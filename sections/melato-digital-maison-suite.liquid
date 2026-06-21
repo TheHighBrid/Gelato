@@ -1,0 +1,280 @@
+{%- liquid
+  assign section_anchor = section.settings.section_anchor | default: 'melato-digital-maison'
+  assign palette_mode = section.settings.palette_mode | default: 'dark'
+-%}
+
+<section id="{{ section_anchor | handleize }}-{{ section.id }}" class="melato-maison melato-maison--{{ palette_mode }}" data-section-type="melato-digital-maison-suite">
+  <style>
+    #{{ section_anchor | handleize }}-{{ section.id }} {
+      --m-bg: {{ section.settings.bg_color | default: '#050505' }};
+      --m-surface: {{ section.settings.surface_color | default: '#101010' }};
+      --m-ink: {{ section.settings.text_color | default: '#f7efe2' }};
+      --m-muted: {{ section.settings.muted_color | default: '#b9aa96' }};
+      --m-accent: {{ section.settings.accent_color | default: '#c9974a' }};
+      --m-line: rgba(247,239,226,.16);
+      --m-radius: {{ section.settings.corner_radius | default: 28 }}px;
+      background: var(--m-bg);
+      color: var(--m-ink);
+      overflow: clip;
+      border-top: 1px solid rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} * { box-sizing: border-box; }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__wrap {
+      width: min({{ section.settings.max_width | default: 1320 }}px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: clamp(56px, 8vw, 112px) 0;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__header {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(280px, .55fr);
+      gap: clamp(24px, 5vw, 72px);
+      align-items: end;
+      margin-bottom: clamp(28px, 5vw, 64px);
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__kicker,
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card__kicker {
+      margin: 0 0 12px;
+      color: var(--m-muted);
+      font-size: 10px;
+      line-height: 1.3;
+      font-weight: 800;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__title {
+      margin: 0;
+      max-width: 900px;
+      color: var(--m-ink);
+      font-family: var(--font-heading-family, inherit);
+      font-size: clamp(42px, 7vw, 102px);
+      line-height: .88;
+      letter-spacing: -.07em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__copy {
+      margin: 0;
+      color: rgba(247,239,226,.76);
+      font-size: clamp(15px, 1.25vw, 19px);
+      line-height: 1.65;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__grid {
+      display: grid;
+      grid-template-columns: repeat({{ section.settings.columns_desktop | default: 3 }}, minmax(0, 1fr));
+      gap: 16px;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card {
+      position: relative;
+      min-height: 360px;
+      overflow: hidden;
+      border: 1px solid var(--m-line);
+      border-radius: var(--m-radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)), var(--m-surface);
+      box-shadow: 0 24px 80px rgba(0,0,0,.28);
+      isolation: isolate;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card--feature { grid-column: span 2; }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card__media {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 20% 0%, rgba(201,151,74,.22), transparent 34%), linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,0));
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.01);
+      filter: saturate(.92) contrast(1.04);
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card__shade {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.68));
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card__content {
+      min-height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: clamp(22px, 3vw, 34px);
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card__title {
+      margin: 0;
+      font-family: var(--font-heading-family, inherit);
+      font-size: clamp(25px, 3.1vw, 48px);
+      line-height: .94;
+      letter-spacing: -.055em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card__text {
+      margin: 14px 0 0;
+      max-width: 540px;
+      color: rgba(247,239,226,.78);
+      line-height: 1.58;
+      font-size: 15px;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid rgba(247,239,226,.28);
+      border-radius: 999px;
+      color: var(--m-ink);
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: 10px;
+      font-weight: 800;
+      transition: transform .22s ease, background .22s ease, color .22s ease;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-btn:hover { transform: translateY(-2px); background: var(--m-ink); color: #111; }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__service-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-service {
+      padding: 18px;
+      border: 1px solid var(--m-line);
+      border-radius: 18px;
+      background: rgba(255,255,255,.035);
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-service strong {
+      display: block;
+      font-size: 11px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--m-ink);
+    }
+    #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-service span {
+      display: block;
+      margin-top: 8px;
+      color: var(--m-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    @media (max-width: 980px) {
+      #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__header,
+      #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__grid,
+      #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__service-row { grid-template-columns: 1fr; }
+      #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card--feature { grid-column: auto; }
+    }
+    @media (max-width: 640px) {
+      #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison__wrap { width: min(100% - 28px, {{ section.settings.max_width | default: 1320 }}px); }
+      #{{ section_anchor | handleize }}-{{ section.id }} .melato-maison-card { min-height: 320px; }
+    }
+  </style>
+
+  <div class="melato-maison__wrap">
+    <div class="melato-maison__header">
+      <div>
+        {%- if section.settings.kicker != blank -%}<p class="melato-maison__kicker">{{ section.settings.kicker }}</p>{%- endif -%}
+        {%- if section.settings.title != blank -%}<h2 class="melato-maison__title">{{ section.settings.title }}</h2>{%- endif -%}
+      </div>
+      {%- if section.settings.copy != blank -%}<p class="melato-maison__copy">{{ section.settings.copy }}</p>{%- endif -%}
+    </div>
+
+    <div class="melato-maison__grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'editorial_card' -%}
+          <article class="melato-maison-card{% if block.settings.featured %} melato-maison-card--feature{% endif %}" {{ block.shopify_attributes }}>
+            <div class="melato-maison-card__media">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 720, 960, 1200, 1600', alt: block.settings.image.alt | escape }}
+              {%- endif -%}
+            </div>
+            <div class="melato-maison-card__shade"></div>
+            <div class="melato-maison-card__content">
+              {%- if block.settings.kicker != blank -%}<p class="melato-maison-card__kicker">{{ block.settings.kicker }}</p>{%- endif -%}
+              {%- if block.settings.title != blank -%}<h3 class="melato-maison-card__title">{{ block.settings.title }}</h3>{%- endif -%}
+              {%- if block.settings.text != blank -%}<p class="melato-maison-card__text">{{ block.settings.text }}</p>{%- endif -%}
+              {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+                <div class="melato-maison-card__actions"><a class="melato-maison-btn" href="{{ block.settings.button_link }}">{{ block.settings.button_label }}</a></div>
+              {%- endif -%}
+            </div>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_service_row -%}
+      <div class="melato-maison__service-row" aria-label="Melato client services">
+        <div class="melato-maison-service"><strong>{{ section.settings.service_1_title }}</strong><span>{{ section.settings.service_1_text }}</span></div>
+        <div class="melato-maison-service"><strong>{{ section.settings.service_2_title }}</strong><span>{{ section.settings.service_2_text }}</span></div>
+        <div class="melato-maison-service"><strong>{{ section.settings.service_3_title }}</strong><span>{{ section.settings.service_3_text }}</span></div>
+        <div class="melato-maison-service"><strong>{{ section.settings.service_4_title }}</strong><span>{{ section.settings.service_4_text }}</span></div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Melato Digital Maison",
+  "tag": "section",
+  "class": "section-melato-digital-maison",
+  "settings": [
+    { "type": "text", "id": "section_anchor", "label": "Section anchor", "default": "melato-digital-maison" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Digital Maison" },
+    { "type": "text", "id": "title", "label": "Title", "default": "A richer world for every Melato drop" },
+    { "type": "textarea", "id": "copy", "label": "Intro copy", "default": "Use this section to build campaign storytelling, shoppable editorial cards, client service cues, and quiet scarcity into any Shopify page with drag-and-drop blocks." },
+    { "type": "checkbox", "id": "show_service_row", "label": "Show client service row", "default": true },
+    { "type": "text", "id": "service_1_title", "label": "Service 1 title", "default": "Private preview" },
+    { "type": "text", "id": "service_1_text", "label": "Service 1 text", "default": "Invite customers into first access before public release." },
+    { "type": "text", "id": "service_2_title", "label": "Service 2 title", "default": "Fit concierge" },
+    { "type": "text", "id": "service_2_text", "label": "Service 2 text", "default": "Make sizing and styling support feel personal." },
+    { "type": "text", "id": "service_3_title", "label": "Service 3 title", "default": "Premium delivery" },
+    { "type": "text", "id": "service_3_text", "label": "Service 3 text", "default": "Surface shipping, returns, and care promises clearly." },
+    { "type": "text", "id": "service_4_title", "label": "Service 4 title", "default": "Edition notes" },
+    { "type": "text", "id": "service_4_text", "label": "Service 4 text", "default": "Frame scarcity with calm luxury language." },
+    { "type": "range", "id": "columns_desktop", "label": "Desktop columns", "min": 2, "max": 4, "step": 1, "default": 3 },
+    { "type": "range", "id": "max_width", "label": "Max width", "min": 1000, "max": 1600, "step": 20, "default": 1320 },
+    { "type": "range", "id": "corner_radius", "label": "Corner radius", "min": 0, "max": 48, "step": 2, "default": 28 },
+    { "type": "select", "id": "palette_mode", "label": "Palette label", "default": "dark", "options": [{ "value": "dark", "label": "Dark" }, { "value": "warm", "label": "Warm" }] },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#050505" },
+    { "type": "color", "id": "surface_color", "label": "Card surface", "default": "#101010" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#f7efe2" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#b9aa96" },
+    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#c9974a" }
+  ],
+  "blocks": [
+    {
+      "type": "editorial_card",
+      "name": "Editorial card",
+      "settings": [
+        { "type": "checkbox", "id": "featured", "label": "Make card wide", "default": false },
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "kicker", "label": "Kicker", "default": "New drop" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Shop the OVUM capsule" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "A campaign-led card for collections, lookbooks, founder notes, material stories, or client service messages." },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Explore" },
+        { "type": "url", "id": "button_link", "label": "Button link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato Digital Maison",
+      "blocks": [
+        { "type": "editorial_card", "settings": { "featured": true, "kicker": "Campaign", "title": "Lead with a world, not a product grid", "text": "Use a full-width editorial card for the season's key collection, campaign film, or strongest visual story.", "button_label": "View campaign" } },
+        { "type": "editorial_card", "settings": { "kicker": "Client services", "title": "Fit concierge", "text": "Promote styling, sizing, and care support in a luxury tone.", "button_label": "Ask a stylist" } },
+        { "type": "editorial_card", "settings": { "kicker": "Edition notes", "title": "Limited releases", "text": "Communicate small-batch scarcity quietly without discount-style urgency.", "button_label": "Shop new drop" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
