@@ -1,0 +1,1147 @@
+{%- liquid
+  assign picked_collection = section.settings.collection
+  assign product_limit = section.settings.product_limit | default: 4
+-%}
+
+<section id="MelatoOvumHome-{{ section.id }}" class="melato-ovum-home" data-section-type="melato-ovum-home">
+  <style>
+    #MelatoOvumHome-{{ section.id }} {
+      --melato-bg: {{ section.settings.bg_color | default: '#050608' }};
+      --melato-surface: {{ section.settings.surface_color | default: '#111217' }};
+      --melato-surface-2: {{ section.settings.surface_2_color | default: '#17181f' }};
+      --melato-text: {{ section.settings.text_color | default: '#f6efe3' }};
+      --melato-muted: {{ section.settings.muted_color | default: '#b7ab9b' }};
+      --melato-line: rgba(246,239,227,.12);
+      --melato-line-strong: rgba(246,239,227,.2);
+      --melato-cream: {{ section.settings.accent_color | default: '#f1e4cf' }};
+      --melato-gold: {{ section.settings.gold_color | default: '#c68b3a' }};
+      --melato-radius: 24px;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(198,139,58,.12), transparent 34%),
+        radial-gradient(circle at 82% 8%, rgba(246,239,227,.08), transparent 32%),
+        var(--melato-bg);
+      color: var(--melato-text);
+      isolation: isolate;
+      overflow: clip;
+      border-top: 1px solid rgba(255,255,255,.05);
+    }
+
+    #MelatoOvumHome-{{ section.id }} *,
+    #MelatoOvumHome-{{ section.id }} *::before,
+    #MelatoOvumHome-{{ section.id }} *::after { box-sizing: border-box; }
+
+    #MelatoOvumHome-{{ section.id }} .melato-wrap {
+      width: min(1280px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-hero {
+      min-height: {{ section.settings.hero_min_height }}vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, .92fr);
+      gap: clamp(28px, 4vw, 72px);
+      align-items: center;
+      padding: clamp(78px, 10vw, 150px) 0 clamp(42px, 6vw, 88px);
+      position: relative;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-hero::before {
+      content: "";
+      position: absolute;
+      inset: 12% auto auto 46%;
+      width: 560px;
+      height: 560px;
+      background: radial-gradient(circle, rgba(241,228,207,.06), transparent 62%);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-eyebrow,
+    #MelatoOvumHome-{{ section.id }} .melato-card-kicker,
+    #MelatoOvumHome-{{ section.id }} .melato-section-kicker {
+      margin: 0 0 12px;
+      font-size: 10px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--melato-muted);
+      line-height: 1.35;
+      font-weight: 700;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-title {
+      margin: 0;
+      font-family: var(--font-heading-family, inherit);
+      font-size: clamp(56px, 11vw, 124px);
+      letter-spacing: -.075em;
+      line-height: .82;
+      text-transform: uppercase;
+      color: var(--melato-cream);
+      text-wrap: balance;
+      filter: drop-shadow(0 18px 44px rgba(0,0,0,.38));
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-subtitle {
+      margin: 24px 0 0;
+      color: rgba(246,239,227,.74);
+      max-width: 640px;
+      font-size: clamp(16px, 1.45vw, 21px);
+      line-height: 1.55;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 24px;
+      border-radius: 999px;
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform .22s ease, border-color .22s ease, background .22s ease, color .22s ease, box-shadow .22s ease;
+      border: 1px solid var(--melato-line-strong);
+      will-change: transform;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 42px rgba(0,0,0,.28);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-btn-primary {
+      background: var(--melato-cream);
+      color: #111;
+      border-color: var(--melato-cream);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-btn-secondary {
+      color: var(--melato-text);
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(16px);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-trust-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-trust-card,
+    #MelatoOvumHome-{{ section.id }} .melato-story-card,
+    #MelatoOvumHome-{{ section.id }} .melato-panel,
+    #MelatoOvumHome-{{ section.id }} .melato-product-card {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.022)),
+        var(--melato-surface);
+      border: 1px solid var(--melato-line);
+      border-radius: var(--melato-radius);
+      box-shadow: 0 18px 60px rgba(0,0,0,.28);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-trust-card {
+      min-height: 152px;
+      padding: 24px 24px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-trust-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% -55% auto;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: rgba(198,139,58,.11);
+      filter: blur(2px);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-trust-card h3,
+    #MelatoOvumHome-{{ section.id }} .melato-story-card h3,
+    #MelatoOvumHome-{{ section.id }} .melato-panel h3 {
+      margin: 0;
+      color: var(--melato-cream);
+      font-size: clamp(17px, 1.45vw, 23px);
+      line-height: 1.06;
+      letter-spacing: -.055em;
+      text-transform: uppercase;
+      font-family: var(--font-heading-family, inherit);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-trust-card p,
+    #MelatoOvumHome-{{ section.id }} .melato-story-card p,
+    #MelatoOvumHome-{{ section.id }} .melato-panel p {
+      margin: 12px 0 0;
+      color: rgba(246,239,227,.68);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-story-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      padding-bottom: 22px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-story-card {
+      padding: clamp(24px, 3vw, 34px);
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin: clamp(54px, 7vw, 92px) 0 22px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-section-title {
+      margin: 0;
+      font-family: var(--font-heading-family, inherit);
+      font-size: clamp(32px, 5vw, 66px);
+      letter-spacing: -.075em;
+      line-height: .88;
+      color: var(--melato-cream);
+      text-transform: uppercase;
+      max-width: 780px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-section-copy {
+      margin: 0;
+      color: rgba(246,239,227,.66);
+      line-height: 1.55;
+      max-width: 420px;
+      font-size: 15px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-products {
+      display: grid;
+      grid-template-columns: repeat({{ product_limit }}, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-product-card {
+      overflow: hidden;
+      border-radius: 22px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform .24s ease, border-color .24s ease, box-shadow .24s ease;
+      min-width: 0;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-product-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(246,239,227,.26);
+      box-shadow: 0 24px 70px rgba(0,0,0,.42);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-product-media {
+      background: #f7f5ef;
+      aspect-ratio: 4 / 4.7;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-product-media img,
+    #MelatoOvumHome-{{ section.id }} .melato-placeholder-box svg {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      mix-blend-mode: normal;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-product-info {
+      padding: 15px 16px 18px;
+      min-height: 88px;
+      background: rgba(17,18,23,.96);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-product-title {
+      display: block;
+      color: rgba(246,239,227,.86);
+      font-size: 13px;
+      line-height: 1.35;
+      letter-spacing: -.01em;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-product-price {
+      display: block;
+      margin-top: 7px;
+      color: rgba(246,239,227,.56);
+      font-size: 12px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-panels {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 14px;
+      margin-top: clamp(24px, 4vw, 46px);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-panel {
+      min-height: 320px;
+      padding: clamp(26px, 4vw, 46px);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(110deg, rgba(198,139,58,.13), transparent 44%),
+        radial-gradient(circle at 100% 0%, rgba(246,239,227,.08), transparent 38%);
+      pointer-events: none;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-panel-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-top: 34px;
+      padding-top: 22px;
+      border-top: 1px solid var(--melato-line);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-stat {
+      color: var(--melato-cream);
+      font-size: clamp(34px, 5vw, 72px);
+      line-height: .9;
+      letter-spacing: -.08em;
+      font-family: var(--font-heading-family, inherit);
+      text-transform: uppercase;
+      margin: 0;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-marquee {
+      margin-top: clamp(38px, 5vw, 68px);
+      border-block: 1px solid rgba(246,239,227,.12);
+      background: rgba(0,0,0,.34);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-marquee-track {
+      display: inline-flex;
+      gap: 30px;
+      min-width: 200%;
+      animation: melatoMarquee{{ section.id }} 28s linear infinite;
+      will-change: transform;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-marquee span {
+      padding: 13px 0;
+      color: rgba(246,239,227,.72);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    @keyframes melatoMarquee{{ section.id }} {
+      to { transform: translateX(-50%); }
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-prefooter {
+      padding: clamp(52px, 7vw, 92px) 0;
+      border-top: 1px solid var(--melato-line);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-prefooter-inner {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr 1fr;
+      gap: 26px;
+      align-items: end;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-footer-brand {
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      min-height: 190px;
+      transform: translateY(18px);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-wordmark {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      color: var(--melato-gold);
+      font-family: var(--font-heading-family, inherit);
+      text-transform: uppercase;
+      letter-spacing: -.06em;
+      font-size: clamp(34px, 4.8vw, 64px);
+      font-style: italic;
+      line-height: .82;
+      text-decoration: none;
+      margin-bottom: 26px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-ig-card {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 12px;
+      width: min(100%, 260px);
+      padding: 20px 22px;
+      border-radius: 26px;
+      border: 1px solid rgba(246,239,227,.18);
+      color: rgba(246,239,227,.78);
+      text-decoration: none;
+      background: rgba(255,255,255,.035);
+      transition: transform .22s ease, border-color .22s ease;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-ig-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(246,239,227,.32);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-ig-card small {
+      color: rgba(246,239,227,.54);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-link-columns {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+      align-items: start;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-link-column h4 {
+      margin: 0 0 18px;
+      color: var(--melato-cream);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-size: 10px;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-link-column a {
+      display: block;
+      color: rgba(246,239,227,.62);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 8px 0;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-link-column a:hover {
+      color: var(--melato-cream);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-footer-bottom {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-top: 26px;
+      margin-top: 8px;
+      border-top: 1px solid rgba(246,239,227,.1);
+      color: rgba(246,239,227,.48);
+      font-size: 11px;
+      letter-spacing: .08em;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-payment-dots {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      opacity: .7;
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-payment-dots i {
+      width: 30px;
+      height: 18px;
+      display: block;
+      border-radius: 4px;
+      background: rgba(246,239,227,.2);
+    }
+
+    #MelatoOvumHome-{{ section.id }} .melato-placeholder-box {
+      width: 100%;
+      height: 100%;
+      background: #f7f5ef;
+      display: grid;
+      place-items: center;
+      color: #222;
+    }
+
+    @media (max-width: 990px) {
+      #MelatoOvumHome-{{ section.id }} .melato-hero,
+      #MelatoOvumHome-{{ section.id }} .melato-panels,
+      #MelatoOvumHome-{{ section.id }} .melato-prefooter-inner {
+        grid-template-columns: 1fr;
+      }
+
+      #MelatoOvumHome-{{ section.id }} .melato-products {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #MelatoOvumHome-{{ section.id }} .melato-story-grid {
+        grid-template-columns: 1fr;
+      }
+
+      #MelatoOvumHome-{{ section.id }} .melato-section-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      #MelatoOvumHome-{{ section.id }} .melato-link-columns {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      #MelatoOvumHome-{{ section.id }} .melato-wrap {
+        width: min(100% - 24px, 1280px);
+      }
+
+      #MelatoOvumHome-{{ section.id }} .melato-hero {
+        padding-top: 56px;
+        min-height: auto;
+      }
+
+      #MelatoOvumHome-{{ section.id }} .melato-trust-grid,
+      #MelatoOvumHome-{{ section.id }} .melato-products,
+      #MelatoOvumHome-{{ section.id }} .melato-link-columns {
+        grid-template-columns: 1fr;
+      }
+
+      #MelatoOvumHome-{{ section.id }} .melato-btn {
+        width: 100%;
+      }
+
+      #MelatoOvumHome-{{ section.id }} .melato-footer-bottom {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+  </style>
+
+  <div class="melato-wrap">
+    <div class="melato-hero">
+      <div class="melato-hero-copy">
+        {% if section.settings.hero_eyebrow != blank %}
+          <p class="melato-eyebrow">{{ section.settings.hero_eyebrow }}</p>
+        {% endif %}
+        <h1 class="melato-title">{{ section.settings.hero_title }}</h1>
+        {% if section.settings.hero_text != blank %}
+          <p class="melato-subtitle">{{ section.settings.hero_text }}</p>
+        {% endif %}
+
+        <div class="melato-actions">
+          {% if section.settings.primary_cta_label != blank %}
+            <a class="melato-btn melato-btn-primary" href="{{ section.settings.primary_cta_url | default: routes.all_products_collection_url }}">{{ section.settings.primary_cta_label }}</a>
+          {% endif %}
+          {% if section.settings.secondary_cta_label != blank %}
+            <a class="melato-btn melato-btn-secondary" href="{{ section.settings.secondary_cta_url | default: routes.collections_url }}">{{ section.settings.secondary_cta_label }}</a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="melato-trust-grid" aria-label="Melato shopping promises">
+        {% for block in section.blocks %}
+          {% if block.type == 'trust_card' %}
+            <article class="melato-trust-card" {{ block.shopify_attributes }}>
+              <h3>{{ block.settings.title }}</h3>
+              <p>{{ block.settings.text }}</p>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="melato-story-grid">
+      {% for block in section.blocks %}
+        {% if block.type == 'story_card' %}
+          <article class="melato-story-card" {{ block.shopify_attributes }}>
+            <div>
+              <p class="melato-card-kicker">{{ block.settings.kicker }}</p>
+              <h3>{{ block.settings.title }}</h3>
+            </div>
+            <p>{{ block.settings.text }}</p>
+          </article>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="melato-section-head">
+      <div>
+        {% if section.settings.product_kicker != blank %}
+          <p class="melato-section-kicker">{{ section.settings.product_kicker }}</p>
+        {% endif %}
+        <h2 class="melato-section-title">{{ section.settings.product_heading }}</h2>
+      </div>
+      {% if section.settings.product_text != blank %}
+        <p class="melato-section-copy">{{ section.settings.product_text }}</p>
+      {% endif %}
+    </div>
+
+    <div class="melato-products">
+      {% if picked_collection != blank and picked_collection.products_count > 0 %}
+        {% for product in picked_collection.products limit: product_limit %}
+          <a class="melato-product-card" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+            <div class="melato-product-media">
+              {% if product.featured_image %}
+                {{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000', sizes: '(max-width: 640px) 100vw, (max-width: 990px) 50vw, 25vw', alt: product.featured_image.alt | default: product.title }}
+              {% else %}
+                <div class="melato-placeholder-box">{{ 'product-1' | placeholder_svg_tag }}</div>
+              {% endif %}
+            </div>
+            <div class="melato-product-info">
+              <span class="melato-product-title">{{ product.title }}</span>
+              <span class="melato-product-price">{{ product.price | money }}</span>
+            </div>
+          </a>
+        {% endfor %}
+      {% else %}
+        {% for i in (1..4) %}
+          <a class="melato-product-card" href="{{ routes.all_products_collection_url }}">
+            <div class="melato-product-media">
+              <div class="melato-placeholder-box">{{ 'product-' | append: i | placeholder_svg_tag }}</div>
+            </div>
+            <div class="melato-product-info">
+              <span class="melato-product-title">Select a collection in this section</span>
+              <span class="melato-product-price">Melato</span>
+            </div>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+
+    {% if section.settings.show_extra_panels %}
+      <div class="melato-panels">
+        <article class="melato-panel">
+          <div>
+            <p class="melato-section-kicker">{{ section.settings.panel_1_kicker }}</p>
+            <h3>{{ section.settings.panel_1_title }}</h3>
+            <p>{{ section.settings.panel_1_text }}</p>
+          </div>
+          <div class="melato-panel-row">
+            <p class="melato-stat">{{ section.settings.panel_1_stat }}</p>
+            {% if section.settings.panel_1_cta_label != blank %}
+              <a class="melato-btn melato-btn-secondary" href="{{ section.settings.panel_1_cta_url | default: routes.all_products_collection_url }}">{{ section.settings.panel_1_cta_label }}</a>
+            {% endif %}
+          </div>
+        </article>
+
+        <article class="melato-panel">
+          <div>
+            <p class="melato-section-kicker">{{ section.settings.panel_2_kicker }}</p>
+            <h3>{{ section.settings.panel_2_title }}</h3>
+            <p>{{ section.settings.panel_2_text }}</p>
+          </div>
+          <div class="melato-panel-row">
+            <p class="melato-stat">{{ section.settings.panel_2_stat }}</p>
+            {% if section.settings.panel_2_cta_label != blank %}
+              <a class="melato-btn melato-btn-secondary" href="{{ section.settings.panel_2_cta_url | default: routes.collections_url }}">{{ section.settings.panel_2_cta_label }}</a>
+            {% endif %}
+          </div>
+        </article>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_marquee %}
+    <div class="melato-marquee" aria-label="Melato editorial ticker">
+      <div class="melato-marquee-track">
+        {% for i in (1..2) %}
+          <span>{{ section.settings.marquee_1 }}</span>
+          <span>{{ section.settings.marquee_2 }}</span>
+          <span>{{ section.settings.marquee_3 }}</span>
+          <span>{{ section.settings.marquee_4 }}</span>
+          <span>{{ section.settings.marquee_5 }}</span>
+          <span>{{ section.settings.marquee_6 }}</span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  {% if section.settings.show_prefooter %}
+    <div class="melato-prefooter">
+      <div class="melato-wrap melato-prefooter-inner">
+        <div class="melato-footer-brand">
+          {% if section.settings.brand_logo != blank %}
+            <a class="melato-wordmark" href="{{ routes.root_url }}">
+              {{ section.settings.brand_logo | image_url: width: 420 | image_tag: loading: 'lazy', widths: '220, 320, 420', alt: shop.name }}
+            </a>
+          {% else %}
+            <a class="melato-wordmark" href="{{ routes.root_url }}">Melato</a>
+          {% endif %}
+
+          <a class="melato-ig-card" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener">
+            <span>{{ section.settings.instagram_text }}</span>
+            <small>Instagram</small>
+          </a>
+        </div>
+
+        <div class="melato-link-columns">
+          <nav class="melato-link-column" aria-label="Shop links">
+            <h4>Shop</h4>
+            <a href="/collections/all">All Products</a>
+            <a href="/collections/tracksuits">Tracksuits</a>
+            <a href="/collections/new-arrivals">New Arrivals</a>
+            <a href="/collections/eves-wardrobe">Eve’s Wardrobe</a>
+            <a href="/collections/accessories">Accessories</a>
+          </nav>
+          <nav class="melato-link-column" aria-label="Info links">
+            <h4>Info</h4>
+            <a href="/pages/our-story">Our Story</a>
+            <a href="/pages/living-lookbook">Living Lookbook</a>
+            <a href="/pages/newsletter">Newsletter</a>
+            <a href="/pages/faq">FAQ</a>
+            <a href="/pages/contact">Contact</a>
+          </nav>
+          <nav class="melato-link-column" aria-label="Legal links">
+            <h4>Legal</h4>
+            <a href="/policies/privacy-policy">Privacy Policy</a>
+            <a href="/policies/terms-of-service">Terms of Service</a>
+            <a href="/policies/refund-policy">Returns & Refunds</a>
+          </nav>
+        </div>
+
+        <div class="melato-footer-bottom">
+          <span>Melato © {{ 'now' | date: '%Y' }}</span>
+          <div class="melato-payment-dots" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Melato OVUM homepage",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "text",
+      "id": "hero_eyebrow",
+      "label": "Eyebrow",
+      "default": "The egg was never empty"
+    },
+    {
+      "type": "text",
+      "id": "hero_title",
+      "label": "Hero title",
+      "default": "OVUM"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_text",
+      "label": "Hero text",
+      "default": "The Origin Capsule. First skin, before the world. Limited pieces built with retro athletic codes, soft textures, and Melato’s sharper graphic language."
+    },
+    {
+      "type": "text",
+      "id": "primary_cta_label",
+      "label": "Primary CTA label",
+      "default": "Shop the archives"
+    },
+    {
+      "type": "url",
+      "id": "primary_cta_url",
+      "label": "Primary CTA link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_label",
+      "label": "Secondary CTA label",
+      "default": "Shop drop #00"
+    },
+    {
+      "type": "url",
+      "id": "secondary_cta_url",
+      "label": "Secondary CTA link"
+    },
+    {
+      "type": "range",
+      "id": "hero_min_height",
+      "min": 50,
+      "max": 90,
+      "step": 5,
+      "unit": "vh",
+      "label": "Hero minimum height",
+      "default": 68
+    },
+    {
+      "type": "header",
+      "content": "Product row"
+    },
+    {
+      "type": "text",
+      "id": "product_kicker",
+      "label": "Product kicker",
+      "default": "Current movement"
+    },
+    {
+      "type": "text",
+      "id": "product_heading",
+      "label": "Product heading",
+      "default": "Start with the pieces moving now"
+    },
+    {
+      "type": "textarea",
+      "id": "product_text",
+      "label": "Product text",
+      "default": "Browse the strongest current products first, then complete the set with matching jackets, pants, and accessories."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Featured collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Products shown",
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Extra sections"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_extra_panels",
+      "label": "Show two extra editorial panels",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "panel_1_kicker",
+      "label": "Panel 1 kicker",
+      "default": "Archive logic"
+    },
+    {
+      "type": "text",
+      "id": "panel_1_title",
+      "label": "Panel 1 title",
+      "default": "The capsule stays small on purpose"
+    },
+    {
+      "type": "textarea",
+      "id": "panel_1_text",
+      "label": "Panel 1 text",
+      "default": "No fake abundance. Each drop is edited tight, produced in limited quantities, and kept sharp enough to feel discovered."
+    },
+    {
+      "type": "text",
+      "id": "panel_1_stat",
+      "label": "Panel 1 big text",
+      "default": "Small runs"
+    },
+    {
+      "type": "text",
+      "id": "panel_1_cta_label",
+      "label": "Panel 1 CTA label",
+      "default": "Shop limited pieces"
+    },
+    {
+      "type": "url",
+      "id": "panel_1_cta_url",
+      "label": "Panel 1 CTA link"
+    },
+    {
+      "type": "text",
+      "id": "panel_2_kicker",
+      "label": "Panel 2 kicker",
+      "default": "Complete the set"
+    },
+    {
+      "type": "text",
+      "id": "panel_2_title",
+      "label": "Panel 2 title",
+      "default": "Build the full Melato uniform"
+    },
+    {
+      "type": "textarea",
+      "id": "panel_2_text",
+      "label": "Panel 2 text",
+      "default": "Track jackets, flare pants, bags, and quiet accessories designed to work together without looking overly matched."
+    },
+    {
+      "type": "text",
+      "id": "panel_2_stat",
+      "label": "Panel 2 big text",
+      "default": "Full set"
+    },
+    {
+      "type": "text",
+      "id": "panel_2_cta_label",
+      "label": "Panel 2 CTA label",
+      "default": "Browse collections"
+    },
+    {
+      "type": "url",
+      "id": "panel_2_cta_url",
+      "label": "Panel 2 CTA link"
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_marquee",
+      "label": "Show ticker",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marquee_1",
+      "label": "Marquee item 1",
+      "default": "Was never empty"
+    },
+    {
+      "type": "text",
+      "id": "marquee_2",
+      "label": "Marquee item 2",
+      "default": "Melato"
+    },
+    {
+      "type": "text",
+      "id": "marquee_3",
+      "label": "Marquee item 3",
+      "default": "First skin"
+    },
+    {
+      "type": "text",
+      "id": "marquee_4",
+      "label": "Marquee item 4",
+      "default": "Materia prima"
+    },
+    {
+      "type": "text",
+      "id": "marquee_5",
+      "label": "Marquee item 5",
+      "default": "Before the world"
+    },
+    {
+      "type": "text",
+      "id": "marquee_6",
+      "label": "Marquee item 6",
+      "default": "Collection #01"
+    },
+    {
+      "type": "header",
+      "content": "Optional pre-footer"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_prefooter",
+      "label": "Show rebuilt pre-footer",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Brand logo"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram link",
+      "default": "https://www.instagram.com/"
+    },
+    {
+      "type": "text",
+      "id": "instagram_text",
+      "label": "Instagram card text",
+      "default": "Join the collective IG"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#050608"
+    },
+    {
+      "type": "color",
+      "id": "surface_color",
+      "label": "Card background",
+      "default": "#111217"
+    },
+    {
+      "type": "color",
+      "id": "surface_2_color",
+      "label": "Secondary card background",
+      "default": "#17181f"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#f6efe3"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#b7ab9b"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Cream accent",
+      "default": "#f1e4cf"
+    },
+    {
+      "type": "color",
+      "id": "gold_color",
+      "label": "Melato gold",
+      "default": "#c68b3a"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "trust_card",
+      "name": "Hero trust card",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Limited productions"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Small-batch releases designed to move fast, not sit in mass stock."
+        }
+      ]
+    },
+    {
+      "type": "story_card",
+      "name": "Story card",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Kicker",
+          "default": "Limited productions"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Built in small runs"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Each release is treated like a capsule: focused colourways, intentional graphics, and no unnecessary overproduction."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato OVUM homepage",
+      "blocks": [
+        {
+          "type": "trust_card",
+          "settings": {
+            "title": "Limited productions",
+            "text": "Small-batch releases designed to move fast, not sit in mass stock."
+          }
+        },
+        {
+          "type": "trust_card",
+          "settings": {
+            "title": "Premium feel",
+            "text": "Velour, structured panels, embroidery, retro silhouettes, and cleaner finishing."
+          }
+        },
+        {
+          "type": "trust_card",
+          "settings": {
+            "title": "Fast dispatch",
+            "text": "Clear checkout, smooth shipping, and responsive customer support."
+          }
+        },
+        {
+          "type": "trust_card",
+          "settings": {
+            "title": "Secure checkout",
+            "text": "Shopify checkout with major cards, Shop Pay, Apple Pay, and Google Pay."
+          }
+        },
+        {
+          "type": "story_card",
+          "settings": {
+            "kicker": "Limited productions",
+            "title": "Built in small runs",
+            "text": "Each release is treated like a capsule: focused colourways, intentional graphics, and no unnecessary overproduction."
+          }
+        },
+        {
+          "type": "story_card",
+          "settings": {
+            "kicker": "Best sellers",
+            "title": "Start with the pieces moving now",
+            "text": "Browse the strongest current products first, then complete the set with matching jackets and pants."
+          }
+        },
+        {
+          "type": "story_card",
+          "settings": {
+            "kicker": "Brand value",
+            "title": "Culture-forward premium apparel",
+            "text": "Melato combines retro athletic codes, symbolic graphics, and elevated product photography for a sharper identity."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

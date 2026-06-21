@@ -1,0 +1,86 @@
+{
+  "sections": {
+    "melato_ovum_home": {
+      "type": "melato-ovum-home-redesign",
+      "settings": {
+        "hero_eyebrow": "The egg was never empty",
+        "hero_title": "OVUM",
+        "hero_text": "The Origin Capsule. First skin, before the world. Limited pieces built with retro athletic codes, soft textures, and Melato’s sharper graphic language.",
+        "primary_cta_label": "Shop the archives",
+        "secondary_cta_label": "Shop drop #00",
+        "product_kicker": "Current movement",
+        "product_heading": "Start with the pieces moving now",
+        "product_text": "Browse the strongest current products first, then complete the set with matching jackets, pants, and accessories.",
+        "show_extra_panels": true,
+        "show_marquee": true,
+        "show_prefooter": true
+      },
+      "blocks": {
+        "trust_1": {
+          "type": "trust_card",
+          "settings": {
+            "title": "Limited productions",
+            "text": "Small-batch releases designed to move fast, not sit in mass stock."
+          }
+        },
+        "trust_2": {
+          "type": "trust_card",
+          "settings": {
+            "title": "Premium feel",
+            "text": "Velour, structured panels, embroidery, retro silhouettes, and cleaner finishing."
+          }
+        },
+        "trust_3": {
+          "type": "trust_card",
+          "settings": {
+            "title": "Fast dispatch",
+            "text": "Clear checkout, smooth shipping, and responsive customer support."
+          }
+        },
+        "trust_4": {
+          "type": "trust_card",
+          "settings": {
+            "title": "Secure checkout",
+            "text": "Shopify checkout with major cards, Shop Pay, Apple Pay, and Google Pay."
+          }
+        },
+        "story_1": {
+          "type": "story_card",
+          "settings": {
+            "kicker": "Limited productions",
+            "title": "Built in small runs",
+            "text": "Each release is treated like a capsule: focused colourways, intentional graphics, and no unnecessary overproduction."
+          }
+        },
+        "story_2": {
+          "type": "story_card",
+          "settings": {
+            "kicker": "Best sellers",
+            "title": "Start with the pieces moving now",
+            "text": "Browse the strongest current products first, then complete the set with matching jackets and pants."
+          }
+        },
+        "story_3": {
+          "type": "story_card",
+          "settings": {
+            "kicker": "Brand value",
+            "title": "Culture-forward premium apparel",
+            "text": "Melato combines retro athletic codes, symbolic graphics, and elevated product photography for a sharper identity."
+          }
+        }
+      },
+      "block_order": [
+        "trust_1",
+        "trust_2",
+        "trust_3",
+        "trust_4",
+        "story_1",
+        "story_2",
+        "story_3"
+      ]
+    }
+  },
+  "order": [
+    "melato_ovum_home"
+  ]
+}
