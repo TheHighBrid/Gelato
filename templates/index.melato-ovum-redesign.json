@@ -78,9 +78,49 @@
         "story_2",
         "story_3"
       ]
+    },
+    "melato_living_lookbook": {
+      "type": "melato-living-lookbook",
+      "settings": {
+        "kicker": "Editorial commerce",
+        "title": "The Living Lookbook",
+        "copy": "A cinematic lookbook that behaves like a shop floor: every editorial photo is a direct doorway to the exact Melato piece it shows."
+      },
+      "blocks": {
+        "scene_1": {
+          "type": "scene",
+          "settings": {
+            "chapter": "Scene 01",
+            "title": "Motion study",
+            "text": "Pin the hero outfit to the product page so the editorial image becomes instantly shoppable."
+          }
+        },
+        "scene_2": {
+          "type": "scene",
+          "settings": {
+            "chapter": "Scene 02",
+            "title": "Soft signal",
+            "text": "Use campaign photography, detail shots, or styled sets; each visible image must be assigned to the product it displays."
+          }
+        },
+        "scene_3": {
+          "type": "scene",
+          "settings": {
+            "chapter": "Scene 03",
+            "title": "After-hours uniform",
+            "text": "Customers can read the mood, tap the frame, and land on the exact piece without breaking the story."
+          }
+        }
+      },
+      "block_order": [
+        "scene_1",
+        "scene_2",
+        "scene_3"
+      ]
     }
   },
   "order": [
-    "melato_ovum_home"
+    "melato_ovum_home",
+    "melato_living_lookbook"
   ]
 }

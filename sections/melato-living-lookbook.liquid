@@ -1,0 +1,315 @@
+{%- liquid
+  assign section_anchor = section.settings.section_anchor | default: 'living-lookbook'
+-%}
+
+<section id="{{ section_anchor | handleize }}-{{ section.id }}" class="melato-living-lookbook" data-section-type="melato-living-lookbook">
+  <style>
+    #{{ section_anchor | handleize }}-{{ section.id }} {
+      --ll-bg: {{ section.settings.bg_color | default: '#080706' }};
+      --ll-ink: {{ section.settings.text_color | default: '#f7efe2' }};
+      --ll-muted: {{ section.settings.muted_color | default: '#b9aa96' }};
+      --ll-accent: {{ section.settings.accent_color | default: '#c9974a' }};
+      --ll-line: rgba(247,239,226,.16);
+      background:
+        radial-gradient(circle at 10% 12%, rgba(201,151,74,.18), transparent 32%),
+        radial-gradient(circle at 84% 8%, rgba(247,239,226,.10), transparent 28%),
+        var(--ll-bg);
+      color: var(--ll-ink);
+      overflow: clip;
+      border-top: 1px solid rgba(247,239,226,.1);
+      border-bottom: 1px solid rgba(247,239,226,.1);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} * { box-sizing: border-box; }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__wrap {
+      width: min({{ section.settings.max_width | default: 1360 }}px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: clamp(64px, 9vw, 126px) 0;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__header {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(280px, .55fr);
+      gap: clamp(24px, 5vw, 84px);
+      align-items: end;
+      margin-bottom: clamp(32px, 5vw, 72px);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__kicker,
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__chapter,
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__label {
+      margin: 0;
+      color: var(--ll-muted);
+      font-size: 10px;
+      line-height: 1.35;
+      font-weight: 800;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__title {
+      margin: 12px 0 0;
+      max-width: 980px;
+      color: var(--ll-ink);
+      font-family: var(--font-heading-family, inherit);
+      font-size: clamp(46px, 8vw, 118px);
+      line-height: .82;
+      letter-spacing: -.08em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__copy {
+      margin: 0;
+      color: rgba(247,239,226,.74);
+      font-size: clamp(15px, 1.25vw, 19px);
+      line-height: 1.65;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__stage {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(14px, 1.7vw, 24px);
+      align-items: stretch;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene {
+      position: relative;
+      grid-column: span 4;
+      min-height: 520px;
+      overflow: hidden;
+      border: 1px solid var(--ll-line);
+      border-radius: clamp(24px, 3vw, 42px);
+      color: inherit;
+      text-decoration: none;
+      background: rgba(255,255,255,.035);
+      box-shadow: 0 28px 90px rgba(0,0,0,.34);
+      isolation: isolate;
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n+1) { transform: translateY(34px); }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n+2) { min-height: 620px; }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n) { transform: translateY(74px); }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(247,239,226,.32);
+      box-shadow: 0 34px 110px rgba(0,0,0,.48);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__image {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: linear-gradient(135deg, rgba(201,151,74,.16), rgba(255,255,255,.04));
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      filter: saturate(.95) contrast(1.04);
+      transform: scale(1.02);
+      transition: transform .7s ease, filter .7s ease;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:hover .living-lookbook-scene__image img {
+      transform: scale(1.08);
+      filter: saturate(1.06) contrast(1.08);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__veil {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.04) 28%, rgba(0,0,0,.72) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.36), rgba(0,0,0,0) 54%);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__content {
+      min-height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(22px, 3vw, 34px);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      max-width: min(100%, 360px);
+      padding: 10px 13px 10px 10px;
+      border: 1px solid rgba(247,239,226,.22);
+      border-radius: 999px;
+      background: rgba(8,7,6,.54);
+      color: var(--ll-ink);
+      backdrop-filter: blur(16px);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      flex: 0 0 14px;
+      border: 3px solid var(--ll-bg);
+      border-radius: 50%;
+      background: var(--ll-accent);
+      box-shadow: 0 0 0 1px rgba(247,239,226,.34), 0 0 22px rgba(201,151,74,.8);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__label {
+      display: block;
+      color: rgba(247,239,226,.72);
+      letter-spacing: .18em;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__title {
+      display: block;
+      margin-top: 3px;
+      color: var(--ll-ink);
+      font-size: 12px;
+      line-height: 1.25;
+      letter-spacing: .01em;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__title {
+      display: block;
+      margin: 14px 0 0;
+      max-width: 520px;
+      font-family: var(--font-heading-family, inherit);
+      font-size: clamp(28px, 3.5vw, 58px);
+      line-height: .9;
+      letter-spacing: -.06em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__text {
+      display: block;
+      margin: 14px 0 0;
+      max-width: 440px;
+      color: rgba(247,239,226,.76);
+      font-size: 14px;
+      line-height: 1.58;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__cta {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 20px;
+      color: var(--ll-ink);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(247,239,226,.45);
+    }
+
+    @media (max-width: 990px) {
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__header,
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__stage { grid-template-columns: 1fr; }
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene,
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(n) {
+        grid-column: auto;
+        min-height: 520px;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__wrap { width: min(100% - 28px, {{ section.settings.max_width | default: 1360 }}px); }
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene,
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(n) { min-height: 440px; }
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin { border-radius: 22px; align-items: flex-start; }
+    }
+  </style>
+
+  <div class="living-lookbook__wrap">
+    <div class="living-lookbook__header">
+      <div>
+        {%- if section.settings.kicker != blank -%}<p class="living-lookbook__kicker">{{ section.settings.kicker }}</p>{%- endif -%}
+        {%- if section.settings.title != blank -%}<h2 class="living-lookbook__title">{{ section.settings.title }}</h2>{%- endif -%}
+      </div>
+      {%- if section.settings.copy != blank -%}<p class="living-lookbook__copy">{{ section.settings.copy }}</p>{%- endif -%}
+    </div>
+
+    <div class="living-lookbook__stage" aria-label="{{ section.settings.title | escape }}">
+      {%- for block in section.blocks -%}
+        {%- assign product = block.settings.product -%}
+        {%- if product != blank -%}
+          {%- assign scene_image = block.settings.image | default: product.featured_image -%}
+          <a class="living-lookbook-scene" href="{{ product.url }}" aria-label="Shop {{ product.title | escape }}" {{ block.shopify_attributes }}>
+            <div class="living-lookbook-scene__image">
+              {%- if scene_image != blank -%}
+                {{ scene_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 720, 960, 1200, 1500, 1800', alt: scene_image.alt | default: product.title }}
+              {%- endif -%}
+            </div>
+            <div class="living-lookbook-scene__veil"></div>
+            <div class="living-lookbook-scene__content">
+              <span class="living-lookbook-pin">
+                <span>
+                  <span class="living-lookbook-pin__label">Shop the photo</span>
+                  <span class="living-lookbook-pin__title">{{ product.title }}</span>
+                </span>
+              </span>
+              <span>
+                {%- if block.settings.chapter != blank -%}<span class="living-lookbook-scene__chapter">{{ block.settings.chapter }}</span>{%- endif -%}
+                {%- if block.settings.title != blank -%}<span class="living-lookbook-scene__title">{{ block.settings.title }}</span>{%- endif -%}
+                {%- if block.settings.text != blank -%}<span class="living-lookbook-scene__text">{{ block.settings.text }}</span>{%- endif -%}
+                <span class="living-lookbook-scene__cta">Open product</span>
+              </span>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Melato Living Lookbook",
+  "tag": "section",
+  "class": "section-melato-living-lookbook",
+  "settings": [
+    { "type": "text", "id": "section_anchor", "label": "Section anchor", "default": "living-lookbook" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Editorial commerce" },
+    { "type": "text", "id": "title", "label": "Title", "default": "The Living Lookbook" },
+    { "type": "textarea", "id": "copy", "label": "Intro copy", "default": "A cinematic lookbook that behaves like a shop floor: every editorial photo is a direct doorway to the exact Melato piece it shows." },
+    { "type": "range", "id": "max_width", "min": 1100, "max": 1600, "step": 20, "unit": "px", "label": "Maximum width", "default": 1360 },
+    { "type": "color", "id": "bg_color", "label": "Background", "default": "#080706" },
+    { "type": "color", "id": "text_color", "label": "Text", "default": "#f7efe2" },
+    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#b9aa96" },
+    { "type": "color", "id": "accent_color", "label": "Pin accent", "default": "#c9974a" }
+  ],
+  "blocks": [
+    {
+      "type": "scene",
+      "name": "Shoppable photo",
+      "settings": [
+        { "type": "product", "id": "product", "label": "Product shown in this photo" },
+        { "type": "image_picker", "id": "image", "label": "Editorial photo", "info": "If empty, the selected product image is used." },
+        { "type": "text", "id": "chapter", "label": "Chapter label", "default": "Scene 01" },
+        { "type": "text", "id": "title", "label": "Scene title", "default": "Worn like a memory" },
+        { "type": "textarea", "id": "text", "label": "Scene text", "default": "Tap the image to move from editorial mood into the exact product page." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato Living Lookbook",
+      "blocks": [
+        { "type": "scene", "settings": { "chapter": "Scene 01", "title": "Motion study", "text": "A product-linked frame for your strongest campaign image." } },
+        { "type": "scene", "settings": { "chapter": "Scene 02", "title": "Soft signal", "text": "Every displayed photo opens the product it features." } },
+        { "type": "scene", "settings": { "chapter": "Scene 03", "title": "After-hours uniform", "text": "Build a living editorial grid from real products, not dead inspiration." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
