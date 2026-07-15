@@ -4,35 +4,37 @@
   assign text_color = section.settings.text_color | default: '#f7efe2'
   assign muted_color = section.settings.muted_color | default: '#b9aa96'
   assign accent_color = section.settings.accent_color | default: '#c9974a'
+  assign selector = section_anchor | append: '-' | append: section.id
 -%}
 
-<section id="{{ section_anchor }}-{{ section.id }}" class="melato-living-lookbook" data-section-type="melato-living-lookbook">
+<section id="{{ selector }}" class="melato-living-lookbook" data-section-type="melato-living-lookbook">
   <style>
-    #{{ section_anchor }}-{{ section.id }} {
+    :root {
+      --ll-selector-id: {{ selector }};
       --ll-bg: {{ bg_color }};
       --ll-ink: {{ text_color }};
       --ll-muted: {{ muted_color }};
       --ll-accent: {{ accent_color }};
       --ll-line: rgba(247,239,226,.16);
-      background:
-        radial-gradient(circle at 10% 12%, rgba(201,151,74,.18), transparent 32%),
-        radial-gradient(circle at 84% 8%, rgba(247,239,226,.10), transparent 28%),
-        var(--ll-bg);
+    }
+
+    #{{ selector }} {
+      background: var(--ll-bg);
       color: var(--ll-ink);
       overflow: clip;
       border-top: 1px solid rgba(247,239,226,.1);
       border-bottom: 1px solid rgba(247,239,226,.1);
     }
 
-    #{{ section_anchor }}-{{ section.id }} * { box-sizing: border-box; }
+    #{{ selector }} * { box-sizing: border-box; }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook__wrap {
+    #{{ selector }} .living-lookbook__wrap {
       width: min({{ section.settings.max_width | default: 1360 }}px, calc(100% - 40px));
       margin: 0 auto;
       padding: clamp(64px, 9vw, 126px) 0;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook__header {
+    #{{ selector }} .living-lookbook__header {
       display: grid;
       grid-template-columns: minmax(0, .95fr) minmax(280px, .55fr);
       gap: clamp(24px, 5vw, 84px);
@@ -40,9 +42,9 @@
       margin-bottom: clamp(32px, 5vw, 72px);
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook__kicker,
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene__chapter,
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-pin__label {
+    #{{ selector }} .living-lookbook__kicker,
+    #{{ selector }} .living-lookbook-scene__chapter,
+    #{{ selector }} .living-lookbook-pin__label {
       margin: 0;
       color: var(--ll-muted);
       font-size: 10px;
@@ -52,7 +54,7 @@
       text-transform: uppercase;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook__title {
+    #{{ selector }} .living-lookbook__title {
       margin: 12px 0 0;
       max-width: 980px;
       color: var(--ll-ink);
@@ -64,21 +66,21 @@
       text-wrap: balance;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook__copy {
+    #{{ selector }} .living-lookbook__copy {
       margin: 0;
       color: rgba(247,239,226,.74);
       font-size: clamp(15px, 1.25vw, 19px);
       line-height: 1.65;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook__stage {
+    #{{ selector }} .living-lookbook__stage {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
       gap: clamp(14px, 1.7vw, 24px);
       align-items: stretch;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene {
+    #{{ selector }} .living-lookbook-scene {
       position: relative;
       grid-column: span 4;
       min-height: 520px;
@@ -88,51 +90,50 @@
       color: inherit;
       text-decoration: none;
       background: rgba(255,255,255,.035);
-      box-shadow: 0 28px 90px rgba(0,0,0,.34);
-      isolation: isolate;
+      box-shadow: 0 12px 40px rgba(0,0,0,.28);
       transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
       outline-offset: 2px;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene:nth-child(3n+1) { transform: translateY(34px); }
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene:nth-child(3n+2) { min-height: 620px; }
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene:nth-child(3n) { transform: translateY(74px); }
+    #{{ selector }} .living-lookbook-scene:nth-child(3n+1) { margin-top: 0; }
+    #{{ selector }} .living-lookbook-scene:nth-child(3n+2) { min-height: 620px; }
+    #{{ selector }} .living-lookbook-scene:nth-child(3n) { margin-top: 0; }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene:hover {
-      transform: translateY(-6px) scale(1.01);
-      border-color: rgba(247,239,226,.32);
-      box-shadow: 0 34px 110px rgba(0,0,0,.48);
+    @media (prefers-reduced-motion: no-preference) {
+      #{{ selector }} .living-lookbook-scene:hover {
+        transform: translateY(-6px);
+        border-color: rgba(247,239,226,.32);
+        box-shadow: 0 16px 50px rgba(0,0,0,.36);
+      }
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene:focus-visible {
+    #{{ selector }} .living-lookbook-scene:focus-visible {
       outline: 2px solid var(--ll-accent);
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene__image {
+    #{{ selector }} .living-lookbook-scene__image {
       position: absolute;
       inset: 0;
       z-index: -2;
       background: linear-gradient(135deg, rgba(201,151,74,.16), rgba(255,255,255,.04));
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene__image img {
+    #{{ selector }} .living-lookbook-scene__image img {
       width: 100%;
       height: 100%;
       display: block;
       object-fit: cover;
-      filter: saturate(.95) contrast(1.04);
-      transform: scale(1.02);
-      transition: transform .7s ease, filter .7s ease;
+      will-change: transform;
+      transition: transform .7s ease;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene:hover .living-lookbook-scene__image img {
-        transform: scale(1.08);
-        filter: saturate(1.06) contrast(1.08);
+      #{{ selector }} .living-lookbook-scene:hover .living-lookbook-scene__image img {
+        transform: scale(1.06);
       }
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene__veil {
+    #{{ selector }} .living-lookbook-scene__veil {
       position: absolute;
       inset: 0;
       z-index: -1;
@@ -141,7 +142,7 @@
         linear-gradient(90deg, rgba(0,0,0,.36), rgba(0,0,0,0) 54%);
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene__content {
+    #{{ selector }} .living-lookbook-scene__content {
       min-height: inherit;
       display: flex;
       flex-direction: column;
@@ -149,7 +150,7 @@
       padding: clamp(22px, 3vw, 34px);
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-pin {
+    #{{ selector }} .living-lookbook-pin {
       align-self: flex-start;
       display: inline-flex;
       align-items: center;
@@ -160,10 +161,10 @@
       border-radius: 999px;
       background: rgba(8,7,6,.54);
       color: var(--ll-ink);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(12px);
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-pin::before {
+    #{{ selector }} .living-lookbook-pin::before {
       content: "";
       width: 14px;
       height: 14px;
@@ -171,16 +172,16 @@
       border: 3px solid var(--ll-bg);
       border-radius: 50%;
       background: var(--ll-accent);
-      box-shadow: 0 0 0 1px rgba(247,239,226,.34), 0 0 22px rgba(201,151,74,.8);
+      box-shadow: 0 0 0 1px rgba(247,239,226,.34), 0 0 16px rgba(201,151,74,.6);
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-pin__label {
+    #{{ selector }} .living-lookbook-pin__label {
       display: block;
       color: rgba(247,239,226,.72);
       letter-spacing: .18em;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-pin__title {
+    #{{ selector }} .living-lookbook-pin__title {
       display: block;
       margin-top: 3px;
       color: var(--ll-ink);
@@ -189,7 +190,7 @@
       letter-spacing: .01em;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene__title {
+    #{{ selector }} .living-lookbook-scene__title {
       display: block;
       margin: 14px 0 0;
       max-width: 520px;
@@ -201,7 +202,7 @@
       text-wrap: balance;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene__text {
+    #{{ selector }} .living-lookbook-scene__text {
       display: block;
       margin: 14px 0 0;
       max-width: 440px;
@@ -210,7 +211,7 @@
       line-height: 1.58;
     }
 
-    #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene__cta {
+    #{{ selector }} .living-lookbook-scene__cta {
       display: inline-flex;
       width: fit-content;
       margin-top: 20px;
@@ -223,21 +224,21 @@
     }
 
     @media (max-width: 990px) {
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook__header,
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook__stage { grid-template-columns: 1fr; }
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene,
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene:nth-child(n) {
+      #{{ selector }} .living-lookbook__header,
+      #{{ selector }} .living-lookbook__stage { grid-template-columns: 1fr; }
+      #{{ selector }} .living-lookbook-scene,
+      #{{ selector }} .living-lookbook-scene:nth-child(n) {
         grid-column: auto;
         min-height: 520px;
-        transform: none !important;
+        margin-top: 0 !important;
       }
     }
 
     @media (max-width: 640px) {
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook__wrap { width: min(100% - 28px, {{ section.settings.max_width | default: 1360 }}px); }
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene,
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook-scene:nth-child(n) { min-height: 440px; }
-      #{{ section_anchor }}-{{ section.id }} .living-lookbook-pin { border-radius: 22px; align-items: flex-start; }
+      #{{ selector }} .living-lookbook__wrap { width: min(100% - 28px, {{ section.settings.max_width | default: 1360 }}px); }
+      #{{ selector }} .living-lookbook-scene,
+      #{{ selector }} .living-lookbook-scene:nth-child(n) { min-height: 440px; }
+      #{{ selector }} .living-lookbook-pin { border-radius: 22px; align-items: flex-start; }
     }
   </style>
 
@@ -264,7 +265,7 @@
           <a class="living-lookbook-scene" href="{{ product.url }}" aria-label="Shop {{ product.title | escape }}" {{ block.shopify_attributes }}>
             <div class="living-lookbook-scene__image">
               {%- if scene_image != blank -%}
-                {{ scene_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 720, 960, 1200, 1500, 1800', alt: scene_image.alt | default: 'Featured product' }}
+                {{ scene_image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 960, 1500', alt: scene_image.alt | default: product.title | escape }}
               {%- endif -%}
             </div>
             <div class="living-lookbook-scene__veil"></div>
