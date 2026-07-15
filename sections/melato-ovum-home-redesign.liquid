@@ -616,7 +616,8 @@
           <a class="melato-product-card" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
             <div class="melato-product-media">
               {% if product.featured_image %}
-                {{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000', sizes: '(max-width: 640px) 100vw, (max-width: 990px) 50vw, 25vw', alt: product.featured_image.alt | default: product.title }}
+                {%- assign product_img_alt = product.featured_image.alt | default: product.title | escape -%}
+                {{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '360, 540, 720, 1000', sizes: '(max-width: 640px) 100vw, (max-width: 990px) 50vw, 25vw', alt: product_img_alt }}
               {% else %}
                 <div class="melato-placeholder-box">{{ 'product-1' | placeholder_svg_tag }}</div>
               {% endif %}
@@ -702,10 +703,12 @@
             <a class="melato-wordmark" href="{{ routes.root_url }}">Melato</a>
           {% endif %}
 
-          <a class="melato-ig-card" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener">
-            <span>{{ section.settings.instagram_text }}</span>
-            <small>Instagram</small>
-          </a>
+          {%- if section.settings.instagram_url != blank -%}
+            <a class="melato-ig-card" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ section.settings.instagram_text | default: 'Instagram' | escape }}">
+              <span>{{ section.settings.instagram_text }}</span>
+              <small>Instagram</small>
+            </a>
+          {%- endif -%}
         </div>
 
         <div class="melato-link-columns">
