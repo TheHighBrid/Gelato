@@ -436,7 +436,7 @@
 
       @media (max-width: 990px) {
         #{{ selector }} .living-lookbook__header { grid-template-columns: 1fr; }
-        #{{ selector }} .living-lookbook__stage.carousel-enabled:not(.carousel-enabled) {
+        #{{ selector }} .living-lookbook__stage:not(.carousel-enabled) {
           grid-template-columns: repeat(2, 1fr);
         }
         #{{ selector }} .living-lookbook-scene {
@@ -521,13 +521,14 @@
             {{ block.shopify_attributes }}>
             <div class="living-lookbook-scene__image is-loading">
               {%- if scene_image != blank -%}
+                {%- assign scene_img_alt = scene_image.alt | default: product.title | escape -%}
                 <picture>
                   <source srcset="{{ scene_image | image_url: width: 480, format: 'webp' }}" media="(max-width: 640px)" type="image/webp">
                   <source srcset="{{ scene_image | image_url: width: 480 }}" media="(max-width: 640px)">
                   <source srcset="{{ scene_image | image_url: width: 960, format: 'webp' }}" media="(max-width: 1200px)" type="image/webp">
                   <source srcset="{{ scene_image | image_url: width: 960 }}" media="(max-width: 1200px)">
                   <source srcset="{{ scene_image | image_url: width: 1500, format: 'webp' }}" type="image/webp">
-                  {{ scene_image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw', alt: scene_image.alt | default: product.title | escape, fetchpriority: 'low' }}
+                  {{ scene_image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw', alt: scene_img_alt, fetchpriority: 'low' }}
                 </picture>
               {%- else -%}
                 <div class="living-lookbook-scene--empty" aria-hidden="true">{{ 'no_image_available' | t: default: 'No image available' }}</div>
@@ -572,9 +573,9 @@
   </div>
 
   {%- if enable_quick_view -%}
-    <div class="living-lookbook-quick-view-modal" data-quick-view-modal>
+    <div class="living-lookbook-quick-view-modal" data-quick-view-modal role="dialog" aria-modal="true" aria-label="{{ 'quick_view' | t: default: 'Quick view' }}" aria-hidden="true">
       <div class="living-lookbook-quick-view-content">
-        <button class="living-lookbook-quick-view-close" data-quick-view-close>✕</button>
+        <button class="living-lookbook-quick-view-close" data-quick-view-close aria-label="{{ 'close' | t: default: 'Close' }}">✕</button>
         <div data-quick-view-placeholder></div>
       </div>
     </div>
@@ -610,7 +611,7 @@
                   "@type": "Offer",
                   "url": "{{ block.settings.product.url | prepend: request.origin }}",
                   "priceCurrency": "{{ shop.currency }}",
-                  "price": "{{ block.settings.product.price | divided_by: 100 }}"
+                  "price": "{{ block.settings.product.price | divided_by: 100.0 }}"
                 }
               {%- endif -%}
             }{{ ','  unless forloop.last }}
@@ -737,7 +738,7 @@
         // Allow relative URLs, same origin, and Shopify CDN
         const allowedOrigins = [
           window.location.origin,
-          request.origin || '',
+          '{{ request.origin | escape }}',
           'cdn.shopify.com',
           'images.unsplash.com'
         ];
@@ -834,6 +835,7 @@
 
         function closeModal() {
           modal.classList.remove('is-open');
+          modal.setAttribute('aria-hidden', 'true');
           document.body.style.overflow = '';
         }
 
@@ -856,6 +858,7 @@
             `;
 
             modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
           }
         }, { signal: abortController.signal });
