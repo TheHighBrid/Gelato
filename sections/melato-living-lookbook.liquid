@@ -5,17 +5,20 @@
   assign muted_color = section.settings.muted_color | default: '#b9aa96'
   assign accent_color = section.settings.accent_color | default: '#c9974a'
   assign selector = section_anchor | append: '-' | append: section.id
+  assign block_count = section.blocks | size
 -%}
 
 <section id="{{ selector }}" class="melato-living-lookbook" data-section-type="melato-living-lookbook">
   <style>
     :root {
-      --ll-selector-id: {{ selector }};
       --ll-bg: {{ bg_color }};
       --ll-ink: {{ text_color }};
       --ll-muted: {{ muted_color }};
       --ll-accent: {{ accent_color }};
       --ll-line: rgba(247,239,226,.16);
+      --ll-text-secondary: rgba(247,239,226,.8);
+      --ll-text-muted: rgba(247,239,226,.85);
+      --ll-text-subtle: rgba(247,239,226,.74);
     }
 
     #{{ selector }} {
@@ -68,21 +71,20 @@
 
     #{{ selector }} .living-lookbook__copy {
       margin: 0;
-      color: rgba(247,239,226,.74);
+      color: var(--ll-text-subtle);
       font-size: clamp(15px, 1.25vw, 19px);
       line-height: 1.65;
     }
 
     #{{ selector }} .living-lookbook__stage {
       display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: clamp(14px, 1.7vw, 24px);
       align-items: stretch;
     }
 
     #{{ selector }} .living-lookbook-scene {
       position: relative;
-      grid-column: span 4;
       min-height: 520px;
       overflow: hidden;
       border: 1px solid var(--ll-line);
@@ -93,11 +95,9 @@
       box-shadow: 0 12px 40px rgba(0,0,0,.28);
       transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
       outline-offset: 2px;
+      display: flex;
+      flex-direction: column;
     }
-
-    #{{ selector }} .living-lookbook-scene:nth-child(3n+1) { margin-top: 0; }
-    #{{ selector }} .living-lookbook-scene:nth-child(3n+2) { min-height: 620px; }
-    #{{ selector }} .living-lookbook-scene:nth-child(3n) { margin-top: 0; }
 
     @media (prefers-reduced-motion: no-preference) {
       #{{ selector }} .living-lookbook-scene:hover {
@@ -123,8 +123,19 @@
       height: 100%;
       display: block;
       object-fit: cover;
+      aspect-ratio: 4/5;
       will-change: transform;
       transition: transform .7s ease;
+    }
+
+    #{{ selector }} .living-lookbook-scene__image.is-loading {
+      animation: shimmer 1.5s infinite ease-in-out;
+    }
+
+    @keyframes shimmer {
+      0% { opacity: .7; }
+      50% { opacity: 1; }
+      100% { opacity: .7; }
     }
 
     @media (prefers-reduced-motion: no-preference) {
@@ -148,6 +159,8 @@
       flex-direction: column;
       justify-content: space-between;
       padding: clamp(22px, 3vw, 34px);
+      position: relative;
+      z-index: 1;
     }
 
     #{{ selector }} .living-lookbook-pin {
@@ -156,7 +169,8 @@
       align-items: center;
       gap: 12px;
       max-width: min(100%, 360px);
-      padding: 10px 13px 10px 10px;
+      padding: 12px 16px;
+      min-height: 44px;
       border: 1px solid rgba(247,239,226,.22);
       border-radius: 999px;
       background: rgba(8,7,6,.54);
@@ -177,8 +191,9 @@
 
     #{{ selector }} .living-lookbook-pin__label {
       display: block;
-      color: rgba(247,239,226,.72);
+      color: var(--ll-text-secondary);
       letter-spacing: .18em;
+      font-size: 10px;
     }
 
     #{{ selector }} .living-lookbook-pin__title {
@@ -206,7 +221,7 @@
       display: block;
       margin: 14px 0 0;
       max-width: 440px;
-      color: rgba(247,239,226,.76);
+      color: var(--ll-text-muted);
       font-size: 14px;
       line-height: 1.58;
     }
@@ -220,25 +235,57 @@
       font-weight: 900;
       letter-spacing: .18em;
       text-transform: uppercase;
-      border-bottom: 1px solid rgba(247,239,226,.45);
+      border-bottom: 2px solid rgba(247,239,226,.45);
+      transition: border-color .28s ease;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      #{{ selector }} .living-lookbook-scene:hover .living-lookbook-scene__cta {
+        border-color: var(--ll-accent);
+      }
+    }
+
+    #{{ selector }} .living-lookbook-scene--empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.05);
+      color: var(--ll-muted);
+      font-size: 12px;
+      text-align: center;
+      padding: 24px;
+      min-height: 240px;
     }
 
     @media (max-width: 990px) {
-      #{{ selector }} .living-lookbook__header,
-      #{{ selector }} .living-lookbook__stage { grid-template-columns: 1fr; }
-      #{{ selector }} .living-lookbook-scene,
-      #{{ selector }} .living-lookbook-scene:nth-child(n) {
-        grid-column: auto;
-        min-height: 520px;
-        margin-top: 0 !important;
+      #{{ selector }} .living-lookbook__header { grid-template-columns: 1fr; }
+      #{{ selector }} .living-lookbook__stage { grid-template-columns: repeat(2, 1fr); }
+      #{{ selector }} .living-lookbook-scene {
+        min-height: 440px;
       }
     }
 
     @media (max-width: 640px) {
       #{{ selector }} .living-lookbook__wrap { width: min(100% - 28px, {{ section.settings.max_width | default: 1360 }}px); }
-      #{{ selector }} .living-lookbook-scene,
-      #{{ selector }} .living-lookbook-scene:nth-child(n) { min-height: 440px; }
+      #{{ selector }} .living-lookbook__stage { grid-template-columns: 1fr; }
+      #{{ selector }} .living-lookbook-scene {
+        min-height: 380px;
+      }
+      #{{ selector }} .living-lookbook-pin {
+        padding: 10px 13px;
+        min-height: auto;
+      }
       #{{ selector }} .living-lookbook-pin { border-radius: 22px; align-items: flex-start; }
+    }
+
+    @media (prefers-color-scheme: light) {
+      #{{ selector }} {
+        --ll-bg: #f5f5f5;
+        --ll-ink: #1a1a1a;
+        --ll-muted: #666;
+        --ll-text-secondary: rgba(26,26,26,.85);
+        --ll-text-muted: rgba(26,26,26,.9);
+      }
     }
   </style>
 
@@ -263,9 +310,18 @@
         {%- if product != blank and product.url != blank -%}
           {%- assign scene_image = block.settings.image | default: product.featured_image -%}
           <a class="living-lookbook-scene" href="{{ product.url }}" aria-label="Shop {{ product.title | escape }}" {{ block.shopify_attributes }}>
-            <div class="living-lookbook-scene__image">
+            <div class="living-lookbook-scene__image is-loading">
               {%- if scene_image != blank -%}
-                {{ scene_image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 960, 1500', alt: scene_image.alt | default: product.title | escape }}
+                <picture>
+                  <source srcset="{{ scene_image | image_url: width: 480, format: 'webp' }}" media="(max-width: 640px)" type="image/webp">
+                  <source srcset="{{ scene_image | image_url: width: 480 }}" media="(max-width: 640px)">
+                  <source srcset="{{ scene_image | image_url: width: 960, format: 'webp' }}" media="(max-width: 990px)" type="image/webp">
+                  <source srcset="{{ scene_image | image_url: width: 960 }}" media="(max-width: 990px)">
+                  <source srcset="{{ scene_image | image_url: width: 1500, format: 'webp' }}" type="image/webp">
+                  {{ scene_image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '(max-width: 640px) 100vw, (max-width: 990px) 50vw, 33vw', alt: scene_image.alt | default: product.title | escape, fetchpriority: 'low' }}
+                </picture>
+              {%- else -%}
+                <div class="living-lookbook-scene--empty" aria-hidden="true">No image available</div>
               {%- endif -%}
             </div>
             <div class="living-lookbook-scene__veil"></div>
@@ -290,10 +346,73 @@
               </span>
             </div>
           </a>
+        {%- elsif block.shopify_attributes -%}
+          <!-- Block {{ forloop.index }} requires a product selection. Please edit this block and select a product. -->
         {%- endif -%}
       {%- endfor -%}
+      {%- if block_count == 0 -%}
+        <div class="living-lookbook-scene--empty" style="grid-column: 1 / -1;">
+          Add shoppable photo blocks to display products.
+        </div>
+      {%- endif -%}
     </div>
   </div>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": {{ section.settings.title | default: 'Living Lookbook' | json }},
+      "description": {{ section.settings.copy | default: '' | json }},
+      "mainEntity": {
+        "@type": "Collection",
+        "name": {{ section.settings.title | default: 'Living Lookbook' | json }},
+        "numberOfItems": {{ block_count }}
+      }
+    }
+  </script>
+
+  <script>
+    (function() {
+      const selector = '#{{ selector }}';
+      const section = document.querySelector(selector);
+      if (!section) return;
+
+      // Remove loading animation when images load
+      const images = section.querySelectorAll('.living-lookbook-scene__image img');
+      images.forEach(img => {
+        const loadingContainer = img.closest('.living-lookbook-scene__image');
+        
+        function stopLoading() {
+          if (loadingContainer) {
+            loadingContainer.classList.remove('is-loading');
+          }
+        }
+
+        img.addEventListener('load', stopLoading);
+        img.addEventListener('error', function() {
+          if (loadingContainer) {
+            loadingContainer.classList.add('is-error');
+            loadingContainer.innerHTML = '<div class="living-lookbook-scene--empty" aria-hidden="true">Image failed to load</div>';
+          }
+        });
+
+        // Fallback: remove loading after 3 seconds
+        setTimeout(stopLoading, 3000);
+      });
+
+      // Validate product URLs are safe (relative or same-origin)
+      const productLinks = section.querySelectorAll('.living-lookbook-scene');
+      productLinks.forEach(link => {
+        const url = link.getAttribute('href');
+        if (url && !url.startsWith('/') && !url.startsWith(window.location.origin)) {
+          console.warn('Invalid product URL detected:', url);
+          link.setAttribute('href', '#');
+          link.setAttribute('aria-disabled', 'true');
+        }
+      });
+    })();
+  </script>
 </section>
 
 {% schema %}
