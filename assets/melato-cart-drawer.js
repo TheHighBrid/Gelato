@@ -3,7 +3,7 @@
 
   const drawer = document.getElementById('cart-drawer') || document.querySelector('.cart-drawer');
   const overlay = document.getElementById('drip-overlay') || document.querySelector('[data-overlay]');
-  const COMPLIMENTARY_DELIVERY_MESSAGE = 'Complimentary delivery on all orders.';
+  const NO_THRESHOLD_MESSAGE = 'Complimentary delivery on all orders.';
   const FREE_SHIPPING_THRESHOLD = (window.DRIP && window.DRIP.shop && window.DRIP.shop.freeShippingThreshold) || 0;
   const pendingForms = new WeakSet();
   let lastFocused = null;
@@ -94,7 +94,7 @@
       if (!threshold || threshold <= 0) {
         // No threshold configured — show flat "complimentary delivery" message
         const textEl = bar.querySelector('[data-shipping-text], .cart-free-shipping__text');
-        if (textEl) textEl.textContent = COMPLIMENTARY_DELIVERY_MESSAGE;
+        if (textEl) textEl.textContent = NO_THRESHOLD_MESSAGE;
         bar.hidden = false;
         bar.style.display = '';
         return;

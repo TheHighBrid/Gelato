@@ -302,7 +302,8 @@
   }
 
   // ── Delivery date estimate ──────────────────────────────
-  // Calculates min/max delivery window skipping weekends.
+  // NOTE: Skips weekends only (Sat/Sun). Does not account for public holidays
+  // or regional delivery variations — the displayed range is a best-effort estimate.
   // Data attributes on the span drive the range (set via section settings).
   (function(){
     var el=document.querySelector('.melato-trust-delivery-date');
