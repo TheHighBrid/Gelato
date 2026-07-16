@@ -1,0 +1,176 @@
+{% comment %}
+  Melato - Announcement Marquee Section
+  Full-width animated ticker with customizable text, speed, accent colour and divider.
+
+  Add to your theme.liquid layout ABOVE the {% section 'header' %} tag:
+    {% section 'announcement-marquee' %}
+
+  Or add via Shopify Customizer → Add Section → Announcement Marquee
+{% endcomment %}
+
+{% assign ticker_text   = section.settings.ticker_text | default: 'Complimentary delivery on all orders.' %}
+{% assign divider_char  = section.settings.divider_char | default: '✦' %}
+{% assign scroll_speed  = section.settings.scroll_speed | default: 28 %}
+{% assign bg_color      = section.settings.bg_color | default: '#0a0a0a' %}
+{% assign text_color    = section.settings.text_color | default: '#e8e8e8' %}
+{% assign accent_color  = section.settings.accent_color | default: '#8fff00' %}
+{% assign bar_height    = section.settings.bar_height | default: 38 %}
+
+<style>
+  #marquee-{{ section.id }} {
+    --marquee-bg: {{ bg_color }};
+    --marquee-text: {{ text_color }};
+    --marquee-accent: {{ accent_color }};
+    --marquee-height: {{ bar_height }}px;
+    --marquee-speed: {{ scroll_speed }}s;
+    --bar-bg: var(--marquee-bg);
+    --bar-text: var(--marquee-text);
+    --bar-accent: var(--marquee-accent);
+  }
+
+  #marquee-{{ section.id }}.melato-marquee {
+    min-height: var(--marquee-height);
+    background: var(--bar-bg, var(--marquee-bg)) !important;
+    color: var(--bar-text, var(--marquee-text)) !important;
+    border-top: 1px solid color-mix(in srgb, var(--bar-accent, var(--marquee-accent)) 34%, transparent) !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--bar-accent, var(--marquee-accent)) 34%, transparent) !important;
+    overflow: hidden;
+  }
+
+  #marquee-{{ section.id }} .melato-marquee__track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    min-height: var(--marquee-height);
+    background: var(--bar-bg, var(--marquee-bg)) !important;
+    color: var(--bar-text, var(--marquee-text)) !important;
+    animation: melato-marquee-scroll-{{ section.id }} var(--marquee-speed) linear infinite;
+    will-change: transform;
+  }
+
+  #marquee-{{ section.id }} .melato-marquee__item {
+    color: var(--bar-text, var(--marquee-text)) !important;
+    white-space: nowrap;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-size: 11px;
+    line-height: 1;
+    padding: 0 18px;
+  }
+
+  #marquee-{{ section.id }} .melato-marquee__divider {
+    color: var(--bar-accent, var(--marquee-accent)) !important;
+    white-space: nowrap;
+    font-size: 12px;
+    line-height: 1;
+    opacity: 1;
+  }
+
+  #marquee-{{ section.id }} .melato-marquee__sr {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  @keyframes melato-marquee-scroll-{{ section.id }} {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #marquee-{{ section.id }} .melato-marquee__track {
+      animation: none;
+      transform: none;
+    }
+  }
+  #marquee-{{ section.id }}:hover .melato-marquee__track {
+    animation-play-state: paused;
+  }
+</style>
+
+<div
+  id="marquee-{{ section.id }}"
+  class="melato-marquee"
+  role="marquee"
+  aria-label="Announcement"
+  data-announcement-bar
+  data-melato-marquee
+>
+  <div class="melato-marquee__track" aria-hidden="true">
+    {% for i in (1..6) %}
+      <span class="melato-marquee__item">{{ ticker_text }}</span>
+      <span class="melato-marquee__divider" aria-hidden="true">{{ divider_char }}</span>
+    {% endfor %}
+  </div>
+
+  <p class="melato-marquee__sr">{{ ticker_text }}</p>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement Marquee",
+  "tag": "div",
+  "class": "melato-marquee-section",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "ticker_text",
+      "label": "Ticker text",
+      "default": "Complimentary delivery on all orders."
+    },
+    {
+      "type": "text",
+      "id": "divider_char",
+      "label": "Divider character",
+      "default": "✦"
+    },
+    {
+      "type": "range",
+      "id": "scroll_speed",
+      "label": "Scroll speed (seconds - lower = faster)",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "label": "Bar height (px)",
+      "min": 30,
+      "max": 60,
+      "step": 2,
+      "default": 38
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background colour",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text colour",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Divider / accent colour",
+      "default": "#8fff00"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement Marquee"
+    }
+  ]
+}
+{% endschema %}
