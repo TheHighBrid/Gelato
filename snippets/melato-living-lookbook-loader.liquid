@@ -1,0 +1,9 @@
+{%- comment -%}
+  snippets/melato-living-lookbook-loader.liquid
+  Loads lookbook-specific assets only on the living-lookbook page template,
+  keeping global <head> clean. Include once in theme.liquid body footer:
+    {% render 'melato-living-lookbook-loader' %}
+{%- endcomment -%}
+{%- if template.name == 'page' and template.suffix == 'living-lookbook' -%}
+  {%- comment -%} Any additional lookbook-only scripts can be added here. {%- endcomment -%}
+{%- endif -%}
