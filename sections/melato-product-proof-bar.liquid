@@ -1,0 +1,135 @@
+{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign product_title_down = product.title | downcase
+  assign product_type_down = product.product_type | downcase
+
+  assign material_title = product.metafields.custom.material.value | default: 'Material'
+  assign material_text = product.metafields.custom.composition.value | default: 'Premium construction selected for clean movement, everyday wearability, and a composed finish.'
+
+  if product_type_down == 'jeans' or product.tags contains 'type_jeans' or product.tags contains 'category_denim'
+    assign material_title = product.metafields.custom.material.value | default: 'Structured denim'
+    assign material_text = product.metafields.custom.composition.value | default: 'Structured denim with a controlled flare silhouette and a clean everyday finish.'
+  elsif product_title_down contains 'bamboo'
+    assign material_title = product.metafields.custom.material.value | default: 'Bamboo-blend trackwear'
+    assign material_text = product.metafields.custom.composition.value | default: 'Bamboo-blend track fabric selected for a softer handfeel, clean movement, and everyday wearability.'
+  elsif product_title_down contains 'velour'
+    assign material_title = product.metafields.custom.material.value | default: 'Premium velour'
+    assign material_text = product.metafields.custom.composition.value | default: 'Premium velour selected for softness, depth, and a composed sportswear handfeel.'
+  endif
+-%}
+
+<section class="melato-proof section-{{ section.id }}" aria-label="Melato product guarantees">
+  <div class="melato-proof__wrap">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign block_title_down = block.settings.title | downcase
+        assign block_text_down = block.settings.text | downcase
+        assign is_material_block = false
+        assign is_legacy_drop_block = false
+
+        if block_title_down contains 'velour' or block_title_down contains 'material' or block_text_down contains 'hand feel' or block_text_down contains 'drape'
+          assign is_material_block = true
+        endif
+
+        if block_title_down contains 'limited drop'
+          assign is_legacy_drop_block = true
+        endif
+
+        if block_text_down contains 'restock'
+          assign is_legacy_drop_block = true
+        endif
+      -%}
+
+      <div class="melato-proof__item" {{ block.shopify_attributes }}>
+        <span class="melato-proof__icon" aria-hidden="true">{{ block.settings.icon }}</span>
+
+        <div>
+          {%- if is_material_block -%}
+            <strong>{{ material_title }}</strong>
+            <p>{{ material_text }}</p>
+          {%- elsif is_legacy_drop_block -%}
+            <strong>Limited production</strong>
+            <p>Produced in controlled quantities with a current-season product focus.</p>
+          {%- else -%}
+            <strong>{{ block.settings.title }}</strong>
+            <p>{{ block.settings.text }}</p>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Melato product proof bar",
+  "tag": "section",
+  "class": "section melato-section",
+  "blocks": [
+    {
+      "type": "proof",
+      "name": "Proof point",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "default": "✦"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Limited production"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Produced in controlled quantities with a current-season product focus."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato product proof bar",
+      "blocks": [
+        {
+          "type": "proof",
+          "settings": {
+            "icon": "✦",
+            "title": "Limited production",
+            "text": "Produced in controlled quantities with a current-season product focus."
+          }
+        },
+        {
+          "type": "proof",
+          "settings": {
+            "icon": "☁",
+            "title": "Material",
+            "text": "Fabric language adapts to the selected product."
+          }
+        },
+        {
+          "type": "proof",
+          "settings": {
+            "icon": "↗",
+            "title": "Express Shipping For US & CAN Available",
+            "text": "Fast express shipping for United States & Canada available, cost is calculated at checkout"
+          }
+        },
+        {
+          "type": "proof",
+          "settings": {
+            "icon": "⌁",
+            "title": "Secure checkout",
+            "text": "Major cards & Digital Pay."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

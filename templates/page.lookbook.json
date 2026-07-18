@@ -1,0 +1,33 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "melato-lookbook",
+      "settings": {
+        "eyebrow": "Melato Lookbook",
+        "heading": "Styled for motion. Built for presence.",
+        "intro": "A curated editorial view of Melato pieces, built for product discovery and premium retro presentation.",
+        "season_label": "Spring 2026",
+        "product_limit": 12,
+        "show_vendor": false,
+        "bg_color": "#0B0B0B",
+        "surface_color": "#151515",
+        "text_color": "#F4F0E8",
+        "muted_color": "#AFA79A",
+        "accent_color": "#D8B56D",
+        "border_color": "#2A2A2A"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

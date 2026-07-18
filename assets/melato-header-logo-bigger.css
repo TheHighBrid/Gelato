@@ -1,0 +1,150 @@
+/* ============================================================
+   MELATO - HEADER LOGO BIGGER OVERRIDE v4
+   Purpose: force the centered Melato header logo to render larger.
+   Install this AFTER theme.css and AFTER melato-palette-logo-updated.css.
+   ============================================================ */
+
+:root {
+  --melato-header-logo-height-desktop: 34px;
+  --melato-header-logo-height-mobile: 25px;
+  --melato-header-logo-width-desktop: 190px;
+  --melato-header-logo-width-mobile: 140px;
+}
+
+/* Give the header enough vertical space so the larger logo is not clipped. */
+header,
+.header,
+.site-header,
+.shopify-section-header,
+[class*="header"] {
+  overflow: visible !important;
+}
+
+/* Target the actual logo containers used by most Shopify themes. */
+header .header__heading,
+header .header__heading-link,
+header .header__heading-logo-wrapper,
+header .site-header__logo,
+header .site-header__logo-link,
+header .header__logo,
+header .logo,
+.header .header__heading,
+.header .header__heading-link,
+.header .header__heading-logo-wrapper,
+.header .site-header__logo,
+.header .site-header__logo-link,
+.header .header__logo,
+.header .logo {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Strong header-logo image override. Uses height because wide logos can still look tiny when only width is controlled. */
+header .header__heading-logo,
+header .header__heading-logo img,
+header .header__heading-logo svg,
+header .header__heading-link img,
+header .header__heading-link svg,
+header .header__heading-logo-wrapper img,
+header .header__heading-logo-wrapper svg,
+header .site-header__logo img,
+header .site-header__logo svg,
+header .site-header__logo-link img,
+header .site-header__logo-link svg,
+header .header__logo img,
+header .header__logo svg,
+header .logo img,
+header .logo svg,
+header a[href="/"] img,
+header a[href="/"] svg,
+.header .header__heading-logo,
+.header .header__heading-logo img,
+.header .header__heading-logo svg,
+.header .header__heading-link img,
+.header .header__heading-link svg,
+.header .header__heading-logo-wrapper img,
+.header .header__heading-logo-wrapper svg,
+.header .site-header__logo img,
+.header .site-header__logo svg,
+.header .site-header__logo-link img,
+.header .site-header__logo-link svg,
+.header .header__logo img,
+.header .header__logo svg,
+.header .logo img,
+.header .logo svg,
+.header a[href="/"] img,
+.header a[href="/"] svg {
+  height: var(--melato-header-logo-height-desktop) !important;
+  width: auto !important;
+  max-height: none !important;
+  max-width: var(--melato-header-logo-width-desktop) !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* If the theme applies a logo scale variable, override it too. */
+header,
+.header {
+  --logo-width: var(--melato-header-logo-width-desktop) !important;
+  --header-logo-width: var(--melato-header-logo-width-desktop) !important;
+  --header-logo-height: var(--melato-header-logo-height-desktop) !important;
+}
+
+@media screen and (max-width: 749px) {
+  :root {
+    --melato-header-logo-height-mobile: 92px;
+    --melato-header-logo-width-mobile: 530px;
+  }
+
+  header .header__heading-logo,
+  header .header__heading-logo img,
+  header .header__heading-logo svg,
+  header .header__heading-link img,
+  header .header__heading-link svg,
+  header .header__heading-logo-wrapper img,
+  header .header__heading-logo-wrapper svg,
+  header .site-header__logo img,
+  header .site-header__logo svg,
+  header .site-header__logo-link img,
+  header .site-header__logo-link svg,
+  header .header__logo img,
+  header .header__logo svg,
+  header .logo img,
+  header .logo svg,
+  header a[href="/"] img,
+  header a[href="/"] svg,
+  .header .header__heading-logo,
+  .header .header__heading-logo img,
+  .header .header__heading-logo svg,
+  .header .header__heading-link img,
+  .header .header__heading-link svg,
+  .header .header__heading-logo-wrapper img,
+  .header .header__heading-logo-wrapper svg,
+  .header .site-header__logo img,
+  .header .site-header__logo svg,
+  .header .site-header__logo-link img,
+  .header .site-header__logo-link svg,
+  .header .header__logo img,
+  .header .header__logo svg,
+  .header .logo img,
+  .header .logo svg,
+  .header a[href="/"] img,
+  .header a[href="/"] svg {
+    height: var(--melato-header-logo-height-mobile) !important;
+    width: auto !important;
+    max-width: var(--melato-header-logo-width-mobile) !important;
+    max-height: none !important;
+    object-fit: contain !important;
+  }
+
+  header,
+  .header {
+    --logo-width: var(--melato-header-logo-width-mobile) !important;
+    --header-logo-width: var(--melato-header-logo-width-mobile) !important;
+    --header-logo-height: var(--melato-header-logo-height-mobile) !important;
+  }
+}

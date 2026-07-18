@@ -1,0 +1,186 @@
+{% comment %}
+  snippets/product-card.liquid
+  Reusable product card - used in featured-collection, collection page, related products
+  Fix-08: price is rendered from selected_or_first_available_variant so homepage and collection cards cannot disagree.
+  Out-of-stock display (Zara-style): greyed image + bottom "OUT OF STOCK" banner, added by Claude.
+  Usage: {% render 'product-card', product: product %}
+{% endcomment %}
+
+{%- liquid
+  assign card_image_ratio = settings.card_image_ratio | default: 'portrait'
+  assign show_quick_view  = settings.card_quick_view
+  assign show_wishlist    = settings.card_wishlist
+  assign show_rating      = settings.card_show_rating
+  assign swatch_style     = settings.card_swatch_style | default: 'square'
+
+  assign card_variant = product.selected_or_first_available_variant
+  assign card_price = card_variant.price | default: product.price
+  assign card_compare_at_price = card_variant.compare_at_price | default: product.compare_at_price
+
+  assign on_sale = false
+  assign sold_out = false
+  if card_compare_at_price != blank and card_compare_at_price > card_price
+    assign on_sale = true
+  endif
+  unless product.available
+    assign sold_out = true
+  endunless
+-%}
+
+<article class="product-card product-card--{{ card_image_ratio }}{% if sold_out %} product-card--sold-out{% endif %}" data-product-card data-product-handle="{{ product.handle }}" data-product-price="{{ card_price }}">
+
+  {%- comment -%} Media {%- endcomment -%}
+  <div class="product-card__media">
+
+    <a
+      href="{{ product.url }}"
+      aria-label="{{ product.title | escape }}"
+      tabindex="-1"
+    >
+      {%- if product.featured_image != blank -%}
+
+        <img
+          class="product-card__img product-card__img--primary{% if product.images.size == 1 %} product-card__img--only{% endif %}"
+          src="{{ product.featured_image | image_url: width: 600 }}"
+          srcset="
+            {{ product.featured_image | image_url: width: 400  }} 400w,
+            {{ product.featured_image | image_url: width: 600  }} 600w,
+            {{ product.featured_image | image_url: width: 800  }} 800w
+          "
+          sizes="(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+          loading="lazy"
+        >
+
+        {%- if product.images.size > 1 and settings.card_hover_second_image -%}
+          <img
+            class="product-card__img product-card__img--secondary"
+            src="{{ product.images[1] | image_url: width: 600 }}"
+            srcset="
+              {{ product.images[1] | image_url: width: 400 }} 400w,
+              {{ product.images[1] | image_url: width: 600 }} 600w,
+              {{ product.images[1] | image_url: width: 800 }} 800w
+            "
+            sizes="(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw"
+            alt="{{ product.images[1].alt | default: product.title | escape }}"
+            width="{{ product.images[1].width }}"
+            height="{{ product.images[1].height }}"
+            loading="lazy"
+            aria-hidden="true"
+          >
+        {%- endif -%}
+
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__img product-card__img--primary product-card__img--only' }}
+      {%- endif -%}
+    </a>
+
+    {%- comment -%} Badges {%- endcomment -%}
+    <div class="product-card__badges" aria-label="Product badges">
+      {%- if sold_out -%}
+        <span class="badge badge--sold-out">{{ 'products.sold_out' | t }}</span>
+      {%- elsif on_sale -%}
+        {%- assign discount_pct = card_compare_at_price | minus: card_price | times: 100 | divided_by: card_compare_at_price -%}
+        <span class="badge badge--sale">−{{ discount_pct }}%</span>
+      {%- elsif product.tags contains 'new' or product.tags contains 'New' -%}
+        <span class="badge badge--new">{{ 'products.new' | t }}</span>
+      {%- endif -%}
+      {%- if product.tags contains 'limited' or product.tags contains 'Limited' -%}
+        <span class="badge badge--limited">{{ 'products.limited' | t }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- if sold_out -%}
+      <div class="product-card__oos-banner" aria-hidden="true">Out of Stock</div>
+    {%- endif -%}
+
+    {%- comment -%} Wishlist {%- endcomment -%}
+    {%- if show_wishlist -%}
+      <button
+        class="product-card__wishlist"
+        aria-label="{{ 'products.add_to_wishlist' | t }}"
+        data-wishlist-btn="{{ product.id }}"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
+    {%- endif -%}
+
+    {%- comment -%} Quick view {%- endcomment -%}
+    {%- if show_quick_view -%}
+      <button
+        class="product-card__quick-view"
+        aria-label="{{ 'products.quick_view' | t }}: {{ product.title | escape }}"
+        data-quick-view="{{ product.url }}"
+      >
+        {{ 'products.quick_view' | t }}
+      </button>
+    {%- endif -%}
+
+  </div>
+
+  {%- comment -%} Info {%- endcomment -%}
+  <div class="product-card__info">
+
+    {%- if settings.card_show_vendor and product.vendor != blank -%}
+      <p class="product-card__vendor">{{ product.vendor }}</p>
+    {%- endif -%}
+
+    <a href="{{ product.url }}" class="product-card__title">
+      {{ product.title }}
+    </a>
+
+    <div class="product-card__price">
+      {%- if on_sale -%}
+        <span class="price price--sale">{{ card_price | money }}</span>
+        <span class="price price--was">{{ card_compare_at_price | money }}</span>
+      {%- else -%}
+        <span class="price {% if sold_out %}price--muted{% endif %}">{{ card_price | money }}</span>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Color swatches {%- endcomment -%}
+    {%- if swatch_style != 'none' -%}
+      {%- assign color_option = product.options_by_name['Color'] | default: product.options_by_name['Colour'] | default: product.options_by_name['Couleur'] -%}
+      {%- if color_option -%}
+        <div class="product-card__swatches" aria-label="Available colors">
+          {%- for value in color_option.values limit: 6 -%}
+            <span
+              class="swatch swatch--{{ swatch_style }}"
+              style="background-color: {{ value | handle }};"
+              title="{{ value }}"
+              aria-label="{{ value }}"
+            ></span>
+          {%- endfor -%}
+          {%- if color_option.values.size > 6 -%}
+            <span class="text-label" style="line-height:18px;">+{{ color_option.values.size | minus: 6 }}</span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} Star rating (Shopify metafields) {%- endcomment -%}
+    {%- if show_rating and product.metafields.reviews.rating.value != blank -%}
+      <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+        <span style="color:var(--color-accent);font-size:0.7rem;" aria-hidden="true">
+          {%- assign rating = product.metafields.reviews.rating.value -%}
+          ★★★★★
+        </span>
+        <span class="text-label">({{ product.metafields.reviews.rating_count.value }})</span>
+      </div>
+    {%- endif -%}
+
+  </div>
+
+</article>
+
+<style>
+.product-card__media{position:relative}
+.product-card--sold-out .product-card__img--primary{filter:grayscale(1) brightness(.94);opacity:.55}
+.product-card--sold-out .product-card__img--secondary{display:none!important;opacity:0!important}
+.product-card--sold-out .badge--sold-out{display:none}
+.product-card__oos-banner{position:absolute;left:0;right:0;bottom:0;background:rgba(18,18,18,.9);color:#f5f1e8;text-align:center;padding:10px 8px;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;z-index:3;pointer-events:none}
+</style>

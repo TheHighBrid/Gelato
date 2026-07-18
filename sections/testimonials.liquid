@@ -1,0 +1,63 @@
+{% comment %}
+  sections/testimonials.liquid
+{% endcomment %}
+
+{%- if section.blocks.size > 0 -%}
+<section class="section-spacing" style="background:var(--color-surface);">
+  <div class="container">
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="heading-md drip-reveal" style="margin-bottom:48px;">{{ section.settings.heading | newline_to_br }}</h2>
+    {%- endif -%}
+
+    <div class="testimonials-track" role="list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'testimonial' -%}
+          <div class="testimonial-card drip-reveal drip-reveal--delay-{{ forloop.index }}" role="listitem" {{ block.shopify_attributes }}>
+            <div class="testimonial-card__stars" aria-label="{{ block.settings.rating }} out of 5 stars">
+              {%- for i in (1..block.settings.rating) -%}★{%- endfor -%}
+            </div>
+            {%- if block.settings.text != blank -%}
+              <blockquote class="testimonial-card__text">"{{ block.settings.text }}"</blockquote>
+            {%- endif -%}
+            {%- if block.settings.author != blank -%}
+              <cite class="testimonial-card__author">- {{ block.settings.author }}</cite>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "textarea", "id": "text", "label": "Review text" },
+        { "type": "text", "id": "author", "label": "Author name & location" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "THEY SPEAK\nFOR US" }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial", "settings": { "rating": 5, "text": "Best quality tracksuit I've ever owned.", "author": "Karim B. - Montreal" } },
+        { "type": "testimonial", "settings": { "rating": 5, "text": "Sold out in minutes. Worth every penny.", "author": "Yasmine R. - Toronto" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

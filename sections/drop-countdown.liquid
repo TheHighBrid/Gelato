@@ -1,0 +1,527 @@
+{% comment %}
+  MELATO - DROP COUNTDOWN SECTION
+  File: sections/countdown-drop.liquid
+  Add via: Online Store > Themes > Customize > Add section > countdown-drop
+  Configure drop date, label, and CTA from the theme editor.
+{% endcomment %}
+
+{%- assign drop_label = section.settings.drop_label | default: 'DROP 001' -%}
+{%- assign drop_date  = section.settings.drop_date  | default: '' -%}
+{%- assign drop_time  = section.settings.drop_time  | default: '12:00' -%}
+{%- assign cta_text   = section.settings.cta_text   | default: 'NOTIFY ME' -%}
+{%- assign cta_url    = section.settings.cta_url    | default: '#' -%}
+{%- assign tagline    = section.settings.tagline     | default: 'SOMETHING IS COMING.' -%}
+
+{%- comment %} Build ISO datetime string for JS - Shopify metafield date is YYYY-MM-DD {%- endcomment %}
+{%- assign drop_datetime = drop_date | append: 'T' | append: drop_time | append: ':00' -%}
+
+<section
+  id="melato-countdown-{{ section.id }}"
+  class="mlto-cd"
+  data-target="{{ drop_datetime }}"
+  aria-label="{{ drop_label }} Countdown"
+>
+
+  {%- comment %} - Grain texture overlay - {%- endcomment %}
+  <div class="mlto-cd__grain" aria-hidden="true"></div>
+
+  {%- comment %} - Diagonal accent stripe - {%- endcomment %}
+  <div class="mlto-cd__stripe" aria-hidden="true"></div>
+
+  <div class="mlto-cd__inner">
+
+    {%- comment %} - Header - {%- endcomment %}
+    <header class="mlto-cd__header">
+      <span class="mlto-cd__label">{{ drop_label }}</span>
+      <p class="mlto-cd__tagline">{{ tagline }}</p>
+    </header>
+
+    {%- comment %} - Ticker - {%- endcomment %}
+    <div class="mlto-cd__ticker" role="timer" aria-live="off">
+
+      <div class="mlto-cd__unit" id="mlto-days-{{ section.id }}">
+        <div class="mlto-cd__flip-wrap">
+          <span class="mlto-cd__num" data-unit="days">00</span>
+        </div>
+        <span class="mlto-cd__unit-label">DAYS</span>
+      </div>
+
+      <span class="mlto-cd__sep" aria-hidden="true">:</span>
+
+      <div class="mlto-cd__unit" id="mlto-hours-{{ section.id }}">
+        <div class="mlto-cd__flip-wrap">
+          <span class="mlto-cd__num" data-unit="hours">00</span>
+        </div>
+        <span class="mlto-cd__unit-label">HRS</span>
+      </div>
+
+      <span class="mlto-cd__sep" aria-hidden="true">:</span>
+
+      <div class="mlto-cd__unit" id="mlto-mins-{{ section.id }}">
+        <div class="mlto-cd__flip-wrap">
+          <span class="mlto-cd__num" data-unit="mins">00</span>
+        </div>
+        <span class="mlto-cd__unit-label">MIN</span>
+      </div>
+
+      <span class="mlto-cd__sep" aria-hidden="true">:</span>
+
+      <div class="mlto-cd__unit" id="mlto-secs-{{ section.id }}">
+        <div class="mlto-cd__flip-wrap">
+          <span class="mlto-cd__num" data-unit="secs">00</span>
+        </div>
+        <span class="mlto-cd__unit-label">SEC</span>
+      </div>
+
+    </div><!-- /.mlto-cd__ticker -->
+
+    {%- comment %} - Dropped state (shown after drop date passes) - {%- endcomment %}
+    <div class="mlto-cd__dropped" hidden aria-live="polite">
+      <span class="mlto-cd__dropped-text">IT'S LIVE - SHOP NOW</span>
+    </div>
+
+    {%- comment %} - CTA - {%- endcomment %}
+    {%- if cta_url != blank -%}
+      <a
+        href="{{ cta_url }}"
+        class="mlto-cd__cta"
+        {% if section.settings.cta_new_tab %}target="_blank" rel="noopener"{% endif %}
+      >
+        {{ cta_text }}
+      </a>
+    {%- endif -%}
+
+  </div><!-- /.mlto-cd__inner -->
+
+</section>
+
+{%- comment %} ============================================================
+    STYLES - scoped to this section only
+    ============================================================ {%- endcomment %}
+<style>
+  /* ---- Root tokens ---- */
+  #melato-countdown-{{ section.id }} {
+    --cd-bg:        {{ section.settings.bg_color        | default: '#0a0a0a' }};
+    --cd-text:      {{ section.settings.text_color      | default: '#f946' }};
+    --cd-accent:    {{ section.settings.accent_color    | default: '#f87e' }};
+    --cd-card-bg:   {{ section.settings.card_bg_color   | default: '#141414' }};
+    --cd-border:    {{ section.settings.border_color    | default: '#2a2a2a' }};
+    --cd-label-fz:  clamp(0.65rem, 1.2vw, 0.85rem);
+    --cd-num-fz:    clamp(3.5rem,  10vw,  9rem);
+    --cd-tag-fz:    clamp(1.1rem,  3vw,   2rem);
+  }
+
+  /* ---- Section shell ---- */
+  .mlto-cd {
+    position: relative;
+    background: var(--cd-bg);
+    color: var(--cd-text);
+    overflow: hidden;
+    padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 5vw, 4rem);
+    min-height: clamp(320px, 50vh, 560px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  /* ---- Grain overlay ---- */
+  .mlto-cd__grain {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+
+  /* ---- Diagonal accent stripe ---- */
+  .mlto-cd__stripe {
+    position: absolute;
+    top: -20%;
+    right: -5%;
+    width: 55%;
+    height: 160%;
+    background: var(--cd-accent);
+    opacity: 0.04;
+    transform: skewX(-12deg);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ---- Inner wrapper ---- */
+  .mlto-cd__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1.5rem, 4vw, 2.8rem);
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+  }
+
+  /* ---- Header ---- */
+  .mlto-cd__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .mlto-cd__label {
+    display: inline-block;
+    font-size: var(--cd-label-fz);
+    font-weight: 900;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--cd-text);
+    border: 1.5px solid var(--cd-accent);
+    padding: 0.3em 1.1em;
+    line-height: 1;
+  }
+
+  .mlto-cd__tagline {
+    font-size: var(--cd-tag-fz);
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+    margin: 0;
+    color: var(--cd-text);
+  }
+
+  /* ---- Ticker ---- */
+  .mlto-cd__ticker {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(0.5rem, 2vw, 1.2rem);
+  }
+
+  /* ---- Separator ---- */
+  .mlto-cd__sep {
+    font-size: var(--cd-num-fz);
+    font-weight: 900;
+    line-height: 1;
+    color: var(--cd-accent);
+    align-self: flex-start;
+    padding-top: 0.05em;
+    opacity: 0.5;
+    user-select: none;
+  }
+
+  /* ---- Unit block ---- */
+  .mlto-cd__unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  /* ---- Flip card wrapper ---- */
+  .mlto-cd__flip-wrap {
+    background: var(--cd-card-bg);
+    border: 1px solid var(--cd-border);
+    padding: 0.1em 0.25em;
+    position: relative;
+    min-width: 1.8ch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* horizontal rule through centre of card */
+    --rule-h: 1px;
+  }
+
+  .mlto-cd__flip-wrap::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: var(--rule-h);
+    background: var(--cd-bg);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* ---- Number ---- */
+  .mlto-cd__num {
+    font-size: var(--cd-num-fz);
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--cd-text);
+    display: block;
+    min-width: 2ch;
+    transition: opacity 0.12s ease;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  .mlto-cd__num.is-ticking {
+    opacity: 0.2;
+  }
+
+  /* ---- Unit label ---- */
+  .mlto-cd__unit-label {
+    font-size: var(--cd-label-fz);
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    color: var(--cd-text);
+    opacity: 0.45;
+    text-transform: uppercase;
+  }
+
+  /* ---- Dropped state ---- */
+  .mlto-cd__dropped {
+    font-size: clamp(1.2rem, 4vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--cd-accent);
+    animation: mlto-pulse 1.4s ease-in-out infinite;
+  }
+
+  /* ---- CTA button ---- */
+  .mlto-cd__cta {
+    display: inline-block;
+    padding: 0.85em 2.5em;
+    font-size: var(--cd-label-fz);
+    font-weight: 900;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--cd-bg);
+    background: var(--cd-accent);
+    border: 2px solid var(--cd-accent);
+    transition: background 0.18s ease, color 0.18s ease;
+    cursor: pointer;
+  }
+
+  .mlto-cd__cta:hover,
+  .mlto-cd__cta:focus-visible {
+    background: transparent;
+    color: var(--cd-accent);
+    outline: none;
+  }
+
+  /* ---- Keyframes ---- */
+  @keyframes mlto-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.45; }
+  }
+
+  /* ---- Responsive ---- */
+  @media (max-width: 480px) {
+    .mlto-cd__sep { display: none; }
+    .mlto-cd__ticker { gap: 0.4rem; flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+
+{%- comment %} ============================================================
+    JAVASCRIPT - self-contained, no dependencies
+    ============================================================ {%- endcomment %}
+<script>
+(function () {
+  'use strict';
+
+  var section   = document.getElementById('melato-countdown-{{ section.id }}');
+  if (!section) return;
+
+  /* ---- Read target date from data attribute ---- */
+  var rawTarget = section.dataset.target || '';   /* e.g. "2026-06-15T12:00:00" */
+
+  /* ---- Guard: if no date set in theme editor, bail silently ---- */
+  if (!rawTarget || rawTarget === 'T:00') return;
+
+  var target = new Date(rawTarget).getTime();
+  if (isNaN(target)) {
+    console.warn('[Melato Countdown] Invalid drop date:', rawTarget);
+    return;
+  }
+
+  /* ---- DOM refs ---- */
+  var numEls = {
+    days:  section.querySelector('[data-unit="days"]'),
+    hours: section.querySelector('[data-unit="hours"]'),
+    mins:  section.querySelector('[data-unit="mins"]'),
+    secs:  section.querySelector('[data-unit="secs"]')
+  };
+  var ticker  = section.querySelector('.mlto-cd__ticker');
+  var dropped = section.querySelector('.mlto-cd__dropped');
+
+  /* ---- Pad helper ---- */
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+  /* ---- Flash animation helper ---- */
+  function flash(el) {
+    el.classList.add('is-ticking');
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { el.classList.remove('is-ticking'); });
+    });
+  }
+
+  /* ---- Update display ---- */
+  var prevSecs = -1;
+
+  function update() {
+    var now  = Date.now();
+    var diff = target - now;
+
+    /* -- Drop has happened -- */
+    if (diff <= 0) {
+      ticker.hidden  = true;
+      dropped.hidden = false;
+      return; /* stop ticking */
+    }
+
+    /* -- Calculate units -- */
+    var totalSecs = Math.floor(diff / 1000);
+    var d  = Math.floor(totalSecs / 86400);
+    var h  = Math.floor((totalSecs % 86400) / 3600);
+    var m  = Math.floor((totalSecs % 3600)  / 60);
+    var s  = totalSecs % 60;
+
+    /* -- Only repaint on second change -- */
+    if (s !== prevSecs) {
+      flash(numEls.secs);
+      numEls.secs.textContent  = pad(s);
+      numEls.mins.textContent  = pad(m);
+      numEls.hours.textContent = pad(h);
+      numEls.days.textContent  = pad(d);
+      prevSecs = s;
+    }
+
+    requestAnimationFrame(function () {
+      setTimeout(update, 250); /* poll 4× per second - smooth but not expensive */
+    });
+  }
+
+  update();
+
+})();
+</script>
+
+{%- comment %} ============================================================
+    SCHEMA - theme editor settings
+    ============================================================ {%- endcomment %}
+{% schema %}
+{
+  "name": "Melato - Drop Countdown",
+  "tag": "section",
+  "class": "melato-countdown-section",
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "Drop Details"
+    },
+    {
+      "type": "text",
+      "id": "drop_label",
+      "label": "Drop Label",
+      "default": "DROP 001",
+      "info": "e.g. DROP 001 · ACID COLORWAY"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "SOMETHING IS COMING."
+    },
+    {
+      "type": "text",
+      "id": "drop_date",
+      "label": "Drop Date (YYYY-MM-DD)",
+      "info": "Enter date in format: 2026-06-01. Leading zero required for months 01–09.",
+      "placeholder": "2026-06-01"
+    },
+    {
+      "type": "text",
+      "id": "drop_time",
+      "label": "Drop Time (HH:MM - 24h, store timezone)",
+      "default": "12:00",
+      "info": "Uses your browser/store timezone. 12:00 = noon."
+    },
+
+    {
+      "type": "header",
+      "content": "CTA Button"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Button Label",
+      "default": "NOTIFY ME"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Button Link"
+    },
+    {
+      "type": "checkbox",
+      "id": "cta_new_tab",
+      "label": "Open link in new tab",
+      "default": false
+    },
+
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#0a0a0a"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#f0ede6"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent (numbers, border, CTA)",
+      "default": "#c8f53e",
+      "info": "ACID colorway default. Swap to #8B1A1A for BORDEAUX drop."
+    },
+    {
+      "type": "color",
+      "id": "card_bg_color",
+      "label": "Number card background",
+      "default": "#141414"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Card border",
+      "default": "#2a2a2a"
+    }
+
+  ],
+  "presets": [
+    {
+      "name": "Melato - Drop Countdown",
+      "settings": {
+        "drop_label": "DROP 001",
+        "tagline": "SOMETHING IS COMING.",
+        "drop_date": "2026-06-01",
+        "drop_time": "12:00",
+        "cta_text": "NOTIFY ME",
+        "bg_color": "#0a0a0a",
+        "text_color": "#f0ede6",
+        "accent_color": "#c8f53e",
+        "card_bg_color": "#141414",
+        "border_color": "#2a2a2a"
+      }
+    }
+  ]
+}
+{% endschema %}

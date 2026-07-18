@@ -1,0 +1,206 @@
+{%- comment -%}
+=============================================================
+MELATO FIX-04 - SEO META PATCHES
+Contains:
+  A. theme.liquid <head> patch (pagination rel links)
+  B. Corrected homepage meta description text
+  C. Correct product meta description template
+  D. URL redirect instructions
+=============================================================
+{%- endcomment -%}
+
+
+{%- comment -%}
+─────────────────────────────────────────────────────────────
+BLOCK A: theme.liquid - add INSIDE <head>, after existing meta tags
+─────────────────────────────────────────────────────────────
+Fixes:
+  - Pagination rel="prev" / rel="next" for Google indexing
+  - Ensures paginated collection pages share link equity correctly
+─────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{% comment %} ── MELATO FIX-04A: Pagination rel links ── {% endcomment %}
+{%- if paginate -%}
+  {%- if paginate.previous -%}
+    <link rel="prev" href="{{ paginate.previous.url | prepend: shop.url }}">
+  {%- endif -%}
+  {%- if paginate.next -%}
+    <link rel="next" href="{{ paginate.next.url | prepend: shop.url }}">
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%} ── MELATO FIX-04A: Org JSON-LD (add once, in theme.liquid) ── {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Melato",
+  "url": "https://melato.ca",
+  "logo": "https://melato.ca/cdn/shop/files/Melato-logo-lightbrown-ontransparent.png",
+  "sameAs": [
+    "https://www.instagram.com/melato.ca"
+  ],
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Ottawa",
+    "addressRegion": "ON",
+    "addressCountry": "CA"
+  }
+}
+</script>
+
+{%- comment -%} ── MELATO FIX-04A: Website sitelinks search box ── {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Melato",
+  "url": "https://melato.ca",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://melato.ca/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+
+
+{%- comment -%}
+─────────────────────────────────────────────────────────────
+BLOCK B: HOMEPAGE META DESCRIPTION CORRECTION
+─────────────────────────────────────────────────────────────
+WHERE TO FIX:
+  Shopify Admin → Online Store → Preferences
+  → Homepage meta description field
+
+CURRENT (BROKEN - live on site):
+  "Melato is an Canadian-based premium apparel label, crafted with
+  attention cut with intent using the high quality fabric materials..."
+
+ERRORS:
+  1. "an Canadian" - should be "a Canadian"
+  2. "crafted with attention cut with intent" - missing comma, reads as run-on
+  3. Too long - gets truncated in SERPs
+  4. Keyword weak - "high quality fabric materials" is generic
+
+CORRECTED VERSION (paste this into the field):
+─────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{% comment %}
+PASTE INTO: Shopify Admin → Online Store → Preferences → Meta description
+
+{% endcomment %}
+
+
+{%- comment -%}
+─────────────────────────────────────────────────────────────
+BLOCK C: HOMEPAGE TITLE CORRECTION
+─────────────────────────────────────────────────────────────
+WHERE: Shopify Admin → Online Store → Preferences → Homepage title
+
+CURRENT: "Melato | Premium Canadian Apparel | Retro & Modern Drop Collections"
+IMPROVED:
+─────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{% comment %}
+PASTE INTO: Shopify Admin → Online Store → Preferences → Homepage title
+
+Melato - Premium Velour Tracksuits
+{% endcomment %}
+
+
+{%- comment -%}
+─────────────────────────────────────────────────────────────
+BLOCK D: NOIR ALIBI PRODUCT META DESCRIPTION FIX
+─────────────────────────────────────────────────────────────
+WHERE: Shopify Admin → Products → "The Noir Alibi Lace Corset Dress"
+       → Search engine listing → Meta description
+
+CURRENT (BROKEN - live):
+  "Noir Alibi Lace Corset DressThe Noir Alibi is a full-length..."
+  ↑ "DressThe" - no space, reads as one word in SERPs
+
+CORRECTED:
+─────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{% comment %}
+PASTE INTO: Products → Noir Alibi → Search engine listing → Description
+
+Full-length black lace corset dress. Floral lace over sheer base, vertical seam channels, slim straps, gold-tone Melato hardware. Limited production. 
+{% endcomment %}
+
+
+{%- comment -%}
+─────────────────────────────────────────────────────────────
+BLOCK E: URL REDIRECT INSTRUCTIONS
+─────────────────────────────────────────────────────────────
+WHERE: Shopify Admin → Online Store → URL Redirects → Add redirect
+─────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{% comment %}
+=== REDIRECTS TO ADD (3 total) ===
+
+1. Fix /pages/about → canonical About page
+   FROM: /pages/about
+   TO:   /pages/our-story
+
+2. Fix denim slug (remove -1 suffix):
+   FIRST: Change handle in Collections → Denim → SEO → URL handle
+          from "denim-1" to "denim"
+   THEN add redirect:
+   FROM: /collections/denim-1
+   TO:   /collections/denim
+
+3. Fix the broken collection handle:
+   FROM: /collections/drop-001-texture-form
+   TO:   /collections/tracksuits
+   (Note: Shopify may not allow the trailing period - fix the source links
+    in cart-drawer.liquid and hero section directly, as in FIX-01.)
+
+{% endcomment %}
+
+
+{%- comment -%}
+─────────────────────────────────────────────────────────────
+BLOCK F: PRODUCT META DESCRIPTION TEMPLATE
+─────────────────────────────────────────────────────────────
+Use this template structure for ALL product SEO descriptions.
+The pattern: [Material/Construction]. [Key detail]. [Limited edition line].
+[Shipping hook]. Max 155 characters.
+─────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{% comment %}
+=== PRODUCT META DESCRIPTION TEMPLATE ===
+
+[Product type] - [1–2 construction details]. [Key material or finish]. Limited production.
+
+EXAMPLES:
+
+Divididos Velour Track Jacket:
+"Heritage-coded velour track jacket. Colorblock panel construction, YKK metal zip, embroidered Melato branding. Limited production."
+
+Divididos Velour Track Pant:
+"Matching velour track pant to the Divididos jacket. Colorblock panels, elastic waistband, tapered silhouette. Limited run."
+
+Chū Velour Track Jacket:
+"Grey-blue geometric colorblock velour track jacket. Premium velour, structured collar, embroidered branding. Limited production."
+
+Hendrix Distressed Flare Jean:
+"Black distressed flare denim jeans. Raw-edge hem, rigid construction, culture-forward silhouette. Limited run."
+
+Reliance Bamboo Track Jacket:
+"Premium bamboo-blend track jacket in black and salmon. Soft-touch finish, structured panels, YKK hardware. Limited drop."
+
+Noir Alibi Lace Corset Dress:
+"Full-length black lace corset dress. Floral lace over sheer base, vertical seam channels, gold-tone Melato hardware. Limited."
+
+{% endcomment %}

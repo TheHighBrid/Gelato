@@ -1,0 +1,46 @@
+<div class="melato-care-bleed">
+<div class="melato-care">
+  {%- if section.settings.heading != blank -%}<h2 class="melato-care__heading">{{ section.settings.heading }}</h2>{%- endif -%}
+  <div class="melato-care__accordion">
+    {%- for block in section.blocks -%}
+      {% render 'melato-care-note', title: block.settings.fabric, text: block.settings.care_text %}
+    {%- endfor -%}
+  </div>
+</div>
+</div>
+
+{% stylesheet %}
+.melato-care-bleed { background: #f4ead8 !important; }
+.melato-care { max-width: 720px; margin: 0 auto; padding: 0 1.25rem clamp(2.5rem,6vw,4rem); }
+.melato-care__heading { color: #0a0a0a !important; font-weight: 500; text-align: center; margin: 0 0 1.5rem; font-size: 1.4rem; }
+.melato-care__accordion { border-top: 1px solid rgba(10,10,10,.14); }
+.melato-care__row { border-bottom: 1px solid rgba(10,10,10,.14); }
+.melato-care__row-title { color: #0a0a0a !important; font-size: 1.02rem; padding: 1.1rem .25rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.melato-care__row-title::-webkit-details-marker { display: none; }
+.melato-care__row-title::after { content: '+'; font-size: 1.2rem; color: #6f6d68; transition: transform .2s ease; }
+.melato-care__row[open] .melato-care__row-title::after { transform: rotate(45deg); }
+.melato-care__row-title:focus-visible { outline: 1px solid #0a0a0a; outline-offset: 2px; }
+.melato-care__row-text { color: #3a3833 !important; padding: 0 .25rem 1.1rem; font-size: .9rem; line-height: 1.55; }
+@media (prefers-reduced-motion: reduce) { .melato-care__row-title::after { transition: none; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Melato Care Library", "tag": "section",
+  "settings": [{ "type": "text", "id": "heading", "label": "Heading", "default": "Garment care library" }],
+  "blocks": [{ "type": "fabric", "name": "Fabric", "settings": [
+      { "type": "text", "id": "fabric", "label": "Fabric name" },
+      { "type": "textarea", "id": "care_text", "label": "Care instructions" }
+  ]}],
+  "max_blocks": 10,
+  "presets": [{ "name": "Melato Care Library", "blocks": [
+      { "type": "fabric", "settings": { "fabric": "Velour", "care_text": "Wash cold, inside out. Use gentle detergent. Avoid high heat and rough tumble drying. Air dry to preserve pile texture." } },
+      { "type": "fabric", "settings": { "fabric": "Satin", "care_text": "Gentle cycle or hand wash. Avoid high heat. Steam lightly from distance." } },
+      { "type": "fabric", "settings": { "fabric": "Bamboo", "care_text": "Wash cold, inside out. Avoid bleach and fabric softener. Air dry to protect softness and breathability." } },
+      { "type": "fabric", "settings": { "fabric": "Denim", "care_text": "Wash sparingly, cold, inside out. Hang dry away from direct sun." } },
+      { "type": "fabric", "settings": { "fabric": "Leather / faux leather", "care_text": "Wipe clean. Do not soak. Store shaped and away from heat." } },
+      { "type": "fabric", "settings": { "fabric": "Lace / mesh", "care_text": "Hand wash or use a delicate bag. Avoid harsh spin." } },
+      { "type": "fabric", "settings": { "fabric": "Knitwear", "care_text": "Fold, do not hang. Reshape while drying." } }
+  ]}]
+}
+{% endschema %}

@@ -1,0 +1,71 @@
+{% comment %}
+  sections/brand-story.liquid
+{% endcomment %}
+
+{%- assign img_pos = section.settings.image_position | default: 'right' -%}
+
+<section class="brand-story section-spacing">
+  <div
+    class="brand-story"
+    style="{% if img_pos == 'left' %}direction:rtl;{% endif %}"
+  >
+
+    <div class="brand-story__media drip-reveal" style="{% if img_pos == 'left' %}direction:ltr;{% endif %}">
+      {%- if section.settings.image != blank -%}
+        <img
+          src="{{ section.settings.image | image_url: width: 1000 }}"
+          srcset="{{ section.settings.image | image_url: width: 600 }} 600w, {{ section.settings.image | image_url: width: 1000 }} 1000w"
+          sizes="50vw"
+          alt="{{ section.settings.image.alt | escape }}"
+          loading="lazy"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+        >
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'brand-story__placeholder' }}
+      {%- endif -%}
+    </div>
+
+    <div class="brand-story__content drip-reveal drip-reveal--delay-2" style="{% if img_pos == 'left' %}direction:ltr;{% endif %}">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="text-label u-accent-line" style="margin-bottom:20px;">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="heading-lg" style="margin-bottom:24px;">{{ section.settings.heading | newline_to_br }}</h2>
+      {%- endif -%}
+      {%- if section.settings.body != blank -%}
+        <p style="color:var(--color-muted);font-size:1rem;line-height:1.8;max-width:480px;margin-bottom:36px;">{{ section.settings.body }}</p>
+      {%- endif -%}
+      {%- if section.settings.cta_label != blank -%}
+        <a href="{{ section.settings.cta_url }}" class="btn btn--primary">{{ section.settings.cta_label }}</a>
+      {%- endif -%}
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Story",
+  "tag": "section",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "THE\nCULTURE\nWEARS US" },
+    { "type": "textarea", "id": "body", "label": "Body text" },
+    { "type": "text", "id": "cta_label", "label": "Button text", "default": "Our Story" },
+    { "type": "url", "id": "cta_url", "label": "Button link" },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "right"
+    }
+  ],
+  "presets": [{ "name": "Brand Story" }]
+}
+{% endschema %}

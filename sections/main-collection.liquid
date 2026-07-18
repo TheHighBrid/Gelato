@@ -1,0 +1,406 @@
+{% comment %}
+  sections/main-collection.liquid
+  v2.0 — Filter Persistence + AJAX Grid + Sort UX
+  - Sort select: URL param via pushState, no full reload
+  - Filters: active pills above grid, persist across navigation via sessionStorage
+  - AJAX product grid refresh on filter/sort change
+  - Active filter count badge on filter button
+  - Clear all filters pill in toolbar
+  - Fully accessible: aria-live grid, aria-pressed on active filters
+{% endcomment %}
+
+{%- liquid
+  assign cols_desktop = section.settings.columns_desktop | default: 4
+  assign cols_mobile  = section.settings.columns_mobile  | default: 2
+  assign per_page     = section.settings.products_per_page | default: 24
+  assign sort_by      = collection.sort_by | default: collection.default_sort_by
+  assign active_filter_count = 0
+  for filter in collection.filters
+    for value in filter.values
+      if value.active
+        assign active_filter_count = active_filter_count | plus: 1
+      endif
+    endfor
+  endfor
+-%}
+
+<!-- COLLECTION HEADER -->
+<div class="melato-collection-header">
+  {%- if collection.image -%}
+    <div class="melato-collection-hero">
+      <img
+        src="{{ collection.image | image_url: width: 2000 }}"
+        alt="{{ collection.title | escape }}"
+        width="2000"
+        height="400"
+        loading="eager"
+        fetchpriority="high"
+        style="width:100%;height:100%;object-fit:cover;"
+      >
+      <div class="melato-collection-hero__overlay"></div>
+      <div class="melato-collection-hero__content">
+        <p class="melato-collection-eyebrow">Collection</p>
+        <h1 class="melato-collection-title">{{ collection.title }}</h1>
+        {%- if collection.description != blank -%}
+          <p class="melato-collection-desc">{{ collection.description }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- else -%}
+    <div class="melato-collection-header__text">
+      <p class="melato-collection-eyebrow">Collection</p>
+      <h1 class="melato-collection-title">{{ collection.title }}</h1>
+      {%- if collection.description != blank -%}
+        <p class="melato-collection-desc">{{ collection.description }}</p>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+
+<!-- TOOLBAR -->
+<div class="melato-collection-toolbar" data-collection-toolbar>
+  <div class="melato-collection-toolbar__left">
+
+    {%- if section.settings.enable_filtering -%}
+    <button
+      class="melato-filter-btn"
+      data-filter-open
+      aria-expanded="false"
+      aria-controls="melato-filter-drawer"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/>
+      </svg>
+      Filter
+      {%- if active_filter_count > 0 -%}
+        <span class="melato-filter-btn__badge" data-active-filter-count>{{ active_filter_count }}</span>
+      {%- else -%}
+        <span class="melato-filter-btn__badge" data-active-filter-count style="display:none">0</span>
+      {%- endif -%}
+    </button>
+    {%- endif -%}
+
+    <span class="melato-collection-count" data-product-count>
+      {{ collection.products_count }}
+      {{ collection.products_count | pluralize: 'piece', 'pieces' }}
+    </span>
+
+    {%- if active_filter_count > 0 -%}
+    <button class="melato-clear-filters" data-clear-all-filters>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      Clear all
+    </button>
+    {%- else -%}
+    <button class="melato-clear-filters" data-clear-all-filters style="display:none">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      Clear all
+    </button>
+    {%- endif -%}
+
+  </div>
+
+  <div class="melato-collection-toolbar__right">
+    {%- if section.settings.enable_sorting -%}
+    <div class="melato-sort-wrap">
+      <label for="melato-sort-select" class="visually-hidden">Sort by</label>
+      <select
+        id="melato-sort-select"
+        class="melato-sort-select"
+        data-sort-select
+        aria-label="Sort products by"
+      >
+        <option value="manual"              {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
+        <option value="best-selling"         {% if sort_by == 'best-selling' %}selected{% endif %}>Best Selling</option>
+        <option value="price-ascending"      {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: Low → High</option>
+        <option value="price-descending"     {% if sort_by == 'price-descending' %}selected{% endif %}>Price: High → Low</option>
+        <option value="created-descending"   {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
+        <option value="title-ascending"      {% if sort_by == 'title-ascending' %}selected{% endif %}>A → Z</option>
+      </select>
+      <svg class="melato-sort-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<!-- ACTIVE FILTER PILLS -->
+{%- if active_filter_count > 0 -%}
+<div class="melato-active-filters" data-active-filters-bar>
+  <div class="melato-active-filters__pills">
+    {%- for filter in collection.filters -%}
+      {%- for value in filter.values -%}
+        {%- if value.active -%}
+          <a
+            href="{{ value.url_to_remove }}"
+            class="melato-active-filter-pill"
+            data-filter-pill
+            aria-label="Remove filter: {{ filter.label }} {{ value.label }}"
+          >
+            <span>{{ filter.label }}: {{ value.label }}</span>
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+{%- else -%}
+<div class="melato-active-filters" data-active-filters-bar style="display:none">
+  <div class="melato-active-filters__pills"></div>
+</div>
+{%- endif -%}
+
+<!-- FILTER DRAWER -->
+{%- if section.settings.enable_filtering -%}
+<div
+  id="melato-filter-drawer"
+  class="melato-filter-drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Filter products"
+  aria-hidden="true"
+  data-filter-drawer
+>
+  <div class="melato-filter-drawer__header">
+    <h2 class="melato-filter-drawer__title">Filter</h2>
+    <button
+      class="melato-filter-drawer__close"
+      type="button"
+      aria-label="Close filters"
+      data-filter-close
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="melato-filter-drawer__body">
+    {%- for filter in collection.filters -%}
+      <div class="melato-filter-group" data-filter-group="{{ filter.param_name }}">
+        <button
+          class="melato-filter-group__trigger"
+          type="button"
+          aria-expanded="true"
+          aria-controls="fg-{{ filter.param_name }}"
+        >
+          <span>{{ filter.label }}</span>
+          {%- assign group_active = 0 -%}
+          {%- for v in filter.values -%}
+            {%- if v.active -%}{%- assign group_active = group_active | plus: 1 -%}{%- endif -%}
+          {%- endfor -%}
+          {%- if group_active > 0 -%}
+            <span class="melato-filter-group__count">{{ group_active }}</span>
+          {%- endif -%}
+          <svg class="melato-filter-group__chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div id="fg-{{ filter.param_name }}" class="melato-filter-group__options">
+          {%- if filter.type == 'list' -%}
+            {%- for value in filter.values -%}
+              <label class="melato-filter-option">
+                <input
+                  type="checkbox"
+                  class="melato-filter-option__input visually-hidden"
+                  name="{{ filter.param_name }}"
+                  value="{{ value.value }}"
+                  {% if value.active %}checked{% endif %}
+                  data-filter-input
+                >
+                <span class="melato-filter-option__box" aria-hidden="true"></span>
+                <span class="melato-filter-option__label">
+                  {{ value.label }}
+                  <span class="melato-filter-option__count">({{ value.count }})</span>
+                </span>
+              </label>
+            {%- endfor -%}
+          {%- elsif filter.type == 'price_range' -%}
+            <div class="melato-price-range">
+              <div class="melato-price-range__inputs">
+                <div class="melato-price-range__field">
+                  <label for="pr-min-{{ filter.param_name }}">Min</label>
+                  <input
+                    id="pr-min-{{ filter.param_name }}"
+                    type="number"
+                    name="{{ filter.min_value.param_name }}"
+                    value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | remove: ',' }}{% endif %}"
+                    placeholder="{{ filter.range_min | money_without_currency | remove: ',' }}"
+                    min="{{ filter.range_min | money_without_currency | remove: ',' }}"
+                    max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                    data-filter-price-input
+                  >
+                </div>
+                <span class="melato-price-range__sep">–</span>
+                <div class="melato-price-range__field">
+                  <label for="pr-max-{{ filter.param_name }}">Max</label>
+                  <input
+                    id="pr-max-{{ filter.param_name }}"
+                    type="number"
+                    name="{{ filter.max_value.param_name }}"
+                    value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | remove: ',' }}{% endif %}"
+                    placeholder="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                    min="{{ filter.range_min | money_without_currency | remove: ',' }}"
+                    max="{{ filter.range_max | money_without_currency | remove: ',' }}"
+                    data-filter-price-input
+                  >
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="melato-filter-drawer__footer">
+    <button class="melato-filter-clear-btn" type="button" data-filter-drawer-clear>Clear all</button>
+    <button class="melato-filter-apply-btn" type="button" data-filter-apply>Show results</button>
+  </div>
+</div>
+{%- endif -%}
+
+<!-- PRODUCT GRID -->
+<div
+  class="melato-collection-grid"
+  id="melato-product-grid"
+  aria-live="polite"
+  aria-label="Product grid"
+  data-product-grid
+  data-cols-desktop="{{ cols_desktop }}"
+  data-cols-mobile="{{ cols_mobile }}"
+>
+  {%- paginate collection.products by per_page -%}
+    {%- if collection.products.size > 0 -%}
+      <div
+        class="melato-product-grid__inner"
+        style="--cols-desktop:{{ cols_desktop }};--cols-mobile:{{ cols_mobile }}"
+      >
+        {%- for product in collection.products -%}
+          <div class="melato-product-grid__item drip-reveal drip-reveal--delay-{{ forloop.index0 | modulo: 4 | plus: 1 }}">
+            {%- render 'product-card', product: product -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="melato-pagination" aria-label="Collection page navigation">
+          {{ paginate | default_pagination }}
+        </nav>
+      {%- endif -%}
+
+    {%- else -%}
+      <div class="melato-collection-empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".8" opacity=".25" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <p class="melato-collection-empty__title">No products found</p>
+        <p class="melato-collection-empty__sub">Try adjusting your filters.</p>
+        <a href="{{ collection.url }}" class="melato-clear-filters-cta">Clear all filters</a>
+      </div>
+    {%- endif -%}
+  {%- endpaginate -%}
+</div>
+
+<style>
+/* ── Collection Header ──────────────────────────────────── */
+.melato-collection-header{background:#080808}
+.melato-collection-hero{position:relative;height:320px;overflow:hidden}
+.melato-collection-hero__overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,.85) 0%,rgba(8,8,8,.3) 60%,transparent 100%)}
+.melato-collection-hero__content{position:absolute;bottom:0;left:0;right:0;padding:32px min(5vw,60px)}
+.melato-collection-header__text{padding:48px min(5vw,60px) 32px}
+.melato-collection-eyebrow{font-family:var(--font-mono-family);font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:#d3a74a;margin:0 0 8px}
+.melato-collection-title{font-family:var(--font-heading-family);font-size:clamp(40px,7vw,100px);line-height:.9;text-transform:uppercase;letter-spacing:-.02em;color:#f5f1e8;margin:0 0 12px}
+.melato-collection-desc{font-size:.9rem;color:#9b968d;max-width:540px;line-height:1.6;margin:0}
+/* ── Toolbar ───────────────────────────────────────────── */
+.melato-collection-toolbar{display:flex;align-items:center;justify-content:space-between;padding:14px min(5vw,60px);border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);background:#0a0a0b;gap:12px;flex-wrap:wrap}
+.melato-collection-toolbar__left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.melato-collection-toolbar__right{display:flex;align-items:center;gap:12px}
+.melato-filter-btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono-family);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#f5f1e8;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:8px 14px;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
+.melato-filter-btn:hover{border-color:rgba(211,167,74,.5);background:rgba(211,167,74,.06)}
+.melato-filter-btn[aria-expanded=true]{border-color:#d3a74a;background:rgba(211,167,74,.1)}
+.melato-filter-btn__badge{display:inline-flex;align-items:center;justify-content:center;min-width:18px;height:18px;padding:0 4px;background:#d3a74a;color:#080808;border-radius:999px;font-size:.55rem;font-weight:700;letter-spacing:0;margin-left:2px}
+.melato-collection-count{font-family:var(--font-mono-family);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:#9b968d}
+.melato-clear-filters{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-mono-family);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:#f0717b;background:rgba(240,113,123,.08);border:1px solid rgba(240,113,123,.2);border-radius:10px;padding:7px 12px;cursor:pointer;transition:background .2s,border-color .2s}
+.melato-clear-filters:hover{background:rgba(240,113,123,.15);border-color:rgba(240,113,123,.4)}
+/* Sort select */
+.melato-sort-wrap{position:relative;display:inline-flex;align-items:center}
+.melato-sort-select{-webkit-appearance:none;appearance:none;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#f5f1e8;font-family:var(--font-mono-family);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 32px 8px 12px;border-radius:10px;cursor:pointer;transition:border-color .2s;outline:none}
+.melato-sort-select:hover,.melato-sort-select:focus{border-color:rgba(211,167,74,.5)}
+.melato-sort-chevron{position:absolute;right:10px;pointer-events:none;color:#9b968d}
+/* ── Active filter pills ─────────────────────────────────── */
+.melato-active-filters{padding:10px min(5vw,60px);background:#080808;border-bottom:1px solid rgba(255,255,255,.05)}
+.melato-active-filters__pills{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.melato-active-filter-pill{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono-family);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:#f5f1e8;background:rgba(211,167,74,.1);border:1px solid rgba(211,167,74,.25);border-radius:999px;padding:5px 10px;text-decoration:none;transition:background .2s,border-color .2s}
+.melato-active-filter-pill:hover{background:rgba(240,113,123,.12);border-color:rgba(240,113,123,.3);color:#f0717b}
+/* ── Filter Drawer ─────────────────────────────────────── */
+.melato-filter-drawer{position:fixed;top:0;left:0;width:min(360px,100vw);height:100%;background:#0e0e0f;border-right:1px solid rgba(255,255,255,.08);z-index:500;display:flex;flex-direction:column;transform:translateX(-105%);transition:transform .35s cubic-bezier(.25,.46,.45,.94);overflow:hidden}
+.melato-filter-drawer.is-open{transform:translateX(0)}
+.melato-filter-drawer__header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.melato-filter-drawer__title{font-family:var(--font-heading-family);font-size:1.4rem;letter-spacing:.08em;text-transform:uppercase;color:#f5f1e8;margin:0}
+.melato-filter-drawer__close{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(255,255,255,.1);background:none;color:#9b968d;cursor:pointer;transition:border-color .2s,color .2s}
+.melato-filter-drawer__close:hover{border-color:#d3a74a;color:#d3a74a}
+.melato-filter-drawer__body{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+.melato-filter-group{border-bottom:1px solid rgba(255,255,255,.06)}
+.melato-filter-group__trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:none;border:none;font-family:var(--font-mono-family);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:#f5f1e8;cursor:pointer;gap:8px;transition:color .2s}
+.melato-filter-group__trigger:hover{color:#d3a74a}
+.melato-filter-group__count{min-width:18px;height:18px;padding:0 4px;background:rgba(211,167,74,.2);color:#d3a74a;border-radius:999px;font-size:.55rem;display:inline-flex;align-items:center;justify-content:center;margin-left:auto}
+.melato-filter-group__chevron{flex-shrink:0;transition:transform .25s;color:#9b968d;margin-left:4px}
+.melato-filter-group__trigger[aria-expanded=false] .melato-filter-group__chevron{transform:rotate(-90deg)}
+.melato-filter-group__options{padding:4px 24px 16px;display:flex;flex-direction:column;gap:8px}
+.melato-filter-group__options[aria-hidden=true]{display:none}
+.melato-filter-option{display:flex;align-items:center;gap:10px;cursor:pointer;padding:4px 0}
+.melato-filter-option__input{position:absolute;opacity:0;width:0;height:0}
+.melato-filter-option__box{width:18px;height:18px;flex-shrink:0;border:1px solid rgba(255,255,255,.15);border-radius:5px;display:flex;align-items:center;justify-content:center;transition:background .2s,border-color .2s}
+.melato-filter-option__input:checked~.melato-filter-option__box{background:#d3a74a;border-color:#d3a74a}
+.melato-filter-option__input:checked~.melato-filter-option__box::after{content:'';display:block;width:10px;height:7px;border-left:2px solid #080808;border-bottom:2px solid #080808;transform:rotate(-45deg) translateY(-1px)}
+.melato-filter-option__input:focus-visible~.melato-filter-option__box{outline:2px solid #d3a74a;outline-offset:2px}
+.melato-filter-option__label{font-size:.8rem;color:#d8d0c4;line-height:1.3}
+.melato-filter-option__count{font-family:var(--font-mono-family);font-size:.58rem;color:#9b968d;margin-left:3px}
+/* Price range */
+.melato-price-range__inputs{display:flex;align-items:center;gap:10px}
+.melato-price-range__field{display:flex;flex-direction:column;gap:4px;flex:1}
+.melato-price-range__field label{font-family:var(--font-mono-family);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:#9b968d}
+.melato-price-range__field input{background:#171717;border:1px solid rgba(255,255,255,.1);color:#f5f1e8;border-radius:8px;padding:8px 10px;font-size:.82rem;width:100%;transition:border-color .2s}
+.melato-price-range__field input:focus{outline:none;border-color:#d3a74a}
+.melato-price-range__sep{color:#9b968d;font-size:.8rem;flex-shrink:0}
+/* Drawer footer */
+.melato-filter-drawer__footer{display:flex;gap:10px;padding:16px 24px;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.melato-filter-clear-btn{flex:1;min-height:44px;background:none;border:1px solid rgba(255,255,255,.1);color:#9b968d;font-family:var(--font-mono-family);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;border-radius:12px;cursor:pointer;transition:border-color .2s,color .2s}
+.melato-filter-clear-btn:hover{border-color:#f0717b;color:#f0717b}
+.melato-filter-apply-btn{flex:2;min-height:44px;background:#9e1824;border:0;color:#fff;font-family:var(--font-mono-family);font-size:.65rem;letter-spacing:.15em;font-weight:700;text-transform:uppercase;border-radius:12px;cursor:pointer;transition:background .2s}
+.melato-filter-apply-btn:hover{background:#b81e2c}
+/* ── Product Grid ───────────────────────────────────────── */
+.melato-collection-grid{padding:28px min(5vw,60px) 80px;background:#080808;min-height:400px;position:relative}
+.melato-product-grid__inner{display:grid;grid-template-columns:repeat(var(--cols-desktop,4),1fr);gap:20px}
+.melato-product-grid__item{}
+/* Loading state */
+.melato-collection-grid.is-loading::after{content:'';position:absolute;inset:0;background:rgba(8,8,8,.6);z-index:10}
+.melato-collection-grid.is-loading::before{content:'';position:absolute;top:50%;left:50%;width:32px;height:32px;margin:-16px 0 0 -16px;border:2px solid rgba(211,167,74,.2);border-top-color:#d3a74a;border-radius:50%;animation:colSpin .7s linear infinite;z-index:11}
+@keyframes colSpin{to{transform:rotate(360deg)}}
+/* Empty state */
+.melato-collection-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:80px 0;text-align:center}
+.melato-collection-empty__title{font-family:var(--font-heading-family);font-size:1.4rem;letter-spacing:.06em;text-transform:uppercase;color:#f5f1e8;margin:0}
+.melato-collection-empty__sub{font-family:var(--font-mono-family);font-size:.62rem;letter-spacing:.1em;color:#9b968d;margin:0}
+.melato-clear-filters-cta{font-family:var(--font-mono-family);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#d3a74a;text-decoration:none;margin-top:8px;border-bottom:1px solid rgba(211,167,74,.3)}
+/* Pagination */
+.melato-pagination{text-align:center;margin-top:48px;padding-bottom:20px}
+.melato-pagination .pagination__item{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:40px;border:1px solid rgba(255,255,255,.1);border-radius:10px;margin:0 3px;font-family:var(--font-mono-family);font-size:.65rem;color:#9b968d;text-decoration:none;transition:border-color .2s,color .2s,background .2s}
+.melato-pagination .pagination__item:hover,.melato-pagination .pagination__item.active{border-color:#d3a74a;color:#d3a74a;background:rgba(211,167,74,.08)}
+/* ── Responsive ────────────────────────────────────────── */
+@media(max-width:900px){
+  .melato-product-grid__inner{grid-template-columns:repeat(var(--cols-mobile,2),1fr);gap:12px}
+  .melato-collection-toolbar{padding:12px 16px}
+  .melato-collection-grid{padding:16px 16px 80px}
+  .melato-collection-hero{height:240px}
+  .melato-collection-hero__content{padding:24px 16px}
+  .melato-active-filters{padding:10px 16px}
+}
+</style>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "div",
+  "settings": [
+    { "type": "range", "id": "columns_desktop", "label": "Columns (desktop)", "min": 2, "max": 6, "step": 1, "default": 4 },
+    { "type": "range", "id": "columns_mobile", "label": "Columns (mobile)", "min": 1, "max": 3, "step": 1, "default": 2 },
+    { "type": "range", "id": "products_per_page", "label": "Products per page", "min": 16, "max": 48, "step": 8, "default": 24 },
+    { "type": "checkbox", "id": "enable_filtering", "label": "Enable filtering", "default": true },
+    { "type": "checkbox", "id": "enable_sorting", "label": "Enable sorting", "default": true }
+  ]
+}
+{% endschema %}

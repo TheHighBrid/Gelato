@@ -1,0 +1,104 @@
+{% comment %}
+  sections/main-article.liquid
+{% endcomment %}
+
+<article class="section-spacing" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <div class="container--narrow">
+
+    {%- if article.image -%}
+      <div class="drip-reveal" style="aspect-ratio:16/9;overflow:hidden;margin-bottom:48px;">
+        <img
+          src="{{ article.image | image_url: width: 1200 }}"
+          srcset="{{ article.image | image_url: width: 800 }} 800w, {{ article.image | image_url: width: 1200 }} 1200w"
+          sizes="(max-width: 800px) 100vw, 800px"
+          alt="{{ article.image.alt | default: article.title | escape }}"
+          loading="eager"
+          fetchpriority="high"
+          width="{{ article.image.width }}"
+          height="{{ article.image.height }}"
+          style="width:100%;height:100%;object-fit:cover;"
+          itemprop="image"
+        >
+      </div>
+    {%- endif -%}
+
+    <header class="drip-reveal" style="margin-bottom:40px;">
+      <p class="text-label" style="color:var(--color-accent);margin-bottom:16px;">
+        <a href="{{ blog.url }}" style="color:inherit;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity=''">
+          {{ blog.title }}
+        </a>
+        <span style="margin:0 8px;">·</span>
+        <time datetime="{{ article.published_at | date: '%Y-%m-%d' }}" itemprop="datePublished">
+          {{ article.published_at | date: '%B %d, %Y' }}
+        </time>
+        {%- if article.author != blank -%}
+          <span style="margin:0 8px;">·</span>
+          <span itemprop="author">{{ article.author }}</span>
+        {%- endif -%}
+      </p>
+
+      <h1 class="heading-md" itemprop="name headline" style="margin-bottom:20px;">{{ article.title }}</h1>
+
+      {%- if article.excerpt != blank -%}
+        <p style="color:var(--color-muted);font-size:1.05rem;line-height:1.7;" itemprop="description">
+          {{ article.excerpt }}
+        </p>
+      {%- endif -%}
+    </header>
+
+    <div
+      class="article-body drip-reveal drip-reveal--delay-1"
+      itemprop="articleBody"
+      style="color:var(--color-muted);line-height:1.9;font-size:0.95rem;"
+    >
+      {{ article.content }}
+    </div>
+
+    {%- if article.tags.size > 0 -%}
+      <div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--color-border);">
+        <p class="text-label" style="margin-bottom:12px;">Tags</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          {%- for tag in article.tags -%}
+            <a
+              href="{{ blog.url }}/tagged/{{ tag | handle }}"
+              class="badge badge--limited"
+              style="text-decoration:none;"
+            >{{ tag }}</a>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+    <nav style="display:flex;justify-content:space-between;margin-top:48px;padding-top:32px;border-top:1px solid var(--color-border);">
+      {%- if blog.previous_article -%}
+        <a href="{{ blog.previous_article }}" class="btn btn--ghost btn--sm">← Previous</a>
+      {%- else -%}
+        <span></span>
+      {%- endif -%}
+      {%- if blog.next_article -%}
+        <a href="{{ blog.next_article }}" class="btn btn--ghost btn--sm">Next →</a>
+      {%- endif -%}
+    </nav>
+
+  </div>
+</article>
+
+<style>
+  .article-body h2 { font-family:var(--font-heading-family); font-size:1.8rem; color:var(--color-text); margin:2em 0 0.8em; }
+  .article-body h3 { font-family:var(--font-heading-family); font-size:1.3rem; color:var(--color-text); margin:1.6em 0 0.6em; }
+  .article-body p  { margin-bottom:1.4em; }
+  .article-body img { width:100%; height:auto; margin:2em 0; }
+  .article-body a  { color:var(--color-accent); text-decoration:underline; text-underline-offset:3px; }
+  .article-body ul, .article-body ol { padding-left:1.5em; margin-bottom:1.4em; }
+  .article-body li { margin-bottom:0.5em; }
+  .article-body blockquote { border-left:3px solid var(--color-accent); padding-left:24px; margin:2em 0; font-style:italic; }
+</style>
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "article",
+  "settings": []
+}
+{% endschema %}

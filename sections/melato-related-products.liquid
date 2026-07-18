@@ -1,0 +1,153 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════╗
+  ║  MELATO - Related Products                               ║
+  ║  sections/melato-related-products.liquid                 ║
+  ╠══════════════════════════════════════════════════════════╣
+  ║  REPLACES the broken sections/related-products.liquid    ║
+  ║                                                          ║
+  ║  TWO-SECTION LOGIC:                                      ║
+  ║                                                          ║
+  ║  1. "You Might Also Like"                                ║
+  ║     → Same garment TYPE, different colorway              ║
+  ║     → Matched via product tag:  type_jacket              ║
+  ║                                    or  type_pants        ║
+  ║                                                          ║
+  ║  2. "Complete the Set"                                   ║
+  ║     → The COUNTERPART garment in the SAME colorway       ║
+  ║     → Matched via product metafield:                     ║
+  ║         custom.set_partner  (product handle string)      ║
+  ║                                                          ║
+  ║  PRODUCT TAGS TO ADD (once per product):                 ║
+  ║  ─────────────────────────────────────                   ║
+  ║  Tag format:  type_jacket  OR  type_pants                ║
+  ║  Colorway:    colorway_divididos  (any slug)             ║
+  ║                                                          ║
+  ║  METAFIELD TO ADD (once per product):                    ║
+  ║  Namespace: custom  |  Key: set_partner                  ║
+  ║  Type: product_reference  (use Shopify product picker)   ║
+  ║  Value: pick the counterpart product                     ║
+  ╚══════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+{%- liquid
+  assign current_product = product
+  assign current_type_tag = nil
+  assign current_colorway_tag = nil
+
+  for tag in current_product.tags
+    if tag contains 'type_'
+      assign current_type_tag = tag
+    endif
+    if tag contains 'colorway_'
+      assign current_colorway_tag = tag
+    endif
+  endfor
+
+  comment
+    ── "You Might Also Like" ──
+    Find products sharing same type_* tag but DIFFERENT colorway_* tag.
+    We collect up to 4. We exclude the current product.
+  endcomment
+  assign alt_colorway_products = '' | split: ''
+  if current_type_tag != nil
+    for col_product in collections.all.products
+      if alt_colorway_products.size >= 4
+        break
+      endif
+      if col_product.handle == current_product.handle
+        continue
+      endif
+      assign col_type = nil
+      assign col_colorway = nil
+      for t in col_product.tags
+        if t contains 'type_'
+          assign col_type = t
+        endif
+        if t contains 'colorway_'
+          assign col_colorway = t
+        endif
+      endfor
+      if col_type == current_type_tag and col_colorway != current_colorway_tag
+        assign alt_colorway_products = alt_colorway_products | push: col_product
+      endif
+    endfor
+  endif
+
+  comment
+    ── "Complete the Set" ──
+    Reads custom.set_partner metafield (product reference).
+  endcomment
+  assign partner_product = current_product.metafields.custom.set_partner.value
+-%}
+
+{%- comment -%} ── Section 1: You Might Also Like ── {%- endcomment -%}
+{%- if alt_colorway_products.size > 0 -%}
+<section class="m-related" aria-labelledby="m-also-like-title">
+  <div class="m-related__header">
+    <h2 class="m-related__title" id="m-also-like-title">
+      You Might Also Like
+    </h2>
+    <span class="m-related__rule" aria-hidden="true"></span>
+  </div>
+  <div class="m-related__grid">
+    {%- for rel_product in alt_colorway_products limit: 4 -%}
+      {%- render 'melato-product-card', product: rel_product -%}
+    {%- endfor -%}
+  </div>
+</section>
+{%- endif -%}
+
+{%- comment -%} ── Section 2: Complete the Set ── {%- endcomment -%}
+{%- if partner_product != blank and partner_product != nil -%}
+<section class="m-related m-related--set" aria-labelledby="m-complete-title">
+  <div class="m-related__header">
+    <h2 class="m-related__title" id="m-complete-title">
+      Complete the Set
+    </h2>
+    <span class="m-related__rule" aria-hidden="true"></span>
+  </div>
+  <div class="m-related__grid m-related__grid--single">
+    {%- render 'melato-product-card', product: partner_product, badge: 'Matching Set' -%}
+  </div>
+</section>
+{%- endif -%}
+
+{%- comment -%}
+  Graceful fallback: if neither section produces results
+  (e.g. metafields not yet populated), show a generic collection sample.
+{%- endcomment -%}
+{%- if alt_colorway_products.size == 0 and partner_product == blank -%}
+  {%- assign fallback_products = collections.all.products -%}
+  {%- assign fallback_count = 0 -%}
+  {%- for fp in fallback_products -%}
+    {%- if fp.handle != current_product.handle and fallback_count < 4 -%}
+      {%- assign fallback_count = fallback_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- if fallback_count > 0 -%}
+  <section class="m-related" aria-labelledby="m-also-like-title">
+    <div class="m-related__header">
+      <h2 class="m-related__title" id="m-also-like-title">The Collection</h2>
+      <span class="m-related__rule" aria-hidden="true"></span>
+    </div>
+    <div class="m-related__grid">
+      {%- assign shown = 0 -%}
+      {%- for fp in fallback_products -%}
+        {%- if shown >= 4 -%}{%- break -%}{%- endif -%}
+        {%- if fp.handle == current_product.handle -%}{%- continue -%}{%- endif -%}
+        {%- render 'melato-product-card', product: fp -%}
+        {%- assign shown = shown | plus: 1 -%}
+      {%- endfor -%}
+    </div>
+  </section>
+  {%- endif -%}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Related Products",
+  "limit": 1,
+  "settings": [],
+  "presets": [{ "name": "Related Products" }]
+}
+{% endschema %}

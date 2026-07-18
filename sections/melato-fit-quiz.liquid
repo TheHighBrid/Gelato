@@ -1,0 +1,67 @@
+<div class="melato-fitquiz" id="melato-fitquiz">
+  <h2 class="melato-fitquiz__title">{{ section.settings.title | default: 'Quick fit check' }}</h2>
+  <div class="melato-fitquiz__grid">
+    <label class="melato-fitquiz__field"><span>What are you buying?</span>
+      <select id="mfq-item">
+        <option value="jacket">Track jacket</option><option value="pants">Track pants</option>
+        <option value="flare">Flare pants</option><option value="denim">Denim</option>
+        <option value="shirt">Polo / shirt</option><option value="bodysuit">Bodysuit / delicate</option>
+        <option value="outerwear">Outerwear</option>
+      </select></label>
+    <label class="melato-fitquiz__field"><span>Usual size</span>
+      <select id="mfq-size"><option>XS</option><option>S</option><option selected>M</option><option>L</option><option>XL</option></select></label>
+    <label class="melato-fitquiz__field"><span>Preferred fit</span>
+      <select id="mfq-fit"><option value="clean">Clean</option><option value="relaxed">Relaxed</option><option value="oversized">Oversized</option><option value="flared">Flared</option></select></label>
+    <label class="melato-fitquiz__field"><span>Between sizes?</span>
+      <select id="mfq-between"><option value="no">No</option><option value="yes">Yes</option></select></label>
+    <label class="melato-fitquiz__field"><span>Buying a matching set?</span>
+      <select id="mfq-set"><option value="no">No</option><option value="yes">Yes</option></select></label>
+  </div>
+  <button type="button" id="mfq-submit" class="melato-fitquiz__submit">See guidance</button>
+  <div id="mfq-result" class="melato-fitquiz__result" role="status" aria-live="polite" hidden></div>
+</div>
+
+{% stylesheet %}
+.melato-fitquiz { max-width: 720px; margin: 0 auto clamp(2.5rem,6vw,4rem); padding: 0 1.25rem; }
+.melato-fitquiz__title { font-weight: 500; margin: 0 0 1.25rem; text-align: center; font-size: 1.3rem; }
+.melato-fitquiz__grid { display: grid; grid-template-columns: 1fr; gap: 1rem 1.25rem; }
+@media (min-width: 480px) { .melato-fitquiz__grid { grid-template-columns: repeat(2,1fr); } }
+@media (min-width: 700px) { .melato-fitquiz__grid { grid-template-columns: repeat(3,1fr); } }
+.melato-fitquiz__field { display: flex; flex-direction: column; gap: .35rem; font-size: .8rem; color: #aaa39a; }
+.melato-fitquiz__field select { font-size: .9rem; padding: .55rem .6rem; border: 1px solid rgba(244,234,216,.25); background: #fff; color: #0a0a0a; }
+.melato-fitquiz__field select:focus-visible { outline: 1px solid #f4ead8; outline-offset: 2px; }
+.melato-fitquiz__submit { display: block; margin: 1.5rem auto 0; padding: .75rem 1.75rem; background: #f4ead8 !important; color: #0a0a0a !important; border: none; font-size: .85rem; letter-spacing: .03em; cursor: pointer; transition: opacity .2s ease; }
+.melato-fitquiz__submit:hover { opacity: .85; }
+.melato-fitquiz__submit:focus-visible { outline: 2px solid #f4ead8; outline-offset: 3px; }
+.melato-fitquiz__result { margin-top: 1.5rem; padding: 1.1rem 1.25rem; background: #efece5 !important; color: #1a1a1a !important; font-size: .9rem; line-height: 1.55; max-width: 560px; margin-inline: auto; }
+@media (prefers-reduced-motion: reduce) { .melato-fitquiz__submit { transition: none; } }
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  var submitBtn = document.getElementById('mfq-submit');
+  if (!submitBtn) return;
+  submitBtn.addEventListener('click', function () {
+    var item = document.getElementById('mfq-item'), size = document.getElementById('mfq-size'),
+        fit = document.getElementById('mfq-fit'), between = document.getElementById('mfq-between'),
+        set = document.getElementById('mfq-set'), result = document.getElementById('mfq-result');
+    if (!item || !size || !fit || !between || !set || !result) return;
+
+    var sizeWord = size.value;
+    if (between.value === 'yes') sizeWord = 'between ' + size.value + ' and the next size up';
+    if (fit.value === 'relaxed' || fit.value === 'oversized') {
+      sizeWord += between.value === 'yes' ? ', leaning toward sizing up' : ', consider sizing up for the look you want';
+    }
+    var text = 'Based on your answers, we would point you toward a ' + sizeWord + ' for the ' + item.value + ', styled ' + fit.value + '.';
+    if (set.value === 'yes') text += ' For a matching set, keep jacket and pant in the same size unless you want a deliberately relaxed pairing.';
+    text += ' This is advisory only — for an exact fit, message Customer Care with your height and usual size.';
+
+    result.textContent = text;
+    result.hidden = false;
+  });
+})();
+{% endjavascript %}
+
+{% schema %}
+{ "name": "Melato Fit Quiz", "tag": "section", "settings": [{ "type": "text", "id": "title", "label": "Title", "default": "Quick fit check" }], "presets": [{ "name": "Melato Fit Quiz" }] }
+{% endschema %}

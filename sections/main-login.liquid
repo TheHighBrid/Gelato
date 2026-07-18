@@ -1,0 +1,40 @@
+{% comment %}
+  sections/main-login.liquid
+{% endcomment %}
+
+<section class="section-spacing">
+  <div class="container--narrow" style="max-width:480px;">
+    <h1 class="heading-md drip-reveal" style="margin-bottom:40px;">{{ 'account.login' | t }}</h1>
+
+    {%- form 'customer_login', class: 'drip-reveal drip-reveal--delay-1' -%}
+      {%- if form.errors -%}
+        <div role="alert" style="background:rgba(255,45,45,0.1);border:1px solid var(--color-error);padding:16px;margin-bottom:24px;">
+          <p class="text-label" style="color:var(--color-error);">{{ form.errors | default_errors }}</p>
+        </div>
+      {%- endif -%}
+
+      <div class="field" style="margin-bottom:16px;">
+        <label class="field__label" for="customer-email">Email</label>
+        <input class="field__input" type="email" name="customer[email]" id="customer-email" autocomplete="email" required>
+      </div>
+
+      <div class="field" style="margin-bottom:8px;">
+        <label class="field__label" for="customer-password">Password</label>
+        <input class="field__input" type="password" name="customer[password]" id="customer-password" autocomplete="current-password" required>
+      </div>
+
+      <a href="{{ routes.account_recover_url }}" class="btn btn--ghost btn--sm" style="margin-bottom:24px;display:inline-block;">
+        {{ 'account.forgot_password' | t }}
+      </a>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <button type="submit" class="btn btn--primary btn--full">{{ 'account.login' | t }}</button>
+        <a href="{{ routes.account_register_url }}" class="btn btn--secondary btn--full">{{ 'account.register' | t }}</a>
+      </div>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Login", "tag": "section", "settings": [] }
+{% endschema %}

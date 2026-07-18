@@ -1,0 +1,86 @@
+{%- comment -%}
+  Melato product JSON-LD.
+  Outputs rich Product + Offer + Breadcrumb schema for PDP snippets.
+{%- endcomment -%}
+
+{%- if product != blank -%}
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign site_url = shop.url | default: request.origin -%}
+{%- assign product_description = product.description | strip_html | strip_newlines | replace: '  ', ' ' | truncate: 700 -%}
+{%- if product_description == blank -%}
+  {%- assign product_description = product.title | append: ' by ' | append: shop.name -%}
+{%- endif -%}
+{%- assign currency_code = cart.currency.iso_code | default: shop.currency -%}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Product",
+      "@id": {{ canonical_url | append: '#product' | json }},
+      "name": {{ product.title | json }},
+      "description": {{ product_description | json }},
+      "url": {{ canonical_url | json }},
+      "brand": {
+        "@type": "Brand",
+        "name": {{ shop.name | json }}
+      },
+      "sku": {{ current_variant.sku | default: product.handle | json }},
+      "mpn": {{ current_variant.barcode | default: current_variant.sku | default: current_variant.id | json }},
+      "category": {{ product.type | default: product.product_type | default: 'Apparel' | json }}{% if product.featured_image != blank %},
+      "image": [
+        {%- for media in product.media limit: 8 -%}
+          {%- if media.media_type == 'image' -%}
+            {{ media | image_url: width: 1400 | prepend: 'https:' | json }}{%- unless forloop.last -%},{%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      ]{% endif %},
+      "offers": [
+        {%- for variant in product.variants -%}
+          {
+            "@type": "Offer",
+            "@id": {{ canonical_url | append: '?variant=' | append: variant.id | append: '#offer' | json }},
+            "url": {{ site_url | append: variant.url | json }},
+            "sku": {{ variant.sku | default: variant.id | json }},
+            "name": {{ variant.title | json }},
+            "priceCurrency": {{ currency_code | json }},
+            "price": {{ variant.price | divided_by: 100.0 | json }},
+            "availability": "https://schema.org/{% if variant.available %}InStock{% else %}OutOfStock{% endif %}",
+            "itemCondition": "https://schema.org/NewCondition",
+            "seller": {
+              "@type": "Organization",
+              "name": {{ shop.name | json }}
+            }
+          }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": {{ canonical_url | append: '#product-breadcrumb' | json }},
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": {{ site_url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Products",
+          "item": {{ site_url | append: routes.all_products_collection_url | json }}
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": {{ product.title | json }},
+          "item": {{ canonical_url | json }}
+        }
+      ]
+    }
+  ]
+}
+</script>
+{%- endif -%}

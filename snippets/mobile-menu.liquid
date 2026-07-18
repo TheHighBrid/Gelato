@@ -1,0 +1,53 @@
+{% comment %}
+  snippets/mobile-menu.liquid
+{% endcomment %}
+
+<nav
+  id="mobile-menu"
+  class="mobile-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation menu"
+  aria-hidden="true"
+>
+
+  <div class="mobile-menu__header">
+    <span class="header__logo-text" style="font-size:1.2rem;">{{ shop.name }}</span>
+<button
+  type="button"
+  class="header-menu-button"
+  data-open-utility="menu"
+  aria-controls="MelatoUtilityLayer"
+>
+  Menu
+</button>  </div>
+
+  <ul class="mobile-nav__list" role="list">
+    {%- for link in linklists.main-menu.links -%}
+      <li class="mobile-nav__item">
+        <a href="{{ link.url }}" class="mobile-nav__link">
+          {{ link.title }}
+        </a>
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  <div class="mobile-menu__footer">
+    <div class="mobile-menu__socials">
+      {%- if settings.social_instagram != blank -%}
+        <a href="https://instagram.com/{{ settings.social_instagram }}" class="footer-social-link" aria-label="Instagram" target="_blank" rel="noopener">IG</a>
+      {%- endif -%}
+      {%- if settings.social_tiktok != blank -%}
+        <a href="https://tiktok.com/@{{ settings.social_tiktok }}" class="footer-social-link" aria-label="TikTok" target="_blank" rel="noopener">TK</a>
+      {%- endif -%}
+    </div>
+    {%- if shop.customer_accounts_enabled -%}
+      <a
+        href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+        class="btn btn--secondary btn--full btn--sm"
+      >
+        {%- if customer -%}{{ 'account.my_account' | t }}{%- else -%}{{ 'account.login' | t }}{%- endif -%}
+      </a>
+    {%- endif -%}
+  </div>
+</nav>

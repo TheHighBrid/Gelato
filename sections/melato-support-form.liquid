@@ -1,0 +1,40 @@
+<div class="melato-contactform" id="{{ section.settings.anchor_id | default: 'melato-support' }}">
+  {%- if section.settings.heading != blank -%}<h2 class="melato-contactform__heading">{{ section.settings.heading }}</h2>{%- endif -%}
+  {%- form 'contact', id: 'melato-contact-form' -%}
+    {%- if form.posted_successfully? -%}<p class="melato-contactform__success">Thank you — your message has reached Melato Customer Care.</p>{%- endif -%}
+    {%- if form.errors -%}<p class="melato-contactform__error">{{ form.errors.translated_default_message }}</p>{%- endif -%}
+    {%- assign topics = section.settings.topics | newline_to_br | split: '<br />' -%}
+    {% render 'melato-contact-form-fields', topics: topics, show_order_number: section.settings.show_order_number %}
+    <button type="submit" class="melato-contactform__submit">{{ section.settings.button_label | default: 'Send to Melato Customer Care' }}</button>
+  {%- endform -%}
+</div>
+
+{% stylesheet %}
+.melato-contactform { max-width: 600px; margin: 0 auto; padding: 0 1.25rem clamp(2.5rem,6vw,4rem); }
+.melato-contactform__heading { color: #f4ead8 !important; font-weight: 500; text-align: center; margin: 0 0 1.5rem; font-size: 1.3rem; }
+.melato-contactform__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.melato-contactform__field { display: flex; flex-direction: column; gap: .35rem; font-size: .82rem; color: #aaa39a; margin-bottom: 1rem; }
+.melato-contactform__field em { color: #6f6d68; font-style: normal; font-size: .75rem; }
+.melato-contactform__field input, .melato-contactform__field select, .melato-contactform__field textarea { font-size: .9rem; padding: .6rem .65rem; border: 1px solid rgba(244,234,216,.3); background: #fff; color: #0a0a0a; font-family: inherit; }
+.melato-contactform__field input:focus-visible, .melato-contactform__field select:focus-visible, .melato-contactform__field textarea:focus-visible { outline: 1px solid #f4ead8; outline-offset: 2px; }
+.melato-contactform__submit { display: block; width: 100%; padding: .85rem; background: #f4ead8 !important; color: #0a0a0a !important; border: none; font-size: .85rem; letter-spacing: .03em; cursor: pointer; transition: opacity .2s ease; }
+.melato-contactform__submit:hover { opacity: .85; }
+.melato-contactform__success { background: #e7efe3; color: #1a3a1a !important; padding: .9rem 1rem; margin-bottom: 1rem; font-size: .88rem; }
+.melato-contactform__error { background: #f5e3e0; color: #5a1a1a !important; padding: .9rem 1rem; margin-bottom: 1rem; font-size: .88rem; }
+@media (max-width: 600px) { .melato-contactform__row { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .melato-contactform__submit { transition: none; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Melato Support Form", "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Contact Melato Customer Care" },
+    { "type": "textarea", "id": "topics", "label": "Topics (one per line)", "default": "Order support\nFit guidance\nDelivery question\nGarment care\nPrivate preview access" },
+    { "type": "checkbox", "id": "show_order_number", "label": "Show order number field", "default": true },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Send to Melato Customer Care" },
+    { "type": "text", "id": "anchor_id", "label": "Anchor ID (for tile links)", "default": "melato-support" }
+  ],
+  "presets": [{ "name": "Melato Support Form" }]
+}
+{% endschema %}

@@ -1,0 +1,71 @@
+{% comment %}
+  Melato - Product Badge Snippet v3
+  Safe Shopify Liquid version.
+
+  Usage:
+    {% render 'product-badge', product: product %}
+
+  Fixes:
+  - No compound Liquid conditions using multiple `and` comparisons.
+  - Guards against blank product, blank variant, blank prices, and zero compare price.
+  - Uses compare_at_price_max for safer product-level sale logic.
+  - Outputs integer sale badge only.
+{% endcomment %}
+
+{% if product != blank %}
+  {% assign current_variant = product.selected_or_first_available_variant %}
+
+  <div class="badge-stack" aria-label="Product status badges">
+
+    {% unless product.available %}
+      <span class="badge badge--sold-out" aria-label="Sold out">SOLD OUT</span>
+    {% else %}
+
+      {% assign badge_rendered = false %}
+
+      {% if current_variant != blank %}
+        {% if current_variant.inventory_management == 'shopify' %}
+          {% assign inventory_qty = current_variant.inventory_quantity | default: 0 | plus: 0 %}
+
+          {% if inventory_qty > 0 %}
+            {% if inventory_qty < 4 %}
+              <span class="badge badge--critical" aria-label="Only {{ inventory_qty }} remaining">ONLY {{ inventory_qty }} LEFT</span>
+              {% assign badge_rendered = true %}
+            {% elsif inventory_qty < 9 %}
+              <span class="badge badge--low-stock" aria-label="Low stock">LOW STOCK</span>
+              {% assign badge_rendered = true %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+
+      {% unless badge_rendered %}
+        {% if product.tags contains 'new-drop' %}
+          <span class="badge badge--drop" aria-label="New drop">NEW DROP</span>
+          {% assign badge_rendered = true %}
+        {% elsif product.tags contains 'coming-soon' %}
+          <span class="badge badge--coming-soon" aria-label="Coming soon">COMING SOON</span>
+          {% assign badge_rendered = true %}
+        {% endif %}
+      {% endunless %}
+
+    {% endunless %}
+
+    {% assign product_price = product.price | default: 0 | plus: 0 %}
+    {% assign compare_price = product.compare_at_price_max | default: 0 | plus: 0 %}
+
+    {% if compare_price > 0 %}
+      {% if product_price > 0 %}
+        {% if compare_price > product_price %}
+          {% assign savings = compare_price | minus: product_price %}
+          {% assign discount_percent = savings | times: 100 | divided_by: compare_price | floor %}
+
+          {% if discount_percent > 0 %}
+            <span class="badge badge--sale" aria-label="{{ discount_percent }} percent off">-{{ discount_percent }}%</span>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+
+  </div>
+{% endif %}

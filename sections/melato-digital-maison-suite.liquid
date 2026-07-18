@@ -194,8 +194,7 @@
           <article class="melato-maison-card{% if block.settings.featured %} melato-maison-card--feature{% endif %}" {{ block.shopify_attributes }}>
             <div class="melato-maison-card__media">
               {%- if block.settings.image != blank -%}
-                {%- assign card_img_alt = block.settings.image.alt | default: block.settings.title | escape -%}
-                {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 720, 960, 1200, 1600', alt: card_img_alt }}
+                {{ block.settings.image | image_url: width: 1600 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 720, 960, 1200, 1600', alt: block.settings.image.alt | escape }}
               {%- endif -%}
             </div>
             <div class="melato-maison-card__shade"></div>
@@ -245,7 +244,7 @@
     { "type": "range", "id": "columns_desktop", "label": "Desktop columns", "min": 2, "max": 4, "step": 1, "default": 3 },
     { "type": "range", "id": "max_width", "label": "Max width", "min": 1000, "max": 1600, "step": 20, "default": 1320 },
     { "type": "range", "id": "corner_radius", "label": "Corner radius", "min": 0, "max": 48, "step": 2, "default": 28 },
-    { "type": "select", "id": "palette_mode", "label": "Palette mode", "default": "dark", "options": [{ "value": "dark", "label": "Dark" }, { "value": "warm", "label": "Warm" }] },
+    { "type": "select", "id": "palette_mode", "label": "Palette label", "default": "dark", "options": [{ "value": "dark", "label": "Dark" }, { "value": "warm", "label": "Warm" }] },
     { "type": "color", "id": "bg_color", "label": "Background", "default": "#050505" },
     { "type": "color", "id": "surface_color", "label": "Card surface", "default": "#101010" },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#f7efe2" },

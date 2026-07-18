@@ -1,0 +1,54 @@
+{% comment %}
+  sections/main-order.liquid
+{% endcomment %}
+
+<section class="section-spacing">
+  <div class="container--narrow">
+    <div class="drip-reveal" style="margin-bottom:40px;">
+      <a href="{{ routes.account_url }}" class="btn btn--ghost btn--sm" style="margin-bottom:16px;">← Back to Account</a>
+      <h1 class="heading-md">Order {{ order.name }}</h1>
+      <p class="text-label" style="color:var(--color-muted);margin-top:8px;">Placed {{ order.created_at | date: '%B %d, %Y' }}</p>
+    </div>
+
+    <div class="drip-reveal drip-reveal--delay-1">
+      {%- for line_item in order.line_items -%}
+        <div class="cart-item" style="grid-template-columns:80px 1fr;padding:20px 0;border-bottom:1px solid var(--color-border);">
+          {%- if line_item.image -%}
+            <img src="{{ line_item.image | image_url: width: 160 }}" alt="{{ line_item.title | escape }}" class="cart-item__img" loading="lazy">
+          {%- endif -%}
+          <div class="cart-item__info">
+            <p class="cart-item__title">{{ line_item.product.title }}</p>
+            {%- if line_item.variant.title != 'Default Title' -%}
+              <p class="cart-item__variant">{{ line_item.variant.title }}</p>
+            {%- endif -%}
+            <div class="cart-item__footer">
+              <span class="text-label" style="color:var(--color-muted);">Qty: {{ line_item.quantity }}</span>
+              <span class="price">{{ line_item.final_line_price | money }}</span>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+
+      <div style="margin-top:32px;display:flex;flex-direction:column;gap:12px;max-width:320px;margin-left:auto;">
+        <div class="cart-subtotal">
+          <span class="text-label">Subtotal</span>
+          <span class="price">{{ order.subtotal_price | money }}</span>
+        </div>
+        {%- for shipping_method in order.shipping_methods -%}
+          <div class="cart-subtotal">
+            <span class="text-label">Shipping</span>
+            <span class="price">{{ shipping_method.price | money }}</span>
+          </div>
+        {%- endfor -%}
+        <div class="cart-subtotal" style="border-top:1px solid var(--color-border);padding-top:12px;">
+          <span class="text-label">Total</span>
+          <span class="price" style="font-size:1.1rem;">{{ order.total_price | money }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Order", "tag": "section", "settings": [] }
+{% endschema %}

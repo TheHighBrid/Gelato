@@ -1,0 +1,6 @@
+{%- comment -%} params: title, text, cta_label, url {%- endcomment -%}
+<a href="{{ url | default: '#' }}" class="melato-fit__card">
+  <h3 class="melato-fit__card-title">{{ title }}</h3>
+  {%- if text != blank -%}<p class="melato-fit__card-text">{{ text }}</p>{%- endif -%}
+  {%- if cta_label != blank -%}<span class="melato-fit__card-cta">{{ cta_label }} →</span>{%- endif -%}
+</a>
