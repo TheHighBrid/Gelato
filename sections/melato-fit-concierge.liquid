@@ -1,0 +1,104 @@
+{%- liquid
+  assign start_blocks = section.blocks | where: 'type', 'start_card'
+  assign category_blocks = section.blocks | where: 'type', 'category'
+  assign cta_blocks = section.blocks | where: 'type', 'cta'
+-%}
+
+<div class="melato-fit-bleed">
+<div class="melato-fit">
+  {%- if section.settings.intro != blank -%}<div class="melato-fit__intro">{{ section.settings.intro }}</div>{%- endif -%}
+
+  {%- if start_blocks.size > 0 -%}
+    <div class="melato-fit__start-grid">
+      {%- for block in start_blocks -%}
+        {% render 'melato-fit-card', title: block.settings.title, text: block.settings.text, cta_label: block.settings.cta_label, url: block.settings.url %}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if category_blocks.size > 0 -%}
+    <div class="melato-fit__accordion">
+      {%- for block in category_blocks -%}
+        <details class="melato-fit__row">
+          <summary class="melato-fit__row-title">{{ block.settings.title }}</summary>
+          <div class="melato-fit__row-text">{{ block.settings.text }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if cta_blocks.size > 0 -%}
+    <div class="melato-fit__cta-row">
+      {%- for block in cta_blocks -%}
+        <a href="{{ block.settings.url | default: '#' }}" class="melato-fit__cta-link">{{ block.settings.label }}</a>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+</div>
+
+{% stylesheet %}
+.melato-fit-bleed { background: #f4ead8 !important; }
+.melato-fit { max-width: 1000px; margin: 0 auto; padding: 0 1.25rem clamp(2rem,5vw,3.5rem); }
+.melato-fit__intro { max-width: 640px; margin: 0 auto clamp(2rem,4vw,3rem); text-align: center; }
+.melato-fit__intro p { color: #3a3833 !important; margin: 0; }
+.melato-fit__start-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: rgba(10,10,10,.14); border: 1px solid rgba(10,10,10,.14); margin-bottom: clamp(2.5rem,6vw,4rem); }
+@media (min-width: 760px) { .melato-fit__start-grid { grid-template-columns: repeat(4,1fr); } }
+.melato-fit__card { background: #f4ead8 !important; padding: 1.5rem 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: .5rem; transition: background-color .25s ease; }
+.melato-fit__card:hover, .melato-fit__card:focus-visible { background: #eadcc6 !important; }
+.melato-fit__card:focus-visible { outline: 1px solid #0a0a0a; outline-offset: 4px; }
+.melato-fit__card-title { color: #0a0a0a !important; font-weight: 500; margin: 0; font-size: 1.05rem; }
+.melato-fit__card-text { color: #6f6d68 !important; font-size: .85rem; line-height: 1.45; margin: 0; }
+.melato-fit__card-cta { color: #0a0a0a !important; margin-top: auto; font-size: .8rem; }
+.melato-fit__accordion { border-top: 1px solid rgba(10,10,10,.14); margin-bottom: clamp(2rem,5vw,3rem); }
+.melato-fit__row { border-bottom: 1px solid rgba(10,10,10,.14); }
+.melato-fit__row-title { color: #0a0a0a !important; font-size: 1.05rem; padding: 1.1rem .25rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.melato-fit__row-title::-webkit-details-marker { display: none; }
+.melato-fit__row-title::after { content: '+'; font-size: 1.2rem; color: #6f6d68; transition: transform .2s ease; }
+.melato-fit__row[open] .melato-fit__row-title::after { transform: rotate(45deg); }
+.melato-fit__row-title:focus-visible { outline: 1px solid #0a0a0a; outline-offset: 2px; }
+.melato-fit__row-text { color: #3a3833 !important; padding: 0 .25rem 1.1rem; font-size: .9rem; line-height: 1.55; max-width: 640px; }
+.melato-fit__cta-row { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; justify-content: center; }
+.melato-fit__cta-link { color: #0a0a0a !important; font-size: .88rem; text-decoration: underline; text-underline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .melato-fit__card, .melato-fit__row-title::after { transition: none; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Melato Fit Concierge",
+  "tag": "section",
+  "settings": [{ "type": "richtext", "id": "intro", "label": "Intro copy (optional)" }],
+  "blocks": [
+    { "type": "start_card", "name": "Start-here card", "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "text", "id": "cta_label", "label": "CTA label" },
+        { "type": "url", "id": "url", "label": "Link" }
+    ]},
+    { "type": "category", "name": "Fit category row", "settings": [
+        { "type": "text", "id": "title", "label": "Category" },
+        { "type": "textarea", "id": "text", "label": "Guidance" }
+    ]},
+    { "type": "cta", "name": "CTA link", "settings": [
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "url", "id": "url", "label": "Link" }
+    ]}
+  ],
+  "max_blocks": 16,
+  "presets": [{ "name": "Melato Fit Concierge", "blocks": [
+      { "type": "start_card", "settings": { "title": "I know my size", "text": "Open size guide", "cta_label": "Open guide", "url": "#" } },
+      { "type": "start_card", "settings": { "title": "I am between sizes", "text": "Ask Customer Care", "cta_label": "Ask now", "url": "/pages/delivery-concierge" } },
+      { "type": "start_card", "settings": { "title": "I want a relaxed fit", "text": "View fit notes", "cta_label": "View notes", "url": "#" } },
+      { "type": "start_card", "settings": { "title": "I am buying a full set", "text": "Check jacket and pant pairing", "cta_label": "Check pairing", "url": "#" } },
+      { "type": "category", "settings": { "title": "Velour track jackets", "text": "Choose true size for clean structure. Size up for relaxed styling." } },
+      { "type": "category", "settings": { "title": "Track pants", "text": "Check waist and inseam, especially for flare silhouettes." } },
+      { "type": "category", "settings": { "title": "Flare pants", "text": "Prioritize waist, rise, inseam, and shoe height." } },
+      { "type": "category", "settings": { "title": "Denim", "text": "Relaxed denim should sit comfortably through the thigh. Flare begins below the knee." } },
+      { "type": "category", "settings": { "title": "Polo / shirts", "text": "Check shoulder and chest first." } },
+      { "type": "category", "settings": { "title": "Bodysuits / delicates", "text": "Check torso length and stretch." } },
+      { "type": "category", "settings": { "title": "Outerwear", "text": "Size around layering preference." } },
+      { "type": "cta", "settings": { "label": "Ask Customer Care", "url": "/pages/delivery-concierge" } },
+      { "type": "cta", "settings": { "label": "Read delivery notes", "url": "/pages/delivery-concierge" } }
+  ]}]
+}
+{% endschema %}

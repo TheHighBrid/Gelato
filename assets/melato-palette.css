@@ -1,0 +1,315 @@
+/* ============================================================
+   MELATO - PALETTE OVERRIDE v2
+   Replaces ALL neon green (#8fff00 / lime / chartreuse) with
+   the brand's signature burnt-orange × brown × beige palette.
+
+   HOW TO INSTALL:
+   In layout/theme.liquid, inside <head>, add AFTER all other
+   stylesheet tags so these rules override everything:
+     {{ 'melato-palette.css' | asset_url | stylesheet_tag }}
+
+   Also add AFTER melato-enhancements.css if that file is loaded.
+   ============================================================ */
+
+/* ── NEW BRAND TOKENS ──────────────────────────────────────── */
+:root {
+  /* Primary - burnt orange (sampled from the Melato logo) */
+  --m-orange:        #C04A10;
+  --m-orange-hover:  #D8560F;
+  --m-orange-light:  #E07030;
+
+  /* Secondary - dark brown */
+  --m-brown-dark:    #3D1A06;
+  --m-brown-mid:     #6B2E0A;
+  --m-brown-border:  #5A2508;
+
+  /* Tertiary - beige / tan */
+  --m-beige:         #E8C9A0;
+  --m-beige-dim:     #C4A882;
+  --m-beige-dark:    #8B7355;
+
+  /* Neutrals (unchanged) */
+  --m-black:         #080808;
+  --m-off:           #0e0e0e;
+  --m-surface:       #141414;
+  --m-border:        #242424;
+  --m-dim:           #2e2e2e;
+  --m-muted:         #666;
+  --m-text:          #d8d8d8;
+  --m-white:         #f0f0f0;
+
+  /* Override the old neon token everywhere */
+  --m-neon:          #C04A10;
+  --m-accent:        #C04A10;
+}
+
+/* ── GLOBAL NEON → ORANGE SWEEP ────────────────────────────── */
+
+/* Any element using the old neon green as background */
+[style*="#8fff00"],
+[style*="#8FFF00"],
+[style*="chartreuse"],
+[style*="lime"] {
+  background-color: #C04A10 !important;
+  color: #fff !important;
+}
+
+/* ── ANNOUNCEMENT BAR ───────────────────────────────────────── */
+.announcement-bar,
+.announcement-bar__message,
+.shopify-section--announcement-bar,
+[class*="announcement"] {
+  background-color: #C04A10 !important;
+  color: #fff !important;
+}
+
+.announcement-bar a,
+.announcement-bar__message a,
+[class*="announcement"] a {
+  color: #fff !important;
+}
+
+/* ── MARQUEE TICKER ──────────────────────────────────────────── */
+.melato-marquee {
+  background: var(--m-brown-dark) !important;
+  border-bottom-color: var(--m-brown-border) !important;
+}
+
+.melato-marquee__divider {
+  color: var(--m-orange) !important;
+}
+
+.melato-marquee__item {
+  color: var(--m-beige) !important;
+}
+
+/* ── BUTTONS - PRIMARY ───────────────────────────────────────── */
+.btn--primary,
+.button--primary,
+[class*="btn-primary"],
+.shopify-payment-button__button--unbranded,
+button[name="add"],
+input[name="add"],
+.product-form__submit,
+.m-satc__btn,
+.m-dropsignup__btn,
+#satc-btn {
+  background-color: var(--m-orange) !important;
+  color: #fff !important;
+  border-color: var(--m-orange) !important;
+}
+
+.btn--primary:hover,
+.button--primary:hover,
+button[name="add"]:hover,
+.product-form__submit:hover,
+.m-satc__btn:hover,
+.m-dropsignup__btn:hover,
+#satc-btn:hover {
+  background-color: var(--m-orange-hover) !important;
+  border-color: var(--m-orange-hover) !important;
+}
+
+/* ── BUTTONS - OUTLINE / SECONDARY ──────────────────────────── */
+.btn--secondary,
+.button--secondary,
+[class*="btn-outline"] {
+  color: var(--m-orange) !important;
+  border-color: var(--m-orange) !important;
+  background: transparent !important;
+}
+
+.btn--secondary:hover,
+.button--secondary:hover {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+}
+
+/* ── LINKS - ACCENT ──────────────────────────────────────────── */
+a[class*="accent"],
+.text--accent,
+[class*="link--accent"] {
+  color: var(--m-orange) !important;
+}
+
+/* ── BADGES (from melato-enhancements.css) ────────────────────── */
+.badge--low-stock {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+}
+
+.badge--drop {
+  background: transparent !important;
+  color: var(--m-orange) !important;
+  border-color: var(--m-orange) !important;
+}
+
+/* ── STICKY ATC BAR ──────────────────────────────────────────── */
+.m-satc {
+  border-top-color: var(--m-brown-border) !important;
+}
+
+.m-satc__btn.is-success {
+  background: var(--m-brown-mid) !important;
+}
+
+/* ── DROP SIGNUP SECTION ─────────────────────────────────────── */
+.m-dropsignup {
+  --ds-accent: var(--m-orange) !important;
+}
+
+.m-dropsignup__eyebrow {
+  color: var(--m-orange) !important;
+}
+
+.m-dropsignup__field-group:focus-within {
+  border-color: var(--m-orange) !important;
+}
+
+/* ── PRICE / SALE INDICATORS ──────────────────────────────────── */
+.price--sale,
+.price-item--sale,
+[class*="price--on-sale"],
+.badge--sale {
+  color: var(--m-orange) !important;
+}
+
+/* ── PRODUCT FORM - SIZE SELECTOR ────────────────────────────── */
+.variant-input-wrap input:checked + label,
+.swatch--active,
+[class*="variant--active"],
+[class*="option--active"] {
+  border-color: var(--m-orange) !important;
+  color: var(--m-orange) !important;
+}
+
+/* ── FOCUS RING ───────────────────────────────────────────────── */
+:focus-visible {
+  outline-color: var(--m-orange) !important;
+}
+
+/* ── PROGRESS BARS / SLIDERS ─────────────────────────────────── */
+progress::-webkit-progress-value,
+input[type="range"]::-webkit-slider-thumb {
+  background: var(--m-orange) !important;
+}
+
+/* ── COUNTDOWN TIMER (homepage) ──────────────────────────────── */
+[class*="countdown"],
+[class*="timer"] {
+  color: var(--m-beige) !important;
+}
+
+[class*="countdown__separator"],
+[class*="timer__colon"] {
+  color: var(--m-orange) !important;
+}
+
+/* ── MARQUEE SECTION CUSTOMIZER COLOURS ──────────────────────── */
+#melato-marquee-section {
+  --marquee-accent: var(--m-orange);
+}
+
+/* ── COMPLETE THE SET SECTION ACCENTS ────────────────────────── */
+.m-cts__badge,
+.m-cts__cta {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+  border-color: var(--m-orange) !important;
+}
+
+.m-cts__cta:hover {
+  background: var(--m-orange-hover) !important;
+}
+
+.m-cts__heading-accent,
+.m-cts__label {
+  color: var(--m-orange) !important;
+}
+
+/* ── TAG-BASED RECOMMENDATIONS ───────────────────────────────── */
+.m-recs__heading-accent {
+  color: var(--m-orange) !important;
+}
+
+.m-recs__card:hover {
+  border-color: var(--m-brown-border) !important;
+}
+
+/* ── FOOTER ACCENTS ───────────────────────────────────────────── */
+.footer__heading,
+[class*="footer__title"],
+[class*="footer-heading"] {
+  color: var(--m-beige-dim) !important;
+}
+
+/* ── QUICK VIEW BUTTON ────────────────────────────────────────── */
+.quick-add__submit,
+[class*="quick-view"],
+[class*="quick-add"] {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+}
+
+/* ── NOTIFICATION / TOAST ────────────────────────────────────── */
+[class*="toast"],
+[class*="notification"],
+[class*="cart-notification"] {
+  border-color: var(--m-orange) !important;
+}
+
+/* ── PAGINATION / ACTIVE STATE ───────────────────────────────── */
+.pagination__item--current,
+[aria-current="page"] {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+  border-color: var(--m-orange) !important;
+}
+
+/* ── SCROLLBAR (webkit) ──────────────────────────────────────── */
+::-webkit-scrollbar-thumb {
+  background: var(--m-brown-mid) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--m-orange) !important;
+}
+
+/* ── LOGO SIZE - HEADER & FOOTER ─────────────────────────────── */
+/*
+   Header logo - adjust px values to taste.
+   100px height is a significant jump from the current small size.
+   width: auto preserves aspect ratio.
+*/
+.header__heading-logo,
+.site-header__logo img,
+.header__logo img,
+.header .logo img,
+[class*="header"] [class*="logo"] img,
+.header__heading a img {
+  height: 80px !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* Footer logo - slightly smaller than header */
+.footer__logo img,
+.site-footer__logo img,
+[class*="footer"] [class*="logo"] img {
+  height: 64px !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* Also target SVG logos if theme uses inline SVG */
+.header__heading-logo svg,
+[class*="header"] [class*="logo"] svg {
+  height: 80px !important;
+  width: auto !important;
+}
+
+.footer__logo svg,
+[class*="footer"] [class*="logo"] svg {
+  height: 64px !important;
+  width: auto !important;
+}

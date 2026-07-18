@@ -1,0 +1,33 @@
+<div class="melato-service-hero">
+  <div class="melato-service-hero__inner">
+    {%- if section.settings.eyebrow != blank -%}
+      <span class="melato-service-hero__eyebrow">{{ section.settings.eyebrow }}</span>
+    {%- endif -%}
+    <h1 class="melato-service-hero__headline">{{ section.settings.headline }}</h1>
+    {%- if section.settings.subcopy != blank -%}
+      <div class="melato-service-hero__subcopy">{{ section.settings.subcopy }}</div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+.melato-service-hero { background: #f4ead8 !important; padding: clamp(3rem,8vw,6rem) 1.25rem clamp(2rem,5vw,3rem); text-align: center; }
+.melato-service-hero__inner { max-width: 720px; margin: 0 auto; }
+.melato-service-hero__eyebrow { display: block; font-family: 'Bebas Neue', sans-serif; font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; color: #6f6d68 !important; margin-bottom: .9rem; }
+.melato-service-hero__headline { color: #0a0a0a !important; font-weight: 500; line-height: 1.1; margin: 0 0 1rem; font-size: clamp(2rem,5vw,3.4rem); }
+.melato-service-hero__subcopy { font-size: 1rem; line-height: 1.6; }
+.melato-service-hero__subcopy p { color: #3a3833 !important; margin: 0; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Melato Service Hero",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
+    { "type": "text", "id": "headline", "label": "Headline" },
+    { "type": "richtext", "id": "subcopy", "label": "Subcopy" }
+  ],
+  "presets": [{ "name": "Melato Service Hero" }]
+}
+{% endschema %}

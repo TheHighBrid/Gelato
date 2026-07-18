@@ -1,0 +1,96 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════╗
+  ║  MELATO - Product Card Snippet                           ║
+  ║  snippets/melato-product-card.liquid                     ║
+  ╠══════════════════════════════════════════════════════════╣
+  ║  PARAMETERS:                                             ║
+  ║    product - Shopify product object (required)           ║
+  ║    badge   - Optional text badge string (optional)       ║
+  ╚══════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+{%- liquid
+  assign card_product = product
+  assign first_image = card_product.featured_image
+  assign second_image = card_product.images[1]
+  assign card_type = card_product.type | default: 'product'
+  assign card_type_down = card_type | downcase
+
+  assign first_alt = first_image.alt | strip
+  if first_alt == blank or first_alt == card_product.title
+    assign first_alt = card_product.title | append: ' by Melato, ' | append: card_type_down | append: ' product image'
+  endif
+
+  assign second_alt = second_image.alt | strip
+  if second_alt == blank or second_alt == card_product.title
+    assign second_alt = card_product.title | append: ' by Melato, alternate ' | append: card_type_down | append: ' product image'
+  endif
+-%}
+
+<article class="m-card" aria-label="{{ card_product.title | escape }}">
+  <a
+    href="{{ card_product.url }}"
+    class="m-card__media-wrap"
+    tabindex="-1"
+    aria-hidden="true">
+
+    {%- if first_image != blank -%}
+      <img
+        src="{{ first_image | image_url: width: 800 }}"
+        alt="{{ first_alt | escape }}"
+        width="800"
+        height="{{ 800 | divided_by: first_image.aspect_ratio | round }}"
+        loading="lazy"
+        class="m-card__img m-card__img--primary"
+      >
+      {%- if second_image != blank -%}
+        <img
+          src="{{ second_image | image_url: width: 800 }}"
+          alt="{{ second_alt | escape }}"
+          width="800"
+          height="{{ 800 | divided_by: second_image.aspect_ratio | round }}"
+          loading="lazy"
+          class="m-card__img m-card__img--hover"
+        >
+      {%- endif -%}
+    {%- else -%}
+      <div class="m-card__img-placeholder" aria-hidden="true"></div>
+    {%- endif -%}
+
+    {%- if badge != blank -%}
+      <span class="m-card__badge">{{ badge }}</span>
+    {%- elsif card_product.available == false -%}
+      <span class="m-card__badge m-card__badge--sold">Sold Out</span>
+    {%- elsif card_product.tags contains 'new' -%}
+      <span class="m-card__badge m-card__badge--new">New</span>
+    {%- endif -%}
+  </a>
+
+  <div class="m-card__info">
+    <a href="{{ card_product.url }}" class="m-card__title-link">
+      <h3 class="m-card__title">{{ card_product.title | escape }}</h3>
+    </a>
+    <div class="m-card__price-row">
+      {%- if card_product.compare_at_price > card_product.price -%}
+        <span class="m-card__price m-card__price--sale">
+          {{- card_product.price | money -}}
+        </span>
+        <s class="m-card__price m-card__price--compare">
+          {{- card_product.compare_at_price | money -}}
+        </s>
+      {%- else -%}
+        <span class="m-card__price">{{ card_product.price | money }}</span>
+      {%- endif -%}
+    </div>
+
+    <a
+      href="{{ card_product.url }}"
+      class="m-card__cta"
+      aria-label="View {{ card_product.title | escape }}">
+      View Product
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+</article>

@@ -1,0 +1,1 @@
+{"sections":{"gate":{"type":"melato-preview-gate","settings":{}},"products":{"type":"melato-preview-products","settings":{}},"strip":{"type":"melato-concierge-strip","settings":{"style_mode":"dark"}}},"order":["gate","products","strip"]}

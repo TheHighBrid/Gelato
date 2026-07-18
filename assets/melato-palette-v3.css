@@ -1,0 +1,713 @@
+/*
+  MELATO PALETTE V3 - Neon Green / Brown Removal + Beige Premium System
+  Install in theme.liquid before </head>:
+  {{ 'melato-palette-v3.css' | asset_url | stylesheet_tag }}
+
+  Scope: announcement bars, marquee/ticker, product cards, review stars,
+  countdown/timer blocks, CTA buttons, header background, and header icons.
+*/
+
+:root {
+  --melato-black: #050505;
+  --melato-ink: #0a0a0a;
+  --melato-ink-2: #111111;
+  --melato-ink-3: #181818;
+  --melato-offwhite: #f4ead8;
+  --melato-offwhite-2: #fff8eb;
+  --melato-beige: #eadcc6;
+  --melato-beige-deep: #d9c8ae;
+  --melato-muted: #aaa39a;
+  --melato-line: rgba(244, 234, 216, 0.18);
+  --melato-soft-line: rgba(244, 234, 216, 0.10);
+  --melato-shadow: rgba(0, 0, 0, 0.45);
+  --melato-icon-size: 28px;
+  --melato-icon-stroke: #f4ead8;
+  --melato-transition: 180ms ease;
+}
+
+/* ------------------------------------------------------------
+   1) Hard stop: remove neon/chartreuse/yellow-green leftovers
+   ------------------------------------------------------------ */
+
+[style*="chartreuse"],
+[style*="Chartreuse"],
+[style*="lime"],
+[style*="Lime"],
+[style*="#c6ff00"],
+[style*="#C6FF00"],
+[style*="#ccff00"],
+[style*="#CCFF00"],
+[style*="#bfff00"],
+[style*="#BFFF00"],
+[style*="#adff2f"],
+[style*="#ADFF2F"],
+[style*="rgb(198, 255, 0)"],
+[style*="rgb(204, 255, 0)"],
+[style*="rgb(173, 255, 47)"] {
+  color: var(--melato-offwhite) !important;
+  border-color: var(--melato-line) !important;
+  text-shadow: none !important;
+}
+
+svg [fill="#c6ff00"],
+svg [fill="#C6FF00"],
+svg [fill="#ccff00"],
+svg [fill="#CCFF00"],
+svg [fill="#bfff00"],
+svg [fill="#BFFF00"],
+svg [fill="#adff2f"],
+svg [fill="#ADFF2F"] {
+  fill: var(--melato-offwhite) !important;
+}
+
+svg [stroke="#c6ff00"],
+svg [stroke="#C6FF00"],
+svg [stroke="#ccff00"],
+svg [stroke="#CCFF00"],
+svg [stroke="#bfff00"],
+svg [stroke="#BFFF00"],
+svg [stroke="#adff2f"],
+svg [stroke="#ADFF2F"] {
+  stroke: var(--melato-offwhite) !important;
+}
+
+/* ------------------------------------------------------------
+   2) Header + announcement / marquee correction
+   ------------------------------------------------------------ */
+
+.shopify-section-group-header-group,
+.shopify-section-header,
+.section-header,
+sticky-header,
+.header-wrapper,
+.site-header,
+.header,
+header.header,
+header.site-header,
+#shopify-section-header,
+#shopify-section-sections--header,
+[class*="header-wrapper"] {
+  background: var(--melato-black) !important;
+  color: var(--melato-offwhite) !important;
+  border-bottom: 1px solid var(--melato-soft-line) !important;
+  box-shadow: none !important;
+}
+
+.header *,
+.site-header *,
+.header-wrapper *,
+sticky-header * {
+  text-shadow: none !important;
+}
+
+.header a,
+.site-header a,
+.header__menu-item,
+.site-nav__link,
+.header__active-menu-item {
+  color: var(--melato-offwhite) !important;
+}
+
+.header a:hover,
+.site-header a:hover,
+.header__menu-item:hover,
+.site-nav__link:hover {
+  color: var(--melato-offwhite-2) !important;
+  opacity: 0.78;
+}
+
+.announcement-bar,
+.announcement-bar-section,
+.utility-bar,
+.top-bar,
+[class*="announcement"],
+[class*="Announcement"] {
+  background: var(--melato-ink-2) !important;
+  color: var(--melato-offwhite) !important;
+  border-color: var(--melato-soft-line) !important;
+}
+
+.announcement-bar__message,
+.announcement-bar__link,
+.announcement__text,
+.announcement__message,
+.utility-bar__grid,
+.utility-bar__grid * {
+  color: var(--melato-offwhite) !important;
+  letter-spacing: 0.18em;
+  text-shadow: none !important;
+}
+
+/* The second scrolling bar / drop ticker visible in screenshot */
+.marquee,
+.marquee-section,
+.marquee-bar,
+.ticker,
+.ticker-bar,
+.scrolling-bar,
+.scrolling-text,
+.announcement-marquee,
+[class*="marquee"],
+[class*="Marquee"],
+[class*="ticker"],
+[class*="Ticker"],
+[class*="scrolling-text"],
+[class*="ScrollingText"] {
+  background: var(--melato-black) !important;
+  color: var(--melato-offwhite) !important;
+  border-top: 1px solid var(--melato-soft-line) !important;
+  border-bottom: 1px solid var(--melato-soft-line) !important;
+  box-shadow: none !important;
+}
+
+.marquee *,
+.marquee-section *,
+.marquee-bar *,
+.ticker *,
+.ticker-bar *,
+.scrolling-bar *,
+.scrolling-text *,
+.announcement-marquee *,
+[class*="marquee"] *,
+[class*="Marquee"] *,
+[class*="ticker"] *,
+[class*="Ticker"] *,
+[class*="scrolling-text"] *,
+[class*="ScrollingText"] * {
+  color: var(--melato-offwhite) !important;
+  fill: var(--melato-offwhite) !important;
+  stroke: var(--melato-offwhite) !important;
+  text-shadow: none !important;
+}
+
+.marquee strong,
+.marquee b,
+.ticker strong,
+.ticker b,
+.scrolling-text strong,
+.scrolling-text b,
+[class*="marquee"] strong,
+[class*="marquee"] b,
+[class*="ticker"] strong,
+[class*="ticker"] b {
+  color: var(--melato-offwhite-2) !important;
+  font-weight: 700 !important;
+}
+
+/* ------------------------------------------------------------
+   3) Product cards: title hover, quick view, badges, wishlist
+   ------------------------------------------------------------ */
+
+.card,
+.product-card,
+.product-card-wrapper,
+.grid__item .card,
+.collection .card-wrapper {
+  background: var(--melato-black) !important;
+  color: var(--melato-offwhite) !important;
+}
+
+.card__heading,
+.card__heading a,
+.card-information,
+.card-information *,
+.product-card__title,
+.product-card__title a,
+.product-item__title,
+.product-item__title a,
+.product-title,
+.product-title a,
+[class*="product-card"] [class*="title"],
+[class*="card"] [class*="heading"] {
+  color: var(--melato-offwhite) !important;
+  text-shadow: none !important;
+}
+
+.card__heading a:hover,
+.card__heading:hover,
+.card-information a:hover,
+.product-card__title:hover,
+.product-card__title a:hover,
+.product-item__title:hover,
+.product-item__title a:hover,
+.product-title:hover,
+.product-title a:hover,
+a.full-unstyled-link:hover,
+[class*="product-card"] [class*="title"]:hover,
+[class*="card"] [class*="heading"] a:hover {
+  color: var(--melato-offwhite-2) !important;
+  text-shadow: none !important;
+  opacity: 0.86;
+}
+
+.price,
+.price *,
+.card-information .price,
+.product-card .price,
+.product-item .price {
+  color: var(--melato-offwhite) !important;
+}
+
+.badge,
+.card__badge,
+.product-badge,
+[class*="badge"],
+[class*="Badge"] {
+  background: var(--melato-offwhite) !important;
+  color: var(--melato-black) !important;
+  border-color: var(--melato-offwhite) !important;
+  box-shadow: none !important;
+}
+
+.quick-add__submit,
+.quick-view,
+.quick-view__button,
+.quickview,
+.button.quick-view,
+.card__quick-view,
+.product-card__quick-view,
+[class*="quick-view"],
+[class*="QuickView"],
+[class*="quick_add"],
+[class*="quick-add"] {
+  background: var(--melato-offwhite) !important;
+  color: var(--melato-black) !important;
+  border-color: var(--melato-offwhite) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.quick-add__submit:hover,
+.quick-view:hover,
+.quick-view__button:hover,
+.card__quick-view:hover,
+.product-card__quick-view:hover,
+[class*="quick-view"]:hover,
+[class*="QuickView"]:hover,
+[class*="quick_add"]:hover,
+[class*="quick-add"]:hover {
+  background: var(--melato-offwhite-2) !important;
+  color: var(--melato-black) !important;
+  border-color: var(--melato-offwhite-2) !important;
+  transform: translateY(-1px);
+}
+
+.wishlist,
+.wishlist-button,
+.swym-button,
+.product-card .heart,
+.card-wrapper [class*="heart"],
+.card-wrapper [class*="wishlist"] {
+  color: var(--melato-offwhite) !important;
+  border-color: var(--melato-line) !important;
+  background: rgba(5, 5, 5, 0.56) !important;
+}
+
+.wishlist svg,
+.wishlist-button svg,
+.swym-button svg,
+.product-card .heart svg,
+.card-wrapper [class*="heart"] svg,
+.card-wrapper [class*="wishlist"] svg {
+  fill: none !important;
+  stroke: var(--melato-offwhite) !important;
+}
+
+/* ------------------------------------------------------------
+   4) Review stars: replace neon/yellow-green with premium beige
+   ------------------------------------------------------------ */
+
+.jdgm-star,
+.jdgm-prev-badge__stars,
+.jdgm-rev-widg__stars,
+.spr-icon,
+.spr-icon-star,
+.spr-icon-star-empty,
+.review-star,
+.review__star,
+.rating-star,
+.rating__star,
+.stars,
+.star-rating,
+[class*="star"],
+[class*="Star"] {
+  color: var(--melato-offwhite) !important;
+  text-shadow: none !important;
+}
+
+.jdgm-star:before,
+.spr-icon-star:before,
+.spr-icon-star-empty:before,
+.review-star:before,
+.rating-star:before,
+[class*="star"]:before,
+[class*="Star"]:before {
+  color: var(--melato-offwhite) !important;
+}
+
+.jdgm-star svg,
+.spr-icon svg,
+.review-star svg,
+.rating-star svg,
+.star-rating svg,
+[class*="star"] svg,
+[class*="Star"] svg,
+svg.icon-star,
+.icon-star,
+svg[class*="star"],
+svg[class*="Star"] {
+  color: var(--melato-offwhite) !important;
+  fill: var(--melato-offwhite) !important;
+  stroke: var(--melato-offwhite) !important;
+  filter: none !important;
+}
+
+.jdgm-star path,
+.spr-icon path,
+.review-star path,
+.rating-star path,
+.star-rating path,
+.icon-star path,
+svg[class*="star"] path,
+svg[class*="Star"] path {
+  fill: var(--melato-offwhite) !important;
+  stroke: var(--melato-offwhite) !important;
+}
+
+/* ------------------------------------------------------------
+   5) Brown / orange removal: buttons, timers, highlights
+   ------------------------------------------------------------ */
+
+a.button,
+.button,
+.btn,
+.shopify-payment-button__button,
+button.button,
+input[type="submit"],
+.customer button,
+.button--primary,
+.btn--primary,
+.shopify-challenge__button,
+.product-form__submit,
+.cart__checkout-button,
+.banner__buttons .button,
+.image-with-text__content .button,
+.multicolumn-card .button,
+[class*="button--primary"],
+[class*="btn--primary"] {
+  background: var(--melato-offwhite) !important;
+  color: var(--melato-black) !important;
+  border: 1px solid var(--melato-offwhite) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+a.button:hover,
+.button:hover,
+.btn:hover,
+.shopify-payment-button__button:hover,
+button.button:hover,
+input[type="submit"]:hover,
+.customer button:hover,
+.product-form__submit:hover,
+.cart__checkout-button:hover,
+.banner__buttons .button:hover,
+.image-with-text__content .button:hover {
+  background: var(--melato-offwhite-2) !important;
+  color: var(--melato-black) !important;
+  border-color: var(--melato-offwhite-2) !important;
+}
+
+.button--secondary,
+.btn--secondary,
+a.button--secondary,
+.banner__buttons .button--secondary {
+  background: transparent !important;
+  color: var(--melato-offwhite) !important;
+  border: 1px solid var(--melato-line) !important;
+}
+
+.button--secondary:hover,
+.btn--secondary:hover,
+a.button--secondary:hover,
+.banner__buttons .button--secondary:hover {
+  background: rgba(244, 234, 216, 0.10) !important;
+  color: var(--melato-offwhite-2) !important;
+}
+
+/* common orange/brown utility classes from custom sections */
+.orange,
+.brown,
+.accent,
+.highlight,
+[class*="orange"],
+[class*="Orange"],
+[class*="brown"],
+[class*="Brown"],
+[class*="accent"],
+[class*="Accent"] {
+  color: var(--melato-offwhite) !important;
+  border-color: var(--melato-line) !important;
+}
+
+[class*="orange-bg"],
+[class*="brown-bg"],
+[class*="accent-bg"],
+[class*="background-accent"],
+[class*="BackgroundAccent"] {
+  background: var(--melato-offwhite) !important;
+  color: var(--melato-black) !important;
+}
+
+.countdown,
+.countdown-timer,
+.timer,
+.timer-block,
+.sale-timer,
+[class*="countdown"],
+[class*="Countdown"],
+[class*="timer"],
+[class*="Timer"] {
+  color: var(--melato-offwhite) !important;
+  border-color: var(--melato-line) !important;
+  text-shadow: none !important;
+}
+
+.countdown__item,
+.countdown__number,
+.countdown-number,
+.timer__item,
+.timer__number,
+.timer-number,
+[class*="countdown"] [class*="number"],
+[class*="Countdown"] [class*="Number"],
+[class*="timer"] [class*="number"],
+[class*="Timer"] [class*="Number"] {
+  background: rgba(244, 234, 216, 0.08) !important;
+  color: var(--melato-offwhite) !important;
+  border: 1px solid var(--melato-line) !important;
+}
+
+.countdown__label,
+.timer__label,
+[class*="countdown"] [class*="label"],
+[class*="timer"] [class*="label"] {
+  color: var(--melato-muted) !important;
+}
+
+/* The small line before “THE MELATO STANDARD” visible in the screenshot */
+.kicker:before,
+.eyebrow:before,
+.section-eyebrow:before,
+.section-kicker:before,
+[class*="kicker"]:before,
+[class*="eyebrow"]:before,
+[class*="standard"]:before,
+[class*="Standard"]:before {
+  background: var(--melato-offwhite) !important;
+  border-color: var(--melato-offwhite) !important;
+  box-shadow: none !important;
+}
+
+/* ------------------------------------------------------------
+   6) Header icon redesign: CSS-only fallback/replacement
+   Use this even before editing header.liquid. The Liquid snippets in this kit
+   are the stronger replacement method.
+   ------------------------------------------------------------ */
+
+.header__icon,
+.site-header__icon,
+.header-icon,
+.header button,
+.header summary,
+.site-header button,
+.site-header summary {
+  color: var(--melato-offwhite) !important;
+  transition: opacity var(--melato-transition), transform var(--melato-transition);
+}
+
+.header__icon:hover,
+.site-header__icon:hover,
+.header-icon:hover,
+.header button:hover,
+.header summary:hover,
+.site-header button:hover,
+.site-header summary:hover {
+  opacity: 0.78;
+  transform: translateY(-1px);
+}
+
+.header__icon svg,
+.site-header__icon svg,
+.header-icon svg,
+.header__icon .icon,
+.site-header__icon .icon {
+  color: var(--melato-offwhite) !important;
+  fill: none !important;
+  stroke: var(--melato-offwhite) !important;
+  stroke-width: 1.7 !important;
+}
+
+/* Hide default icon art for known icon wrappers and draw Melato icons on top. */
+.header__icon--menu svg,
+.header__icon--search svg,
+.header__icon--account svg,
+.header__icon--cart svg,
+.site-header__icon--menu svg,
+.site-header__icon--search svg,
+.site-header__icon--account svg,
+.site-header__icon--cart svg,
+.menu-drawer-container summary svg,
+details-modal.header__search svg,
+a[href="/cart"] svg,
+a[href^="/cart"] svg,
+a[href="/account"] svg,
+a[href^="/account"] svg,
+button[aria-label*="Search"] svg,
+button[aria-label*="search"] svg,
+button[aria-label*="Menu"] svg,
+button[aria-label*="menu"] svg {
+  opacity: 0 !important;
+}
+
+.header__icon--menu,
+.header__icon--search,
+.header__icon--account,
+.header__icon--cart,
+.site-header__icon--menu,
+.site-header__icon--search,
+.site-header__icon--account,
+.site-header__icon--cart,
+.menu-drawer-container summary,
+details-modal.header__search .header__icon,
+a[href="/cart"].header__icon,
+a[href^="/cart"].header__icon,
+a[href="/account"].header__icon,
+a[href^="/account"].header__icon,
+button[aria-label*="Search"],
+button[aria-label*="search"],
+button[aria-label*="Menu"],
+button[aria-label*="menu"] {
+  position: relative !important;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.header__icon--menu:before,
+.site-header__icon--menu:before,
+.menu-drawer-container summary:before,
+button[aria-label*="Menu"]:before,
+button[aria-label*="menu"]:before {
+  content: "";
+  width: var(--melato-icon-size);
+  height: var(--melato-icon-size);
+  display: block;
+  background: center / contain no-repeat url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.5 9.8H22.8' stroke='%23F4EAD8' stroke-width='1.9' stroke-linecap='round'/%3E%3Cpath d='M5.5 16H26.5' stroke='%23F4EAD8' stroke-width='1.9' stroke-linecap='round'/%3E%3Cpath d='M5.5 22.2H18.6' stroke='%23F4EAD8' stroke-width='1.9' stroke-linecap='round'/%3E%3Cpath d='M23.7 8.2L27.2 9.8L23.7 11.4' stroke='%23F4EAD8' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round' opacity='.75'/%3E%3C/svg%3E");
+}
+
+.header__icon--search:before,
+.site-header__icon--search:before,
+details-modal.header__search .header__icon:before,
+button[aria-label*="Search"]:before,
+button[aria-label*="search"]:before {
+  content: "";
+  width: var(--melato-icon-size);
+  height: var(--melato-icon-size);
+  display: block;
+  background: center / contain no-repeat url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='14.2' cy='14.2' r='7.3' stroke='%23F4EAD8' stroke-width='1.8'/%3E%3Cpath d='M19.9 20L26.3 26.2' stroke='%23F4EAD8' stroke-width='1.8' stroke-linecap='round'/%3E%3Cpath d='M10.5 11.2C11.4 10.1 12.7 9.5 14.2 9.5' stroke='%23F4EAD8' stroke-width='1.2' stroke-linecap='round' opacity='.65'/%3E%3C/svg%3E");
+}
+
+.header__icon--account:before,
+.site-header__icon--account:before,
+a[href="/account"].header__icon:before,
+a[href^="/account"].header__icon:before {
+  content: "";
+  width: var(--melato-icon-size);
+  height: var(--melato-icon-size);
+  display: block;
+  background: center / contain no-repeat url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16 16.2C19 16.2 21.4 13.8 21.4 10.8C21.4 7.8 19 5.4 16 5.4C13 5.4 10.6 7.8 10.6 10.8C10.6 13.8 13 16.2 16 16.2Z' stroke='%23F4EAD8' stroke-width='1.65'/%3E%3Cpath d='M6.8 26.6C7.8 21.9 11.2 19.5 16 19.5C20.8 19.5 24.2 21.9 25.2 26.6' stroke='%23F4EAD8' stroke-width='1.65' stroke-linecap='round'/%3E%3Cpath d='M11.8 23.8C13 23.2 14.4 22.9 16 22.9C17.6 22.9 19 23.2 20.2 23.8' stroke='%23F4EAD8' stroke-width='1.05' stroke-linecap='round' opacity='.55'/%3E%3C/svg%3E");
+}
+
+.header__icon--cart:before,
+.site-header__icon--cart:before,
+a[href="/cart"].header__icon:before,
+a[href^="/cart"].header__icon:before {
+  content: "";
+  width: var(--melato-icon-size);
+  height: var(--melato-icon-size);
+  display: block;
+  background: center / contain no-repeat url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M9.1 11.2H22.9L24.5 26.1H7.5L9.1 11.2Z' stroke='%23F4EAD8' stroke-width='1.7' stroke-linejoin='round'/%3E%3Cpath d='M12.2 11.2V9.8C12.2 7.5 13.8 5.8 16 5.8C18.2 5.8 19.8 7.5 19.8 9.8V11.2' stroke='%23F4EAD8' stroke-width='1.55' stroke-linecap='round'/%3E%3Cpath d='M11.3 16.2H20.7' stroke='%23F4EAD8' stroke-width='1.05' stroke-linecap='round' opacity='.55'/%3E%3Cpath d='M23.1 11.2L25.5 13.1' stroke='%23F4EAD8' stroke-width='1.15' stroke-linecap='round' opacity='.7'/%3E%3C/svg%3E");
+}
+
+.cart-count-bubble,
+.header__icon--cart .cart-count-bubble,
+.site-header__cart-count,
+.cart-link__bubble {
+  background: var(--melato-offwhite) !important;
+  color: var(--melato-black) !important;
+  border: 1px solid var(--melato-black) !important;
+}
+
+/* ------------------------------------------------------------
+   7) General section tone correction
+   ------------------------------------------------------------ */
+
+body,
+.gradient,
+.color-background-1,
+.color-background-2,
+.color-inverse,
+.shopify-section,
+main,
+#MainContent {
+  background-color: var(--melato-black) !important;
+}
+
+.section-heading,
+.title,
+.title-wrapper,
+h1, h2, h3, h4, h5, h6 {
+  color: var(--melato-offwhite) !important;
+}
+
+p,
+.rte,
+.rte *,
+.rich-text__text,
+.image-with-text__text,
+.multicolumn-card__info,
+.testimonial,
+.testimonial * {
+  color: rgba(244, 234, 216, 0.78) !important;
+}
+
+/* Prevent accidental beige/tan bands from surviving as full-width section backgrounds. */
+[style*="#e8d3b3"],
+[style*="#E8D3B3"],
+[style*="#d8c0a0"],
+[style*="#D8C0A0"],
+[style*="#d38a3a"],
+[style*="#D38A3A"],
+[style*="#d84600"],
+[style*="#D84600"],
+[style*="#dd3d00"],
+[style*="#DD3D00"] {
+  background-color: var(--melato-black) !important;
+  color: var(--melato-offwhite) !important;
+  border-color: var(--melato-line) !important;
+}
+
+/* But preserve intentional beige cards/buttons by class. */
+.button,
+.btn,
+.badge,
+.product-badge,
+.quick-view,
+.quick-view__button,
+.quick-add__submit,
+.cart-count-bubble {
+  background-color: var(--melato-offwhite) !important;
+}

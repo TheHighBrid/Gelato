@@ -1,0 +1,480 @@
+{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="melato-page melato-contact melato-contact-upgrade section-{{ section.id }}"
+  aria-labelledby="ContactHeading-{{ section.id }}"
+>
+  <div class="melato-section-wrap melato-page__wrap">
+
+    <header class="melato-page__header">
+      {% if section.settings.eyebrow != blank %}
+        <p class="melato-eyebrow">{{ section.settings.eyebrow }}</p>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h1 id="ContactHeading-{{ section.id }}">{{ section.settings.heading }}</h1>
+      {% endif %}
+
+      {% if section.settings.intro != blank %}
+        <p class="melato-contact-intro">{{ section.settings.intro }}</p>
+      {% endif %}
+    </header>
+
+    <div class="melato-contact__grid">
+
+      <div class="melato-contact__cards">
+        {%- for block in section.blocks -%}
+          <article class="melato-contact-card" {{ block.shopify_attributes }}>
+            {% if block.settings.title != blank %}
+              <h2>{{ block.settings.title }}</h2>
+            {% endif %}
+
+            {% if block.settings.description != blank %}
+              <p>{{ block.settings.description }}</p>
+            {% endif %}
+
+            {% if block.settings.email != blank %}
+              <a href="mailto:{{ block.settings.email | strip | escape }}">
+                {{ block.settings.email }}
+              </a>
+            {% endif %}
+          </article>
+        {%- endfor -%}
+      </div>
+
+      <div class="melato-contact__form-card">
+        {% if section.settings.form_heading != blank %}
+          <h2>{{ section.settings.form_heading }}</h2>
+        {% endif %}
+
+        {% form 'contact', class: 'melato-contact-form' %}
+
+          {%- if form.posted_successfully? -%}
+            <p class="melato-form-success" role="status">
+              Message sent. Melato will respond as soon as possible.
+            </p>
+          {%- endif -%}
+
+          {%- if form.errors -%}
+            <div class="melato-form-error" role="alert">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="melato-field">
+            <label for="ContactName-{{ section.id }}">Name</label>
+            <input
+              id="ContactName-{{ section.id }}"
+              type="text"
+              name="contact[name]"
+              autocomplete="name"
+              required
+            >
+          </div>
+
+          <div class="melato-field">
+            <label for="ContactEmail-{{ section.id }}">Email</label>
+            <input
+              id="ContactEmail-{{ section.id }}"
+              type="email"
+              name="contact[email]"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="melato-field">
+            <label for="ContactTopic-{{ section.id }}">Topic</label>
+            <select id="ContactTopic-{{ section.id }}" name="contact[topic]">
+              <option value="Order support">Order support</option>
+              <option value="Returns and exchanges">Returns and exchanges</option>
+              <option value="Sizing help">Sizing help</option>
+              <option value="Wholesale">Wholesale</option>
+              <option value="General inquiry">General inquiry</option>
+            </select>
+          </div>
+
+          <div class="melato-field">
+            <label for="ContactMessage-{{ section.id }}">Message</label>
+            <textarea
+              id="ContactMessage-{{ section.id }}"
+              name="contact[body]"
+              rows="6"
+              required
+            ></textarea>
+          </div>
+
+          <button class="melato-button" type="submit">
+            Send message
+          </button>
+
+        {% endform %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  /*
+    MELATO CONTACT UPGRADE - FULL SECTION FIX
+    This CSS is intentionally scoped to this exact section.
+  */
+
+  #shopify-section-{{ section.id }} {
+    background: #050609 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-upgrade {
+    background: #050609 !important;
+    color: #f5f1e8 !important;
+    padding: clamp(56px, 7vw, 110px) 20px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-section-wrap,
+  #shopify-section-{{ section.id }} .melato-page__wrap {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    background: transparent !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-page__header {
+    max-width: 640px;
+    margin-bottom: clamp(36px, 5vw, 64px);
+  }
+
+  #shopify-section-{{ section.id }} .melato-eyebrow {
+    margin: 0 0 10px;
+    color: rgba(245, 241, 232, 0.7) !important;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-page__header h1 {
+    margin: 0;
+    color: #f5f1e8 !important;
+    font-size: clamp(42px, 7vw, 82px);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-intro {
+    margin: 18px 0 0;
+    color: rgba(245, 241, 232, 0.72) !important;
+    font-size: clamp(14px, 1.6vw, 17px);
+    line-height: 1.7;
+    max-width: 600px;
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+    gap: clamp(28px, 4vw, 56px);
+    align-items: start;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact__cards {
+    display: grid;
+    gap: 18px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-card,
+  #shopify-section-{{ section.id }} .melato-contact__form-card {
+    background: #f4f3ef !important;
+    color: #090909 !important;
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-card {
+    padding: clamp(24px, 3vw, 34px);
+    min-height: 126px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact__form-card {
+    padding: clamp(26px, 4vw, 42px);
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-card *,
+  #shopify-section-{{ section.id }} .melato-contact__form-card * {
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-card h2,
+  #shopify-section-{{ section.id }} .melato-contact__form-card h2 {
+    margin: 0 0 14px;
+    color: #111111 !important;
+    font-size: 13px;
+    line-height: 1.1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-card p {
+    margin: 0 0 12px;
+    color: #555555 !important;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-card a {
+    color: #090909 !important;
+    font-size: 14px;
+    line-height: 1.4;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-card a:hover {
+    border-bottom-color: #090909;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-form {
+    display: grid;
+    gap: 18px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-field {
+    display: grid;
+    gap: 8px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-form label {
+    color: #141414 !important;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-form input,
+  #shopify-section-{{ section.id }} .melato-contact-form textarea,
+  #shopify-section-{{ section.id }} .melato-contact-form select {
+    width: 100%;
+    min-height: 54px;
+    background: #fbfaf7 !important;
+    color: #090909 !important;
+    border: 1px solid rgba(0, 0, 0, 0.16) !important;
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-size: 15px;
+    line-height: 1.4;
+    box-shadow: none !important;
+    outline: none;
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-form textarea {
+    min-height: 150px;
+    resize: vertical;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-form input:focus,
+  #shopify-section-{{ section.id }} .melato-contact-form textarea:focus,
+  #shopify-section-{{ section.id }} .melato-contact-form select:focus {
+    border-color: rgba(0, 0, 0, 0.5) !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-form input::placeholder,
+  #shopify-section-{{ section.id }} .melato-contact-form textarea::placeholder {
+    color: rgba(0, 0, 0, 0.45) !important;
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-contact-form select,
+  #shopify-section-{{ section.id }} .melato-contact-form option {
+    color: #090909 !important;
+    background: #ffffff !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-button,
+  #shopify-section-{{ section.id }} .melato-contact-form button {
+    width: 100%;
+    min-height: 54px;
+    margin-top: 2px;
+    background: #050609 !important;
+    color: #ffffff !important;
+    border: 1px solid #050609 !important;
+    border-radius: 999px;
+    font-size: 12px;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 800;
+    cursor: pointer;
+    opacity: 1 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-button:hover,
+  #shopify-section-{{ section.id }} .melato-contact-form button:hover {
+    background: #17181d !important;
+    color: #ffffff !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-form-success {
+    margin: 0;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(27, 120, 71, 0.12) !important;
+    color: #145c37 !important;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  #shopify-section-{{ section.id }} .melato-form-error {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(180, 35, 24, 0.1) !important;
+    color: #8a1f17 !important;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  #shopify-section-{{ section.id }} .melato-form-error *,
+  #shopify-section-{{ section.id }} .melato-form-success * {
+    color: inherit !important;
+  }
+
+  @media screen and (max-width: 900px) {
+    #shopify-section-{{ section.id }} .melato-contact__grid {
+      grid-template-columns: 1fr;
+    }
+
+    #shopify-section-{{ section.id }} .melato-contact__form-card {
+      order: 2;
+    }
+
+    #shopify-section-{{ section.id }} .melato-contact__cards {
+      order: 1;
+    }
+  }
+
+  @media screen and (max-width: 560px) {
+    #shopify-section-{{ section.id }} .melato-contact-upgrade {
+      padding: 44px 14px 70px;
+    }
+
+    #shopify-section-{{ section.id }} .melato-contact-card,
+    #shopify-section-{{ section.id }} .melato-contact__form-card {
+      border-radius: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .melato-contact-card {
+      padding: 22px;
+    }
+
+    #shopify-section-{{ section.id }} .melato-contact__form-card {
+      padding: 24px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Melato contact upgrade",
+  "tag": "section",
+  "class": "section melato-section melato-contact-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Customer care"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Contact Melato"
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro",
+      "default": "For order support, sizing, wholesale, and drop questions, send the right department a clear message with the details we need to assist you accordingly."
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form heading",
+      "default": "Send a message"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "contact_card",
+      "name": "Contact card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Orders & Returns"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Order support, tracking, returns, and exchanges."
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email",
+          "default": "support@melato.ca"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato contact upgrade",
+      "blocks": [
+        {
+          "type": "contact_card",
+          "settings": {
+            "title": "Returns & Exchanges",
+            "description": "Order support, returns and exchanges.",
+            "email": "support@melato.ca"
+          }
+        },
+        {
+          "type": "contact_card",
+          "settings": {
+            "title": "Order Tracking",
+            "description": "Order tracking numbers, fulfillment updates and order status.",
+            "email": "orders@melato.ca"
+          }
+        },
+        {
+          "type": "contact_card",
+          "settings": {
+            "title": "General Inquiries",
+            "description": "Product questions, sizing help, customer care and for all other inquiries.",
+            "email": "inquiries@melato.ca"
+          }
+        },
+        {
+          "type": "contact_card",
+          "settings": {
+            "title": "Sales & Wholesale",
+            "description": "Retail partnerships, styling, gifting and wholesale requests.",
+            "email": "sales@melato.ca"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

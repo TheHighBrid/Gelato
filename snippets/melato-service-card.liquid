@@ -1,0 +1,9 @@
+{%- comment -%} params: eyebrow, title, text, cta_label, url {%- endcomment -%}
+<a href="{{ url | default: '#' }}" class="melato-concierge__card">
+  {%- if eyebrow != blank -%}<span class="melato-concierge__eyebrow">{{ eyebrow }}</span>{%- endif -%}
+  <h3 class="melato-concierge__title">{{ title }}</h3>
+  {%- if text != blank -%}<p class="melato-concierge__text">{{ text }}</p>{%- endif -%}
+  {%- if cta_label != blank -%}
+    <span class="melato-concierge__cta">{{ cta_label }}<span class="melato-concierge__cta-arrow" aria-hidden="true"> →</span></span>
+  {%- endif -%}
+</a>

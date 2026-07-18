@@ -1,0 +1,47 @@
+{% comment %}
+  sections/main-register.liquid
+{% endcomment %}
+
+<section class="section-spacing">
+  <div class="container--narrow" style="max-width:480px;">
+    <h1 class="heading-md drip-reveal" style="margin-bottom:40px;">{{ 'account.register' | t }}</h1>
+
+    {%- form 'create_customer', class: 'drip-reveal drip-reveal--delay-1' -%}
+      {%- if form.errors -%}
+        <div role="alert" style="background:rgba(255,45,45,0.1);border:1px solid var(--color-error);padding:16px;margin-bottom:24px;">
+          <p class="text-label" style="color:var(--color-error);">{{ form.errors | default_errors }}</p>
+        </div>
+      {%- endif -%}
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+        <div class="field">
+          <label class="field__label" for="reg-first">First name</label>
+          <input class="field__input" type="text" name="customer[first_name]" id="reg-first" autocomplete="given-name">
+        </div>
+        <div class="field">
+          <label class="field__label" for="reg-last">Last name</label>
+          <input class="field__input" type="text" name="customer[last_name]" id="reg-last" autocomplete="family-name">
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:16px;">
+        <label class="field__label" for="reg-email">Email</label>
+        <input class="field__input" type="email" name="customer[email]" id="reg-email" autocomplete="email" required>
+      </div>
+
+      <div class="field" style="margin-bottom:24px;">
+        <label class="field__label" for="reg-password">Password</label>
+        <input class="field__input" type="password" name="customer[password]" id="reg-password" autocomplete="new-password" required>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <button type="submit" class="btn btn--primary btn--full">{{ 'account.register' | t }}</button>
+        <a href="{{ routes.account_login_url }}" class="btn btn--secondary btn--full">{{ 'account.login' | t }}</a>
+      </div>
+    {%- endform -%}
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Register", "tag": "section", "settings": [] }
+{% endschema %}

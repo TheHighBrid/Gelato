@@ -1,0 +1,1324 @@
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Barlow+Condensed:wght@200;400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --black:    #050505;
+  --ink:      #0c0c0c;
+  --offwhite: #ede8e0;
+  --cream:    #d6ccbc;
+  --gold:     #b89660;
+  --gold-lt:  #d4b07a;
+  --red:      #8b1a1a;
+  --muted:    #5a5550;
+  --dim:      #2a2620;
+  --bebas:    'Bebas Neue', sans-serif;
+  --cormo:    'Cormorant Garamond', serif;
+  --barlow:   'Barlow Condensed', sans-serif;
+}
+html { scroll-behavior: smooth; background: var(--black); }
+body {
+  background: var(--black);
+  color: var(--offwhite);
+  font-family: var(--barlow);
+  font-weight: 200;
+  cursor: none;
+  overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* ═══════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════ */
+.cursor {
+  position: fixed;
+  top: 0; left: 0;
+  width: 10px; height: 10px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform .12s ease, width .25s ease, height .25s ease, background .25s ease;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed;
+  top: 0; left: 0;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(184,150,96,.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform .35s cubic-bezier(.25,.46,.45,.94), width .3s ease, height .3s ease, border-color .3s ease;
+}
+.cursor.hovering { width: 6px; height: 6px; }
+.cursor-ring.hovering { width: 60px; height: 60px; border-color: var(--gold); }
+.cursor-ring .cursor-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--barlow);
+  font-size: 8px; font-weight: 500;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold); opacity: 0;
+  transition: opacity .25s;
+}
+.cursor-ring.hovering .cursor-label { opacity: 1; }
+
+/* ═══════════════════════════════════════
+   LOADING SCREEN
+═══════════════════════════════════════ */
+.loader {
+  position: fixed; inset: 0;
+  background: var(--black);
+  z-index: 8000;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px;
+  transition: opacity .8s ease, visibility .8s ease;
+}
+.loader.done { opacity: 0; visibility: hidden; }
+.loader-logo {
+  font-family: var(--bebas);
+  font-size: 52px;
+  letter-spacing: .2em;
+  color: var(--gold);
+  animation: pulse-gold 1.4s ease infinite;
+}
+.loader-line {
+  width: 120px; height: 1px;
+  background: var(--dim);
+  position: relative; overflow: hidden;
+}
+.loader-line::after {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: var(--gold);
+  animation: load-sweep 1.2s ease forwards;
+}
+.loader-sub {
+  font-family: var(--barlow);
+  font-size: 11px; font-weight: 200;
+  letter-spacing: .35em; text-transform: uppercase;
+  color: var(--muted);
+  animation: fade-in .5s ease .8s both;
+}
+@keyframes load-sweep { to { left: 100%; } }
+@keyframes pulse-gold { 0%,100%{opacity:1} 50%{opacity:.4} }
+@keyframes fade-in { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+
+/* ═══════════════════════════════════════
+   CINEMATIC HERO
+═══════════════════════════════════════ */
+.hero {
+  position: relative;
+  height: 100svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  padding-bottom: 8vh;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+  opacity: .18;
+  filter: grayscale(1);
+}
+.hero-bg-tile { overflow: hidden; }
+.hero-bg-tile img {
+  width: 100%; height: 100%; object-fit: cover;
+  transform: scale(1.08);
+  animation: slow-zoom 14s ease-in-out infinite alternate;
+}
+.hero-bg-tile:nth-child(2) img { animation-delay: -4s; }
+.hero-bg-tile:nth-child(3) img { animation-delay: -8s; }
+@keyframes slow-zoom { from{transform:scale(1.08)} to{transform:scale(1.14)} }
+
+/* grain overlay */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.06'/%3E%3C/svg%3E");
+  background-size: 256px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: .4;
+}
+/* vignette */
+.hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, rgba(5,5,5,.92) 100%);
+  z-index: 1;
+}
+.hero-content {
+  position: relative; z-index: 3;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 16px;
+}
+.hero-eyebrow {
+  font-family: var(--barlow);
+  font-size: 11px; font-weight: 400;
+  letter-spacing: .45em; text-transform: uppercase;
+  color: var(--gold); opacity: .8;
+  animation: fade-in .6s ease .5s both;
+}
+.hero-title {
+  font-family: var(--bebas);
+  font-size: clamp(64px, 14vw, 160px);
+  line-height: .92;
+  letter-spacing: .04em;
+  color: var(--offwhite);
+  animation: hero-rise .9s cubic-bezier(.22,1,.36,1) .3s both;
+}
+.hero-title em {
+  color: var(--gold);
+  font-style: normal;
+}
+.hero-desc {
+  font-family: var(--cormo);
+  font-size: clamp(15px, 2.2vw, 20px);
+  font-style: italic;
+  color: var(--cream);
+  opacity: .65;
+  max-width: 480px;
+  line-height: 1.5;
+  animation: fade-in .7s ease .7s both;
+}
+.hero-scroll {
+  margin-top: 32px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  animation: fade-in .6s ease 1.1s both;
+}
+.hero-scroll span {
+  font-family: var(--barlow);
+  font-size: 9px; font-weight: 400;
+  letter-spacing: .4em; text-transform: uppercase;
+  color: var(--muted);
+}
+.scroll-line {
+  width: 1px; height: 40px;
+  background: var(--dim);
+  position: relative; overflow: hidden;
+}
+.scroll-line::after {
+  content: '';
+  position: absolute; top: -100%; left: 0;
+  width: 100%; height: 100%;
+  background: var(--gold);
+  animation: scroll-drop 1.6s ease 1.5s infinite;
+}
+@keyframes scroll-drop { 0%{top:-100%} 100%{top:100%} }
+@keyframes hero-rise { from{opacity:0;transform:translateY(40px)} to{opacity:1;transform:none} }
+
+/* ═══════════════════════════════════════
+   FILTER BAR
+═══════════════════════════════════════ */
+.filter-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(5,5,5,.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--dim);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 40px;
+  height: 52px;
+  gap: 16px;
+}
+.filter-bar-logo {
+  font-family: var(--bebas);
+  font-size: 20px; letter-spacing: .18em;
+  color: var(--gold); flex-shrink: 0;
+}
+.filter-tabs {
+  display: flex; gap: 4px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.filter-tabs::-webkit-scrollbar { display: none; }
+.filter-tab {
+  font-family: var(--barlow);
+  font-size: 10px; font-weight: 400;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: var(--muted);
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-radius: 1px;
+  background: none;
+  cursor: none;
+  white-space: nowrap;
+  transition: color .2s, border-color .2s;
+}
+.filter-tab:hover { color: var(--offwhite); }
+.filter-tab.active {
+  color: var(--gold);
+  border-color: rgba(184,150,96,.3);
+}
+.filter-bar-cta {
+  font-family: var(--barlow);
+  font-size: 10px; font-weight: 500;
+  letter-spacing: .28em; text-transform: uppercase;
+  color: var(--offwhite);
+  background: var(--gold);
+  padding: 7px 16px;
+  flex-shrink: 0;
+  transition: background .2s;
+}
+.filter-bar-cta:hover { background: var(--gold-lt); }
+
+/* ═══════════════════════════════════════
+   ISSUE HEADER - editorial magazine style
+═══════════════════════════════════════ */
+.issue-header {
+  padding: 80px 40px 40px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 24px;
+  border-bottom: 1px solid var(--dim);
+  max-width: 1400px; margin: 0 auto;
+}
+.issue-tag {
+  font-family: var(--barlow);
+  font-size: 10px; font-weight: 400;
+  letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 14px;
+  display: flex; align-items: center; gap: 12px;
+}
+.issue-tag::before {
+  content: '';
+  width: 24px; height: 1px;
+  background: var(--gold);
+}
+.issue-title {
+  font-family: var(--bebas);
+  font-size: clamp(40px, 6vw, 80px);
+  line-height: 1;
+  letter-spacing: .05em;
+  color: var(--offwhite);
+}
+.issue-meta {
+  text-align: right;
+}
+.issue-count {
+  font-family: var(--bebas);
+  font-size: 64px; line-height: 1;
+  color: var(--dim);
+  letter-spacing: .05em;
+}
+.issue-label {
+  font-family: var(--barlow);
+  font-size: 9px; font-weight: 400;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ═══════════════════════════════════════
+   MASONRY GRID - the main event
+═══════════════════════════════════════ */
+.grid-wrap {
+  max-width: 1400px; margin: 0 auto;
+  padding: 48px 24px;
+}
+.masonry {
+  columns: 3;
+  column-gap: 6px;
+}
+@media(max-width:900px) { .masonry { columns: 2; } }
+@media(max-width:540px) { .masonry { columns: 1; } }
+
+/* ─── LOOK CARD ─── */
+.look-card {
+  break-inside: avoid;
+  margin-bottom: 6px;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  cursor: none;
+}
+/* Featured cards (tall) */
+.look-card--feat { grid-row: span 2; }
+
+.look-card__img-wrap {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink);
+}
+.look-card__img-wrap img {
+  width: 100%; height: auto;
+  display: block;
+  transform: scale(1);
+  transition: transform .65s cubic-bezier(.25,.46,.45,.94);
+  filter: brightness(.96);
+}
+.look-card:hover .look-card__img-wrap img {
+  transform: scale(1.04);
+  filter: brightness(1.02);
+}
+
+/* overlay */
+.look-card__overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(5,5,5,.88) 0%, rgba(5,5,5,.2) 45%, transparent 70%);
+  opacity: 0;
+  transition: opacity .4s ease;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px;
+}
+.look-card:hover .look-card__overlay { opacity: 1; }
+
+.look-card__name {
+  font-family: var(--cormo);
+  font-size: 18px;
+  font-style: italic;
+  color: var(--offwhite);
+  margin-bottom: 4px;
+  transform: translateY(8px);
+  transition: transform .35s ease;
+}
+.look-card:hover .look-card__name { transform: translateY(0); }
+
+.look-card__price {
+  font-family: var(--barlow);
+  font-size: 12px; font-weight: 400;
+  letter-spacing: .2em;
+  color: var(--gold-lt);
+  margin-bottom: 12px;
+  transform: translateY(8px);
+  transition: transform .35s ease .04s;
+}
+.look-card:hover .look-card__price { transform: translateY(0); }
+
+.look-card__cta {
+  display: inline-flex;
+  align-items: center; gap: 8px;
+  font-family: var(--barlow);
+  font-size: 9px; font-weight: 500;
+  letter-spacing: .35em; text-transform: uppercase;
+  color: var(--offwhite);
+  border-bottom: 1px solid rgba(214,204,188,.35);
+  padding-bottom: 2px;
+  width: fit-content;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform .35s ease .08s, opacity .35s ease .08s;
+}
+.look-card:hover .look-card__cta { transform: translateY(0); opacity: 1; }
+.look-card__cta svg { transition: transform .25s; }
+.look-card:hover .look-card__cta svg { transform: translateX(4px); }
+
+/* category tag on card */
+.look-card__tag {
+  position: absolute;
+  top: 14px; left: 14px;
+  font-family: var(--barlow);
+  font-size: 8.5px; font-weight: 500;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--offwhite);
+  background: rgba(5,5,5,.72);
+  padding: 4px 10px;
+  border: 1px solid rgba(214,204,188,.15);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity .3s, transform .3s;
+}
+.look-card:hover .look-card__tag { opacity: 1; transform: none; }
+
+/* card number */
+.look-card__num {
+  position: absolute;
+  bottom: 14px; right: 14px;
+  font-family: var(--bebas);
+  font-size: 13px; letter-spacing: .1em;
+  color: rgba(214,204,188,.25);
+  opacity: 0;
+  transition: opacity .3s;
+}
+.look-card:hover .look-card__num { opacity: 1; }
+
+/* reveal animation on scroll */
+.look-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.look-card.visible { opacity: 1; transform: none; }
+
+/* ═══════════════════════════════════════
+   EDITORIAL BREAK - full width quote
+═══════════════════════════════════════ */
+.editorial-break {
+  padding: 80px 40px;
+  text-align: center;
+  border-top: 1px solid var(--dim);
+  border-bottom: 1px solid var(--dim);
+  margin: 48px 0;
+  position: relative;
+  overflow: hidden;
+}
+.editorial-break::before {
+  content: '"';
+  position: absolute;
+  font-family: var(--bebas);
+  font-size: 400px; line-height: 1;
+  color: var(--dim);
+  top: -80px; left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  opacity: .3;
+}
+.editorial-quote {
+  position: relative; z-index: 1;
+  font-family: var(--cormo);
+  font-size: clamp(22px, 4vw, 42px);
+  font-style: italic;
+  line-height: 1.35;
+  color: var(--offwhite);
+  max-width: 700px;
+  margin: 0 auto 20px;
+}
+.editorial-attr {
+  font-family: var(--barlow);
+  font-size: 10px; font-weight: 400;
+  letter-spacing: .4em; text-transform: uppercase;
+  color: var(--gold); opacity: .7;
+}
+
+/* ═══════════════════════════════════════
+   MARQUEE STRIP
+═══════════════════════════════════════ */
+.marquee-strip {
+  overflow: hidden;
+  border-top: 1px solid var(--dim);
+  border-bottom: 1px solid var(--dim);
+  padding: 14px 0;
+  margin: 0;
+  background: var(--ink);
+}
+.marquee-track {
+  display: flex; gap: 0;
+  width: max-content;
+  animation: marquee-scroll 22s linear infinite;
+}
+.marquee-item {
+  display: flex; align-items: center; gap: 32px;
+  padding: 0 32px;
+  font-family: var(--bebas);
+  font-size: 14px; letter-spacing: .25em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.marquee-item .dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--gold); opacity: .6; flex-shrink: 0;
+}
+@keyframes marquee-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ═══════════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════════ */
+.lightbox {
+  position: fixed; inset: 0;
+  background: rgba(5,5,5,.97);
+  z-index: 7000;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity .4s ease, visibility .4s ease;
+}
+.lightbox.open { opacity: 1; visibility: visible; }
+
+.lightbox-inner {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  max-width: 1100px;
+  width: 94vw;
+  max-height: 90vh;
+  gap: 0;
+  border: 1px solid var(--dim);
+}
+@media(max-width:700px){
+  .lightbox-inner { grid-template-columns: 1fr; max-height: 95vh; }
+}
+.lightbox-img {
+  overflow: hidden;
+  max-height: 90vh;
+  background: var(--ink);
+  display: flex; align-items: center;
+}
+.lightbox-img img {
+  width: 100%; height: 100%; object-fit: contain;
+  max-height: 90vh;
+}
+.lightbox-panel {
+  background: var(--ink);
+  border-left: 1px solid var(--dim);
+  padding: 36px 28px;
+  display: flex; flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+.lightbox-num {
+  font-family: var(--bebas);
+  font-size: 11px; letter-spacing: .3em;
+  color: var(--muted);
+}
+.lightbox-tag {
+  display: inline-block;
+  font-family: var(--barlow);
+  font-size: 9px; font-weight: 500;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: var(--gold);
+  border: 1px solid rgba(184,150,96,.3);
+  padding: 3px 10px;
+  width: fit-content;
+}
+.lightbox-name {
+  font-family: var(--cormo);
+  font-size: 28px; font-weight: 300;
+  font-style: italic;
+  line-height: 1.2;
+  color: var(--offwhite);
+}
+.lightbox-desc {
+  font-family: var(--cormo);
+  font-size: 15px; font-weight: 300;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.lightbox-price {
+  font-family: var(--barlow);
+  font-size: 20px; font-weight: 400;
+  letter-spacing: .12em;
+  color: var(--offwhite);
+}
+.lightbox-cta {
+  display: block;
+  text-align: center;
+  background: var(--gold);
+  color: var(--black);
+  font-family: var(--barlow);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .35em; text-transform: uppercase;
+  padding: 14px 24px;
+  transition: background .2s;
+  margin-top: auto;
+}
+.lightbox-cta:hover { background: var(--gold-lt); }
+.lightbox-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  width: 36px; height: 36px;
+  background: none;
+  border: 1px solid var(--dim);
+  color: var(--muted);
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none;
+  transition: border-color .2s, color .2s;
+  z-index: 2;
+}
+.lightbox-close:hover { border-color: var(--gold); color: var(--gold); }
+.lightbox-nav {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  background: rgba(12,12,12,.85);
+  border: 1px solid var(--dim);
+  color: var(--muted);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: none; font-size: 20px;
+  transition: border-color .2s, color .2s;
+  z-index: 2;
+}
+.lightbox-nav:hover { border-color: var(--gold); color: var(--gold); }
+.lightbox-nav--prev { left: 12px; }
+.lightbox-nav--next { left: calc(100% - 320px - 52px); }
+@media(max-width:700px) {
+  .lightbox-nav--next { left: auto; right: 12px; }
+}
+
+/* ═══════════════════════════════════════
+   SHOP THE DROP CTA SECTION
+═══════════════════════════════════════ */
+.drop-cta {
+  max-width: 1400px; margin: 0 auto;
+  padding: 80px 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+@media(max-width:700px) { .drop-cta { grid-template-columns: 1fr; } }
+.drop-cta-panel {
+  background: var(--ink);
+  padding: 48px 40px;
+  border: 1px solid var(--dim);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.drop-cta-panel--gold { background: var(--gold); border-color: var(--gold); }
+.drop-cta-panel--gold * { color: var(--black) !important; }
+.drop-cta-label {
+  font-family: var(--barlow);
+  font-size: 10px; font-weight: 400;
+  letter-spacing: .4em; text-transform: uppercase;
+  color: var(--muted);
+}
+.drop-cta-title {
+  font-family: var(--bebas);
+  font-size: clamp(32px, 5vw, 56px);
+  letter-spacing: .04em;
+  color: var(--offwhite);
+  line-height: 1;
+}
+.drop-cta-desc {
+  font-family: var(--cormo);
+  font-size: 16px; font-style: italic;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.drop-cta-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: var(--barlow);
+  font-size: 11px; font-weight: 500;
+  letter-spacing: .3em; text-transform: uppercase;
+  color: var(--offwhite);
+  border-bottom: 1px solid rgba(214,204,188,.3);
+  padding-bottom: 4px;
+  width: fit-content;
+  margin-top: 8px;
+  transition: gap .25s;
+}
+.drop-cta-btn:hover { gap: 16px; }
+.drop-cta-panel--gold .drop-cta-btn {
+  color: var(--black);
+  border-color: rgba(5,5,5,.25);
+}
+
+/* ═══════════════════════════════════════
+   FOOTER STRIP
+═══════════════════════════════════════ */
+.lb-footer {
+  border-top: 1px solid var(--dim);
+  padding: 24px 40px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+.lb-footer-logo {
+  font-family: var(--bebas);
+  font-size: 22px; letter-spacing: .2em;
+  color: var(--gold);
+}
+.lb-footer-links {
+  display: flex; gap: 24px;
+  font-family: var(--barlow);
+  font-size: 10px; font-weight: 400;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--muted);
+}
+.lb-footer-links a:hover { color: var(--offwhite); }
+.lb-footer-copy {
+  font-family: var(--barlow);
+  font-size: 9px; letter-spacing: .15em;
+  color: var(--dim);
+}
+
+/* ═══════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════ */
+.hidden-filter { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"><span class="cursor-label">VIEW</span></div>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-logo">MELATO</div>
+  <div class="loader-line"></div>
+  <div class="loader-sub">The Living Lookbook</div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lightbox-close" id="lbClose" aria-label="Close">✕</button>
+  <button class="lightbox-nav lightbox-nav--prev" id="lbPrev" aria-label="Previous">←</button>
+  <button class="lightbox-nav lightbox-nav--next" id="lbNext" aria-label="Next">→</button>
+  <div class="lightbox-inner">
+    <div class="lightbox-img">
+      <img id="lbImg" src="" alt="">
+    </div>
+    <div class="lightbox-panel">
+      <div class="lightbox-num" id="lbNum"></div>
+      <div class="lightbox-tag" id="lbTag"></div>
+      <div class="lightbox-name" id="lbName"></div>
+      <div class="lightbox-desc" id="lbDesc"></div>
+      <div class="lightbox-price" id="lbPrice"></div>
+      <a class="lightbox-cta" id="lbCta" href="#">Shop this look →</a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-tile"><img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77065.jpg?v=1780015765" alt="" loading="eager"></div>
+    <div class="hero-bg-tile"><img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77072.jpg?v=1780016702" alt="" loading="eager"></div>
+    <div class="hero-bg-tile"><img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77091.jpg?v=1780016761" alt="" loading="eager"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Melato · Editorial Archive</div>
+    <h1 class="hero-title">THE<br><em>LIVING</em><br>LOOKBOOK</h1>
+    <p class="hero-desc">Styled like Evidence.</p>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track">
+    <div class="marquee-item"><span>THE CULTURE WEARS US</span><span class="dot"></span><span>CUT WITH INTENT</span><span class="dot"></span><span>LIKE NEVER CHANGE</span><span class="dot"></span><span>MELATO</span><span class="dot"></span><span>LIMITED PRODUCTION</span><span class="dot"></span><span>PREMIUM VELOUR</span><span class="dot"></span><span>DROP 001 & DROP 002</span><span class="dot"></span></div>
+    <div class="marquee-item"><span>THE CULTURE WEARS US</span><span class="dot"></span><span>CUT WITH INTENT</span><span class="dot"></span><span>LIKE NEVER CHANGE</span><span class="dot"></span><span>MELATO</span><span class="dot"></span><span>LIMITED PRODUCTION</span><span class="dot"></span><span>PREMIUM VELOUR</span><span class="dot"></span><span>DROP 001 & DROP 002</span><span class="dot"></span></div>
+  </div>
+</div>
+
+<!-- ISSUE HEADER -->
+<div class="issue-header">
+  <div>
+    <div class="issue-tag">Vol. 01 · 2026</div>
+    <h2 class="issue-title">THE UNIFORM<br>IN MOTION</h2>
+  </div>
+  <div class="issue-meta">
+    <div class="issue-count">22</div>
+    <div class="issue-label">Editorial Frames</div>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="filter-bar-logo">M</div>
+  <div class="filter-tabs" role="tablist">
+    <button class="filter-tab active" data-filter="all" role="tab">All Looks</button>
+    <button class="filter-tab" data-filter="tracksuits" role="tab">Tracksuits</button>
+    <button class="filter-tab" data-filter="EvesWardrobe" role="tab">EvesWardrobe</button>
+    <button class="filter-tab" data-filter="denim" role="tab">Denim</button>
+    <button class="filter-tab" data-filter="accessories" role="tab">Accessories</button>
+  </div>
+  <a class="filter-bar-cta" href="https://melato.ca/collections/all">Shop All</a>
+</div>
+
+<!-- MAIN GRID -->
+<div class="grid-wrap">
+  <div class="masonry" id="lookGrid">
+
+    <!-- LOOK 01 -->
+    <div class="look-card" data-cat="tracksuits" data-index="0">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77065.jpg?v=1780015765" alt="Look 01 - Melato tracksuit editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">The Uniform</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop this look <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">01</div>
+      </div>
+    </div>
+
+    <!-- LOOK 02 -->
+    <div class="look-card" data-cat="tracksuits" data-index="1">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77070.jpg?v=1780015790" alt="Look 02 - Melato velour tracksuit styled" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">Cut With Intent</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">02</div>
+      </div>
+    </div>
+
+    <!-- LOOK 03 -->
+    <div class="look-card" data-cat="tracksuits" data-index="2">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_46b812ef-a485-4233-abc9-6625c3f1ad30.png?v=1780017276" alt="Look 03 - Melato velour editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">Presence, Identity</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">03</div>
+      </div>
+    </div>
+
+    <!-- LOOK 04 -->
+    <div class="look-card" data-cat="tracksuits" data-index="3">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_e94d01c7-fa1b-4029-bf66-7b5c0a5fb245.png?v=1780017277" alt="Look 04 - Melato velour editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">Built For Movement</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">04</div>
+      </div>
+    </div>
+
+    <!-- LOOK 05 -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="4">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_52eec129-fb9c-4c14-a126-938ac1b81d4f.png?v=1780017277" alt="Look 05 - Melato EvesWardrobe editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">The Collective</div>
+          <div class="look-card__price">From $59.99 CAD</div>
+          <div class="look-card__cta">Shop EvesWardrobe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">05</div>
+      </div>
+    </div>
+
+    <!-- LOOK 06 -->
+    <div class="look-card" data-cat="tracksuits" data-index="5">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_1546b4db-669d-4609-82cd-8c7e166cacb1.png?v=1780017276" alt="Look 06 - Melato tracksuit styled" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">Retro Athletic</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">06</div>
+      </div>
+    </div>
+
+    <!-- LOOK 07 -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="6">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_969660e7-076a-4edd-97b2-04b45bfe6cdc.png?v=1780017276" alt="Look 07 - Melato EvesWardrobe" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">After Dark</div>
+          <div class="look-card__price">From $59.99 CAD</div>
+          <div class="look-card__cta">Shop EvesWardrobe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">07</div>
+      </div>
+    </div>
+
+    <!-- LOOK 08 -->
+    <div class="look-card" data-cat="tracksuits" data-index="7">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_91ec842e-4be4-4eb5-9d6d-9d4c3acd3811.png?v=1780017277" alt="Look 08 - Melato velour tracksuit" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">Like Never Change</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">08</div>
+      </div>
+    </div>
+
+    <!-- LOOK 09 -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="8">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_4d33b113-2480-41fb-a9de-470520feb266.png?v=1780017276" alt="Look 09 - Melato EvesWardrobe editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">Feminine Energy</div>
+          <div class="look-card__price">From $59.99 CAD</div>
+          <div class="look-card__cta">Shop EvesWardrobe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">09</div>
+      </div>
+    </div>
+
+    <!-- LOOK 10 - Brown Skirt -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="9">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Brown_Skirt_by_Melato.png?v=1780018176" alt="Look 10 - Melato Cognac skirt" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">Cognac Confession</div>
+          <div class="look-card__price">$110.00 CAD</div>
+          <div class="look-card__cta">Shop the skirt <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">10</div>
+      </div>
+    </div>
+
+  </div><!-- /masonry first half -->
+</div>
+
+<!-- EDITORIAL BREAK -->
+<div class="editorial-break">
+  <blockquote class="editorial-quote">"The culture wears us. We don't chase it - we build it."</blockquote>
+  <div class="editorial-attr">- Melato· Est. 2026</div>
+</div>
+
+<!-- SECOND GRID HALF -->
+<div class="grid-wrap" style="padding-top:0">
+  <div class="masonry" id="lookGrid2">
+
+    <!-- LOOK 11 -->
+    <div class="look-card" data-cat="tracksuits" data-index="10">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_b553cd04-d96a-4619-af83-9a8e44279b61.png?v=1780017277" alt="Look 11 - Melato velour editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">The Set</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">11</div>
+      </div>
+    </div>
+
+    <!-- LOOK 12 -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="11">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/1779940473251.png?v=1780019782" alt="Look 12 - Melato EvesWardrobe" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">New Arrivals</div>
+          <div class="look-card__price">From $59.99 CAD</div>
+          <div class="look-card__cta">Shop new arrivals <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">12</div>
+      </div>
+    </div>
+
+    <!-- LOOK 13 -->
+    <div class="look-card" data-cat="tracksuits" data-index="12">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_5b798327-0998-430f-bc5f-1689ea5465b0.png?v=1780017277" alt="Look 13 - Melato velour track set" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">Statement Colourway</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">13</div>
+      </div>
+    </div>
+
+    <!-- LOOK 14 -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="13">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_c26d31ea-1dd9-4623-a7d1-59c6c85d6231.png?v=1780017277" alt="Look 14 - Melato EvesWardrobe editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">Structured Grace</div>
+          <div class="look-card__price">From $79.99 CAD</div>
+          <div class="look-card__cta">Shop EvesWardrobe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">14</div>
+      </div>
+    </div>
+
+    <!-- LOOK 15 -->
+    <div class="look-card" data-cat="tracksuits" data-index="14">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_f99c6d28-981b-461e-856d-18faef8f5588.png?v=1780017276" alt="Look 15 - Melato tracksuit editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">Drop Archive</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">15</div>
+      </div>
+    </div>
+
+    <!-- LOOK 16 -->
+    <div class="look-card" data-cat="tracksuits" data-index="15">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_faf02b0e-1162-4416-9fb8-ae2f9009346a.png?v=1780017276" alt="Look 16 - Melato velour editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">Colorblock Story</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">16</div>
+      </div>
+    </div>
+
+    <!-- LOOK 17 -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="16">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_937e4d12-b76d-48a2-849a-cf660ad0963a.png?v=1780017277" alt="Look 17 - Melato EvesWardrobe editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">The Night Edit</div>
+          <div class="look-card__price">From $59.99 CAD</div>
+          <div class="look-card__cta">Shop EvesWardrobe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">17</div>
+      </div>
+    </div>
+
+    <!-- LOOK 18 -->
+    <div class="look-card" data-cat="tracksuits" data-index="17">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_9dd3eb29-7f52-4e0c-8958-776b3edf09e9.png?v=1780017277" alt="Look 18 - Melato velour tracksuit" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits</div>
+          <div class="look-card__name">The Velour Standard</div>
+          <div class="look-card__price">From $89.99 CAD</div>
+          <div class="look-card__cta">Shop tracksuits <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">18</div>
+      </div>
+    </div>
+
+    <!-- LOOK 19 -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="18">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_0899d5b8-f2ae-44de-8772-7c544511f893.jpg?v=1780017276" alt="Look 19 - Melato EvesWardrobe" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">Silk & Intent</div>
+          <div class="look-card__price">From $59.99 CAD</div>
+          <div class="look-card__cta">Shop EvesWardrobe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">19</div>
+      </div>
+    </div>
+
+    <!-- LOOK 20 - Noir Alibi -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="19">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77072.jpg?v=1780016702" alt="Look 20 - Melato Noir Alibi dress editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">Noir Alibi</div>
+          <div class="look-card__price">$319.99 CAD</div>
+          <div class="look-card__cta">Shop the dress <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">20</div>
+      </div>
+    </div>
+
+    <!-- LOOK 21 -->
+    <div class="look-card" data-cat="EvesWardrobe" data-index="20">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77077.jpg?v=1780016734" alt="Look 21 - Melato EvesWardrobe editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">EvesWardrobe</div>
+          <div class="look-card__name">Culture Forward</div>
+          <div class="look-card__price">From $59.99 CAD</div>
+          <div class="look-card__cta">Shop EvesWardrobe <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">21</div>
+      </div>
+    </div>
+
+    <!-- LOOK 22 - OJOS -->
+    <div class="look-card" data-cat="tracksuits" data-index="21">
+      <div class="look-card__img-wrap">
+        <img src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77091.jpg?v=1780016761" alt="Look 22 - Melato OJOS tracksuit editorial" loading="lazy">
+        <div class="look-card__overlay">
+          <div class="look-card__tag">Tracksuits · Drop 002</div>
+          <div class="look-card__name">OJOS</div>
+          <div class="look-card__price">$109.99 CAD</div>
+          <div class="look-card__cta">Shop OJOS <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+        </div>
+        <div class="look-card__num">22</div>
+      </div>
+    </div>
+
+  </div><!-- /masonry second half -->
+</div>
+
+<!-- MARQUEE 2 -->
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-track" style="animation-direction:reverse;animation-duration:28s">
+    <div class="marquee-item"><span>DIVIDIDOS</span><span class="dot"></span><span>CHŪ</span><span class="dot"></span><span>PASSION FRUIT</span><span class="dot"></span><span>CONQUISTA</span><span class="dot"></span><span>RELIANCE</span><span class="dot"></span><span>OJOS</span><span class="dot"></span><span>NOIR ALIBI</span><span class="dot"></span><span>WINE BREAKER</span><span class="dot"></span></div>
+    <div class="marquee-item"><span>DIVIDIDOS</span><span class="dot"></span><span>CHŪ</span><span class="dot"></span><span>PASSION FRUIT</span><span class="dot"></span><span>CONQUISTA</span><span class="dot"></span><span>RELIANCE</span><span class="dot"></span><span>OJOS</span><span class="dot"></span><span>NOIR ALIBI</span><span class="dot"></span><span>WINE BREAKER</span><span class="dot"></span></div>
+  </div>
+</div>
+
+<!-- SHOP CTA -->
+<div class="drop-cta">
+  <div class="drop-cta-panel">
+    <div class="drop-cta-label">Drop 001 · Drop 002</div>
+    <div class="drop-cta-title">SHOP<br>THE UNIFORM</div>
+    <div class="drop-cta-desc">Velour, bamboo, and denim. Each piece limited. Each colourway intentional.</div>
+    <a class="drop-cta-btn" href="https://melato.ca/collections/tracksuits">
+      Shop all tracksuits
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="drop-cta-panel drop-cta-panel--gold">
+    <div class="drop-cta-label">New Arrivals</div>
+    <div class="drop-cta-title">THE<br>LATEST DROP</div>
+    <div class="drop-cta-desc">Fresh pieces. Limited quantities. When a colourway is gone, it's part of the story.</div>
+    <a class="drop-cta-btn" href="https://melato.ca/collections/new-arrivals">
+      See new arrivals
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="lb-footer">
+  <div class="lb-footer-logo">MELATO</div>
+  <div class="lb-footer-links">
+    <a href="https://melato.ca/">Home</a>
+    <a href="https://melato.ca/collections/all">Shop All</a>
+    <a href="https://melato.ca/pages/our-story">Our Story</a>
+    <a href="https://www.instagram.com/melato.ca" target="_blank" rel="noopener">IG</a>
+  </div>
+  <div class="lb-footer-copy">© 2026 Melato. Cut with intent. ✦</div>
+</footer>
+
+<!-- LIGHTBOX DATA -->
+<script>
+const LOOKS = [
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77065.jpg?v=1780015765", cat:"Tracksuits", name:"The Uniform", desc:"Premium velour tracksuits built for movement and presence. Colorblock panels, embroidered Melato branding, YKK hardware.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77070.jpg?v=1780015790", cat:"Tracksuits", name:"Cut With Intent", desc:"Every silhouette deliberate. Every stitch meaningful. The Melato velour uniform", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_46b812ef-a485-4233-abc9-6625c3f1ad30.png?v=1780017276", cat:"Tracksuits", name:"Presence, Identity", desc:"Retro athletic codes reimagined. Structured panels, defined colourways, and a silhouette built to be noticed.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_e94d01c7-fa1b-4029-bf66-7b5c0a5fb245.png?v=1780017277", cat:"Tracksuits", name:"Built For Movement", desc:"Velour that moves with you. Small-batch production, no overstock, no compromise.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_52eec129-fb9c-4c14-a126-938ac1b81d4f.png?v=1780017277", cat:"EvesWardrobe", name:"The Collective", desc:"Culture-forward pieces for women who move with intention. From lace tops to woven suspenders - every piece tells a story.", price:"From $59.99 CAD", url:"https://melato.ca/collections/new-arrivals" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_1546b4db-669d-4609-82cd-8c7e166cacb1.png?v=1780017276", cat:"Tracksuits", name:"Retro Athletic", desc:"1980s athletic codes, 2024 construction standards. Velour track sets built for the streets, not the algorithm.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_969660e7-076a-4edd-97b2-04b45bfe6cdc.png?v=1780017276", cat:"EvesWardrobe", name:"After Dark", desc:"Pieces designed for the night. Italian silk, lace construction, and a presence that owns every room.", price:"From $59.99 CAD", url:"https://melato.ca/collections/new-arrivals" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_91ec842e-4be4-4eb5-9d6d-9d4c3acd3811.png?v=1780017277", cat:"Tracksuits", name:"Like Never Change", desc:"The velour set - a Melato signature. Clean colourblock geometry, relaxed athletic fit, premium embroidery.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_4d33b113-2480-41fb-a9de-470520feb266.png?v=1780017276", cat:"EvesWardrobe", name:"Feminine Energy", desc:"Structured softness. Pieces that balance strength and elegance - built for women who define their own standard.", price:"From $59.99 CAD", url:"https://melato.ca/collections/new-arrivals" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Brown_Skirt_by_Melato.png?v=1780018176", cat:"EvesWardrobe", name:"Cognac Confession", desc:"The Noir Memoir Wrap Pencil Skirt - a structured leather-look wrap silhouette in warm cognac. Limited edition.", price:"$110.00 CAD", url:"https://melato.ca/products/the-noir-memoir-wrap-pencil-skirt" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_b553cd04-d96a-4619-af83-9a8e44279b61.png?v=1780017277", cat:"Tracksuits", name:"The Set", desc:"Jacket and pant together. Complete the uniform. Complete the look. The Melato standard, set in velour.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/1779940473251.png?v=1780019782", cat:"EvesWardrobe", name:"New Arrivals", desc:"Season's latest. Limited quantities on every piece - when it's gone, it becomes part of the archive.", price:"From $59.99 CAD", url:"https://melato.ca/collections/new-arrivals" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_5b798327-0998-430f-bc5f-1689ea5465b0.png?v=1780017277", cat:"Tracksuits", name:"Statement Colourway", desc:"Bold, focused, intentional. Each Melato colourway is designed as a complete visual identity - not an afterthought.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_c26d31ea-1dd9-4623-a7d1-59c6c85d6231.png?v=1780017277", cat:"EvesWardrobe", name:"Structured Grace", desc:"Editorial EvesWardrobe with architectural intent. Constructed silhouettes for women who occupy space deliberately.", price:"From $79.99 CAD", url:"https://melato.ca/collections/new-arrivals" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_f99c6d28-981b-461e-856d-18faef8f5588.png?v=1780017276", cat:"Tracksuits", name:"Drop Archive", desc:"Every colourway a chapter. Every drop a statement. This is the Melato archive in motion.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_faf02b0e-1162-4416-9fb8-ae2f9009346a.png?v=1780017276", cat:"Tracksuits", name:"Colorblock Story", desc:"Geometric contrast panels in premium velour. Each panel boundary a design decision, not an accident.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_937e4d12-b76d-48a2-849a-cf660ad0963a.png?v=1780017277", cat:"EvesWardrobe", name:"The Night Edit", desc:"Pieces built for after dark. Italian silk, lace, and construction details that belong in a cinematic frame.", price:"From $59.99 CAD", url:"https://melato.ca/collections/new-arrivals" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_9dd3eb29-7f52-4e0c-8958-776b3edf09e9.png?v=1780017277", cat:"Tracksuits", name:"The Velour Standard", desc:"This is what premium velour feels like when the design is right. Structured. Intentional. Limited.", price:"From $89.99 CAD", url:"https://melato.ca/collections/tracksuits" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_0899d5b8-f2ae-44de-8772-7c544511f893.jpg?v=1780017276", cat:"EvesWardrobe", name:"Silk & Intent", desc:"Melato EvesWardrobe - pieces that move between the everyday and the exceptional without effort.", price:"From $59.99 CAD", url:"https://melato.ca/collections/new-arrivals" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77072.jpg?v=1780016702", cat:"EvesWardrobe", name:"Noir Alibi", desc:"Full-length lace corset dress. Floral lace over sheer base, vertical seam channels, slim straps, gold-tone Melato hardware. The statement piece.", price:"$319.99 CAD", url:"https://melato.ca/products/the-noir-alibi-lace-corset-dress" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77077.jpg?v=1780016734", cat:"EvesWardrobe", name:"Culture Forward", desc:"The Melato woman. Confident, intentional, and exactly where she means to be.", price:"From $59.99 CAD", url:"https://melato.ca/collections/new-arrivals" },
+  { img:"https://cdn.shopify.com/s/files/1/0809/3358/5151/files/77091.jpg?v=1780016761", cat:"Tracksuits · Drop 002", name:"OJOS", desc:"Drop 002. Burgundy/black/red/mauve four-colourway velour jacket. Back graphic: The Eyes Chico - They Never Lie. Limited run of 40.", price:"$109.99 CAD", url:"https://melato.ca/products/ojos-velour-track-jacket" },
+];
+
+/* ── CURSOR ── */
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = -100, my = -100, rx = -100, ry = -100;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function animCursor() {
+  cursor.style.left = mx + 'px'; cursor.style.top = my + 'px';
+  rx += (mx - rx) * .12; ry += (my - ry) * .12;
+  ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+  requestAnimationFrame(animCursor);
+})();
+document.querySelectorAll('a, button, .look-card').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.classList.add('hovering'); ring.classList.add('hovering'); });
+  el.addEventListener('mouseleave', () => { cursor.classList.remove('hovering'); ring.classList.remove('hovering'); });
+});
+
+/* ── LOADER ── */
+window.addEventListener('load', () => {
+  setTimeout(() => { document.getElementById('loader').classList.add('done'); }, 1200);
+});
+
+/* ── SCROLL REVEAL ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), Math.random() * 180);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.look-card').forEach(c => observer.observe(c));
+
+/* ── FILTER ── */
+document.querySelectorAll('.filter-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.look-card').forEach(card => {
+      const cat = (card.dataset.cat || '').toLowerCase();
+      if (f === 'all' || cat.includes(f)) {
+        card.classList.remove('hidden-filter');
+      } else {
+        card.classList.add('hidden-filter');
+      }
+    });
+  });
+});
+
+/* ── LIGHTBOX ── */
+const lb = document.getElementById('lightbox');
+let currentIdx = 0;
+function openLb(idx) {
+  currentIdx = idx;
+  const d = LOOKS[idx];
+  document.getElementById('lbImg').src = d.img;
+  document.getElementById('lbImg').alt = d.name;
+  document.getElementById('lbNum').textContent = 'Look ' + String(idx + 1).padStart(2,'0') + ' / ' + LOOKS.length;
+  document.getElementById('lbTag').textContent = d.cat;
+  document.getElementById('lbName').textContent = d.name;
+  document.getElementById('lbDesc').textContent = d.desc;
+  document.getElementById('lbPrice').textContent = d.price;
+  document.getElementById('lbCta').href = d.url;
+  lb.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLb() { lb.classList.remove('open'); document.body.style.overflow = ''; }
+document.getElementById('lbClose').addEventListener('click', closeLb);
+lb.addEventListener('click', e => { if (e.target === lb) closeLb(); });
+document.getElementById('lbPrev').addEventListener('click', () => openLb((currentIdx - 1 + LOOKS.length) % LOOKS.length));
+document.getElementById('lbNext').addEventListener('click', () => openLb((currentIdx + 1) % LOOKS.length));
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLb();
+  if (e.key === 'ArrowLeft') openLb((currentIdx - 1 + LOOKS.length) % LOOKS.length);
+  if (e.key === 'ArrowRight') openLb((currentIdx + 1) % LOOKS.length);
+});
+document.querySelectorAll('.look-card').forEach((card, i) => {
+  card.addEventListener('click', () => openLb(parseInt(card.dataset.index)));
+});
+
+/* ── TOUCH SWIPE (lightbox) ── */
+let tsX = 0;
+lb.addEventListener('touchstart', e => { tsX = e.touches[0].clientX; }, {passive:true});
+lb.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tsX;
+  if (Math.abs(dx) > 50) {
+    dx < 0 ? openLb((currentIdx + 1) % LOOKS.length) : openLb((currentIdx - 1 + LOOKS.length) % LOOKS.length);
+  }
+});
+</script>
+{% schema %}
+{
+  "name": "Melato Living Lookbook",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Melato Living Lookbook"
+    }
+  ]
+}
+{% endschema %}
+

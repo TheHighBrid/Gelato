@@ -1,0 +1,510 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "DRIP",
+    "theme_author": "DRIP Theme",
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https://drip-theme.com/docs",
+    "theme_support_url": "https://drip-theme.com/support"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Page colors"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background",
+        "default": "#080808"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text",
+        "default": "#F2EDE6"
+      },
+      {
+        "type": "color",
+        "id": "color_muted",
+        "label": "Secondary text",
+        "default": "#666666"
+      },
+      {
+        "type": "header",
+        "content": "Accent & buttons"
+      },
+      {
+        "type": "color",
+        "id": "color_accent",
+        "label": "Accent",
+        "info": "Used for buttons, links, and highlights",
+        "default": "#C8FF00"
+      },
+      {
+        "type": "color",
+        "id": "color_accent_hover",
+        "label": "Accent hover",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "header",
+        "content": "Surfaces & borders"
+      },
+      {
+        "type": "color",
+        "id": "color_surface",
+        "label": "Card background",
+        "default": "#1A1A1A"
+      },
+      {
+        "type": "color",
+        "id": "color_border",
+        "label": "Borders",
+        "default": "#2A2A2A"
+      },
+      {
+        "type": "color",
+        "id": "color_error",
+        "label": "Sale / error",
+        "default": "#FF2D2D"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Fonts"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_heading",
+        "label": "Headings",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "font_body",
+        "label": "Body text",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "paragraph",
+        "content": "DRIP always loads Bebas Neue, Barlow, and DM Mono as its design fonts. The font pickers above are additional options."
+      },
+      {
+        "type": "header",
+        "content": "Size & spacing"
+      },
+      {
+        "type": "range",
+        "id": "font_size_base",
+        "min": 12,
+        "max": 18,
+        "step": 1,
+        "unit": "px",
+        "label": "Body font size",
+        "default": 14
+      },
+      {
+        "type": "range",
+        "id": "line_height_body",
+        "min": 1.2,
+        "max": 2.0,
+        "step": 0.1,
+        "label": "Body line height",
+        "default": 1.6
+      },
+      {
+        "type": "range",
+        "id": "letter_spacing_heading",
+        "min": -0.1,
+        "max": 0.3,
+        "step": 0.1,
+        "unit": "em",
+        "label": "Heading letter spacing",
+        "default": 0.0
+      }
+    ]
+  },
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon",
+        "info": "Recommended: 32\u00d732px PNG"
+      },
+      {
+        "type": "image_picker",
+        "id": "share_image",
+        "label": "Default sharing image",
+        "info": "Recommended: 1200\u00d7630px. Shows in link previews when no product or page image is set."
+      },
+      {
+        "type": "header",
+        "content": "Header colors"
+      },
+      {
+        "type": "color",
+        "id": "header_bg",
+        "label": "Background",
+        "default": "#080808"
+      },
+      {
+        "type": "color",
+        "id": "header_text_color",
+        "label": "Text & icons",
+        "default": "#F2EDE6"
+      },
+      {
+        "type": "header",
+        "content": "Header behavior"
+      },
+      {
+        "type": "checkbox",
+        "id": "sticky_header",
+        "label": "Sticky header",
+        "info": "Header stays fixed when scrolling",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "header_transparent",
+        "label": "Transparent on homepage",
+        "info": "Makes header transparent over the hero image",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "range",
+        "id": "container_width",
+        "min": 1000,
+        "max": 1600,
+        "step": 40,
+        "unit": "px",
+        "label": "Page width",
+        "default": 1400
+      },
+      {
+        "type": "range",
+        "id": "container_padding",
+        "min": 16,
+        "max": 80,
+        "step": 4,
+        "unit": "px",
+        "label": "Page side padding",
+        "default": 48
+      },
+      {
+        "type": "range",
+        "id": "grid_gap",
+        "min": 4,
+        "max": 40,
+        "step": 2,
+        "unit": "px",
+        "label": "Grid gap",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "border_radius",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "Corner rounding",
+        "info": "Set to 0 for sharp edges \u2014 recommended for retro",
+        "default": 0
+      }
+    ]
+  },
+  {
+    "name": "Product pages",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Product cards"
+      },
+      {
+        "type": "select",
+        "id": "card_image_ratio",
+        "label": "Image ratio",
+        "options": [
+          {
+            "value": "portrait",
+            "label": "Portrait (3:4)"
+          },
+          {
+            "value": "square",
+            "label": "Square (1:1)"
+          },
+          {
+            "value": "landscape",
+            "label": "Landscape (4:3)"
+          }
+        ],
+        "default": "portrait"
+      },
+      {
+        "type": "checkbox",
+        "id": "card_hover_second_image",
+        "label": "Show second image on hover",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_quick_view",
+        "label": "Show quick view button",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "card_wishlist",
+        "label": "Show wishlist button",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "card_swatch_style",
+        "label": "Color swatch shape",
+        "options": [
+          {
+            "value": "circle",
+            "label": "Circle"
+          },
+          {
+            "value": "square",
+            "label": "Square"
+          },
+          {
+            "value": "none",
+            "label": "Hidden"
+          }
+        ],
+        "default": "square"
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_vendor",
+        "label": "Show brand name",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "card_show_rating",
+        "label": "Show star rating",
+        "info": "Requires a product reviews app that supports Shopify metafields",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Drop & urgency"
+      },
+      {
+        "type": "checkbox",
+        "id": "drop_social_proof",
+        "label": "Show live viewer count",
+        "info": "Shows 'X people viewing this' on product pages",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "drop_social_proof_min",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "label": "Viewer count minimum",
+        "default": 4
+      },
+      {
+        "type": "range",
+        "id": "drop_social_proof_max",
+        "min": 10,
+        "max": 100,
+        "step": 1,
+        "label": "Viewer count maximum",
+        "default": 47
+      },
+      {
+        "type": "checkbox",
+        "id": "drop_low_stock",
+        "label": "Show low stock warning",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "drop_low_stock_threshold",
+        "min": 1,
+        "max": 20,
+        "step": 1,
+        "label": "Low stock threshold",
+        "info": "Show warning when inventory drops below this number",
+        "default": 5
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart style",
+        "options": [
+          {
+            "value": "drawer",
+            "label": "Slide-out drawer"
+          },
+          {
+            "value": "page",
+            "label": "Cart page"
+          }
+        ],
+        "default": "drawer"
+      },
+            {
+        "type": "header",
+        "content": "Free shipping bar"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_free_shipping_bar",
+        "label": "Show free shipping progress bar",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "cart_free_shipping_threshold",
+        "label": "Free shipping minimum order",
+        "info": "Enter amount in your store's currency. Leave blank to hide bar.",
+        "default": "500"
+      },
+
+      {
+        "type": "header",
+        "content": "Upsell"
+      },
+      {
+        "type": "checkbox",
+        "id": "cart_upsell",
+        "label": "Show upsell in cart",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "cart_upsell_title",
+        "label": "Upsell heading",
+        "default": "YOU MIGHT ALSO WANT"
+      }
+    ]
+  },
+  {
+    "name": "Animations",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "animations_enabled",
+        "label": "Enable scroll animations",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "animation_style",
+        "label": "Animation style",
+        "options": [
+          {
+            "value": "fade",
+            "label": "Fade up"
+          },
+          {
+            "value": "slide",
+            "label": "Slide in"
+          },
+          {
+            "value": "none",
+            "label": "No animation"
+          }
+        ],
+        "default": "fade"
+      },
+      {
+        "type": "checkbox",
+        "id": "animations_reduce_motion",
+        "label": "Respect reduced motion setting",
+        "info": "Turns off animations for users who have enabled 'reduce motion' in their operating system",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      {
+        "type": "text",
+        "id": "social_instagram",
+        "label": "Instagram",
+        "info": "Username only, without the @"
+      },
+      {
+        "type": "text",
+        "id": "social_tiktok",
+        "label": "TikTok",
+        "info": "Username only, without the @"
+      },
+      {
+        "type": "text",
+        "id": "social_twitter",
+        "label": "X (Twitter)",
+        "info": "Username only, without the @"
+      },
+      {
+        "type": "text",
+        "id": "social_facebook",
+        "label": "Facebook",
+        "info": "Full page URL"
+      },
+      {
+        "type": "text",
+        "id": "social_youtube",
+        "label": "YouTube",
+        "info": "Full channel URL"
+      }
+    ]
+  },
+  {
+    "name": "Advanced",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Accessibility"
+      },
+      {
+        "type": "checkbox",
+        "id": "high_contrast",
+        "label": "High contrast mode",
+        "info": "Increases contrast ratios for better readability",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Custom code"
+      },
+      {
+        "type": "textarea",
+        "id": "custom_css",
+        "label": "Custom CSS",
+        "info": "Add custom CSS that will be applied to every page"
+      }
+    ]
+  }
+]

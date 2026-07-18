@@ -1,0 +1,14 @@
+{%- comment -%} params: topics (array), show_order_number (bool) {%- endcomment -%}
+<div class="melato-contactform__row">
+  <label class="melato-contactform__field"><span>Name</span><input type="text" name="contact[name]" autocomplete="name"></label>
+  <label class="melato-contactform__field"><span>Email <em>*</em></span><input type="email" name="contact[email]" autocomplete="email" required {% if customer %}value="{{ customer.email }}"{% endif %}></label>
+</div>
+<label class="melato-contactform__field"><span>Topic</span>
+  <select name="contact[topic]">
+    {%- for topic in topics -%}{%- if topic != blank -%}<option value="{{ topic }}">{{ topic }}</option>{%- endif -%}{%- endfor -%}
+  </select>
+</label>
+{%- if show_order_number -%}
+<label class="melato-contactform__field"><span>Order number <em>(optional)</em></span><input type="text" name="contact[order_number]"></label>
+{%- endif -%}
+<label class="melato-contactform__field"><span>Message <em>*</em></span><textarea name="contact[body]" rows="5" required></textarea></label>

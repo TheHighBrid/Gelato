@@ -1,0 +1,26 @@
+{% comment %}
+  snippets/quick-view-modal.liquid
+  Rendered empty - populated via JS fetch of product?view=quick-view
+{% endcomment %}
+
+<div
+  class="quick-view-modal"
+  id="quick-view-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ 'products.quick_view' | t }}"
+  aria-hidden="true"
+>
+  <div class="quick-view-modal__inner">
+    <button
+      class="quick-view-modal__close"
+      aria-label="{{ 'accessibility.close' | t }}"
+      data-quick-view-close
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    {%- comment -%} Content injected by JS {%- endcomment -%}
+  </div>
+</div>

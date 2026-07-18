@@ -1,0 +1,136 @@
+{% comment %}
+  sections/featured-collection.liquid
+  Pulls a collection and renders a product grid
+{% endcomment %}
+
+{%- liquid
+  assign collection = collections[section.settings.collection]
+  assign products_to_show = section.settings.products_to_show | default: 4
+  assign cols_desktop = section.settings.columns_desktop | default: 4
+  assign cols_mobile  = section.settings.columns_mobile  | default: 2
+-%}
+
+<section class="featured-collection section-spacing" data-section-id="{{ section.id }}">
+  <div class="container">
+
+    {%- comment -%} Section header {%- endcomment -%}
+    <div class="featured-collection__header drip-reveal">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="text-label u-accent-line" style="margin-bottom:12px;">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="heading-md">{{ section.settings.title }}</h2>
+      </div>
+
+      {%- if section.settings.show_view_all and collection != blank -%}
+        <a href="{{ collection.url }}" class="btn btn--ghost u-hide-mobile">
+          {{ section.settings.view_all_label | default: 'View All' }} →
+        </a>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Product grid {%- endcomment -%}
+    {%- if collection != blank and collection.products.size > 0 -%}
+      <div
+        class="grid grid--{{ cols_desktop }}"
+        style="--cols-mobile: {{ cols_mobile }};"
+        role="list"
+      >
+        {%- for product in collection.products limit: products_to_show -%}
+          <div role="listitem" class="drip-reveal drip-reveal--delay-{{ forloop.index0 | modulo: 4 | plus: 1 }}">
+            {%- render 'product-card', product: product -%}
+          </div>
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.show_view_all -%}
+        <div class="u-show-mobile" style="text-align:center; margin-top:32px;">
+          <a href="{{ collection.url }}" class="btn btn--secondary">
+            {{ section.settings.view_all_label | default: 'View All' }}
+          </a>
+        </div>
+      {%- endif -%}
+
+    {%- else -%}
+      <div style="text-align:center; padding:60px 0; color:var(--color-muted);">
+        <p class="text-label">No products found in this collection.</p>
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "THE COLLECTION"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "columns_mobile",
+      "label": "Columns (mobile)",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View all' button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_label",
+      "label": "'View all' button text",
+      "default": "View All Drops"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection",
+      "settings": {
+        "title": "THE COLLECTION",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "columns_mobile": 2
+      }
+    }
+  ]
+}
+{% endschema %}

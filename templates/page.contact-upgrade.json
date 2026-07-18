@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "contact_upgrade": {
+      "type": "melato-contact-upgrade",
+      "settings": {
+        "eyebrow": "Customer care",
+        "heading": "Contact Melato",
+        "intro": "For order support, sizing, wholesale, and drop questions, send the right department a clean message with the details we need to help quickly.",
+        "form_heading": "Send a message"
+      }
+    }
+  },
+  "order": ["contact_upgrade"]
+}

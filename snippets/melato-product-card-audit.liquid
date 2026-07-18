@@ -1,0 +1,46 @@
+{%- comment -%}
+  Safe product card with guarded compare-at-price logic.
+  Usage: {% render 'melato-product-card-audit', card_product: product %}
+{%- endcomment -%}
+
+{%- liquid
+  assign p = card_product | default: product
+  assign compare_at = p.compare_at_price
+  assign price = p.price
+  assign has_discount = false
+
+  if compare_at != blank
+    if compare_at > price
+      assign has_discount = true
+      assign savings = compare_at | minus: price
+      assign discount_percent = savings | times: 100.0 | divided_by: compare_at | floor
+    endif
+  endif
+-%}
+
+<article class="melato-card" data-product-card>
+  <a class="melato-card__media" href="{{ p.url }}" aria-label="View {{ p.title | escape }}">
+    {% render 'melato-responsive-image', image: p.featured_image, alt: p.title, class: 'melato-card__image', loading: 'lazy', sizes: '(min-width: 990px) 25vw, 50vw' %}
+    {%- if has_discount -%}
+      <span class="melato-card__badge">Save {{ discount_percent }}%</span>
+    {%- elsif p.available == false -%}
+      <span class="melato-card__badge">Sold out</span>
+    {%- endif -%}
+  </a>
+
+  <div class="melato-card__content">
+    <p class="melato-card__eyebrow">Melato</p>
+    <h3 class="melato-card__title">
+      <a href="{{ p.url }}">{{ p.title }}</a>
+    </h3>
+
+    <div class="melato-card__price" aria-label="Price">
+      {%- if has_discount -%}
+        <span class="melato-card__price-current">{{ price | money }}</span>
+        <s class="melato-card__price-compare">{{ compare_at | money }}</s>
+      {%- else -%}
+        <span>{{ price | money }}</span>
+      {%- endif -%}
+    </div>
+  </div>
+</article>

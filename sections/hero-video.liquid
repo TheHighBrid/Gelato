@@ -1,0 +1,648 @@
+{% comment %}
+  MELATO - Cinematic Video Hero
+  File: sections/hero-video.liquid
+
+  Video instruction:
+  - Upload an H.264 .mp4 hero video in Shopify Files or directly through this section's video picker.
+  - Recommended: 1920x1080, under 10MB, muted loop, ghost mannequin tracksuits, slow cinematic movement.
+{% endcomment %}
+
+{% liquid
+  assign hero_height = '100svh'
+  case section.settings.hero_height
+    when 'large'
+      assign hero_height = '86svh'
+    when 'medium'
+      assign hero_height = '74svh'
+    when 'custom'
+      assign hero_height = section.settings.custom_height | append: 'px'
+  endcase
+
+  assign content_position = section.settings.content_position
+%}
+
+<section
+  id="MelatoHeroVideo-{{ section.id }}"
+  class="melato-hero-video melato-hero-video--{{ content_position }}{% if section.settings.enable_texture %} melato-hero-video--texture{% endif %}"
+  style="--mh-height: {{ hero_height }}; --mh-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }}; --mh-max-width: {{ section.settings.content_width }}px;"
+>
+  <div class="melato-hero-video__media" aria-hidden="true">
+    {% if section.settings.shopify_video != blank %}
+      {{ section.settings.shopify_video | video_tag: autoplay: true, loop: section.settings.loop_video, muted: true, controls: false, playsinline: true, class: 'melato-hero-video__asset' }}
+    {% elsif section.settings.video_url != blank %}
+      <video class="melato-hero-video__asset" autoplay muted playsinline {% if section.settings.loop_video %}loop{% endif %} preload="metadata" {% if section.settings.poster_image != blank %}poster="{{ section.settings.poster_image | image_url: width: 2400 }}"{% endif %}>
+        <source src="{{ section.settings.video_url | escape }}" type="video/mp4">
+      </video>
+    {% elsif section.settings.poster_image != blank %}
+      <div class="melato-hero-video__poster" style="background-image: url('{{ section.settings.poster_image | image_url: width: 2400 }}');"></div>
+    {% else %}
+      <div class="melato-hero-video__placeholder">
+        <div class="melato-hero-video__ghosts" aria-hidden="true">
+          <span class="melato-hero-video__ghost melato-hero-video__ghost--one"></span>
+          <span class="melato-hero-video__ghost melato-hero-video__ghost--two"></span>
+          <span class="melato-hero-video__ghost melato-hero-video__ghost--three"></span>
+        </div>
+        <div class="melato-hero-video__placeholder-copy">
+          <span>Video placeholder</span>
+          <small>Upload: ghost mannequin tracksuits • H.264 MP4 • 1920×1080 • under 10MB</small>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="melato-hero-video__shade"></div>
+  <div class="melato-hero-video__vignette"></div>
+
+  <div class="melato-hero-video__inner page-width">
+    <div class="melato-hero-video__content">
+      {% if section.settings.kicker != blank %}
+        <p class="melato-hero-video__kicker">
+          <span></span>{{ section.settings.kicker | escape }}
+        </p>
+      {% endif %}
+
+      {% if section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank %}
+        <h1 class="melato-hero-video__heading">
+          {% if section.settings.heading_line_1 != blank %}<span>{{ section.settings.heading_line_1 | escape }}</span>{% endif %}
+          {% if section.settings.heading_line_2 != blank %}<span>{{ section.settings.heading_line_2 | escape }}</span>{% endif %}
+        </h1>
+      {% endif %}
+
+      {% if section.settings.body != blank %}
+        <div class="melato-hero-video__text rte">
+          {{ section.settings.body }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.primary_label != blank or section.settings.secondary_label != blank %}
+        <div class="melato-hero-video__actions">
+          {% if section.settings.primary_label != blank %}
+            <a class="melato-hero-video__button melato-hero-video__button--primary" href="{{ section.settings.primary_link | default: routes.all_products_collection_url }}">
+              {{ section.settings.primary_label | escape }}
+            </a>
+          {% endif %}
+
+          {% if section.settings.secondary_label != blank %}
+            <a class="melato-hero-video__button melato-hero-video__button--secondary" href="{{ section.settings.secondary_link | default: routes.root_url }}">
+              {{ section.settings.secondary_label | escape }}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if section.settings.show_scroll_cue %}
+    <button class="melato-hero-video__scroll" type="button" aria-label="Scroll to next section" data-melato-scroll-cue>
+      <span></span>
+    </button>
+  {% endif %}
+</section>
+
+<style>
+  #MelatoHeroVideo-{{ section.id }} {
+    min-height: var(--mh-height);
+  }
+
+  .melato-hero-video {
+    --mh-black: #050505;
+    --mh-offwhite: #f4ead8;
+    --mh-offwhite-2: #fff8eb;
+    --mh-muted: rgba(244, 234, 216, 0.68);
+    --mh-line: rgba(244, 234, 216, 0.18);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--mh-black);
+    color: var(--mh-offwhite);
+    display: flex;
+    align-items: center;
+  }
+
+  .melato-hero-video__media,
+  .melato-hero-video__asset,
+  .melato-hero-video__poster,
+  .melato-hero-video__placeholder,
+  .melato-hero-video__shade,
+  .melato-hero-video__vignette {
+    position: absolute;
+    inset: 0;
+  }
+
+  .melato-hero-video__media {
+    z-index: -4;
+    background: #050505;
+  }
+
+  .melato-hero-video__asset,
+  .melato-hero-video__poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .melato-hero-video__poster {
+    background-position: center;
+    background-size: cover;
+    transform: scale(1.02);
+  }
+
+  .melato-hero-video__shade {
+    z-index: -3;
+    background:
+      linear-gradient(90deg, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.68) 35%, rgba(0,0,0,0.36) 66%, rgba(0,0,0,0.72) 100%),
+      linear-gradient(180deg, rgba(0,0,0,0.60) 0%, rgba(0,0,0,var(--mh-overlay)) 52%, rgba(0,0,0,0.80) 100%);
+  }
+
+  .melato-hero-video__vignette {
+    z-index: -2;
+    background:
+      radial-gradient(circle at 78% 44%, rgba(244,234,216,0.10), transparent 30%),
+      radial-gradient(circle at 12% 82%, rgba(244,234,216,0.07), transparent 25%),
+      linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.45) 100%);
+    pointer-events: none;
+  }
+
+  .melato-hero-video--texture:after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.19;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05) 0 1px, transparent 1px),
+      radial-gradient(circle at 80% 70%, rgba(255,255,255,0.04) 0 1px, transparent 1px);
+    background-size: 4px 4px, 6px 6px;
+    mix-blend-mode: screen;
+  }
+
+  .melato-hero-video__inner {
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    padding-top: clamp(92px, 12vw, 150px);
+    padding-bottom: clamp(72px, 9vw, 120px);
+  }
+
+  .melato-hero-video__content {
+    max-width: var(--mh-max-width);
+  }
+
+  .melato-hero-video--center .melato-hero-video__inner {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .melato-hero-video--right .melato-hero-video__inner {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .melato-hero-video--right .melato-hero-video__content {
+    text-align: left;
+  }
+
+  .melato-hero-video__kicker {
+    margin: 0 0 1.35rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: rgba(244,234,216,0.66) !important;
+    font-size: clamp(0.66rem, 1.1vw, 0.78rem);
+    font-weight: 700;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+  }
+
+  .melato-hero-video__kicker span {
+    display: inline-block;
+    width: 30px;
+    height: 2px;
+    background: var(--mh-offwhite);
+    opacity: 0.9;
+  }
+
+  .melato-hero-video--center .melato-hero-video__kicker span {
+    width: 22px;
+  }
+
+  .melato-hero-video__heading {
+    margin: 0;
+    color: var(--mh-offwhite) !important;
+    font-family: var(--font-heading-family, inherit);
+    font-size: clamp(3.7rem, 10.5vw, 9.8rem);
+    line-height: 0.78;
+    letter-spacing: -0.055em;
+    text-transform: uppercase;
+    font-weight: 900;
+    max-width: 9ch;
+  }
+
+  .melato-hero-video--center .melato-hero-video__heading {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .melato-hero-video__heading span {
+    display: block;
+  }
+
+  .melato-hero-video__text {
+    margin-top: clamp(1.5rem, 2.6vw, 2.25rem);
+    max-width: 720px;
+  }
+
+  .melato-hero-video__text,
+  .melato-hero-video__text p {
+    color: rgba(244,234,216,0.76) !important;
+    font-size: clamp(1.0rem, 1.5vw, 1.25rem);
+    line-height: 1.72;
+  }
+
+  .melato-hero-video--center .melato-hero-video__text {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .melato-hero-video__actions {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .melato-hero-video--center .melato-hero-video__actions {
+    justify-content: center;
+  }
+
+  .melato-hero-video__button {
+    min-height: 54px;
+    padding: 1rem 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    font-size: 0.73rem;
+    font-weight: 800;
+    line-height: 1;
+    transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease, opacity 180ms ease;
+  }
+
+  .melato-hero-video__button--primary {
+    background: var(--mh-offwhite) !important;
+    color: #050505 !important;
+    border: 1px solid var(--mh-offwhite) !important;
+  }
+
+  .melato-hero-video__button--primary:hover {
+    background: var(--mh-offwhite-2) !important;
+    color: #050505 !important;
+    border-color: var(--mh-offwhite-2) !important;
+    transform: translateY(-2px);
+  }
+
+  .melato-hero-video__button--secondary {
+    background: transparent !important;
+    color: var(--mh-offwhite) !important;
+    border: 1px solid var(--mh-line) !important;
+  }
+
+  .melato-hero-video__button--secondary:hover {
+    background: rgba(244,234,216,0.10) !important;
+    color: var(--mh-offwhite-2) !important;
+    border-color: rgba(244,234,216,0.34) !important;
+    transform: translateY(-2px);
+  }
+
+  .melato-hero-video__placeholder {
+    display: grid;
+    place-items: center;
+    background:
+      radial-gradient(circle at 52% 42%, rgba(244,234,216,0.12), transparent 34%),
+      linear-gradient(120deg, #050505 0%, #101010 50%, #050505 100%);
+  }
+
+  .melato-hero-video__ghosts {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(18px, 4vw, 64px);
+    opacity: 0.5;
+    filter: blur(0.1px);
+  }
+
+  .melato-hero-video__ghost {
+    position: relative;
+    width: clamp(90px, 14vw, 180px);
+    height: clamp(170px, 27vw, 340px);
+    border: 1px solid rgba(244,234,216,0.34);
+    border-radius: 46% 46% 22% 22% / 13% 13% 18% 18%;
+    background:
+      linear-gradient(90deg, transparent 0 45%, rgba(244,234,216,0.08) 45% 55%, transparent 55% 100%),
+      linear-gradient(145deg, rgba(244,234,216,0.08), rgba(244,234,216,0.015));
+    box-shadow: 0 30px 90px rgba(0,0,0,0.55);
+  }
+
+  .melato-hero-video__ghost:before,
+  .melato-hero-video__ghost:after {
+    content: "";
+    position: absolute;
+    top: 18%;
+    width: 36%;
+    height: 68%;
+    border: 1px solid rgba(244,234,216,0.24);
+    border-radius: 999px;
+  }
+
+  .melato-hero-video__ghost:before {
+    left: -28%;
+    transform: rotate(7deg);
+  }
+
+  .melato-hero-video__ghost:after {
+    right: -28%;
+    transform: rotate(-7deg);
+  }
+
+  .melato-hero-video__ghost--two {
+    transform: translateY(-4%) scale(1.08);
+    opacity: 0.82;
+  }
+
+  .melato-hero-video__ghost--one,
+  .melato-hero-video__ghost--three {
+    transform: translateY(5%) scale(0.88);
+    opacity: 0.42;
+  }
+
+  .melato-hero-video__placeholder-copy {
+    position: relative;
+    z-index: 1;
+    padding: 18px 22px;
+    border: 1px solid rgba(244,234,216,0.16);
+    background: rgba(0,0,0,0.42);
+    backdrop-filter: blur(14px);
+    text-align: center;
+  }
+
+  .melato-hero-video__placeholder-copy span,
+  .melato-hero-video__placeholder-copy small {
+    display: block;
+    color: var(--mh-offwhite) !important;
+  }
+
+  .melato-hero-video__placeholder-copy span {
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  .melato-hero-video__placeholder-copy small {
+    margin-top: 8px;
+    opacity: 0.68;
+    letter-spacing: 0.08em;
+  }
+
+  .melato-hero-video__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 28px;
+    z-index: 3;
+    width: 38px;
+    height: 58px;
+    border: 1px solid rgba(244,234,216,0.34);
+    border-radius: 999px;
+    background: rgba(0,0,0,0.24) !important;
+    color: var(--mh-offwhite) !important;
+    transform: translateX(-50%);
+    cursor: pointer;
+  }
+
+  .melato-hero-video__scroll span {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--mh-offwhite);
+    transform: translateX(-50%);
+    animation: melato-scroll-cue 1.7s ease-in-out infinite;
+  }
+
+  @keyframes melato-scroll-cue {
+    0% { transform: translate(-50%, 0); opacity: 0; }
+    35% { opacity: 1; }
+    100% { transform: translate(-50%, 22px); opacity: 0; }
+  }
+
+  @media screen and (max-width: 749px) {
+    .melato-hero-video {
+      min-height: max(720px, var(--mh-height));
+    }
+
+    .melato-hero-video__inner {
+      padding-top: 108px;
+      padding-bottom: 92px;
+    }
+
+    .melato-hero-video__heading {
+      font-size: clamp(3.35rem, 18vw, 5.9rem);
+      line-height: 0.82;
+      max-width: 8ch;
+    }
+
+    .melato-hero-video__actions {
+      width: 100%;
+    }
+
+    .melato-hero-video__button {
+      width: 100%;
+      min-height: 56px;
+    }
+
+    .melato-hero-video__shade {
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.74) 0%, rgba(0,0,0,0.46) 46%, rgba(0,0,0,0.88) 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.88), rgba(0,0,0,0.36));
+    }
+
+    .melato-hero-video--right .melato-hero-video__inner,
+    .melato-hero-video--center .melato-hero-video__inner {
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    .melato-hero-video--center .melato-hero-video__heading,
+    .melato-hero-video--center .melato-hero-video__text {
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    .melato-hero-video--center .melato-hero-video__actions {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .melato-hero-video__asset,
+    .melato-hero-video__scroll span {
+      animation: none !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Melato - video hero",
+  "tag": "section",
+  "class": "section-melato-video-hero",
+  "settings": [
+    {
+      "type": "video",
+      "id": "shopify_video",
+      "label": "Shopify-hosted video"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "MP4 video URL fallback",
+      "info": "Paste the Shopify Files URL for an H.264 MP4 if you do not use the video picker."
+    },
+    {
+      "type": "image_picker",
+      "id": "poster_image",
+      "label": "Poster / fallback image"
+    },
+    {
+      "type": "checkbox",
+      "id": "loop_video",
+      "label": "Loop video",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "hero_height",
+      "label": "Hero height",
+      "default": "full",
+      "options": [
+        { "value": "full", "label": "Full viewport" },
+        { "value": "large", "label": "Large" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "custom", "label": "Custom pixels" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "custom_height",
+      "min": 560,
+      "max": 1100,
+      "step": 20,
+      "unit": "px",
+      "label": "Custom height",
+      "default": 820
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 20,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "label": "Overlay strength",
+      "default": 60
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_texture",
+      "label": "Add subtle cinematic grain",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "content_position",
+      "label": "Content position",
+      "default": "left",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "min": 420,
+      "max": 920,
+      "step": 20,
+      "unit": "px",
+      "label": "Text width",
+      "default": 680
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "THE MELATO STANDARD"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading line 1",
+      "default": "THE CULTURE"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading line 2",
+      "default": "WEARS US"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body",
+      "default": "<p>Ghost mannequin motion. Velour texture. Built for the drop.</p>"
+    },
+    {
+      "type": "text",
+      "id": "primary_label",
+      "label": "Primary button label",
+      "default": "SHOP THE COLLECTION"
+    },
+    {
+      "type": "url",
+      "id": "primary_link",
+      "label": "Primary button link"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Secondary button label",
+      "default": "OUR STORY"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Secondary button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_scroll_cue",
+      "label": "Show scroll cue",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato - cinematic video hero"
+    }
+  ]
+}
+{% endschema %}

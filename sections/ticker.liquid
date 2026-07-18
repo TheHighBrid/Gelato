@@ -1,0 +1,124 @@
+{% comment %}
+  sections/ticker.liquid
+  Scrolling marquee with configurable items, speed, and separator
+{% endcomment %}
+
+{%- if section.blocks.size > 0 -%}
+
+<div
+  class="ticker"
+  style="
+    --ticker-speed: {{ section.settings.speed | default: 30 }}s;
+    background: {{ section.settings.background_color }};
+    color: {{ section.settings.text_color }};
+    border-color: {{ section.settings.border_color }};
+    padding: {{ section.settings.padding }}px 0;
+  "
+  aria-hidden="true"
+>
+  <div class="ticker__track" data-ticker-track>
+
+    {%- comment -%} Render twice for seamless loop {%- endcomment -%}
+    {%- for n in (1..2) -%}
+      {%- for block in section.blocks -%}
+        <span class="ticker__item" {{ block.shopify_attributes }}>
+          {{ block.settings.text | upcase | escape }}
+        </span>
+        <span class="ticker__separator" aria-hidden="true">
+          {{ section.settings.separator | default: '✦' }}
+        </span>
+      {%- endfor -%}
+    {%- endfor -%}
+
+  </div>
+</div>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Ticker",
+  "tag": "div",
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Ticker item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "The culture wears us"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Scroll speed",
+      "min": 10,
+      "max": 80,
+      "step": 5,
+      "default": 30,
+      "unit": "s",
+      "info": "Lower = faster"
+    },
+    {
+      "type": "text",
+      "id": "separator",
+      "label": "Separator character",
+      "default": "✦"
+    },
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction",
+      "options": [
+        { "value": "left",  "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Vertical padding",
+      "min": 6,
+      "max": 24,
+      "step": 2,
+      "default": 10,
+      "unit": "px"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#C8FF00"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#080808"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#2A2A2A"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ticker",
+      "blocks": [
+        { "type": "item", "settings": { "text": "THE CULTURE WEARS US" } },
+        { "type": "item", "settings": { "text": "SS26 COLLECTION" } },
+        { "type": "item", "settings": { "text": "LIMITED" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

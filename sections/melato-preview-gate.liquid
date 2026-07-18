@@ -1,0 +1,84 @@
+{%- comment -%}
+  Customer tag gating. Reads from Shopify's `customer` object — nil-safe.
+  SECURITY NOTE: This controls *display only*. It does not protect products,
+  prices, or checkout from a determined visitor. Do not rely on this for
+  genuinely restricted/private drops — use Locksmith or similar for that.
+
+  AUTOMATION NOTE: The locked-state form below sets accepts_marketing only.
+  Shopify's native customer form cannot apply a custom tag like "newsletter"
+  on submit. That tag must be applied by a Shopify Flow workflow triggered
+  on marketing-consent-updated (or equivalent), not by this Liquid.
+{%- endcomment -%}
+
+{%- liquid
+  assign state = 'locked'
+  if customer
+    if customer.tags contains 'preview-access'
+      assign state = 'unlocked'
+    elsif customer.tags contains 'newsletter'
+      assign state = 'pending'
+    endif
+  endif
+-%}
+
+<div class="melato-preview-gate melato-preview-gate--{{ state }}" data-preview-state="{{ state }}">
+  {%- case state -%}
+    {%- when 'locked' -%}
+      <h1 class="melato-preview-gate__headline">{{ section.settings.locked_headline | default: 'The List Sees It First.' }}</h1>
+      <p class="melato-preview-gate__copy">{{ section.settings.locked_copy | default: 'Newsletter subscribers get private previews before pieces reach the public floor.' }}</p>
+      {%- form 'customer' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="melato-preview-gate__form-row">
+          <input type="email" name="contact[email]" placeholder="Email address" required aria-label="Email address">
+          <button type="submit" class="melato-preview-gate__submit">{{ section.settings.locked_cta | default: 'Join the Preview List' }}</button>
+        </div>
+        <label class="melato-preview-gate__consent">
+          <input type="checkbox" name="contact[accepts_marketing]" value="1" checked> Yes, send me Melato previews and release notes.
+        </label>
+        {%- if form.posted_successfully? -%}<p class="melato-preview-gate__success">You're on the list — selected pieces will appear here as access opens.</p>{%- endif -%}
+      {%- endform -%}
+
+    {%- when 'pending' -%}
+      <h1 class="melato-preview-gate__headline">{{ section.settings.pending_headline | default: "You're On The List." }}</h1>
+      <p class="melato-preview-gate__copy">{{ section.settings.pending_copy | default: 'Selected pieces will appear here before the public floor, as soon as the room opens.' }}</p>
+
+    {%- when 'unlocked' -%}
+      <h1 class="melato-preview-gate__headline">{{ section.settings.unlocked_headline | default: 'Welcome Inside.' }}</h1>
+      <p class="melato-preview-gate__copy">{{ section.settings.unlocked_copy | default: 'Selected pieces appear here first, before the public floor.' }}</p>
+  {%- endcase -%}
+</div>
+
+{% stylesheet %}
+.melato-preview-gate { max-width: 640px; margin: 0 auto; padding: 0 1.25rem clamp(2rem,5vw,3.5rem); text-align: center; color: #f4ead8; }
+.melato-preview-gate__headline { font-weight: 500; margin: 0 0 1rem; font-size: clamp(1.6rem,4vw,2.2rem); }
+.melato-preview-gate__copy { font-size: .95rem; line-height: 1.6; color: #aaa39a; margin: 0 0 1.75rem; }
+.melato-preview-gate__form-row { display: flex; gap: .6rem; max-width: 440px; margin: 0 auto; }
+.melato-preview-gate__form-row input { flex: 1; padding: .7rem .8rem; border: 1px solid rgba(244,234,216,.3); background: transparent; color: #f4ead8; font-size: .9rem; }
+.melato-preview-gate__form-row input::placeholder { color: #6f6d68; }
+.melato-preview-gate__form-row input:focus-visible { outline: 1px solid #f4ead8; outline-offset: 2px; }
+.melato-preview-gate__submit { padding: .7rem 1.4rem; background: #f4ead8 !important; color: #0a0a0a !important; border: none; font-size: .85rem; cursor: pointer; white-space: nowrap; transition: opacity .2s ease; }
+.melato-preview-gate__submit:hover { opacity: .85; }
+.melato-preview-gate__consent { display: block; margin-top: .9rem; font-size: .78rem; color: #6f6d68; }
+.melato-preview-gate__success { margin-top: 1rem; font-size: .88rem; color: #c8e0c0 !important; }
+@media (max-width: 480px) { .melato-preview-gate__form-row { flex-direction: column; } }
+@media (prefers-reduced-motion: reduce) { .melato-preview-gate__submit { transition: none; } }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Melato Preview Gate", "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Locked state" },
+    { "type": "text", "id": "locked_headline", "label": "Headline", "default": "The List Sees It First." },
+    { "type": "textarea", "id": "locked_copy", "label": "Copy", "default": "Newsletter subscribers get private previews before pieces reach the public floor." },
+    { "type": "text", "id": "locked_cta", "label": "Button label", "default": "Join the Preview List" },
+    { "type": "header", "content": "Pending state" },
+    { "type": "text", "id": "pending_headline", "label": "Headline", "default": "You're On The List." },
+    { "type": "textarea", "id": "pending_copy", "label": "Copy", "default": "Selected pieces will appear here before the public floor, as soon as the room opens." },
+    { "type": "header", "content": "Unlocked state" },
+    { "type": "text", "id": "unlocked_headline", "label": "Headline", "default": "Welcome Inside." },
+    { "type": "textarea", "id": "unlocked_copy", "label": "Copy", "default": "Selected pieces appear here first, before the public floor." }
+  ],
+  "presets": [{ "name": "Melato Preview Gate" }]
+}
+{% endschema %}

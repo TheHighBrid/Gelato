@@ -1,0 +1,592 @@
+/* ============================================================
+   MELATO ENHANCEMENTS - melato-enhancements.css
+   Load in theme.liquid <head> via:
+   {{ 'melato-enhancements.css' | asset_url | stylesheet_tag }}
+   ============================================================ */
+
+/* ---- GLOBAL TOKENS ---------------------------------------- */
+:root {
+  --m-black:    #0a0a0a;
+  --m-offwhite: #e8e8e8;
+  --m-white:    #ffffff;
+  --m-neon:     #8fff00;
+  --m-dim:      #1a1a1a;
+  --m-border:   #2a2a2a;
+  --m-radius:   2px;
+  --m-font-ui:  'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --m-ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --m-ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- UTILITY ---------------------------------------------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ============================================================
+   1. PRODUCT CARD HOVER IMAGE
+   ============================================================ */
+
+.pci-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  background: var(--m-dim);
+}
+
+/* Force consistent aspect ratio - 4:5 portrait (adjust to your card) */
+.pci-wrapper::before {
+  content: '';
+  display: block;
+  padding-top: 125%; /* 4:5 = 125% */
+}
+
+.pci {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: opacity 0.45s var(--m-ease-in-out),
+              transform 0.55s var(--m-ease-out-expo);
+  will-change: opacity, transform;
+}
+
+.pci--primary {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
+}
+
+.pci--secondary {
+  opacity: 0;
+  transform: scale(1.03);
+  z-index: 2;
+}
+
+/* Trigger hover on the card wrapper - works even if card has padding/text below */
+.product-card:hover .pci--primary,
+.product-item:hover .pci--primary,
+[class*="product-card"]:hover .pci--primary {
+  opacity: 0;
+  transform: scale(1.03);
+}
+
+.product-card:hover .pci--secondary,
+.product-item:hover .pci--secondary,
+[class*="product-card"]:hover .pci--secondary {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Touch: no hover - keep primary visible, slight scale on tap */
+@media (hover: none) {
+  .pci--secondary { display: none; }
+}
+
+/* Placeholder SVG fallback */
+.pci--placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--m-dim);
+}
+
+.pci--svg {
+  width: 60%;
+  height: auto;
+  opacity: 0.15;
+}
+
+/* Badge overlay within the image wrapper */
+.pci-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+
+/* ============================================================
+   2. PRODUCT BADGES
+   ============================================================ */
+
+.badge-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--m-font-ui);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: var(--m-radius);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* 3 or fewer units - critical urgency */
+.badge--critical {
+  background: #ff3030;
+  color: #fff;
+}
+
+/* 4–8 units */
+.badge--low-stock {
+  background: var(--m-neon);
+  color: var(--m-black);
+}
+
+/* Tagged 'new-drop' */
+.badge--drop {
+  background: transparent;
+  color: var(--m-neon);
+  border: 1px solid var(--m-neon);
+}
+
+/* Tagged 'coming-soon' */
+.badge--coming-soon {
+  background: var(--m-black);
+  color: var(--m-offwhite);
+  border: 1px solid var(--m-border);
+}
+
+/* Sold out */
+.badge--sold-out {
+  background: var(--m-border);
+  color: var(--m-offwhite);
+  opacity: 0.75;
+}
+
+/* Sale % */
+.badge--sale {
+  background: var(--m-white);
+  color: var(--m-black);
+}
+
+
+/* ============================================================
+   3. ANNOUNCEMENT MARQUEE
+   ============================================================ */
+
+.melato-marquee {
+  position: relative;
+  overflow: hidden;
+  background: var(--marquee-bg, var(--m-black));
+  height: var(--marquee-height, 38px);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--m-border);
+  z-index: 200;
+}
+
+.melato-marquee__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+.melato-marquee__track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 0;
+  animation: melato-marquee-scroll var(--marquee-speed, 28s) linear infinite;
+  will-change: transform;
+}
+
+/* Pause on hover (accessibility - reduce motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .melato-marquee:hover .melato-marquee__track {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .melato-marquee__track {
+    animation: none;
+  }
+}
+
+.melato-marquee__item {
+  font-family: var(--m-font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--marquee-text, var(--m-offwhite));
+  white-space: nowrap;
+  padding: 0 28px;
+}
+
+.melato-marquee__divider {
+  font-size: 10px;
+  color: var(--marquee-accent, var(--m-neon));
+  flex-shrink: 0;
+}
+
+@keyframes melato-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+
+/* ============================================================
+   4. STICKY ADD TO CART BAR
+   ============================================================ */
+
+.m-satc {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background: var(--m-black);
+  border-top: 1px solid var(--m-border);
+  transform: translateY(100%);
+  transition: transform 0.4s var(--m-ease-out-expo);
+  will-change: transform;
+}
+
+.m-satc[aria-hidden="false"] {
+  transform: translateY(0);
+}
+
+.m-satc__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Product thumbnail + meta */
+.m-satc__info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.m-satc__thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--m-radius);
+  flex-shrink: 0;
+  border: 1px solid var(--m-border);
+}
+
+.m-satc__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.m-satc__title {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--m-offwhite);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.m-satc__price {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+  letter-spacing: 0.05em;
+}
+
+/* Size select + CTA */
+.m-satc__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.m-satc__size-select {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--m-dim);
+  color: var(--m-offwhite);
+  border: 1px solid var(--m-border);
+  border-radius: var(--m-radius);
+  padding: 8px 10px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 70px;
+}
+
+.m-satc__btn {
+  position: relative;
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--m-neon);
+  color: var(--m-black);
+  border: none;
+  border-radius: var(--m-radius);
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.m-satc__btn:hover {
+  background: #a8ff33;
+  transform: translateY(-1px);
+}
+
+.m-satc__btn:active {
+  transform: translateY(0);
+}
+
+/* Loading state */
+.m-satc__btn.is-loading .m-satc__btn-text {
+  opacity: 0;
+}
+
+.m-satc__btn.is-loading .m-satc__spinner {
+  display: block;
+}
+
+.m-satc__spinner {
+  display: none;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 16px;
+  height: 16px;
+  animation: satc-spin 0.7s linear infinite;
+}
+
+@keyframes satc-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Mobile: hide product title text, keep price */
+@media (max-width: 480px) {
+  .m-satc__title { display: none; }
+  .m-satc__thumb { width: 34px; height: 34px; }
+  .m-satc__btn   { padding: 10px 16px; }
+}
+
+
+/* ============================================================
+   5. DROP LIST SIGNUP SECTION
+   ============================================================ */
+
+.m-dropsignup {
+  position: relative;
+  background: var(--ds-bg, var(--m-black));
+  color: var(--ds-text, var(--m-offwhite));
+  overflow: hidden;
+  padding: 80px 40px;
+}
+
+.m-dropsignup__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.m-dropsignup__eyebrow {
+  font-family: var(--m-font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ds-accent, var(--m-neon));
+  margin: 0 0 16px;
+}
+
+.m-dropsignup__heading {
+  font-family: var(--font-heading, var(--m-font-ui));
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ds-text, var(--m-offwhite));
+  margin: 0 0 20px;
+}
+
+.m-dropsignup__sub {
+  font-family: var(--m-font-ui);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin: 0;
+}
+
+/* Form */
+.m-dropsignup__form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.m-dropsignup__field-group {
+  display: flex;
+  border: 1px solid var(--m-border);
+  border-radius: var(--m-radius);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.m-dropsignup__field-group:focus-within {
+  border-color: var(--ds-accent, var(--m-neon));
+}
+
+.m-dropsignup__input {
+  flex: 1;
+  background: var(--m-dim);
+  color: var(--ds-text, var(--m-offwhite));
+  border: none;
+  outline: none;
+  padding: 16px 20px;
+  font-family: var(--m-font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.m-dropsignup__input::placeholder {
+  color: #555;
+}
+
+.m-dropsignup__btn {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--ds-accent, var(--m-neon));
+  color: var(--m-black);
+  border: none;
+  padding: 16px 24px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.m-dropsignup__btn:hover { background: #a8ff33; }
+
+.m-dropsignup__disclaimer {
+  font-family: var(--m-font-ui);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #555;
+  margin: 0;
+}
+
+.m-dropsignup__success {
+  font-family: var(--m-font-ui);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-accent, var(--m-neon));
+  padding: 20px;
+  border: 1px solid var(--ds-accent, var(--m-neon));
+  border-radius: var(--m-radius);
+}
+
+.m-dropsignup__error {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #ff3030;
+  margin: 0;
+}
+
+/* Decorative lines */
+.m-dropsignup__lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.m-dropsignup__lines span {
+  position: absolute;
+  width: 1px;
+  background: var(--m-border);
+  opacity: 0.4;
+  top: 0;
+  bottom: 0;
+}
+
+.m-dropsignup__lines span:nth-child(1) { left: 33.33%; }
+.m-dropsignup__lines span:nth-child(2) { left: 50%; }
+.m-dropsignup__lines span:nth-child(3) { left: 66.66%; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .m-dropsignup {
+    padding: 60px 24px;
+  }
+
+  .m-dropsignup__inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .m-dropsignup__field-group {
+    flex-direction: column;
+  }
+
+  .m-dropsignup__btn {
+    padding: 14px 24px;
+  }
+}

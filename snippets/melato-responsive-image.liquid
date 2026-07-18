@@ -1,0 +1,61 @@
+{%- comment -%}
+  Melato responsive image snippet
+  Usage:
+  {% render 'melato-responsive-image', image: product.featured_image, alt: product.title, class: 'my-class', loading: 'lazy', fetchpriority: 'auto', sizes: '(min-width: 990px) 50vw, 100vw' %}
+
+  Alt text policy:
+  - Preserve strong hand-written media alt text.
+  - Upgrade plain product-name fallback alt into a Melato descriptive product image format.
+{%- endcomment -%}
+
+{%- liquid
+  assign image_obj = image
+  assign image_alt_raw = alt | default: image_obj.alt | default: shop.name
+  assign image_alt_clean = image_alt_raw | strip
+  assign shop_name_down = shop.name | downcase
+  assign image_alt_down = image_alt_clean | downcase
+
+  if image_alt_clean == blank
+    assign image_alt_clean = shop.name
+    assign image_alt_down = shop_name_down
+  endif
+
+  unless image_alt_down contains 'melato'
+    assign image_alt_clean = image_alt_clean | append: ' by Melato'
+  endunless
+
+  assign image_alt_down = image_alt_clean | downcase
+  if image_alt_down contains 'product image'
+  elsif image_alt_down contains 'product photo'
+  elsif image_alt_down contains 'front view'
+  elsif image_alt_down contains 'back view'
+  elsif image_alt_down contains 'alternate view'
+  elsif image_alt_down contains 'detail view'
+  else
+    assign image_alt_clean = image_alt_clean | append: ', product image'
+  endif
+
+  assign image_alt = image_alt_clean | escape
+  assign image_class = class | default: 'melato-responsive-image'
+  assign image_loading = loading | default: 'lazy'
+  assign image_fetchpriority = fetchpriority | default: 'auto'
+  assign image_sizes = sizes | default: '(min-width: 990px) 50vw, 100vw'
+  assign image_widths = widths | default: '320, 480, 640, 750, 960, 1200, 1500, 1800, 2200'
+-%}
+
+{%- if image_obj != blank -%}
+  {{ image_obj
+    | image_url: width: 2200
+    | image_tag:
+      class: image_class,
+      alt: image_alt,
+      loading: image_loading,
+      fetchpriority: image_fetchpriority,
+      sizes: image_sizes,
+      widths: image_widths
+  }}
+{%- else -%}
+  <div class="melato-image-placeholder {{ image_class }}" aria-hidden="true">
+    {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+  </div>
+{%- endif -%}

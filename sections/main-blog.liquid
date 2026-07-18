@@ -1,0 +1,64 @@
+{% comment %}
+  sections/main-blog.liquid
+{% endcomment %}
+
+{%- assign articles_per_page = section.settings.articles_per_page | default: 12 -%}
+
+<section class="section-spacing">
+  <div class="container">
+
+    <h1 class="heading-md drip-reveal" style="margin-bottom:60px;">{{ blog.title }}</h1>
+
+    {%- paginate blog.articles by articles_per_page -%}
+      <div class="grid grid--3">
+        {%- for article in blog.articles -%}
+          <article class="drip-reveal drip-reveal--delay-{{ forloop.index0 | modulo: 3 | plus: 1 }}">
+            {%- if article.image -%}
+              <a href="{{ article.url }}" style="display:block;overflow:hidden;aspect-ratio:16/10;margin-bottom:20px;">
+                <img
+                  src="{{ article.image | image_url: width: 800 }}"
+                  alt="{{ article.image.alt | default: article.title | escape }}"
+                  loading="lazy"
+                  width="{{ article.image.width }}"
+                  height="{{ article.image.height }}"
+                  style="width:100%;height:100%;object-fit:cover;transition:transform 0.4s ease;"
+                >
+              </a>
+            {%- endif -%}
+            <p class="text-label" style="margin-bottom:10px;color:var(--color-accent);">
+              {{ article.published_at | date: '%B %d, %Y' }}
+            </p>
+            <h2 class="heading-xs" style="margin-bottom:10px;line-height:1.2;">
+              <a href="{{ article.url }}" style="transition:color 0.2s;" onmouseover="this.style.color='var(--color-accent)'" onmouseout="this.style.color=''">
+                {{ article.title }}
+              </a>
+            </h2>
+            {%- if article.excerpt != blank -%}
+              <p style="color:var(--color-muted);font-size:0.875rem;line-height:1.7;margin-bottom:16px;">
+                {{ article.excerpt | strip_html | truncate: 120 }}
+              </p>
+            {%- endif -%}
+            <a href="{{ article.url }}" class="btn btn--ghost btn--sm">Read More →</a>
+          </article>
+        {%- endfor -%}
+      </div>
+
+      {%- if paginate.pages > 1 -%}
+        <nav aria-label="Pagination" style="text-align:center;margin-top:60px;">
+          {{ paginate | default_pagination }}
+        </nav>
+      {%- endif -%}
+    {%- endpaginate -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Blog",
+  "tag": "section",
+  "settings": [
+    { "type": "range", "id": "articles_per_page", "label": "Articles per page", "min": 6, "max": 24, "step": 3, "default": 12 }
+  ]
+}
+{% endschema %}

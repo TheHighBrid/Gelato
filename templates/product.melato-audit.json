@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "main": { "type": "main-product", "settings": {} },
+    "proof_bar": {
+      "type": "melato-product-proof-bar",
+      "settings": {},
+      "blocks": {
+        "proof_1": { "type": "proof", "settings": { "icon": "✦", "title": "Limited production", "text": "Produced in controlled quantities with a current-season product focus." } },
+        "proof_2": { "type": "proof", "settings": { "icon": "☁", "title": "Material", "text": "Fabric language adapts to the selected product." } },
+        "proof_3": { "type": "proof", "settings": { "icon": "↗", "title": "Ships Worldwide", "text": "Complimentary delivery on all orders." } },
+        "proof_4": { "type": "proof", "settings": { "icon": "⌁", "title": "Secure checkout", "text": "Major cards, Shop Pay, Apple Pay, Google Pay." } }
+      },
+      "block_order": ["proof_1", "proof_2", "proof_3", "proof_4"]
+    },
+    "complete_set": {
+      "type": "melato-complete-the-set",
+      "settings": {
+        "eyebrow": "Complete the set",
+        "heading": "Complete the Melato set",
+        "description": "Pair the matching pieces for the full drop look."
+      }
+    },
+    "accordions": {
+      "type": "melato-product-trust-accordions",
+      "settings": {
+        "eyebrow": "Product intelligence",
+        "heading": "Fit, material, care, and shipping",
+        "open_first": true
+      }
+    },
+    "related": {
+      "type": "related-products",
+      "settings": {
+        "eyebrow": "More from the collection",
+        "heading": "You might also like",
+        "products_to_show": 4
+      }
+    }
+  },
+  "order": ["main", "proof_bar", "complete_set", "accordions", "related"]
+}

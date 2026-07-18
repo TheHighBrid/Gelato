@@ -1,0 +1,165 @@
+/*
+  Melato hidden utility cleanup
+  Keeps drawers, overlays, modals, and toast out of normal page flow until opened.
+  This prevents utility markup from appearing below footer/legal pages while keeping all drawers functional.
+*/
+
+.melato-utility-layer {
+  position: relative;
+  z-index: 2147483000;
+  width: 0;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.melato-utility-layer *,
+.melato-utility-layer *::before,
+.melato-utility-layer *::after {
+  box-sizing: border-box;
+}
+
+.melato-utility-layer > * {
+  pointer-events: auto;
+}
+
+.melato-utility-layer .drip-overlay,
+.melato-utility-layer [data-overlay] {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  background: rgba(0, 0, 0, 0.62);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 180ms ease, visibility 180ms ease;
+}
+
+.melato-utility-layer .drip-overlay.is-visible,
+.melato-utility-layer [data-overlay].is-visible,
+.melato-utility-layer .drip-overlay[aria-hidden="false"],
+.melato-utility-layer [data-overlay][aria-hidden="false"] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.melato-utility-layer .cart-drawer,
+.melato-utility-layer .search-drawer,
+.melato-utility-layer .mobile-menu,
+.melato-utility-layer .quick-view-modal,
+.melato-utility-layer .size-guide-modal,
+.melato-utility-layer [id*="cart" i][class*="drawer" i],
+.melato-utility-layer [id*="search" i][class*="drawer" i],
+.melato-utility-layer [id*="menu" i][class*="drawer" i],
+.melato-utility-layer [id*="quick" i][class*="modal" i],
+.melato-utility-layer [id*="size" i][class*="modal" i],
+.melato-utility-layer [data-cart-drawer],
+.melato-utility-layer [data-search-drawer],
+.melato-utility-layer [data-mobile-menu],
+.melato-utility-layer [data-quick-view],
+.melato-utility-layer [data-size-guide] {
+  position: fixed !important;
+  z-index: 950;
+  max-width: min(92vw, 480px);
+  max-height: 100dvh;
+  overflow: auto;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.melato-utility-layer .cart-drawer,
+.melato-utility-layer [id*="cart" i][class*="drawer" i],
+.melato-utility-layer [data-cart-drawer],
+.melato-utility-layer .search-drawer,
+.melato-utility-layer [id*="search" i][class*="drawer" i],
+.melato-utility-layer [data-search-drawer],
+.melato-utility-layer .mobile-menu,
+.melato-utility-layer [id*="menu" i][class*="drawer" i],
+.melato-utility-layer [data-mobile-menu] {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateX(104%);
+  transition: transform 220ms ease, opacity 180ms ease, visibility 180ms ease;
+}
+
+.melato-utility-layer .quick-view-modal,
+.melato-utility-layer .size-guide-modal,
+.melato-utility-layer [id*="quick" i][class*="modal" i],
+.melato-utility-layer [id*="size" i][class*="modal" i],
+.melato-utility-layer [data-quick-view],
+.melato-utility-layer [data-size-guide] {
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -46%);
+  width: min(92vw, 760px);
+  transition: transform 220ms ease, opacity 180ms ease, visibility 180ms ease;
+}
+
+.melato-utility-layer .is-open,
+.melato-utility-layer .is-active,
+.melato-utility-layer .is-visible,
+.melato-utility-layer [open],
+.melato-utility-layer [aria-hidden="false"] {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.melato-utility-layer .cart-drawer.is-open,
+.melato-utility-layer .search-drawer.is-open,
+.melato-utility-layer .mobile-menu.is-open,
+.melato-utility-layer [id*="cart" i][class*="drawer" i].is-open,
+.melato-utility-layer [id*="search" i][class*="drawer" i].is-open,
+.melato-utility-layer [id*="menu" i][class*="drawer" i].is-open,
+.melato-utility-layer [data-cart-drawer].is-open,
+.melato-utility-layer [data-search-drawer].is-open,
+.melato-utility-layer [data-mobile-menu].is-open,
+.melato-utility-layer [aria-hidden="false"][class*="drawer" i] {
+  transform: translateX(0) !important;
+}
+
+.melato-utility-layer .quick-view-modal.is-open,
+.melato-utility-layer .size-guide-modal.is-open,
+.melato-utility-layer [id*="quick" i][class*="modal" i].is-open,
+.melato-utility-layer [id*="size" i][class*="modal" i].is-open,
+.melato-utility-layer [data-quick-view].is-open,
+.melato-utility-layer [data-size-guide].is-open,
+.melato-utility-layer [aria-hidden="false"][class*="modal" i] {
+  transform: translate(-50%, -50%) !important;
+}
+
+.melato-utility-layer #drip-toast,
+.melato-utility-layer .drip-toast,
+.melato-utility-layer [role="status"] {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1200;
+  width: auto;
+  max-width: min(420px, calc(100vw - 36px));
+  pointer-events: none;
+}
+
+footer,
+.shopify-section-footer,
+.melato-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.template-page .melato-footer a,
+.template-page .melato-footer small,
+.template-page .melato-footer p,
+.template-page footer a,
+.template-page footer small,
+.template-page footer p {
+  overflow-wrap: anywhere;
+}
+
+.template-page .main-content + .shopify-section-footer,
+.template-page main + footer,
+.template-page main + .melato-footer {
+  margin-top: 0;
+}

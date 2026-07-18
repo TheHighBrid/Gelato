@@ -1,0 +1,58 @@
+{% comment %}
+  sections/newsletter.liquid
+{% endcomment %}
+
+<section class="newsletter-section section-spacing">
+  <div class="container--narrow" style="text-align:center;">
+
+    <div class="drip-reveal">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="heading-md" style="margin-bottom:12px;">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p style="color:var(--color-muted);margin-bottom:32px;font-size:0.9rem;">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- form 'customer', class: 'drip-reveal drip-reveal--delay-2', data-newsletter-form: '' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div class="newsletter-form" style="justify-content:center;">
+        <input
+          class="field__input newsletter-form__input"
+          type="email"
+          name="contact[email]"
+          id="newsletter-email-{{ section.id }}"
+          value="{{ customer.email }}"
+          placeholder="{{ section.settings.placeholder | default: 'your@email.com' }}"
+          autocomplete="email"
+          required
+          aria-label="{{ 'newsletter.placeholder' | t }}"
+          style="max-width:320px;"
+        >
+        <button type="submit" class="btn btn--primary newsletter-form__btn">
+          {{ section.settings.button_label | default: 'Subscribe' }}
+        </button>
+      </div>
+      {%- if form.posted_successfully? -%}
+        <p style="color:var(--color-accent);font-family:var(--font-mono-family);font-size:0.7rem;letter-spacing:0.15em;margin-top:16px;">
+          {{ 'newsletter.success' | t }}
+        </p>
+      {%- endif -%}
+    {%- endform -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "GET DROP ALERTS" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Be first to know. One email per drop. No spam." },
+    { "type": "text", "id": "placeholder", "label": "Input placeholder", "default": "your@email.com" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Join the List" }
+  ],
+  "presets": [{ "name": "Newsletter" }]
+}
+{% endschema %}

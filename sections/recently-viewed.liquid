@@ -1,0 +1,20 @@
+{% comment %}
+  sections/recently-viewed.liquid
+{% endcomment %}
+
+<section class="section-spacing" style="border-top:1px solid var(--color-border);" data-recently-viewed>
+  <div class="container">
+    <h2 class="heading-sm" style="margin-bottom:40px;">{{ section.settings.heading | default: 'RECENTLY VIEWED' }}</h2>
+    <div class="grid grid--4" data-recently-viewed-grid></div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "RECENTLY VIEWED" }
+  ]
+}
+{% endschema %}

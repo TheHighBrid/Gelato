@@ -1,0 +1,159 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "close": "Close",
+    "open": "Open",
+    "loading": "Loading",
+    "next": "Next",
+    "previous": "Previous",
+    "play": "Play",
+    "pause": "Pause",
+    "zoom_in": "Zoom in",
+    "zoom_out": "Zoom out",
+    "open_menu": "Open navigation menu",
+    "close_menu": "Close navigation menu",
+    "open_cart": "Open cart",
+    "close_cart": "Close cart",
+    "open_search": "Open search",
+    "close_search": "Close search",
+    "change_image": "Change image to {{ position }}"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "empty_cta": "Continue Shopping",
+    "added": "Added to cart",
+    "remove": "Remove",
+    "update": "Update",
+    "checkout": "Checkout",
+    "subtotal": "Subtotal",
+    "total": "Total",
+    "item": "item",
+    "items": "items",
+    "free_shipping_message": "Complimentary delivery on all orders.",
+    "free_shipping_achieved": "Complimentary delivery on all orders.",
+    "quantity": "Quantity",
+    "upsell_heading": "You might also want"
+  },
+  "products": {
+    "add_to_cart": "Add to Cart",
+    "sold_out": "Sold Out",
+    "unavailable": "Unavailable",
+    "out_of_stock": "Out of stock",
+    "only_left": "Only {{ count }} left",
+    "low_stock": "Low stock - only {{ count }} left",
+    "select_size": "Select size",
+    "select_color": "Select color",
+    "size_guide": "Size Guide",
+    "vendor": "by {{ vendor }}",
+    "sale": "Sale",
+    "new": "New",
+    "limited": "Limited",
+    "drop_live": "Drop is live",
+    "drop_soon": "Drop in",
+    "drop_ended": "Drop ended",
+    "notify_me": "Notify Me",
+    "notify_email": "Enter your email",
+    "notify_submit": "Alert Me",
+    "notify_success": "You're on the list!",
+    "viewers_singular": "{{ count }} person viewing this",
+    "viewers_plural": "{{ count }} people viewing this",
+    "share": "Share",
+    "copy_link": "Copy link",
+    "link_copied": "Link copied!",
+    "description": "Description",
+    "details": "Details",
+    "shipping": "Shipping & Returns",
+    "related": "You May Also Like",
+    "recently_viewed": "Recently Viewed",
+    "reviews_count": "{{ count }} reviews",
+    "write_review": "Write a review",
+    "add_to_wishlist": "Add to wishlist",
+    "remove_from_wishlist": "Remove from wishlist",
+    "wishlisted": "Saved!",
+    "quick_view": "Quick View"
+  },
+  "collections": {
+    "filter_by": "Filter",
+    "sort_by": "Sort by",
+    "filters": "Filters",
+    "clear_all": "Clear all",
+    "apply": "Apply",
+    "products_count": "{{ count }} products",
+    "showing_count": "Showing {{ count }} of {{ total }}",
+    "load_more": "Load more",
+    "no_results": "No products found",
+    "no_results_cta": "Clear filters",
+    "sort_options": {
+      "featured": "Featured",
+      "best_selling": "Best Selling",
+      "price_asc": "Price: Low to High",
+      "price_desc": "Price: High to Low",
+      "newest": "Newest",
+      "oldest": "Oldest",
+      "title_asc": "A–Z",
+      "title_desc": "Z–A"
+    }
+  },
+  "search": {
+    "placeholder": "Search products...",
+    "submit": "Search",
+    "no_results": "No results for \"{{ query }}\"",
+    "results_count": "{{ count }} results for \"{{ query }}\"",
+    "popular_searches": "Popular searches",
+    "recent_searches": "Recent searches",
+    "clear": "Clear"
+  },
+  "account": {
+    "login": "Log in",
+    "logout": "Log out",
+    "register": "Create account",
+    "forgot_password": "Forgot password?",
+    "my_account": "My account",
+    "orders": "Orders",
+    "addresses": "Addresses",
+    "wishlist": "Wishlist"
+  },
+  "newsletter": {
+    "placeholder": "Your email address",
+    "submit": "Subscribe",
+    "success": "Thanks for subscribing!",
+    "error": "Something went wrong. Please try again."
+  },
+  "general": {
+    "free_shipping": "Complimentary delivery",
+    "on_orders_over": "on all orders",
+    "easy_returns": "Easy returns",
+    "return_days": "{{ days }}-day returns",
+    "secure_checkout": "Secure checkout",
+    "currency": "Currency",
+    "country": "Country / Region",
+    "language": "Language",
+    "powered_by": "Powered by Shopify"
+  },
+  "errors": {
+    "sold_out": "This item is sold out",
+    "unavailable": "This variant is unavailable",
+    "invalid_email": "Please enter a valid email",
+    "required": "This field is required",
+    "add_to_cart_error": "Something went wrong adding to cart"
+  },
+  "drop": {
+    "countdown_title": "Drop goes live in",
+    "waitlist_heading": "Get early access",
+    "waitlist_subheading": "Be the first to know when this drops",
+    "waitlist_success": "You're on the list! We'll hit you when it's live.",
+    "locked": "Drop not live yet",
+    "coming_soon": "Coming Soon",
+    "drop_calendar": "Upcoming Drops"
+  }
+}

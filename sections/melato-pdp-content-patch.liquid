@@ -1,0 +1,151 @@
+{%- liquid
+assign badge_1 = product.metafields.custom.pdp_badge_1.value
+assign badge_2 = product.metafields.custom.pdp_badge_2.value
+assign badge_3 = product.metafields.custom.pdp_badge_3.value
+assign story_content = product.metafields.custom.pdp_story_content.value
+assign technical_details = product.metafields.custom.pdp_technical_details.value
+assign technical_paragraph = product.metafields.custom.pdp_technical_paragraph.value
+assign fit_details = product.metafields.custom.pdp_fit_details.value
+assign material_details = product.metafields.custom.pdp_material_details.value
+assign care_details = product.metafields.custom.pdp_care_details.value
+assign shipping_returns_details = product.metafields.custom.pdp_shipping_returns_details.value
+assign hide_dynamic_checkout = product.metafields.custom.hide_dynamic_checkout.value
+-%}
+<style>
+.melato-pdp-rebuild .pdp-proof-mini {
+display: none !important;
+}
+{% if hide_dynamic_checkout %}
+.melato-pdp-rebuild .pdp-dynamic-checkout,
+.melato-pdp-rebuild .shopify-payment-button {
+display: none !important;
+}
+{% endif %}
+.melato-pdp-rebuild .pdp-content-list {
+margin: 12px 0 0;
+padding-left: 20px;
+color: rgba(255, 255, 255, 0.78);
+line-height: 1.65;
+}
+.melato-pdp-rebuild .pdp-content-list li + li {
+margin-top: 7px;
+}
+.melato-pdp-rebuild .pdp-technical-paragraph {
+margin: 18px 0 0;
+color: rgba(255, 255, 255, 0.78);
+line-height: 1.72;
+max-width: 76ch;
+}
+</style>
+<script type="application/json" id="MelatoPDPContentPatchData-{{ section.id }}">
+{
+"badge1": {{ badge_1 | json }},
+"badge2": {{ badge_2 | json }},
+"badge3": {{ badge_3 | json }},
+"story": {{ story_content | json }},
+"technicalDetails": {{ technical_details | json }},
+"technicalParagraph": {{ technical_paragraph | json }},
+"fit": {{ fit_details | json }},
+"material": {{ material_details | json }},
+"care": {{ care_details | json }},
+"shippingReturns": {{ shipping_returns_details | json }},
+"hideDynamicCheckout": {{ hide_dynamic_checkout | json }}
+}
+</script>
+<script>
+(function() {
+function initializeMelatoPDPContentPatch() {
+var dataElement = document.getElementById('MelatoPDPContentPatchData-{{ section.id }}');
+var root = document.querySelector('.melato-pdp-rebuild');
+if (!dataElement || !root) return;
+var data;
+try {
+data = JSON.parse(dataElement.textContent || '{}');
+} catch (error) {
+return;
+}
+var proofStack = root.querySelector('.pdp-proof-mini');
+if (proofStack) proofStack.remove();
+var badges = root.querySelectorAll('.pdp-trust-row span');
+[data.badge1, data.badge2, data.badge3].forEach(function(text, index) {
+if (text && badges[index]) badges[index].textContent = text;
+});
+if (data.hideDynamicCheckout) {
+var dynamicCheckout = root.querySelector('.pdp-dynamic-checkout');
+if (dynamicCheckout) dynamicCheckout.remove();
+}
+var storyBlock = root.querySelector('.pdp-story-tech__story');
+if (storyBlock && data.story) {
+var storyHeading = storyBlock.querySelector('h2');
+var storyBody = storyBlock.querySelector('.pdp-rte--story');
+if (storyHeading) storyHeading.textContent = 'The story.';
+if (storyBody) storyBody.textContent = data.story;
+}
+var technicalBlock = root.querySelector('.pdp-story-tech__details');
+if (technicalBlock) {
+var technicalList = technicalBlock.querySelector('.pdp-detail-list');
+if (technicalList && Array.isArray(data.technicalDetails) && data.technicalDetails.length) {
+technicalList.textContent = '';
+data.technicalDetails.forEach(function(item) {
+var listItem = document.createElement('li');
+listItem.textContent = item;
+technicalList.appendChild(listItem);
+});
+}
+if (data.technicalParagraph) {
+var existingParagraph = technicalBlock.querySelector('.pdp-technical-paragraph');
+var paragraph = existingParagraph || document.createElement('p');
+paragraph.className = 'pdp-technical-paragraph';
+paragraph.textContent = data.technicalParagraph;
+if (!existingParagraph) {
+technicalBlock.appendChild(paragraph);
+}
+}
+}
+function replaceSpecification(label, items) {
+if (!Array.isArray(items) || !items.length) return;
+var target = Array.prototype.find.call(
+root.querySelectorAll('.pdp-spec'),
+function(details) {
+var summary = details.querySelector('summary');
+return summary && summary.textContent.trim().toLowerCase() === label.toLowerCase();
+}
+);
+if (!target) return;
+var body = target.querySelector('.pdp-rte');
+if (!body) return;
+body.textContent = '';
+var list = document.createElement('ul');
+list.className = 'pdp-content-list';
+items.forEach(function(item) {
+var listItem = document.createElement('li');
+listItem.textContent = item;
+list.appendChild(listItem);
+});
+body.appendChild(list);
+}
+replaceSpecification('Fit', data.fit);
+replaceSpecification('Material', data.material);
+replaceSpecification('Care', data.care);
+replaceSpecification('Shipping & returns', data.shippingReturns);
+}
+if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', initializeMelatoPDPContentPatch, { once: true });
+} else {
+initializeMelatoPDPContentPatch();
+}
+})();
+</script>
+{% schema %}
+{
+"name": "Melato PDP content patch",
+"tag": "section",
+"class": "section-melato-pdp-content-patch",
+"settings": [],
+"presets": [
+{
+"name": "Melato PDP content patch"
+}
+]
+}
+{% endschema %}

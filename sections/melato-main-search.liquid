@@ -1,0 +1,278 @@
+<section class="melato-search-page" aria-labelledby="MelatoSearchHeading">
+  <div class="melato-search-page__wrap">
+
+    <header class="melato-search-page__header">
+      <p class="melato-search-page__eyebrow">Search</p>
+      <h1 id="MelatoSearchHeading">Search Melato</h1>
+      <p>Find jackets, pants, tracksuits, and release details.</p>
+    </header>
+
+    <form action="{{ routes.search_url }}" method="get" role="search" class="melato-search-page__form">
+      <label class="visually-hidden" for="MelatoSearchInput">Search</label>
+      <input
+        id="MelatoSearchInput"
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="Search products"
+        autocomplete="off"
+      >
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit">Search</button>
+    </form>
+
+    {%- if search.performed -%}
+      <div class="melato-search-page__status">
+        {%- if search.results_count > 0 -%}
+          {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for “{{ search.terms | escape }}”
+        {%- else -%}
+          No results for “{{ search.terms | escape }}”
+        {%- endif -%}
+      </div>
+
+      {%- paginate search.results by 24 -%}
+        {%- if search.results_count > 0 -%}
+          <div class="melato-search-page__grid">
+            {%- for item in search.results -%}
+              <article class="melato-search-card">
+                <a class="melato-search-card__media" href="{{ item.url }}">
+                  {%- if item.object_type == 'product' and item.featured_media -%}
+                    {{
+                      item.featured_media
+                      | image_url: width: 900
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '300, 450, 600, 750, 900',
+                        sizes: '(max-width: 749px) 50vw, 25vw',
+                        alt: item.title
+                    }}
+                  {%- else -%}
+                    <div class="melato-search-card__placeholder">
+                      {{ item.object_type | capitalize }}
+                    </div>
+                  {%- endif -%}
+                </a>
+
+                <div class="melato-search-card__content">
+                  <p class="melato-search-card__type">{{ item.object_type | capitalize }}</p>
+                  <h2>
+                    <a href="{{ item.url }}">{{ item.title }}</a>
+                  </h2>
+
+                  {%- if item.object_type == 'product' -%}
+                    <p class="melato-search-card__price">
+                      {{ item.price | money }}
+                    </p>
+                  {%- endif -%}
+                </div>
+              </article>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="melato-search-pagination" role="navigation" aria-label="Pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}">Previous</a>
+            {%- endif -%}
+
+            <span>Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}">Next</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+
+  </div>
+</section>
+
+<style>
+  #shopify-section-{{ section.id }} {
+    background: #050609 !important;
+    color: #f5f1e8 !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page {
+    background: #050609 !important;
+    color: #f5f1e8 !important;
+    padding: clamp(56px, 7vw, 110px) 20px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__wrap {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__header {
+    max-width: 700px;
+    margin-bottom: 30px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__eyebrow {
+    margin: 0 0 10px;
+    color: rgba(245, 241, 232, 0.7) !important;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} h1 {
+    margin: 0;
+    color: #f5f1e8 !important;
+    font-size: clamp(42px, 7vw, 82px);
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__header p:not(.melato-search-page__eyebrow) {
+    color: rgba(245, 241, 232, 0.72) !important;
+    line-height: 1.7;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__form {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    margin: 0 0 32px;
+    max-width: 760px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__form input {
+    min-height: 56px;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 241, 232, 0.18);
+    background: #f5f1e8 !important;
+    color: #050609 !important;
+    padding: 0 20px;
+    font-size: 15px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__form button {
+    min-height: 56px;
+    border-radius: 999px;
+    border: 1px solid #f5f1e8;
+    background: #f5f1e8 !important;
+    color: #050609 !important;
+    padding: 0 26px;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__status {
+    margin: 0 0 24px;
+    color: rgba(245, 241, 232, 0.72) !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-page__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card {
+    background: #111111 !important;
+    border: 1px solid rgba(245, 241, 232, 0.1);
+    border-radius: 24px;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card__media {
+    display: block;
+    aspect-ratio: 1 / 1.18;
+    background: #f4f3ef;
+    overflow: hidden;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: #050609;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card__content {
+    padding: 18px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card__type {
+    margin: 0 0 8px;
+    color: rgba(245, 241, 232, 0.52) !important;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card h2 {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card h2 a {
+    color: #f5f1e8 !important;
+    text-decoration: none;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-card__price {
+    margin: 10px 0 0;
+    color: rgba(245, 241, 232, 0.72) !important;
+    font-size: 13px;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin-top: 42px;
+    color: rgba(245, 241, 232, 0.72) !important;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-pagination a {
+    color: #f5f1e8 !important;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(245, 241, 232, 0.35);
+  }
+
+  @media screen and (max-width: 990px) {
+    #shopify-section-{{ section.id }} .melato-search-page__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #shopify-section-{{ section.id }} .melato-search-page__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    #shopify-section-{{ section.id }} .melato-search-page__form {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Melato main search",
+  "settings": []
+}
+{% endschema %}

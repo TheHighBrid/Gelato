@@ -1,0 +1,80 @@
+{% comment %}
+  Melato - Product Card Images Snippet
+  Renders primary + hover-reveal secondary product images with smooth crossfade.
+
+  Usage: {% render 'product-card-images', product: product %}
+
+  Fixes:
+  - Replaces deprecated img_url with image_url.
+  - Uses explicit width/height numbers instead of a legacy size string.
+  - Keeps src and srcset generated with the same image_url syntax.
+  - Upgrades plain product-name alt text into Melato descriptive fallback alt text.
+{% endcomment %}
+
+{% assign primary_img   = product.featured_image %}
+{% assign secondary_img = product.images[1] %}
+{% assign img_width     = 600 %}
+{% assign img_height    = 750 %}
+{% assign img_crop      = 'center' %}
+{% assign img_sizes     = '(max-width: 480px) 50vw, (max-width: 768px) 33vw, 25vw' %}
+{% assign product_type_alt = product.type | default: 'product' | downcase %}
+
+{% assign primary_alt = primary_img.alt | strip %}
+{% if primary_alt == blank or primary_alt == product.title %}
+  {% assign primary_alt = product.title | append: ' by Melato, ' | append: product_type_alt | append: ' product image' %}
+{% endif %}
+
+{% assign secondary_alt = secondary_img.alt | strip %}
+{% if secondary_alt == blank or secondary_alt == product.title %}
+  {% assign secondary_alt = product.title | append: ' by Melato, alternate ' | append: product_type_alt | append: ' product image' %}
+{% endif %}
+
+<div class="pci-wrapper">
+
+  {% comment %} - Primary Image {% endcomment %}
+  {% if primary_img != blank %}
+    <img
+      class="pci pci--primary"
+      src="{{ primary_img | image_url: width: img_width, height: img_height, crop: img_crop }}"
+      srcset="
+        {{ primary_img | image_url: width: 400, height: 500, crop: img_crop }} 400w,
+        {{ primary_img | image_url: width: 600, height: 750, crop: img_crop }} 600w,
+        {{ primary_img | image_url: width: 800, height: 1000, crop: img_crop }} 800w
+      "
+      sizes="{{ img_sizes }}"
+      alt="{{ primary_alt | escape }}"
+      loading="lazy"
+      width="{{ img_width }}"
+      height="{{ img_height }}"
+    >
+  {% else %}
+    <div class="pci pci--placeholder">
+      {{ 'product-1' | placeholder_svg_tag: 'pci pci--svg' }}
+    </div>
+  {% endif %}
+
+  {% comment %} - Secondary / Hover Image {% endcomment %}
+  {% if secondary_img != blank %}
+    <img
+      class="pci pci--secondary"
+      src="{{ secondary_img | image_url: width: img_width, height: img_height, crop: img_crop }}"
+      srcset="
+        {{ secondary_img | image_url: width: 400, height: 500, crop: img_crop }} 400w,
+        {{ secondary_img | image_url: width: 600, height: 750, crop: img_crop }} 600w,
+        {{ secondary_img | image_url: width: 800, height: 1000, crop: img_crop }} 800w
+      "
+      sizes="{{ img_sizes }}"
+      alt="{{ secondary_alt | escape }}"
+      loading="lazy"
+      width="{{ img_width }}"
+      height="{{ img_height }}"
+      aria-hidden="true"
+    >
+  {% endif %}
+
+  {% comment %} - Badges overlay {% endcomment %}
+  <div class="pci-badges">
+    {% render 'product-badge', product: product %}
+  </div>
+
+</div>

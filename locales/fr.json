@@ -1,0 +1,95 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin language editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "accessibility": {
+    "skip_to_content": "Passer au contenu",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "loading": "Chargement",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "open_menu": "Ouvrir le menu",
+    "close_menu": "Fermer le menu",
+    "open_cart": "Ouvrir le panier",
+    "close_cart": "Fermer le panier",
+    "open_search": "Ouvrir la recherche",
+    "close_search": "Fermer la recherche"
+  },
+  "cart": {
+    "title": "Panier",
+    "empty": "Votre panier est vide",
+    "empty_cta": "Continuer mes achats",
+    "added": "Ajouté au panier",
+    "remove": "Supprimer",
+    "checkout": "Commander",
+    "subtotal": "Sous-total",
+    "total": "Total",
+    "item": "article",
+    "items": "articles",
+    "free_shipping_message": "Plus que {{ amount }} pour la livraison gratuite",
+    "free_shipping_achieved": "Livraison gratuite débloquée ! 🎉",
+    "quantity": "Quantité"
+  },
+  "products": {
+    "add_to_cart": "Ajouter au panier",
+    "sold_out": "Épuisé",
+    "unavailable": "Indisponible",
+    "out_of_stock": "Rupture de stock",
+    "only_left": "Plus que {{ count }}",
+    "low_stock": "Stock limité - {{ count }} restants",
+    "select_size": "Choisir la taille",
+    "select_color": "Choisir la couleur",
+    "size_guide": "Guide des tailles",
+    "sale": "Soldes",
+    "new": "Nouveau",
+    "limited": "Limité",
+    "notify_me": "M'alerter",
+    "notify_submit": "M'alerter",
+    "notify_success": "Vous êtes sur la liste !"
+  },
+  "collections": {
+    "filter_by": "Filtrer",
+    "sort_by": "Trier par",
+    "filters": "Filtres",
+    "clear_all": "Tout effacer",
+    "apply": "Appliquer",
+    "no_results": "Aucun produit trouvé",
+    "sort_options": {
+      "featured": "En vedette",
+      "best_selling": "Meilleures ventes",
+      "price_asc": "Prix croissant",
+      "price_desc": "Prix décroissant",
+      "newest": "Plus récent",
+      "title_asc": "A–Z",
+      "title_desc": "Z–A"
+    }
+  },
+  "search": {
+    "placeholder": "Rechercher des produits...",
+    "submit": "Rechercher",
+    "no_results": "Aucun résultat pour « {{ query }} »"
+  },
+  "newsletter": {
+    "placeholder": "Votre adresse email",
+    "submit": "S'abonner",
+    "success": "Merci pour votre inscription !"
+  },
+  "general": {
+    "free_shipping": "Livraison gratuite",
+    "secure_checkout": "Paiement sécurisé"
+  },
+  "drop": {
+    "countdown_title": "Le drop commence dans",
+    "waitlist_heading": "Accès anticipé",
+    "waitlist_success": "Vous êtes sur la liste !",
+    "locked": "Drop pas encore disponible",
+    "coming_soon": "Bientôt disponible"
+  }
+}

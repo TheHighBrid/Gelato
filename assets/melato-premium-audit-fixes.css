@@ -1,0 +1,49 @@
+/* Melato Premium Brand Audit fixes — Copy of Gelato v5.40 */
+
+.facets__selected,
+.facets__summary .count,
+.facets__summary .count-bubble,
+.facets__label .count,
+.facet-checkbox .count,
+.facet-checkbox__text .count,
+.mobile-facets__count,
+.mobile-facets__summary .count,
+.collection-filters__item-count,
+.filter-count,
+.facet-count,
+[data-filter-count],
+[data-facet-count] {
+  display: none !important;
+}
+
+.melato-utility-layer [hidden] {
+  display: none !important;
+}
+
+.melato-utility-layer [aria-hidden="true"] {
+  pointer-events: none !important;
+}
+
+.melato-utility-layer [aria-hidden="false"] {
+  pointer-events: auto !important;
+}
+
+button[aria-label],
+a[aria-label] {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+[class*="shipping" i],
+[class*="delivery" i],
+[class*="returns" i],
+[class*="support" i] {
+  overflow-wrap: anywhere;
+}
+
+[data-active-filters-bar] a,
+.active-facets a,
+.active-facets__button,
+.active-filters a {
+  text-decoration: none;
+}

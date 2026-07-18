@@ -1,0 +1,275 @@
+/*
+  MELATO HEADER / FOOTER / SEARCH FIX
+    Fixes duplicate hamburger icon, missing cart icon, tiny logo, and dark header/footer alignment.
+    */
+
+    /* HEADER BASE */
+    .shopify-section-header,
+    #shopify-section-header,
+    .header-wrapper,
+    .site-header,
+    header {
+      background: #050609 !important;
+        color: #f5f1e8 !important;
+        }
+
+        .header,
+        .site-header,
+        .melato-header {
+          min-height: 76px !important;
+            align-items: center !important;
+            }
+
+            /* ANNOUNCEMENT BAR */
+            .announcement-bar,
+            .announcement-bar-section,
+            .utility-bar {
+              background: #302922 !important;
+                color: #f5f1e8 !important;
+                }
+
+                .announcement-bar *,
+                .utility-bar * {
+                  color: #f5f1e8 !important;
+                  }
+
+                  /* LOGO - MAKE BIGGER */
+                  .header__heading-logo,
+                  .header__heading-logo-wrapper img,
+                  .header__heading-link img,
+                  .site-header__logo img,
+                  .site-header__logo-image,
+                  .melato-logo img,
+                  .melato-header__logo img {
+                    width: clamp(92px, 8vw, 150px) !important;
+                      max-width: clamp(92px, 8vw, 150px) !important;
+                        height: auto !important;
+                          opacity: 1 !important;
+                            visibility: visible !important;
+                            }
+
+                            .header__heading-link,
+                            .site-header__logo,
+                            .melato-header__logo {
+                              display: inline-flex !important;
+                                align-items: center !important;
+                                  justify-content: center !important;
+                                  }
+
+                                  /* NAVIGATION TEXT */
+                                  .header__menu-item,
+                                  .header__inline-menu a,
+                                  .site-nav a,
+                                  nav a {
+                                    color: #f5f1e8 !important;
+                                      letter-spacing: 0.12em;
+                                        text-transform: uppercase;
+                                          font-size: 11px;
+                                          }
+
+                                          .header__menu-item:hover,
+                                          .header__inline-menu a:hover,
+                                          .site-nav a:hover,
+                                          nav a:hover {
+                                            color: #ffffff !important;
+                                            }
+
+                                            /* HEADER ICONS GENERAL */
+                                            .header__icons,
+                                            .site-header__icons,
+                                            .melato-header__icons {
+                                              display: flex !important;
+                                                align-items: center !important;
+                                                  justify-content: flex-end !important;
+                                                    gap: 18px !important;
+                                                      opacity: 1 !important;
+                                                        visibility: visible !important;
+                                                        }
+
+                                                        .header__icon,
+                                                        .site-header__icon,
+                                                        .header__icon--search,
+                                                        .header__icon--cart,
+                                                        .header__icon--account,
+                                                        a[href="/cart"],
+                                                        a[href*="/cart"],
+                                                        a[href="/search"],
+                                                        a[href*="/search"] {
+                                                          display: inline-flex !important;
+                                                            align-items: center !important;
+                                                              justify-content: center !important;
+                                                                width: 42px !important;
+                                                                  height: 42px !important;
+                                                                    color: #f5f1e8 !important;
+                                                                      opacity: 1 !important;
+                                                                        visibility: visible !important;
+                                                                          pointer-events: auto !important;
+                                                                          }
+
+                                                                          .header__icon svg,
+                                                                          .site-header__icon svg,
+                                                                          .header__icon--search svg,
+                                                                          .header__icon--cart svg,
+                                                                          .header__icon--account svg,
+                                                                          a[href="/cart"] svg,
+                                                                          a[href*="/cart"] svg,
+                                                                          a[href="/search"] svg,
+                                                                          a[href*="/search"] svg {
+                                                                            width: 22px !important;
+                                                                              height: 22px !important;
+                                                                                display: block !important;
+                                                                                  color: #f5f1e8 !important;
+                                                                                    fill: none !important;
+                                                                                      stroke: currentColor !important;
+                                                                                        stroke-width: 1.7 !important;
+                                                                                          opacity: 1 !important;
+                                                                                            visibility: visible !important;
+                                                                                            }
+
+                                                                                            /* FIX TWO MENU ICONS SHOWING AT SAME TIME */
+                                                                                            .header__icon--menu {
+                                                                                              display: inline-flex !important;
+                                                                                                align-items: center !important;
+                                                                                                  justify-content: center !important;
+                                                                                                    color: #f5f1e8 !important;
+                                                                                                      opacity: 1 !important;
+                                                                                                        visibility: visible !important;
+                                                                                                        }
+
+                                                                                                        .header__icon--menu svg,
+                                                                                                        .header__icon--menu .icon,
+                                                                                                        summary.header__icon--menu svg {
+                                                                                                          width: 24px !important;
+                                                                                                            height: 24px !important;
+                                                                                                              display: block !important;
+                                                                                                                color: #f5f1e8 !important;
+                                                                                                                  opacity: 1 !important;
+                                                                                                                    visibility: visible !important;
+                                                                                                                    }
+
+                                                                                                                    /* Hide the second menu/close icon when both are visible */
+                                                                                                                    .header__icon--menu svg + svg,
+                                                                                                                    .header__icon--menu .icon-close,
+                                                                                                                    summary.header__icon--menu svg + svg,
+                                                                                                                    summary.header__icon--menu .icon-close {
+                                                                                                                      display: none !important;
+                                                                                                                      }
+
+                                                                                                                      /* Force hamburger to stay visible */
+                                                                                                                      .header__icon--menu .icon-hamburger,
+                                                                                                                      summary.header__icon--menu .icon-hamburger {
+                                                                                                                        display: block !important;
+                                                                                                                        }
+
+                                                                                                                        /* CART BADGE */
+                                                                                                                        .cart-count-bubble,
+                                                                                                                        .header__cart-count,
+                                                                                                                        .site-header__cart-count {
+                                                                                                                          display: flex !important;
+                                                                                                                            align-items: center !important;
+                                                                                                                              justify-content: center !important;
+                                                                                                                                background: #f5f1e8 !important;
+                                                                                                                                  color: #050609 !important;
+                                                                                                                                    opacity: 1 !important;
+                                                                                                                                      visibility: visible !important;
+                                                                                                                                      }
+
+                                                                                                                                      /* SEARCH DRAWER / SEARCH PAGE SAFETY */
+                                                                                                                                      .search-modal,
+                                                                                                                                      .predictive-search,
+                                                                                                                                      .search__input,
+                                                                                                                                      input[type="search"] {
+                                                                                                                                        color: #050609 !important;
+                                                                                                                                          background: #f8f6ef !important;
+                                                                                                                                          }
+
+                                                                                                                                          .search-modal *,
+                                                                                                                                          .predictive-search * {
+                                                                                                                                            color: #050609 !important;
+                                                                                                                                            }
+
+                                                                                                                                            /* FOOTER */
+                                                                                                                                            .footer,
+                                                                                                                                            .site-footer,
+                                                                                                                                            .melato-footer,
+                                                                                                                                            #shopify-section-footer {
+                                                                                                                                              background: #111111 !important;
+                                                                                                                                                color: #f5f1e8 !important;
+                                                                                                                                                }
+
+                                                                                                                                                .footer *,
+                                                                                                                                                .site-footer *,
+                                                                                                                                                .melato-footer *,
+                                                                                                                                                #shopify-section-footer * {
+                                                                                                                                                  opacity: 1 !important;
+                                                                                                                                                  }
+
+                                                                                                                                                  .footer a,
+                                                                                                                                                  .site-footer a,
+                                                                                                                                                  .melato-footer a,
+                                                                                                                                                  #shopify-section-footer a {
+                                                                                                                                                    color: rgba(245, 241, 232, 0.78) !important;
+                                                                                                                                                    }
+
+                                                                                                                                                    .footer a:hover,
+                                                                                                                                                    .site-footer a:hover,
+                                                                                                                                                    .melato-footer a:hover,
+                                                                                                                                                    #shopify-section-footer a:hover {
+                                                                                                                                                      color: #ffffff !important;
+                                                                                                                                                      }
+
+                                                                                                                                                      .footer h2,
+                                                                                                                                                      .footer h3,
+                                                                                                                                                      .footer .footer-block__heading,
+                                                                                                                                                      .site-footer h2,
+                                                                                                                                                      .site-footer h3,
+                                                                                                                                                      .melato-footer h2,
+                                                                                                                                                      .melato-footer h3 {
+                                                                                                                                                        color: #f5f1e8 !important;
+                                                                                                                                                        }
+
+                                                                                                                                                        /* PAYMENT ICONS */
+                                                                                                                                                        .footer__payment,
+                                                                                                                                                        .list-payment,
+                                                                                                                                                        .payment-icons {
+                                                                                                                                                          display: flex !important;
+                                                                                                                                                            align-items: center !important;
+                                                                                                                                                              justify-content: flex-end !important;
+                                                                                                                                                                gap: 8px !important;
+                                                                                                                                                                  opacity: 1 !important;
+                                                                                                                                                                  }
+
+                                                                                                                                                                  /* MOBILE */
+                                                                                                                                                                  @media screen and (max-width: 749px) {
+                                                                                                                                                                    .header,
+                                                                                                                                                                      .site-header,
+                                                                                                                                                                        .melato-header {
+                                                                                                                                                                            min-height: 68px !important;
+                                                                                                                                                                              }
+
+                                                                                                                                                                                .header__heading-logo,
+                                                                                                                                                                                  .header__heading-logo-wrapper img,
+                                                                                                                                                                                    .header__heading-link img,
+                                                                                                                                                                                      .site-header__logo img,
+                                                                                                                                                                                        .site-header__logo-image,
+                                                                                                                                                                                          .melato-logo img,
+                                                                                                                                                                                            .melato-header__logo img {
+                                                                                                                                                                                                width: 96px !important;
+                                                                                                                                                                                                    max-width: 96px !important;
+                                                                                                                                                                                                      }
+
+                                                                                                                                                                                                        .header__icons,
+                                                                                                                                                                                                          .site-header__icons,
+                                                                                                                                                                                                            .melato-header__icons {
+                                                                                                                                                                                                                gap: 10px !important;
+                                                                                                                                                                                                                  }
+
+                                                                                                                                                                                                                    .header__icon,
+                                                                                                                                                                                                                      .site-header__icon,
+                                                                                                                                                                                                                        .header__icon--search,
+                                                                                                                                                                                                                          .header__icon--cart,
+                                                                                                                                                                                                                            .header__icon--account {
+                                                                                                                                                                                                                                width: 38px !important;
+                                                                                                                                                                                                                                    height: 38px !important;
+                                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                                      }

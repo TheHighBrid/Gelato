@@ -1,0 +1,35 @@
+{% comment %}
+  sections/main-page.liquid
+  Generic page renderer with duplicate-H1 protection.
+{% endcomment %}
+
+{%- liquid
+  assign page_content_down = page.content | downcase
+  assign content_has_h1 = false
+
+  if page_content_down contains '<h1'
+    assign content_has_h1 = true
+  endif
+-%}
+
+<section class="section-spacing melato-page-main" aria-labelledby="MainPageHeading-{{ section.id }}">
+  <div class="container--narrow">
+    {%- unless content_has_h1 -%}
+      <h1 id="MainPageHeading-{{ section.id }}" class="heading-md drip-reveal" style="margin-bottom:40px;">
+        {{ page.title }}
+      </h1>
+    {%- endunless -%}
+
+    <div class="page-content drip-reveal drip-reveal--delay-1" style="color:var(--color-muted);line-height:1.9;font-size:0.95rem;">
+      {{ page.content }}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Page",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

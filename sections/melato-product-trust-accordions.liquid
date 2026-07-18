@@ -1,0 +1,66 @@
+{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+{{ 'melato-pdp-fit-sync.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'melato-pdp-fit-sync-diagnostics.js' | asset_url }}" defer></script>
+
+{%- liquid
+  assign product_title_down = product.title | downcase
+  assign product_type_down = product.product_type | downcase
+  assign material_content = '<p>Premium construction selected for clean movement, everyday wearability, and a composed finish.</p>'
+  if product_type_down == 'jeans' or product.tags contains 'type_jeans' or product.tags contains 'category_denim'
+    assign material_content = '<p>Structured denim with a controlled flare silhouette and a clean everyday finish.</p>'
+  elsif product_title_down contains 'bamboo'
+    assign material_content = '<p>Bamboo-blend track fabric selected for a softer handfeel, clean movement, and everyday wearability.</p>'
+  elsif product_title_down contains 'velour'
+    assign material_content = '<p>Premium velour selected for softness, depth, and a composed sportswear handfeel.</p>'
+  endif
+-%}
+
+{%- capture melato_fit_matrix -%}
+<div class="melato-fit-matrix-wrap" data-melato-fit-matrix>
+  <p class="melato-fit-matrix__intro">Dimensional grading matrix in inches. Use as body-range guidance; final garment measurements vary by silhouette, fabric weight, elastic tension, and intended drape.</p>
+  <table class="melato-fit-matrix__table">
+    <caption>Melato dimensional grading matrix</caption>
+    <thead><tr><th scope="col">Size</th><th scope="col">Chest</th><th scope="col">Waist</th><th scope="col">Hip</th><th scope="col">Jacket / Top Length</th><th scope="col">Pant Inseam</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">XS</th><td data-label="Chest"><span>32–34</span></td><td data-label="Waist"><span>24–26</span></td><td data-label="Hip"><span>34–36</span></td><td data-label="Jacket / Top Length"><span>23.5–25</span></td><td data-label="Pant Inseam"><span>29–30</span></td></tr>
+      <tr><th scope="row">S</th><td data-label="Chest"><span>34–36</span></td><td data-label="Waist"><span>27–29</span></td><td data-label="Hip"><span>36–38</span></td><td data-label="Jacket / Top Length"><span>24.5–26</span></td><td data-label="Pant Inseam"><span>30–31</span></td></tr>
+      <tr><th scope="row">M</th><td data-label="Chest"><span>38–40</span></td><td data-label="Waist"><span>31–33</span></td><td data-label="Hip"><span>39–41</span></td><td data-label="Jacket / Top Length"><span>25.5–27</span></td><td data-label="Pant Inseam"><span>31–32</span></td></tr>
+      <tr><th scope="row">L</th><td data-label="Chest"><span>42–44</span></td><td data-label="Waist"><span>35–37</span></td><td data-label="Hip"><span>42–44</span></td><td data-label="Jacket / Top Length"><span>26.5–28</span></td><td data-label="Pant Inseam"><span>32–33</span></td></tr>
+      <tr><th scope="row">XL</th><td data-label="Chest"><span>46–48</span></td><td data-label="Waist"><span>39–41</span></td><td data-label="Hip"><span>45–48</span></td><td data-label="Jacket / Top Length"><span>27.5–29</span></td><td data-label="Pant Inseam"><span>33–34</span></td></tr>
+    </tbody>
+  </table>
+  <p class="melato-fit-matrix__note">For oversized styling, size up one step. For a closer body line, stay true to size or size down only when between sizes.</p>
+</div>
+{%- endcapture -%}
+
+<section class="melato-accordions section-{{ section.id }}" aria-labelledby="AccHeading-{{ section.id }}">
+  <div class="melato-section-wrap melato-accordions__wrap">
+    <div class="melato-section-head">
+      <p class="melato-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 id="AccHeading-{{ section.id }}">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="melato-accordion-list">
+      {%- for block in section.blocks -%}
+        {%- assign accordion_title_down = block.settings.title | downcase -%}
+        {%- assign rendered_title = block.settings.title -%}
+        {%- if accordion_title_down contains 'fit' or accordion_title_down contains 'design' -%}{%- assign rendered_title = 'Design & Fit' -%}{%- endif -%}
+        <details class="melato-accordion" {{ block.shopify_attributes }} {% if forloop.first and section.settings.open_first %}open{% endif %}>
+          <summary><span>{{ rendered_title }}</span><span aria-hidden="true">+</span></summary>
+          <div class="melato-accordion__content rte">
+            {%- if accordion_title_down contains 'fit' or accordion_title_down contains 'design' -%}
+              {{ block.settings.content }}{{ melato_fit_matrix }}
+            {%- elsif accordion_title_down contains 'material' -%}
+              {{ material_content }}
+            {%- else -%}
+              {{ block.settings.content }}
+            {%- endif -%}
+          </div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{"name":"Melato product accordions","tag":"section","class":"section melato-section","settings":[{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Product intelligence"},{"type":"text","id":"heading","label":"Heading","default":"Fit, material, care, and shipping"},{"type":"checkbox","id":"open_first","label":"Open first accordion","default":true}],"blocks":[{"type":"accordion","name":"Accordion item","settings":[{"type":"text","id":"title","label":"Title","default":"Design & Fit"},{"type":"richtext","id":"content","label":"Content","default":"<p>Relaxed athletic fit. Choose your usual size for a clean silhouette, or size up for a looser oversized line.</p>"}]}],"presets":[{"name":"Melato product accordions","blocks":[{"type":"accordion","settings":{"title":"Design & Fit","content":"<p>Relaxed athletic fit. Choose your usual size for a clean silhouette, or size up for a looser oversized line.</p>"}},{"type":"accordion","settings":{"title":"Material","content":"<p>Fabric language adapts to the selected product.</p>"}},{"type":"accordion","settings":{"title":"Care","content":"<p>Machine wash cold inside out on gentle. Hang dry or lay flat. Do not tumble dry. Do not iron directly over embroidery, patches, prints, or branded details.</p>"}},{"type":"accordion","settings":{"title":"Shipping","content":"<p>Orders are usually prepared within 1–3 business days. Complimentary delivery on all orders.</p>"}},{"type":"accordion","settings":{"title":"Returns","content":"<p>Eligible items may be returned within the posted return window if unworn, unused, unwashed, with tags attached, and in original packaging.</p>"}}]}]}
+{% endschema %}

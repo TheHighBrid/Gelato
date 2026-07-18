@@ -1,0 +1,72 @@
+{%- comment -%} Independently re-checks gate state — sections can't share variables in OS 2.0. {%- endcomment -%}
+{%- liquid
+  assign unlocked = false
+  if customer and customer.tags contains 'preview-access'
+    assign unlocked = true
+  endif
+-%}
+
+{%- if unlocked -%}
+<div class="melato-preview-products">
+  {%- if section.settings.notes_title != blank or section.settings.notes_text != blank -%}
+    <div class="melato-preview-products__notes">
+      {%- if section.settings.notes_title != blank -%}<h2 class="melato-preview-products__notes-title">{{ section.settings.notes_title }}</h2>{%- endif -%}
+      {%- if section.settings.notes_text != blank -%}<div class="melato-preview-products__notes-text">{{ section.settings.notes_text }}</div>{%- endif -%}
+    </div>
+  {%- endif -%}
+
+  <div class="melato-preview-products__grid">
+    {%- for block in section.blocks -%}
+      <div class="melato-preview-products__card">
+        {%- if block.settings.image != blank -%}
+          <div class="melato-preview-products__image">{{ block.settings.image | image_url: width: 600 | image_tag: loading: 'lazy', alt: block.settings.title }}</div>
+        {%- endif -%}
+        <span class="melato-preview-products__status">{{ block.settings.status }}</span>
+        <h3 class="melato-preview-products__title">{{ block.settings.title }}</h3>
+        {%- if block.settings.note != blank -%}<p class="melato-preview-products__note">{{ block.settings.note }}</p>{%- endif -%}
+        {%- if block.settings.date != blank -%}<p class="melato-preview-products__date">{{ block.settings.date }}</p>{%- endif -%}
+        {%- if block.settings.button_label != blank -%}
+          <a href="{{ block.settings.url | default: '#' }}" class="melato-preview-products__cta">{{ block.settings.button_label }}</a>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}
+
+{% stylesheet %}
+.melato-preview-products { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem clamp(2rem,5vw,3.5rem); color: #f7f5f1; }
+.melato-preview-products__notes { max-width: 640px; margin: 0 auto clamp(2.5rem,6vw,4rem); text-align: center; }
+.melato-preview-products__notes-title { font-family: var(--font-fraunces,'Fraunces',serif); font-size: 1.3rem; font-weight: 500; margin: 0 0 .75rem; }
+.melato-preview-products__notes-text { font-size: .92rem; line-height: 1.6; color: #b4b2ab; }
+.melato-preview-products__grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: rgba(247,245,241,.14); border: 1px solid rgba(247,245,241,.14); }
+@media (min-width: 700px) { .melato-preview-products__grid { grid-template-columns: repeat(3,1fr); } }
+.melato-preview-products__card { background: #15140f; padding: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
+.melato-preview-products__image img { width: 100%; height: auto; display: block; margin-bottom: .5rem; }
+.melato-preview-products__status { font-family: var(--font-bebas,'Bebas Neue',sans-serif); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: #8a8780; }
+.melato-preview-products__title { font-family: var(--font-fraunces,'Fraunces',serif); font-size: 1.1rem; font-weight: 500; margin: 0; }
+.melato-preview-products__note { font-size: .85rem; line-height: 1.5; color: #b4b2ab; margin: 0; }
+.melato-preview-products__date { font-size: .78rem; color: #8a8780; margin: 0; }
+.melato-preview-products__cta { margin-top: auto; font-size: .85rem; color: #f7f5f1; text-decoration: underline; text-underline-offset: 3px; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Melato Preview Products", "tag": "section",
+  "settings": [
+    { "type": "text", "id": "notes_title", "label": "Editorial note title", "default": "Notes from the room" },
+    { "type": "richtext", "id": "notes_text", "label": "Editorial note text" }
+  ],
+  "blocks": [{ "type": "preview_card", "name": "Preview product", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Image" },
+      { "type": "text", "id": "title", "label": "Product title" },
+      { "type": "text", "id": "status", "label": "Status", "default": "Preview" },
+      { "type": "textarea", "id": "note", "label": "Release note" },
+      { "type": "text", "id": "date", "label": "Date" },
+      { "type": "text", "id": "button_label", "label": "Button label", "default": "View piece" },
+      { "type": "url", "id": "url", "label": "Link" }
+  ]}],
+  "max_blocks": 12,
+  "presets": [{ "name": "Melato Preview Products" }]
+}
+{% endschema %}

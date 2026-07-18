@@ -1,0 +1,79 @@
+{%- liquid assign clarity_blocks = section.blocks | where: 'type', 'clarity_card' -%}
+
+<div class="melato-delivery-bleed">
+<div class="melato-delivery">
+  {%- if section.settings.intro != blank -%}<div class="melato-delivery__intro">{{ section.settings.intro }}</div>{%- endif -%}
+
+  {%- if clarity_blocks.size > 0 -%}
+    <div class="melato-delivery__grid">
+      {%- for block in clarity_blocks -%}
+        <div class="melato-delivery__card">
+          <h3 class="melato-delivery__card-title">{{ block.settings.title }}</h3>
+          <p class="melato-delivery__card-text">{{ block.settings.text }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.packaging_text != blank -%}
+    <div class="melato-delivery__packaging">
+      <h2 class="melato-delivery__packaging-title">{{ section.settings.packaging_title | default: 'Packaging' }}</h2>
+      <div class="melato-delivery__packaging-text">{{ section.settings.packaging_text }}</div>
+    </div>
+  {%- endif -%}
+
+  {%- if section.settings.checklist != blank -%}
+    <div class="melato-delivery__checklist">
+      <h2 class="melato-delivery__checklist-title">{{ section.settings.checklist_title | default: 'Before checkout' }}</h2>
+      <ul class="melato-delivery__checklist-list">
+        {%- assign items = section.settings.checklist | newline_to_br | split: '<br />' -%}
+        {%- for item in items -%}{%- if item != blank -%}<li>{{ item }}</li>{%- endif -%}{%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+</div>
+</div>
+
+{% stylesheet %}
+.melato-delivery-bleed { background: #f4ead8 !important; }
+.melato-delivery { max-width: 1000px; margin: 0 auto; padding: 0 1.25rem clamp(2rem,5vw,3.5rem); }
+.melato-delivery__intro { max-width: 640px; margin: 0 auto clamp(2rem,4vw,3rem); text-align: center; }
+.melato-delivery__intro p { color: #3a3833 !important; margin: 0; }
+.melato-delivery__grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: rgba(10,10,10,.14); border: 1px solid rgba(10,10,10,.14); margin-bottom: clamp(2.5rem,6vw,4rem); }
+@media (min-width: 760px) { .melato-delivery__grid { grid-template-columns: repeat(3,1fr); } }
+.melato-delivery__card { background: #f4ead8 !important; padding: 1.5rem 1.25rem; }
+.melato-delivery__card-title { color: #0a0a0a !important; font-weight: 500; margin: 0 0 .5rem; font-size: 1.05rem; }
+.melato-delivery__card-text { color: #6f6d68 !important; font-size: .87rem; line-height: 1.5; margin: 0; }
+.melato-delivery__packaging { max-width: 640px; margin: 0 auto clamp(2.5rem,6vw,4rem); text-align: center; }
+.melato-delivery__packaging-title { color: #0a0a0a !important; font-weight: 500; margin: 0 0 .75rem; font-size: 1.3rem; }
+.melato-delivery__packaging-text p { color: #3a3833 !important; font-size: .95rem; line-height: 1.6; margin: 0; }
+.melato-delivery__checklist { max-width: 480px; margin: 0 auto; }
+.melato-delivery__checklist-title { color: #0a0a0a !important; font-weight: 500; margin: 0 0 1rem; text-align: center; font-size: 1.15rem; }
+.melato-delivery__checklist-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .65rem; }
+.melato-delivery__checklist-list li { color: #3a3833; font-size: .9rem; padding-left: 1.4rem; position: relative; }
+.melato-delivery__checklist-list li::before { content: ''; position: absolute; left: 0; top: .45rem; width: .55rem; height: .55rem; border: 1px solid #0a0a0a; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Melato Delivery Concierge", "tag": "section",
+  "settings": [
+    { "type": "richtext", "id": "intro", "label": "Intro copy (optional)" },
+    { "type": "text", "id": "packaging_title", "label": "Packaging title", "default": "Packaging" },
+    { "type": "richtext", "id": "packaging_text", "label": "Packaging story" },
+    { "type": "text", "id": "checklist_title", "label": "Checklist title", "default": "Before checkout" },
+    { "type": "textarea", "id": "checklist", "label": "Checklist items (one per line)" }
+  ],
+  "blocks": [{ "type": "clarity_card", "name": "Clarity card", "settings": [
+      { "type": "text", "id": "title", "label": "Title" }, { "type": "textarea", "id": "text", "label": "Text" }
+  ]}],
+  "max_blocks": 8,
+  "presets": [{ "name": "Melato Delivery Concierge", "blocks": [
+      { "type": "clarity_card", "settings": { "title": "Processing", "text": "Orders are prepared before dispatch." } },
+      { "type": "clarity_card", "settings": { "title": "Delivery", "text": "Shipping options and timelines are shown at checkout." } },
+      { "type": "clarity_card", "settings": { "title": "Tracking", "text": "Tracking details are sent once the order ships." } },
+      { "type": "clarity_card", "settings": { "title": "Packaging", "text": "Pieces are folded, protected, and prepared with intention." } },
+      { "type": "clarity_card", "settings": { "title": "Need it for a date?", "text": "Contact Customer Care before ordering." } }
+  ]}]
+}
+{% endschema %}

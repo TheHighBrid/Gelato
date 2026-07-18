@@ -1,0 +1,42 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "melato-living-lookbook-old",
+      "settings": {}
+    },
+    "evidence_20260714": {
+      "type": "melato-living-lookbook-evidence",
+      "settings": {
+        "archive_label": "CASE FILE 02",
+        "archive_title": "NEW EVIDENCE",
+        "archive_note": "Ninety-one living-study photographs, expanded with thirty-five newly filed frames and presented as a continuous evidence archive.",
+        "case_code": "LL-02",
+        "archive_source": "case02"
+      }
+    },
+    "evidence_case03": {
+      "type": "melato-living-lookbook-evidence",
+      "settings": {
+        "archive_label": "CASE FILE 03",
+        "archive_title": "AFTERIMAGE RECORD",
+        "archive_note": "Seventeen newly isolated photographs form a third case, filed as peripheral sightings, movements and afterimages.",
+        "case_code": "LL-03",
+        "archive_source": "case03"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "evidence_20260714",
+    "evidence_case03"
+  ]
+}

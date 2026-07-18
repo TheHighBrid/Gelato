@@ -1,0 +1,225 @@
+{% comment %}
+  Melato complete-the-set section.
+  Place below the main product section. Copy adapts by material family.
+{% endcomment %}
+{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+
+<style>
+  /* Fix for background/text color and image sizing proportions */
+  .section-{{ section.id }} {
+    background-color: var(--color-bg) !important;
+    color: var(--color-text) !important;
+    padding: 4rem var(--container-padding);
+  }
+
+  .section-{{ section.id }} .melato-set__wrap {
+    max-width: 900px; /* Constrains the massive overall width */
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .section-{{ section.id }} .melato-set__head {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-{{ section.id }} .melato-set__head h2,
+  .section-{{ section.id }} .melato-set__head p,
+  .section-{{ section.id }} .melato-eyebrow {
+    color: var(--color-text) !important;
+  }
+
+  .section-{{ section.id }} .melato-set__cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .section-{{ section.id }} .melato-set__item {
+    flex: 1 1 50%;
+    max-width: 380px; /* Stops the images from blowing up */
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .section-{{ section.id }} .melato-set__label {
+    display: block;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono-family);
+    font-size: calc(var(--font-size-base) * 0.85);
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .section-{{ section.id }} .melato-set__media img {
+    width: 100%;
+    max-width: 250px; /* Constrains the image specifically */
+    height: auto;
+    margin: 0 auto 1.5rem auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .section-{{ section.id }} .melato-set__item h3 {
+    font-size: calc(var(--font-size-base) * 1.2);
+    margin: 0.5rem 0;
+    color: var(--color-text) !important;
+  }
+
+  .section-{{ section.id }} .melato-set__item p {
+    color: var(--color-text) !important;
+    margin-bottom: 1rem;
+  }
+  
+  .section-{{ section.id }} .melato-set__total {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  /* Mobile Responsiveness */
+  @media (max-width: 768px) {
+    .section-{{ section.id }} .melato-set__cards {
+      flex-direction: column;
+      align-items: center;
+    }
+    .section-{{ section.id }} .melato-set__item {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+</style>
+
+{%- liquid
+  assign matching_product = section.settings.matching_product
+  if product.metafields.custom.matching_product.value != blank
+    assign matching_product = product.metafields.custom.matching_product.value
+  endif
+  assign product_title_down = product.title | downcase
+  assign current_label = section.settings.current_label | default: 'You have'
+  assign add_label = section.settings.add_label | default: 'Add the matching piece'
+  assign set_heading = section.settings.heading | default: 'Complete the Melato set'
+  assign set_description = section.settings.description | default: 'Pair the matching pieces for the full drop look.'
+  
+  if product.product_type == 'Jeans' or product.tags contains 'type_jeans' or product.tags contains 'category_denim'
+    assign set_heading = 'Complete the denim look'
+    assign set_description = 'Pair the right Melato piece without changing the denim story.'
+  elsif product_title_down contains 'bamboo'
+    assign set_heading = 'Complete the bamboo-blend set'
+    assign set_description = 'Pair the matching bamboo-blend track pieces for a clean full-set read.'
+  elsif product_title_down contains 'velour'
+    assign set_heading = 'Complete the velour set'
+    assign set_description = 'Pair the matching velour jacket and pants for the full drop look.'
+  endif
+-%}
+
+{%- if product != blank and matching_product != blank -%}
+  <section class="melato-set section-{{ section.id }}" aria-labelledby="SetHeading-{{ section.id }}">
+    <div class="melato-section-wrap melato-set__wrap">
+      
+      <div class="melato-section-head melato-set__head">
+        <p class="melato-eyebrow">{{ section.settings.eyebrow | default: 'Complete the set' }}</p>
+        <h2 id="SetHeading-{{ section.id }}">{{ set_heading }}</h2>
+        <p>{{ set_description }}</p>
+      </div>
+
+      <div class="melato-set__cards" role="list">
+        <article class="melato-set__item" role="listitem">
+          <span class="melato-set__label">{{ current_label }}</span>
+          <a href="{{ product.url }}" class="melato-set__media">
+            {% render 'melato-responsive-image', image: product.featured_image, alt: product.title, class: 'melato-set__image', loading: 'lazy', sizes: '(min-width: 990px) 30vw, 100vw' %}
+          </a>
+          <div>
+            <h3>{{ product.title }}</h3>
+            <p>{{ product.price | money }}</p>
+          </div>
+        </article>
+
+        <article class="melato-set__item melato-set__item--add" role="listitem">
+          <span class="melato-set__label">{{ add_label }}</span>
+          <a href="{{ matching_product.url }}" class="melato-set__media">
+            {% render 'melato-responsive-image', image: matching_product.featured_image, alt: matching_product.title, class: 'melato-set__image', loading: 'lazy', sizes: '(min-width: 990px) 30vw, 100vw' %}
+          </a>
+          <div>
+            <h3>{{ matching_product.title }}</h3>
+            <p>{{ matching_product.price | money }}</p>
+            <a class="melato-button melato-button--light" href="{{ matching_product.url }}">Add full set &rarr;</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="melato-set__total" aria-label="Full set price">
+        <span>Full set price</span>
+        <strong>{{ product.price | plus: matching_product.price | money_with_currency }}</strong>
+      </div>
+
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Melato complete the set",
+  "tag": "section",
+  "class": "section melato-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Complete the set"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Complete the Melato set"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Pair the matching pieces for the full drop look."
+    },
+    {
+      "type": "product",
+      "id": "matching_product",
+      "label": "Matching product fallback"
+    },
+    {
+      "type": "text",
+      "id": "current_label",
+      "label": "Current product label",
+      "default": "You have"
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Matching product label",
+      "default": "Add the matching piece"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato complete the set"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,37 @@
+{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+
+<section class="melato-editorial section-{{ section.id }}" aria-labelledby="EditorialHeading-{{ section.id }}">
+  <div class="melato-section-wrap melato-editorial__grid">
+    <div class="melato-editorial__copy">
+      <p class="melato-eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 id="EditorialHeading-{{ section.id }}">{{ section.settings.heading }}</h2>
+      <div class="rte">{{ section.settings.text }}</div>
+      {%- if section.settings.button_label != blank -%}
+        <a class="melato-button" href="{{ section.settings.button_link }}">{{ section.settings.button_label }}</a>
+      {%- endif -%}
+    </div>
+
+    <div class="melato-editorial__media">
+      {% render 'melato-responsive-image', image: section.settings.image, alt: section.settings.heading, class: 'melato-editorial__image', loading: 'lazy', sizes: '(min-width: 990px) 50vw, 100vw' %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Melato editorial block",
+  "tag": "section",
+  "class": "section melato-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "The Melato standard" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Built for texture, movement, and presence." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Melato pieces are built around limited productions, premium textures, controlled color stories, and details that hold weight beyond the logo.</p>" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop the drop" },
+    { "type": "url", "id": "button_link", "label": "Button link", "default": "/collections/all" }
+  ],
+  "presets": [
+    { "name": "Melato editorial block" }
+  ]
+}
+{% endschema %}

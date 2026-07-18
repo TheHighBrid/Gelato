@@ -1,0 +1,226 @@
+{% comment %}
+  ╔══════════════════════════════════════════════════════════╗
+  ║  MELATO - Hero Section                                   ║
+  ║  sections/melato-hero.liquid                             ║
+  ╠══════════════════════════════════════════════════════════╣
+  ║  Features:                                               ║
+  ║  • Full-bleed image slideshow (one slide per set)        ║
+  ║  • Random start slide on each page load (shuffle)        ║
+  ║  • Touch swipe support on mobile                         ║
+  ║  • Prev/next arrows + dot navigation                     ║
+  ║  • Merchant adds slides in Shopify Customizer            ║
+  ║  • "THE DROP IS LIVE" REMOVED - premium messaging        ║
+  ╚══════════════════════════════════════════════════════════╝
+{% endcomment %}
+
+{%- assign slide_count = 0 -%}
+{%- for block in section.blocks -%}
+  {%- if block.type == 'slide' -%}
+    {%- assign slide_count = slide_count | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<section
+  class="m-hero"
+  id="m-hero"
+  style="--hero-h: {{ section.settings.hero_height | default: 90 }}vh"
+  aria-label="{{ section.settings.aria_label | default: 'Featured collection' }}"
+>
+  <div
+    class="m-hero__track"
+    id="m-hero-track"
+    data-interval="{{ section.settings.autoplay_seconds | default: 6 | times: 1000 }}"
+  >
+    {%- if slide_count > 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'slide' -%}
+          <div
+            class="m-hero__slide"
+            {{ block.shopify_attributes }}
+            {%- if block.settings.image != blank -%}
+            style="background-image: url('{{ block.settings.image | image_url: width: 2400 }}')"
+            {%- endif -%}
+            aria-hidden="{{ forloop.first | default: false | json }}"
+          >
+            {%- if block.settings.image == blank -%}
+              <div class="m-hero__fallback-bg"></div>
+            {%- endif -%}
+            <div class="m-hero__overlay"></div>
+            <div class="m-hero__content">
+              {%- if block.settings.eyebrow != blank -%}
+                <p class="m-hero__eyebrow">{{ block.settings.eyebrow }}</p>
+              {%- endif -%}
+              {%- if block.settings.headline != blank -%}
+                <h2 class="m-hero__headline">{{ block.settings.headline }}</h2>
+              {%- endif -%}
+              {%- if block.settings.subline != blank -%}
+                <p class="m-hero__subline">{{ block.settings.subline }}</p>
+              {%- endif -%}
+              <div class="m-hero__ctas">
+                {%- if block.settings.cta_label != blank and block.settings.cta_url != blank -%}
+                  <a href="{{ block.settings.cta_url }}" class="m-btn m-btn--primary">{{ block.settings.cta_label }}</a>
+                {%- endif -%}
+                {%- if block.settings.cta2_label != blank and block.settings.cta2_url != blank -%}
+                  <a href="{{ block.settings.cta2_url }}" class="m-btn m-btn--ghost">{{ block.settings.cta2_label }}</a>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      {%- comment -%} Placeholder when no slides are added yet {%- endcomment -%}
+      <div class="m-hero__slide">
+        <div class="m-hero__fallback-bg"></div>
+        <div class="m-hero__overlay"></div>
+        <div class="m-hero__content">
+          <p class="m-hero__eyebrow">SS25 Collection</p>
+          <h2 class="m-hero__headline">The Collection</h2>
+          <p class="m-hero__subline">Premium velour. Crafted for those who move on their own terms.</p>
+          <div class="m-hero__ctas">
+            <a href="{{ routes.collections_url }}/all" class="m-btn m-btn--primary">Shop Now</a>
+          </div>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if slide_count > 1 -%}
+
+    {%- comment -%} Prev / Next arrows {%- endcomment -%}
+    <button class="m-hero__arrow m-hero__arrow--prev" id="m-hero-prev" aria-label="Previous slide">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m15 18-6-6 6-6"/>
+      </svg>
+    </button>
+    <button class="m-hero__arrow m-hero__arrow--next" id="m-hero-next" aria-label="Next slide">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="m9 18 6-6-6-6"/>
+      </svg>
+    </button>
+
+    {%- comment -%} Dot navigation {%- endcomment -%}
+    <div class="m-hero__dots" role="tablist" aria-label="Slide navigation">
+      {%- assign dot_i = 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'slide' -%}
+          <button
+            class="m-hero__dot"
+            role="tab"
+            aria-label="Slide {{ dot_i | plus: 1 }}"
+            aria-selected="false"
+            data-slide="{{ dot_i }}"
+          ></button>
+          {%- assign dot_i = dot_i | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Hero Slideshow",
+  "limit": 1,
+  "settings": [
+    {
+      "type": "range",
+      "id": "hero_height",
+      "label": "Hero height (% of viewport)",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "default": 90,
+      "unit": "vh"
+    },
+    {
+      "type": "range",
+      "id": "autoplay_seconds",
+      "label": "Auto-advance every (seconds)",
+      "min": 3,
+      "max": 14,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "Accessibility label for screen readers",
+      "default": "Featured collection slideshow"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "limit": 8,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Full-set image (jacket + pants together, min 2400px wide)"
+        },
+        {
+          "type": "text",
+          "id": "eyebrow",
+          "label": "Eyebrow label",
+          "default": "SS25 Collection"
+        },
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Headline",
+          "default": "The Collection"
+        },
+        {
+          "type": "text",
+          "id": "subline",
+          "label": "Sub-headline",
+          "default": "Premium velour. Crafted for those who move on their own terms."
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "Primary button label",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "cta_url",
+          "label": "Primary button link"
+        },
+        {
+          "type": "text",
+          "id": "cta2_label",
+          "label": "Secondary button label (optional)"
+        },
+        {
+          "type": "url",
+          "id": "cta2_url",
+          "label": "Secondary button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Slideshow",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "SS25 Collection",
+            "headline": "The Collection",
+            "subline": "Premium velour. Crafted for those who move on their own terms.",
+            "cta_label": "Shop Now",
+            "cta_url": "/collections/all",
+            "cta2_label": "View Lookbook",
+            "cta2_url": "/pages/lookbook"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

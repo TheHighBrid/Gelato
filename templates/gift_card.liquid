@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money_without_trailing_zeros, shop: shop.name }}</title>
+
+  {{ 'gift-card.css' | global_asset_url | stylesheet_tag }}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080808;
+      --text: #F2EDE6;
+      --accent: #C8FF00;
+      --muted: #555;
+      --border: #222;
+      --surface: #141414;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .gc-wrap {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 60px 24px;
+      text-align: center;
+    }
+
+    .gc-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.12em;
+      margin-bottom: 40px;
+      display: block;
+    }
+    .gc-logo span { color: var(--accent); }
+
+    .gc-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 48px 40px;
+      margin-bottom: 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gc-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at top right, rgba(200,255,0,0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .gc-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .gc-value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 10vw, 5rem);
+      line-height: 0.9;
+      letter-spacing: -0.01em;
+      margin-bottom: 32px;
+    }
+
+    .gc-code-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .gc-code {
+      font-family: 'DM Mono', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 16px 24px;
+      display: inline-block;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+
+    .gc-balance {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    .gc-qr {
+      margin: 24px auto 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    .gc-expiry {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .gc-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--bg);
+      padding: 14px 36px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+      margin-bottom: 16px;
+    }
+    .gc-btn:hover { background: var(--text); }
+
+    .gc-print {
+      display: block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      cursor: pointer;
+      margin: 0 auto;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      background: none;
+      border: none;
+      transition: color 0.2s;
+    }
+    .gc-print:hover { color: var(--accent); }
+
+    @media print {
+      .gc-btn, .gc-print { display: none; }
+      body { background: #fff; color: #000; }
+      .gc-card { border-color: #ccc; background: #f9f9f9; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="gc-wrap">
+
+    <a href="{{ shop.url }}" class="gc-logo">{{ shop.name }}<span>.</span></a>
+
+    <div class="gc-card">
+
+      <p class="gc-label">Gift Card</p>
+
+      <div class="gc-value">
+        {%- if gift_card.balance != gift_card.initial_value -%}
+          {{ gift_card.balance | money_without_trailing_zeros }}
+        {%- else -%}
+          {{ gift_card.initial_value | money_without_trailing_zeros }}
+        {%- endif -%}
+      </div>
+
+      <p class="gc-code-label">Your Gift Card Code</p>
+
+      <div class="gc-code" id="gift-card-code">
+        {{ gift_card.code | format_code }}
+      </div>
+
+      {%- if gift_card.balance != gift_card.initial_value -%}
+        <p class="gc-balance">
+          Original value: {{ gift_card.initial_value | money_without_trailing_zeros }} -
+          Remaining: {{ gift_card.balance | money_without_trailing_zeros }}
+        </p>
+      {%- endif -%}
+
+      <div class="gc-qr">
+        {{ gift_card | qr_code: size: 120 }}
+      </div>
+
+    </div>
+
+    {%- if gift_card.expires_on -%}
+      <p class="gc-expiry">
+        Expires: {{ gift_card.expires_on | date: format: 'basic' }}
+        {%- if gift_card.expired -%} - <span style="color:#FF3333">Expired</span>{%- endif -%}
+      </p>
+    {%- endif -%}
+
+    <a href="{{ shop.url }}" class="gc-btn">
+      Shop {{ shop.name }} →
+    </a>
+
+    <button class="gc-print" onclick="window.print()">Print Gift Card</button>
+
+  </div>
+
+</body>
+</html>

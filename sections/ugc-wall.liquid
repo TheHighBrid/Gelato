@@ -1,0 +1,84 @@
+{% comment %}
+  sections/ugc-wall.liquid
+  Community photo wall / UGC grid
+{% endcomment %}
+
+{%- if section.blocks.size > 0 -%}
+<section class="section-spacing">
+  <div class="container">
+
+    {%- if section.settings.heading != blank -%}
+      <div class="drip-reveal" style="margin-bottom:40px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;">
+        <h2 class="heading-md">{{ section.settings.heading }}</h2>
+        {%- if section.settings.instagram_handle != blank -%}
+          <a
+            href="https://instagram.com/{{ section.settings.instagram_handle }}"
+            class="btn btn--ghost btn--sm"
+            target="_blank"
+            rel="noopener"
+          >
+            @{{ section.settings.instagram_handle }} →
+          </a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="ugc-grid drip-reveal drip-reveal--delay-1">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'photo' -%}
+          <div class="ugc-item" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              <img
+                src="{{ block.settings.image | image_url: width: 600 }}"
+                alt="{{ block.settings.alt | default: 'Community photo' | escape }}"
+                loading="lazy"
+                width="{{ block.settings.image.width }}"
+                height="{{ block.settings.image.height }}"
+              >
+            {%- else -%}
+              {{ 'lifestyle-2' | placeholder_svg_tag }}
+            {%- endif -%}
+            <div class="ugc-item__overlay" aria-hidden="true">
+              {%- if block.settings.handle != blank -%}
+                <span class="text-label" style="color:#fff;">@{{ block.settings.handle }}</span>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Community Photos",
+  "tag": "section",
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Photo",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "text", "id": "handle", "label": "Instagram handle (without @)" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    }
+  ],
+  "settings": [
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "THE CULTURE\nWEARS US" },
+    { "type": "text", "id": "instagram_handle", "label": "Instagram handle", "info": "Without the @" }
+  ],
+  "presets": [
+    {
+      "name": "Community Photos",
+      "blocks": [
+        { "type": "photo" }, { "type": "photo" },
+        { "type": "photo" }, { "type": "photo" }
+      ]
+    }
+  ]
+}
+{% endschema %}

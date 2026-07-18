@@ -1,0 +1,563 @@
+{%- comment -%}
+  Melato Lookbook - Online Store 2.0 section
+  File: sections/melato-lookbook.liquid
+
+  Usage:
+  1. Add this file to /sections.
+  2. Add templates/page.lookbook.json.
+  3. Create a Shopify Page named "Lookbook" and assign the "lookbook" template.
+  4. Point "View Lookbook" links to /pages/lookbook.
+
+  Notes:
+  - Uses image_url, not deprecated img_url.
+  - Pulls products from the selected collection. If no collection is selected, it tries collections['all'].
+{%- endcomment -%}
+
+{%- liquid
+  assign lookbook_collection = section.settings.lookbook_collection
+  if lookbook_collection == blank
+    assign lookbook_collection = collections['all']
+  endif
+
+  assign product_limit = section.settings.product_limit | default: 12
+  assign eyebrow = section.settings.eyebrow | default: 'Melato Lookbook'
+  assign heading = section.settings.heading | default: 'Cut with intent.'
+  assign intro = section.settings.intro | default: 'A curated visual edit of current Melato pieces, designed for product discovery, editorial styling, and high-intent shopping.'
+-%}
+
+<section
+  id="melato-lookbook-{{ section.id }}"
+  class="melato-lookbook"
+  style="
+    --ml-bg: {{ section.settings.bg_color }};
+    --ml-surface: {{ section.settings.surface_color }};
+    --ml-text: {{ section.settings.text_color }};
+    --ml-muted: {{ section.settings.muted_color }};
+    --ml-accent: {{ section.settings.accent_color }};
+    --ml-border: {{ section.settings.border_color }};
+  "
+>
+  <div class="melato-lookbook__inner">
+    <header class="melato-lookbook__hero">
+      <div class="melato-lookbook__copy">
+        {%- if eyebrow != blank -%}
+          <p class="melato-lookbook__eyebrow">{{ eyebrow | escape }}</p>
+        {%- endif -%}
+
+        {%- if heading != blank -%}
+          <h1 class="melato-lookbook__heading">{{ heading | escape }}</h1>
+        {%- endif -%}
+
+        {%- if intro != blank -%}
+          <p class="melato-lookbook__intro">{{ intro | escape }}</p>
+        {%- endif -%}
+      </div>
+
+      <div class="melato-lookbook__meta" aria-label="Lookbook information">
+        <span>{{ section.settings.season_label | escape }}</span>
+        <span>{{ section.settings.location_label | escape }}</span>
+        {%- if lookbook_collection != blank -%}
+          <span>{{ lookbook_collection.products_count }} products</span>
+        {%- endif -%}
+      </div>
+    </header>
+
+    {%- if lookbook_collection != blank and lookbook_collection.products_count > 0 -%}
+      {%- paginate lookbook_collection.products by product_limit -%}
+        <div class="melato-lookbook__grid">
+          {%- for product in lookbook_collection.products -%}
+            {%- liquid
+              assign look_number = forloop.index | plus: paginate.current_offset
+              assign featured_image = product.featured_image
+              assign first_available_variant = product.selected_or_first_available_variant
+              assign card_label = 'Look ' | append: look_number
+              if product.metafields.custom.lookbook_label.value != blank
+                assign card_label = product.metafields.custom.lookbook_label.value
+              endif
+
+              assign product_price = product.price | default: 0 | plus: 0
+              assign compare_price = product.compare_at_price_max | default: 0 | plus: 0
+              assign show_sale_badge = false
+              if compare_price > product_price
+                assign show_sale_badge = true
+              endif
+            -%}
+
+            <article class="melato-lookbook__card">
+              <a class="melato-lookbook__media" href="{{ product.url }}" aria-label="View {{ product.title | escape }}">
+                {%- if show_sale_badge -%}
+                  <span class="melato-lookbook__badge">Sale</span>
+                {%- endif -%}
+
+                {%- if first_available_variant != blank and first_available_variant.available == false -%}
+                  <span class="melato-lookbook__badge melato-lookbook__badge--muted">Sold out</span>
+                {%- endif -%}
+
+                {%- if featured_image != blank -%}
+                  <img
+                    src="{{ featured_image | image_url: width: 900 }}"
+                    srcset="
+                      {{ featured_image | image_url: width: 480 }} 480w,
+                      {{ featured_image | image_url: width: 720 }} 720w,
+                      {{ featured_image | image_url: width: 900 }} 900w,
+                      {{ featured_image | image_url: width: 1200 }} 1200w
+                    "
+                    sizes="(min-width: 1200px) 31vw, (min-width: 750px) 45vw, 92vw"
+                    alt="{{ featured_image.alt | default: product.title | escape }}"
+                    loading="{% if forloop.index <= 2 %}eager{% else %}lazy{% endif %}"
+                    width="{{ featured_image.width }}"
+                    height="{{ featured_image.height }}"
+                  >
+                {%- else -%}
+                  <div class="melato-lookbook__placeholder">
+                    {{ 'product-1' | placeholder_svg_tag: 'melato-lookbook__placeholder-svg' }}
+                  </div>
+                {%- endif -%}
+              </a>
+
+              <div class="melato-lookbook__details">
+                <div>
+                  <p class="melato-lookbook__look">{{ card_label | escape }}</p>
+                  <h2 class="melato-lookbook__product-title">
+                    <a href="{{ product.url }}">{{ product.title | escape }}</a>
+                  </h2>
+                </div>
+
+                <div class="melato-lookbook__price">
+                  {%- if show_sale_badge -%}
+                    <span class="melato-lookbook__price-current">{{ product.price | money }}</span>
+                    <s class="melato-lookbook__price-compare">{{ product.compare_at_price_max | money }}</s>
+                  {%- else -%}
+                    <span>{{ product.price | money }}</span>
+                  {%- endif -%}
+                </div>
+
+                {%- if section.settings.show_vendor and product.vendor != blank -%}
+                  <p class="melato-lookbook__vendor">{{ product.vendor | escape }}</p>
+                {%- endif -%}
+
+                <a class="melato-lookbook__button" href="{{ product.url }}">
+                  View product
+                  <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </article>
+          {%- endfor -%}
+        </div>
+
+        {%- if paginate.pages > 1 -%}
+          <nav class="melato-lookbook__pagination" role="navigation" aria-label="Lookbook pagination">
+            {%- if paginate.previous -%}
+              <a href="{{ paginate.previous.url }}" class="melato-lookbook__page-link">← Previous</a>
+            {%- endif -%}
+
+            <span class="melato-lookbook__page-current">
+              Page {{ paginate.current_page }} of {{ paginate.pages }}
+            </span>
+
+            {%- if paginate.next -%}
+              <a href="{{ paginate.next.url }}" class="melato-lookbook__page-link">Next →</a>
+            {%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- else -%}
+      <div class="melato-lookbook__empty">
+        <h2>No products found for this lookbook.</h2>
+        <p>Select a collection in the theme editor, or publish products to your Online Store sales channel.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  #melato-lookbook-{{ section.id }} {
+    background:
+      radial-gradient(circle at 20% 0%, color-mix(in srgb, var(--ml-accent) 18%, transparent), transparent 32rem),
+      linear-gradient(180deg, color-mix(in srgb, var(--ml-bg) 94%, #ffffff 6%), var(--ml-bg));
+    color: var(--ml-text);
+    padding: clamp(40px, 6vw, 88px) 0;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__inner {
+    width: min(1440px, calc(100% - 32px));
+    margin: 0 auto;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: end;
+    margin-bottom: clamp(28px, 4vw, 54px);
+    border-bottom: 1px solid var(--ml-border);
+    padding-bottom: 24px;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__eyebrow,
+  #melato-lookbook-{{ section.id }} .melato-lookbook__look,
+  #melato-lookbook-{{ section.id }} .melato-lookbook__vendor,
+  #melato-lookbook-{{ section.id }} .melato-lookbook__meta {
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__eyebrow {
+    color: var(--ml-accent);
+    margin: 0 0 14px;
+    font-weight: 700;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__heading {
+    margin: 0;
+    max-width: 920px;
+    font-size: clamp(38px, 7vw, 96px);
+    line-height: .92;
+    letter-spacing: -.055em;
+    color: var(--ml-text);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__intro {
+    max-width: 680px;
+    margin: 22px 0 0;
+    color: var(--ml-muted);
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.65;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    color: var(--ml-muted);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__card {
+    position: relative;
+    overflow: hidden;
+    background: var(--ml-surface);
+    border: 1px solid var(--ml-border);
+    border-radius: 24px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, .16);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 1),
+  #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 5) {
+    grid-column: span 2;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--ml-surface) 72%, #000000 28%);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 1) .melato-lookbook__media,
+  #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 5) .melato-lookbook__media {
+    aspect-ratio: 16 / 10;
+  }
+
+  #melato-lookbook-{{ section.id }} img,
+  #melato-lookbook-{{ section.id }} .melato-lookbook__placeholder-svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.001);
+    transition: transform .7s ease, filter .7s ease;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__card:hover img {
+    transform: scale(1.045);
+    filter: contrast(1.04) saturate(.96);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__media::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0;
+    height: 38%;
+    background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .42));
+    pointer-events: none;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__badge {
+    position: absolute;
+    z-index: 2;
+    top: 14px;
+    left: 14px;
+    padding: 8px 11px;
+    border-radius: 999px;
+    background: var(--ml-accent);
+    color: #111;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-weight: 800;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__badge--muted {
+    left: auto;
+    right: 14px;
+    background: rgba(255, 255, 255, .86);
+    color: #111;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__details {
+    display: grid;
+    gap: 12px;
+    padding: 20px;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__look,
+  #melato-lookbook-{{ section.id }} .melato-lookbook__vendor {
+    margin: 0;
+    color: var(--ml-muted);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__product-title {
+    margin: 7px 0 0;
+    color: var(--ml-text);
+    font-size: clamp(18px, 2vw, 28px);
+    line-height: 1.05;
+    letter-spacing: -.03em;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__product-title a,
+  #melato-lookbook-{{ section.id }} .melato-lookbook__button,
+  #melato-lookbook-{{ section.id }} .melato-lookbook__page-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__price {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    color: var(--ml-text);
+    font-size: 14px;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__price-current {
+    color: var(--ml-accent);
+    font-weight: 800;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__price-compare {
+    color: var(--ml-muted);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: fit-content;
+    min-width: 150px;
+    border: 1px solid var(--ml-border);
+    border-radius: 999px;
+    padding: 12px 16px;
+    color: var(--ml-text);
+    background: color-mix(in srgb, var(--ml-surface) 86%, #ffffff 14%);
+    transition: transform .25s ease, border-color .25s ease, background .25s ease;
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__button:hover {
+    transform: translateY(-1px);
+    border-color: var(--ml-accent);
+    background: color-mix(in srgb, var(--ml-accent) 16%, var(--ml-surface));
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-top: 36px;
+    color: var(--ml-muted);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__page-link {
+    border: 1px solid var(--ml-border);
+    border-radius: 999px;
+    padding: 10px 14px;
+    color: var(--ml-text);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__empty {
+    border: 1px solid var(--ml-border);
+    border-radius: 24px;
+    background: var(--ml-surface);
+    padding: 32px;
+    color: var(--ml-text);
+  }
+
+  #melato-lookbook-{{ section.id }} .melato-lookbook__empty p {
+    color: var(--ml-muted);
+  }
+
+  @media screen and (max-width: 989px) {
+    #melato-lookbook-{{ section.id }} .melato-lookbook__hero {
+      grid-template-columns: 1fr;
+    }
+
+    #melato-lookbook-{{ section.id }} .melato-lookbook__meta {
+      text-align: left;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+    }
+
+    #melato-lookbook-{{ section.id }} .melato-lookbook__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 1),
+    #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 5) {
+      grid-column: span 2;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    #melato-lookbook-{{ section.id }} {
+      padding-top: 34px;
+    }
+
+    #melato-lookbook-{{ section.id }} .melato-lookbook__inner {
+      width: min(100% - 24px, 1440px);
+    }
+
+    #melato-lookbook-{{ section.id }} .melato-lookbook__grid {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    #melato-lookbook-{{ section.id }} .melato-lookbook__card,
+    #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 1),
+    #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 5) {
+      grid-column: span 1;
+    }
+
+    #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 1) .melato-lookbook__media,
+    #melato-lookbook-{{ section.id }} .melato-lookbook__card:nth-child(6n + 5) .melato-lookbook__media,
+    #melato-lookbook-{{ section.id }} .melato-lookbook__media {
+      aspect-ratio: 4 / 5;
+    }
+
+    #melato-lookbook-{{ section.id }} .melato-lookbook__details {
+      padding: 16px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Melato lookbook",
+  "tag": "section",
+  "class": "section-melato-lookbook",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "lookbook_collection",
+      "label": "Lookbook collection"
+    },
+    {
+      "type": "range",
+      "id": "product_limit",
+      "min": 4,
+      "max": 24,
+      "step": 4,
+      "default": 12,
+      "label": "Products per page"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "Melato Lookbook"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Styled for motion. Built for presence."
+    },
+    {
+      "type": "textarea",
+      "id": "intro",
+      "label": "Intro text",
+      "default": "A curated visual edit of current Melato pieces, designed for product discovery, editorial styling, and high-intent shopping."
+    },
+    {
+      "type": "text",
+      "id": "season_label",
+      "label": "Season label",
+      "default": "Spring 2026"
+    },
+    {
+      "type": "text",
+      "id": "location_label",
+      "label": "Location label",
+      "default": "Toronto/Montreal/Ottawa/Canada"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show product vendor",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#0B0B0B"
+    },
+    {
+      "type": "color",
+      "id": "surface_color",
+      "label": "Card surface",
+      "default": "#151515"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#F4F0E8"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#AFA79A"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#D8B56D"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#2A2A2A"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato lookbook"
+    }
+  ]
+}
+{% endschema %}

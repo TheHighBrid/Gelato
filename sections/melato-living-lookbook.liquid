@@ -1,966 +1,275 @@
 {%- liquid
-  assign section_anchor = section.settings.section_anchor | default: 'living-lookbook' | handleize
-  assign bg_color = section.settings.bg_color | default: '#080706'
-  assign text_color = section.settings.text_color | default: '#f7efe2'
-  assign muted_color = section.settings.muted_color | default: '#b9aa96'
-  assign accent_color = section.settings.accent_color | default: '#c9974a'
-  assign selector = section_anchor | append: '-' | append: section.id
-  assign block_count = section.blocks | size
-  assign max_width = section.settings.max_width | default: 1360
-  assign enable_carousel = section.settings.enable_carousel | default: false
-  assign carousel_enabled_mobile = section.settings.carousel_enabled_mobile | default: true
-  assign enable_quick_view = section.settings.enable_quick_view | default: true
-  assign enable_analytics = section.settings.enable_analytics | default: true
-  assign locale = request.locale.iso_code | downcase | default: 'en'
+  assign section_anchor = section.settings.section_anchor | default: 'living-lookbook'
 -%}
 
-<section id="{{ selector }}" class="melato-living-lookbook" data-section-type="melato-living-lookbook" data-carousel-enabled="{{ carousel_enabled_mobile }}" data-quick-view-enabled="{{ enable_quick_view }}">
+<section id="{{ section_anchor | handleize }}-{{ section.id }}" class="melato-living-lookbook" data-section-type="melato-living-lookbook">
   <style>
-    @layer base, theme, utilities;
+    #{{ section_anchor | handleize }}-{{ section.id }} {
+      --ll-bg: {{ section.settings.bg_color | default: '#080706' }};
+      --ll-ink: {{ section.settings.text_color | default: '#f7efe2' }};
+      --ll-muted: {{ section.settings.muted_color | default: '#b9aa96' }};
+      --ll-accent: {{ section.settings.accent_color | default: '#c9974a' }};
+      --ll-line: rgba(247,239,226,.16);
+      background:
+        radial-gradient(circle at 10% 12%, rgba(201,151,74,.18), transparent 32%),
+        radial-gradient(circle at 84% 8%, rgba(247,239,226,.10), transparent 28%),
+        var(--ll-bg);
+      color: var(--ll-ink);
+      overflow: clip;
+      border-top: 1px solid rgba(247,239,226,.1);
+      border-bottom: 1px solid rgba(247,239,226,.1);
+    }
 
-    @layer base {
-      :root {
-        --ll-spacing-xs: 8px;
-        --ll-spacing-sm: 12px;
-        --ll-spacing-md: 16px;
-        --ll-spacing-lg: 24px;
-        --ll-spacing-xl: 34px;
-        --ll-spacing-2xl: 74px;
-        
-        --ll-offset-hover: -6px;
-        --ll-scale-hover: 1.06;
-        
-        --ll-duration-fast: 0.28s;
-        --ll-duration-slow: 0.7s;
-        
-        --ll-shadow-sm: 0 12px 40px rgba(0,0,0,.28);
-        --ll-shadow-md: 0 16px 50px rgba(0,0,0,.36);
-        --ll-shadow-lg: 0 28px 90px rgba(0,0,0,.34);
-        
-        --ll-border-radius: clamp(24px, 3vw, 42px);
-        --ll-border-radius-sm: 22px;
-        
-        --ll-bg: {{ bg_color }};
-        --ll-ink: {{ text_color }};
-        --ll-muted: {{ muted_color }};
-        --ll-accent: {{ accent_color }};
-        --ll-line: rgba(247,239,226,.16);
-        --ll-text-secondary: rgba(247,239,226,.8);
-        --ll-text-muted: rgba(247,239,226,.85);
-        --ll-text-subtle: rgba(247,239,226,.74);
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} * { box-sizing: border-box; }
 
-      #{{ selector }} {
-        background: var(--ll-bg);
-        color: var(--ll-ink);
-        overflow: clip;
-        border-top: 1px solid rgba(247,239,226,.1);
-        border-bottom: 1px solid rgba(247,239,226,.1);
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__wrap {
+      width: min({{ section.settings.max_width | default: 1360 }}px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: clamp(64px, 9vw, 126px) 0;
+    }
 
-      #{{ selector }} * { box-sizing: border-box; }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__header {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(280px, .55fr);
+      gap: clamp(24px, 5vw, 84px);
+      align-items: end;
+      margin-bottom: clamp(32px, 5vw, 72px);
+    }
 
-      #{{ selector }} .living-lookbook__wrap {
-        width: min({{ max_width }}px, calc(100% - 40px));
-        margin: 0 auto;
-        padding: clamp(64px, 9vw, 126px) 0;
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__kicker,
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__chapter,
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__label {
+      margin: 0;
+      color: var(--ll-muted);
+      font-size: 10px;
+      line-height: 1.35;
+      font-weight: 800;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+    }
 
-      #{{ selector }} .living-lookbook__header {
-        display: grid;
-        grid-template-columns: minmax(0, .95fr) minmax(280px, .55fr);
-        gap: clamp(24px, 5vw, 84px);
-        align-items: end;
-        margin-bottom: clamp(32px, 5vw, 72px);
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__title {
+      margin: 12px 0 0;
+      max-width: 980px;
+      color: var(--ll-ink);
+      font-family: var(--font-heading-family, inherit);
+      font-size: clamp(46px, 8vw, 118px);
+      line-height: .82;
+      letter-spacing: -.08em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
 
-      #{{ selector }} .living-lookbook__kicker,
-      #{{ selector }} .living-lookbook-scene__chapter,
-      #{{ selector }} .living-lookbook-pin__label {
-        margin: 0;
-        color: var(--ll-muted);
-        font-size: 10px;
-        line-height: 1.35;
-        font-weight: 800;
-        letter-spacing: .26em;
-        text-transform: uppercase;
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__copy {
+      margin: 0;
+      color: rgba(247,239,226,.74);
+      font-size: clamp(15px, 1.25vw, 19px);
+      line-height: 1.65;
+    }
 
-      #{{ selector }} .living-lookbook__title {
-        margin: 12px 0 0;
-        max-width: 980px;
-        color: var(--ll-ink);
-        font-family: var(--font-heading-family, inherit);
-        font-size: clamp(46px, 8vw, 118px);
-        line-height: .82;
-        letter-spacing: -.08em;
-        text-transform: uppercase;
-        text-wrap: balance;
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__stage {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: clamp(14px, 1.7vw, 24px);
+      align-items: stretch;
+    }
 
-      #{{ selector }} .living-lookbook__copy {
-        margin: 0;
-        color: var(--ll-text-subtle);
-        font-size: clamp(15px, 1.25vw, 19px);
-        line-height: 1.65;
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene {
+      position: relative;
+      grid-column: span 4;
+      min-height: 520px;
+      overflow: hidden;
+      border: 1px solid var(--ll-line);
+      border-radius: clamp(24px, 3vw, 42px);
+      color: inherit;
+      text-decoration: none;
+      background: rgba(255,255,255,.035);
+      box-shadow: 0 28px 90px rgba(0,0,0,.34);
+      isolation: isolate;
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
 
-      #{{ selector }} .living-lookbook__stage {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: clamp(14px, 1.7vw, 24px);
-        align-items: stretch;
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n+1) { transform: translateY(34px); }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n+2) { min-height: 620px; }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n) { transform: translateY(74px); }
 
-      #{{ selector }} .living-lookbook__stage.carousel-enabled {
-        grid-template-columns: 1fr;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: var(--ll-spacing-sm);
-        margin-bottom: calc(-1 * var(--ll-spacing-sm));
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:hover {
+      transform: translateY(-6px) scale(1.01);
+      border-color: rgba(247,239,226,.32);
+      box-shadow: 0 34px 110px rgba(0,0,0,.48);
+    }
 
-      #{{ selector }} .living-lookbook__stage.carousel-enabled::-webkit-scrollbar {
-        height: 4px;
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__image {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: linear-gradient(135deg, rgba(201,151,74,.16), rgba(255,255,255,.04));
+    }
 
-      #{{ selector }} .living-lookbook__stage.carousel-enabled::-webkit-scrollbar-track {
-        background: rgba(255,255,255,.05);
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__image img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      filter: saturate(.95) contrast(1.04);
+      transform: scale(1.02);
+      transition: transform .7s ease, filter .7s ease;
+    }
 
-      #{{ selector }} .living-lookbook__stage.carousel-enabled::-webkit-scrollbar-thumb {
-        background: var(--ll-accent);
-        border-radius: 2px;
-      }
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:hover .living-lookbook-scene__image img {
+      transform: scale(1.08);
+      filter: saturate(1.06) contrast(1.08);
+    }
 
-      #{{ selector }} .living-lookbook-scene {
-        position: relative;
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__veil {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.04) 28%, rgba(0,0,0,.72) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.36), rgba(0,0,0,0) 54%);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__content {
+      min-height: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(22px, 3vw, 34px);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      max-width: min(100%, 360px);
+      padding: 10px 13px 10px 10px;
+      border: 1px solid rgba(247,239,226,.22);
+      border-radius: 999px;
+      background: rgba(8,7,6,.54);
+      color: var(--ll-ink);
+      backdrop-filter: blur(16px);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin::before {
+      content: "";
+      width: 14px;
+      height: 14px;
+      flex: 0 0 14px;
+      border: 3px solid var(--ll-bg);
+      border-radius: 50%;
+      background: var(--ll-accent);
+      box-shadow: 0 0 0 1px rgba(247,239,226,.34), 0 0 22px rgba(201,151,74,.8);
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__label {
+      display: block;
+      color: rgba(247,239,226,.72);
+      letter-spacing: .18em;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__title {
+      display: block;
+      margin-top: 3px;
+      color: var(--ll-ink);
+      font-size: 12px;
+      line-height: 1.25;
+      letter-spacing: .01em;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__title {
+      display: block;
+      margin: 14px 0 0;
+      max-width: 520px;
+      font-family: var(--font-heading-family, inherit);
+      font-size: clamp(28px, 3.5vw, 58px);
+      line-height: .9;
+      letter-spacing: -.06em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__text {
+      display: block;
+      margin: 14px 0 0;
+      max-width: 440px;
+      color: rgba(247,239,226,.76);
+      font-size: 14px;
+      line-height: 1.58;
+    }
+
+    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__cta {
+      display: inline-flex;
+      width: fit-content;
+      margin-top: 20px;
+      color: var(--ll-ink);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(247,239,226,.45);
+    }
+
+    @media (max-width: 990px) {
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__header,
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__stage { grid-template-columns: 1fr; }
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene,
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(n) {
+        grid-column: auto;
         min-height: 520px;
-        overflow: hidden;
-        border: 1px solid var(--ll-line);
-        border-radius: var(--ll-border-radius);
-        color: inherit;
-        text-decoration: none;
-        background: rgba(255,255,255,.035);
-        box-shadow: var(--ll-shadow-sm);
-        transition: transform var(--ll-duration-fast) ease, border-color var(--ll-duration-fast) ease, box-shadow var(--ll-duration-fast) ease;
-        outline-offset: 2px;
-        display: flex;
-        flex-direction: column;
-        scroll-snap-align: start;
-        flex-shrink: 0;
+        transform: none;
       }
+    }
 
-      #{{ selector }} .living-lookbook__stage.carousel-enabled .living-lookbook-scene {
-        min-width: 90vw;
-        max-width: 90vw;
-      }
-
-      @media (prefers-reduced-motion: no-preference) {
-        #{{ selector }} .living-lookbook-scene:hover {
-          transform: translateY(var(--ll-offset-hover));
-          border-color: rgba(247,239,226,.32);
-          box-shadow: var(--ll-shadow-md);
-        }
-      }
-
-      #{{ selector }} .living-lookbook-scene:focus-visible {
-        outline: 2px solid var(--ll-accent);
-      }
-
-      #{{ selector }} .living-lookbook-scene[aria-busy="true"] {
-        opacity: 0.8;
-      }
-
-      #{{ selector }} .living-lookbook-scene__image {
-        position: absolute;
-        inset: 0;
-        z-index: -2;
-        background: linear-gradient(135deg, rgba(201,151,74,.16), rgba(255,255,255,.04));
-      }
-
-      #{{ selector }} .living-lookbook-scene__image img {
-        width: 100%;
-        height: 100%;
-        display: block;
-        object-fit: cover;
-        aspect-ratio: 4/5;
-        will-change: transform;
-        transition: transform var(--ll-duration-slow) ease;
-      }
-
-      #{{ selector }} .living-lookbook-scene__image.is-loading {
-        animation: shimmer 1.5s infinite ease-in-out;
-        background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.1), rgba(255,255,255,0));
-        background-size: 200% 100%;
-      }
-
-      @keyframes shimmer {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        #{{ selector }} .living-lookbook-scene__image.is-loading {
-          animation: none;
-          opacity: 0.7;
-        }
-      }
-
-      @media (prefers-reduced-motion: no-preference) {
-        #{{ selector }} .living-lookbook-scene:hover .living-lookbook-scene__image img {
-          transform: scale(var(--ll-scale-hover));
-        }
-      }
-
-      #{{ selector }} .living-lookbook-scene__veil {
-        position: absolute;
-        inset: 0;
-        z-index: -1;
-        background:
-          linear-gradient(180deg, rgba(0,0,0,.04) 28%, rgba(0,0,0,.72) 100%),
-          linear-gradient(90deg, rgba(0,0,0,.36), rgba(0,0,0,0) 54%);
-      }
-
-      #{{ selector }} .living-lookbook-scene__content {
-        min-height: inherit;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        padding: clamp(var(--ll-spacing-md), 3vw, var(--ll-spacing-lg));
-        position: relative;
-        z-index: 1;
-      }
-
-      #{{ selector }} .living-lookbook-pin {
-        align-self: flex-start;
-        display: inline-flex;
-        align-items: center;
-        gap: var(--ll-spacing-sm);
-        max-width: min(100%, 360px);
-        padding: var(--ll-spacing-md);
-        min-height: 44px;
-        border: 1px solid rgba(247,239,226,.22);
-        border-radius: 999px;
-        background: rgba(8,7,6,.54);
-        color: var(--ll-ink);
-        backdrop-filter: blur(12px);
-        cursor: pointer;
-        transition: background-color var(--ll-duration-fast) ease;
-      }
-
-      @media (prefers-reduced-motion: no-preference) {
-        #{{ selector }} .living-lookbook-pin:hover {
-          background: rgba(8,7,6,.72);
-        }
-      }
-
-      #{{ selector }} .living-lookbook-pin::before {
-        content: "";
-        width: 14px;
-        height: 14px;
-        flex: 0 0 14px;
-        border: 3px solid var(--ll-bg);
-        border-radius: 50%;
-        background: var(--ll-accent);
-        box-shadow: 0 0 0 1px rgba(247,239,226,.34), 0 0 16px rgba(201,151,74,.6);
-      }
-
-      #{{ selector }} .living-lookbook-pin__label {
-        display: block;
-        color: var(--ll-text-secondary);
-        letter-spacing: .18em;
-        font-size: 10px;
-      }
-
-      #{{ selector }} .living-lookbook-pin__title {
-        display: block;
-        margin-top: 3px;
-        color: var(--ll-ink);
-        font-size: 12px;
-        line-height: 1.25;
-        letter-spacing: .01em;
-      }
-
-      #{{ selector }} .living-lookbook-scene__title {
-        display: block;
-        margin: 14px 0 0;
-        max-width: 520px;
-        font-family: var(--font-heading-family, inherit);
-        font-size: clamp(28px, 3.5vw, 58px);
-        line-height: .9;
-        letter-spacing: -.06em;
-        text-transform: uppercase;
-        text-wrap: balance;
-      }
-
-      #{{ selector }} .living-lookbook-scene__text {
-        display: block;
-        margin: 14px 0 0;
-        max-width: 440px;
-        color: var(--ll-text-muted);
-        font-size: 14px;
-        line-height: 1.58;
-      }
-
-      #{{ selector }} .living-lookbook-scene__cta {
-        display: inline-flex;
-        width: fit-content;
-        margin-top: 20px;
-        color: var(--ll-ink);
-        font-size: 10px;
-        font-weight: 900;
-        letter-spacing: .18em;
-        text-transform: uppercase;
-        border-bottom: 2px solid rgba(247,239,226,.45);
-        transition: border-color var(--ll-duration-fast) ease;
-        cursor: pointer;
-      }
-
-      @media (prefers-reduced-motion: no-preference) {
-        #{{ selector }} .living-lookbook-scene:hover .living-lookbook-scene__cta {
-          border-color: var(--ll-accent);
-        }
-      }
-
-      #{{ selector }} .living-lookbook-scene__image-error,
-      #{{ selector }} .living-lookbook-scene--empty {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(255,255,255,.05);
-        color: var(--ll-muted);
-        font-size: 12px;
-        text-align: center;
-        padding: var(--ll-spacing-lg);
-        min-height: 240px;
-        flex-direction: column;
-        gap: var(--ll-spacing-sm);
-      }
-
-      #{{ selector }} .living-lookbook-scene__image-error button {
-        margin-top: var(--ll-spacing-sm);
-        padding: var(--ll-spacing-xs) var(--ll-spacing-md);
-        background: var(--ll-accent);
-        color: var(--ll-bg);
-        border: none;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 700;
-        cursor: pointer;
-        text-transform: uppercase;
-        letter-spacing: .08em;
-      }
-
-      #{{ selector }} .living-lookbook-quick-view-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 9999;
-        background: rgba(0,0,0,.8);
-        backdrop-filter: blur(4px);
-      }
-
-      #{{ selector }} .living-lookbook-quick-view-modal.is-open {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: fadeIn 0.3s ease;
-      }
-
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-
-      #{{ selector }} .living-lookbook-quick-view-content {
-        background: var(--ll-bg);
-        border-radius: var(--ll-border-radius);
-        padding: var(--ll-spacing-lg);
-        max-width: 600px;
-        width: 90vw;
-        max-height: 80vh;
-        overflow-y: auto;
-        position: relative;
-        box-shadow: var(--ll-shadow-lg);
-      }
-
-      #{{ selector }} .living-lookbook-quick-view-close {
-        position: absolute;
-        top: var(--ll-spacing-md);
-        right: var(--ll-spacing-md);
-        background: none;
-        border: none;
-        color: var(--ll-ink);
-        font-size: 24px;
-        cursor: pointer;
-        z-index: 10000;
-      }
-
-      #{{ selector }} .living-lookbook-carousel-nav {
-        display: none;
-        justify-content: center;
-        gap: var(--ll-spacing-sm);
-        padding: var(--ll-spacing-lg) 0 0;
-        margin-top: var(--ll-spacing-lg);
-      }
-
-      #{{ selector }} .living-lookbook-carousel-nav.visible {
-        display: flex;
-      }
-
-      #{{ selector }} .living-lookbook-carousel-nav button {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(247,239,226,.3);
-        cursor: pointer;
-        transition: background-color var(--ll-duration-fast) ease;
-      }
-
-      #{{ selector }} .living-lookbook-carousel-nav button.active {
-        background: var(--ll-accent);
-      }
-
-      @media (max-width: 1200px) {
-        #{{ selector }} .living-lookbook__stage {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 990px) {
-        #{{ selector }} .living-lookbook__header { grid-template-columns: 1fr; }
-        #{{ selector }} .living-lookbook__stage:not(.carousel-enabled) {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        #{{ selector }} .living-lookbook-scene {
-          min-height: 440px;
-        }
-      }
-
-      @media (max-width: 640px) {
-        #{{ selector }} .living-lookbook__wrap { width: min(100% - 28px, {{ max_width }}px); }
-        #{{ selector }} .living-lookbook__stage:not(.carousel-enabled) {
-          grid-template-columns: 1fr;
-        }
-        #{{ selector }} .living-lookbook-scene:not(.carousel-enabled) {
-          min-height: 380px;
-        }
-        #{{ selector }} .living-lookbook-pin {
-          padding: var(--ll-spacing-xs) var(--ll-spacing-sm);
-          min-height: auto;
-        }
-        #{{ selector }} .living-lookbook-pin { border-radius: var(--ll-border-radius-sm); align-items: flex-start; }
-      }
-
-      @supports (aspect-ratio: 1) {
-        #{{ selector }} .living-lookbook-scene__image img {
-          aspect-ratio: 4/5;
-        }
-      }
-
-      @supports not (aspect-ratio: 1) {
-        #{{ selector }} .living-lookbook-scene__image img {
-          padding-bottom: 125%;
-        }
-      }
-
-      @media (prefers-color-scheme: light) {
-        #{{ selector }} {
-          --ll-bg: #f5f5f5;
-          --ll-ink: #1a1a1a;
-          --ll-muted: #666;
-          --ll-text-secondary: rgba(26,26,26,.85);
-          --ll-text-muted: rgba(26,26,26,.9);
-        }
-      }
-
-      @media (prefers-contrast: more) {
-        #{{ selector }} .living-lookbook-pin__label {
-          color: var(--ll-ink);
-          font-weight: 900;
-        }
-      }
+    @media (max-width: 640px) {
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__wrap { width: min(100% - 28px, {{ section.settings.max_width | default: 1360 }}px); }
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene,
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(n) { min-height: 440px; }
+      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin { border-radius: 22px; align-items: flex-start; }
     }
   </style>
 
   <div class="living-lookbook__wrap">
     <div class="living-lookbook__header">
       <div>
-        {%- if section.settings.kicker != blank -%}
-          <p class="living-lookbook__kicker">{{ section.settings.kicker | escape }}</p>
-        {%- endif -%}
-        {%- if section.settings.title != blank -%}
-          <h2 class="living-lookbook__title">{{ section.settings.title | escape }}</h2>
-        {%- endif -%}
+        {%- if section.settings.kicker != blank -%}<p class="living-lookbook__kicker">{{ section.settings.kicker }}</p>{%- endif -%}
+        {%- if section.settings.title != blank -%}<h2 class="living-lookbook__title">{{ section.settings.title }}</h2>{%- endif -%}
       </div>
-      {%- if section.settings.copy != blank -%}
-        <p class="living-lookbook__copy">{{ section.settings.copy | escape }}</p>
-      {%- endif -%}
+      {%- if section.settings.copy != blank -%}<p class="living-lookbook__copy">{{ section.settings.copy }}</p>{%- endif -%}
     </div>
 
-    <div class="living-lookbook__stage" role="region" aria-label="{{ section.settings.title | escape }}" data-section-id="{{ selector }}">
+    <div class="living-lookbook__stage" aria-label="{{ section.settings.title | escape }}">
       {%- for block in section.blocks -%}
         {%- assign product = block.settings.product -%}
-        {%- if product != blank and product.url != blank -%}
+        {%- if product != blank -%}
           {%- assign scene_image = block.settings.image | default: product.featured_image -%}
-          <a 
-            class="living-lookbook-scene" 
-            href="{{ product.url }}" 
-            aria-label="Shop {{ product.title | escape }}" 
-            aria-busy="false"
-            data-product-id="{{ product.id }}"
-            data-product-title="{{ product.title | escape }}"
-            data-track-event="living_lookbook_click"
-            {{ block.shopify_attributes }}>
-            <div class="living-lookbook-scene__image is-loading">
+          <a class="living-lookbook-scene" href="{{ product.url }}" aria-label="Shop {{ product.title | escape }}" {{ block.shopify_attributes }}>
+            <div class="living-lookbook-scene__image">
               {%- if scene_image != blank -%}
-                {%- assign scene_img_alt = scene_image.alt | default: product.title | escape -%}
-                <picture>
-                  <source srcset="{{ scene_image | image_url: width: 480, format: 'webp' }}" media="(max-width: 640px)" type="image/webp">
-                  <source srcset="{{ scene_image | image_url: width: 480 }}" media="(max-width: 640px)">
-                  <source srcset="{{ scene_image | image_url: width: 960, format: 'webp' }}" media="(max-width: 1200px)" type="image/webp">
-                  <source srcset="{{ scene_image | image_url: width: 960 }}" media="(max-width: 1200px)">
-                  <source srcset="{{ scene_image | image_url: width: 1500, format: 'webp' }}" type="image/webp">
-                  {{ scene_image | image_url: width: 1500 | image_tag: loading: 'lazy', sizes: '(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 33vw', alt: scene_img_alt, fetchpriority: 'low' }}
-                </picture>
-              {%- else -%}
-                <div class="living-lookbook-scene--empty" aria-hidden="true">{{ 'no_image_available' | t: default: 'No image available' }}</div>
+                {{ scene_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 720, 960, 1200, 1500, 1800', alt: scene_image.alt | default: product.title }}
               {%- endif -%}
             </div>
             <div class="living-lookbook-scene__veil"></div>
             <div class="living-lookbook-scene__content">
               <span class="living-lookbook-pin">
                 <span>
-                  <span class="living-lookbook-pin__label">{{ 'shop_the_photo' | t: default: 'Shop the photo' }}</span>
-                  <span class="living-lookbook-pin__title">{{ product.title | escape }}</span>
+                  <span class="living-lookbook-pin__label">Shop the photo</span>
+                  <span class="living-lookbook-pin__title">{{ product.title }}</span>
                 </span>
               </span>
               <span>
-                {%- if block.settings.chapter != blank -%}
-                  <span class="living-lookbook-scene__chapter">{{ block.settings.chapter | escape }}</span>
-                {%- endif -%}
-                {%- if block.settings.title != blank -%}
-                  <span class="living-lookbook-scene__title">{{ block.settings.title | escape }}</span>
-                {%- endif -%}
-                {%- if block.settings.text != blank -%}
-                  <span class="living-lookbook-scene__text">{{ block.settings.text | escape }}</span>
-                {%- endif -%}
-                <span class="living-lookbook-scene__cta">{{ 'open_product' | t: default: 'Open product' }}</span>
+                {%- if block.settings.chapter != blank -%}<span class="living-lookbook-scene__chapter">{{ block.settings.chapter }}</span>{%- endif -%}
+                {%- if block.settings.title != blank -%}<span class="living-lookbook-scene__title">{{ block.settings.title }}</span>{%- endif -%}
+                {%- if block.settings.text != blank -%}<span class="living-lookbook-scene__text">{{ block.settings.text }}</span>{%- endif -%}
+                <span class="living-lookbook-scene__cta">Open product</span>
               </span>
             </div>
           </a>
-        {%- elsif block.shopify_attributes -%}
-          <!-- Block {{ forloop.index }} requires a product selection. Please edit this block and select a product. -->
         {%- endif -%}
       {%- endfor -%}
-      {%- if block_count == 0 -%}
-        <div class="living-lookbook-scene--empty" style="grid-column: 1 / -1;">
-          {{ 'add_shoppable_blocks' | t: default: 'Add shoppable photo blocks to display products.' }}
-        </div>
-      {%- endif -%}
     </div>
-
-    {%- if carousel_enabled_mobile and block_count > 0 -%}
-      <div class="living-lookbook-carousel-nav" data-carousel-nav></div>
-    {%- endif -%}
   </div>
-
-  {%- if enable_quick_view -%}
-    <div class="living-lookbook-quick-view-modal" data-quick-view-modal role="dialog" aria-modal="true" aria-label="{{ 'quick_view' | t: default: 'Quick view' }}" aria-hidden="true">
-      <div class="living-lookbook-quick-view-content">
-        <button class="living-lookbook-quick-view-close" data-quick-view-close aria-label="{{ 'close' | t: default: 'Close' }}">✕</button>
-        <div data-quick-view-placeholder></div>
-      </div>
-    </div>
-  {%- endif -%}
-
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      "name": {{ section.settings.title | default: 'Living Lookbook' | json }},
-      "description": {{ section.settings.copy | default: '' | json }},
-      "mainEntity": {
-        "@type": "Collection",
-        "name": {{ section.settings.title | default: 'Living Lookbook' | json }},
-        "numberOfItems": {{ block_count }}
-      },
-      "itemListElement": [
-        {%- for block in section.blocks -%}
-          {%- if block.settings.product -%}
-            {
-              "@type": "Product",
-              "@id": "{{ block.settings.product.url | prepend: request.origin }}",
-              "name": {{ block.settings.product.title | json }},
-              "url": "{{ block.settings.product.url | prepend: request.origin }}",
-              "image": "{{ block.settings.product.featured_image | image_url: width: 1500 | prepend: 'https:' }}",
-              "description": {{ block.settings.text | default: block.settings.product.description | json }},
-              "brand": {
-                "@type": "Brand",
-                "name": {{ shop.name | json }}
-              }
-              {%- if block.settings.product.price -%}
-                , "offers": {
-                  "@type": "Offer",
-                  "url": "{{ block.settings.product.url | prepend: request.origin }}",
-                  "priceCurrency": "{{ shop.currency }}",
-                  "price": "{{ block.settings.product.price | divided_by: 100.0 }}"
-                }
-              {%- endif -%}
-            }{{ ','  unless forloop.last }}
-          {%- endif -%}
-        {%- endfor -%}
-      ]
-    }
-  </script>
-
-  <script>
-    (function() {
-      'use strict';
-
-      const selector = '#{{ selector }}';
-      const section = document.querySelector(selector);
-      if (!section) return;
-
-      // Configuration
-      const config = {
-        carouselEnabled: section.dataset.carouselEnabled === 'true',
-        quickViewEnabled: section.dataset.quickViewEnabled === 'true',
-        enableAnalytics: {{ enable_analytics | json }},
-        imageLoadTimeout: 3000,
-        debounceDelay: 150,
-        locale: '{{ locale }}'
-      };
-
-      // Translations
-      const i18n = {
-        'en': {
-          imageFailed: 'Image failed to load',
-          retry: 'Retry',
-          quickView: 'Quick View',
-          close: 'Close'
-        },
-        'es': {
-          imageFailed: 'Error al cargar la imagen',
-          retry: 'Reintentar',
-          quickView: 'Vista rápida',
-          close: 'Cerrar'
-        },
-        'fr': {
-          imageFailed: 'Échec du chargement de l\'image',
-          retry: 'Réessayer',
-          quickView: 'Aperçu rapide',
-          close: 'Fermer'
-        }
-      };
-
-      const t = (key) => (i18n[config.locale] || i18n['en'])[key] || key;
-
-      // Cleanup tracking
-      const abortController = new AbortController();
-      const timers = new Set();
-
-      function clearTimer(id) {
-        clearTimeout(id);
-        timers.delete(id);
-      }
-
-      function setTimeout_(fn, delay) {
-        const id = setTimeout(fn, delay);
-        timers.add(id);
-        return id;
-      }
-
-      // Image Loading
-      function initImageLoading() {
-        const images = section.querySelectorAll('.living-lookbook-scene__image img');
-        images.forEach((img, index) => {
-          const loadingContainer = img.closest('.living-lookbook-scene__image');
-          const scene = img.closest('.living-lookbook-scene');
-          
-          if (!loadingContainer || !scene) return;
-
-          function stopLoading() {
-            loadingContainer.classList.remove('is-loading');
-            scene.setAttribute('aria-busy', 'false');
-          }
-
-          function showError() {
-            loadingContainer.classList.add('is-error');
-            scene.setAttribute('aria-busy', 'false');
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'living-lookbook-scene__image-error';
-            errorDiv.setAttribute('role', 'alert');
-            errorDiv.innerHTML = `
-              <span>${t('imageFailed')}</span>
-              <button type="button" data-retry-image="${index}">${t('retry')}</button>
-            `;
-            loadingContainer.innerHTML = '';
-            loadingContainer.appendChild(errorDiv);
-          }
-
-          img.addEventListener('load', stopLoading, { signal: abortController.signal });
-          img.addEventListener('error', showError, { signal: abortController.signal });
-
-          // Preload first image (LCP optimization)
-          if (index === 0) {
-            const link = document.createElement('link');
-            link.rel = 'preload';
-            link.as = 'image';
-            link.href = img.currentSrc || img.src;
-            link.fetchPriority = 'high';
-            document.head.appendChild(link);
-          }
-
-          // Fallback timeout
-          const timeoutId = setTimeout_(() => {
-            if (!loadingContainer.classList.contains('is-error')) {
-              stopLoading();
-            }
-          }, config.imageLoadTimeout);
-
-          img.addEventListener('load', () => clearTimer(timeoutId), { signal: abortController.signal });
-          img.addEventListener('error', () => clearTimer(timeoutId), { signal: abortController.signal });
-        });
-      }
-
-      // URL Validation
-      function validateProductUrl(url) {
-        if (!url) return false;
-        
-        // Allow relative URLs, same origin, and Shopify CDN
-        const allowedOrigins = [
-          window.location.origin,
-          '{{ request.origin | escape }}',
-          'cdn.shopify.com',
-          'images.unsplash.com'
-        ];
-
-        if (url.startsWith('/')) return true;
-        
-        try {
-          const urlObj = new URL(url);
-          return allowedOrigins.some(origin => urlObj.origin.includes(origin));
-        } catch {
-          return false;
-        }
-      }
-
-      // Product Link Validation
-      function validateProductLinks() {
-        const productLinks = section.querySelectorAll('.living-lookbook-scene');
-        productLinks.forEach(link => {
-          const url = link.getAttribute('href');
-          if (!validateProductUrl(url)) {
-            console.warn('Invalid product URL detected:', url);
-            link.setAttribute('href', '#');
-            link.setAttribute('aria-disabled', 'true');
-            link.addEventListener('click', (e) => e.preventDefault(), { signal: abortController.signal });
-          }
-        });
-      }
-
-      // Image Retry
-      function setupImageRetry() {
-        section.addEventListener('click', (e) => {
-          if (e.target.dataset.retryImage !== undefined) {
-            const index = parseInt(e.target.dataset.retryImage);
-            const images = section.querySelectorAll('.living-lookbook-scene__image img');
-            if (images[index]) {
-              const img = images[index];
-              const container = img.closest('.living-lookbook-scene__image');
-              container.classList.remove('is-error');
-              container.classList.add('is-loading');
-              img.src = img.src; // Trigger reload
-            }
-          }
-        }, { signal: abortController.signal });
-      }
-
-      // Carousel Functionality
-      function initCarousel() {
-        if (!config.carouselEnabled) return;
-
-        const stage = section.querySelector('.living-lookbook__stage');
-        const nav = section.querySelector('[data-carousel-nav]');
-        
-        if (!stage || !nav) return;
-
-        stage.classList.add('carousel-enabled');
-        nav.classList.add('visible');
-
-        const scenes = section.querySelectorAll('.living-lookbook-scene');
-        const navButtons = [];
-
-        scenes.forEach((scene, index) => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.setAttribute('aria-label', `Go to slide ${index + 1}`);
-          if (index === 0) btn.classList.add('active');
-          btn.addEventListener('click', () => {
-            scene.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-            updateCarouselNav();
-          }, { signal: abortController.signal });
-          nav.appendChild(btn);
-          navButtons.push(btn);
-        });
-
-        function updateCarouselNav() {
-          const scrollLeft = stage.scrollLeft;
-          const firstVisibleIndex = Math.round(scrollLeft / stage.offsetWidth);
-          navButtons.forEach((btn, i) => {
-            btn.classList.toggle('active', i === firstVisibleIndex);
-          });
-        }
-
-        stage.addEventListener('scroll', debounce(updateCarouselNav, config.debounceDelay), { signal: abortController.signal });
-      }
-
-      // Quick View Modal
-      function initQuickView() {
-        if (!config.quickViewEnabled) return;
-
-        const modal = section.querySelector('[data-quick-view-modal]');
-        const closeBtn = section.querySelector('[data-quick-view-close]');
-        const placeholder = section.querySelector('[data-quick-view-placeholder]');
-        
-        if (!modal || !closeBtn) return;
-
-        function closeModal() {
-          modal.classList.remove('is-open');
-          modal.setAttribute('aria-hidden', 'true');
-          document.body.style.overflow = '';
-        }
-
-        closeBtn.addEventListener('click', closeModal, { signal: abortController.signal });
-        modal.addEventListener('click', (e) => {
-          if (e.target === modal) closeModal();
-        }, { signal: abortController.signal });
-
-        section.addEventListener('click', (e) => {
-          if (e.target.classList.contains('living-lookbook-pin') || e.target.closest('.living-lookbook-pin')) {
-            const scene = e.target.closest('.living-lookbook-scene');
-            if (!scene) return;
-
-            const productId = scene.dataset.productId;
-            const productTitle = scene.dataset.productTitle;
-            
-            placeholder.innerHTML = `
-              <h3>${productTitle}</h3>
-              <p>Loading product details...</p>
-            `;
-
-            modal.classList.add('is-open');
-            modal.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
-          }
-        }, { signal: abortController.signal });
-      }
-
-      // Analytics
-      function initAnalytics() {
-        if (!config.enableAnalytics) return;
-
-        section.addEventListener('click', (e) => {
-          const scene = e.target.closest('.living-lookbook-scene');
-          if (!scene) return;
-
-          const productId = scene.dataset.productId;
-          const productTitle = scene.dataset.productTitle;
-          const eventName = scene.dataset.trackEvent || 'living_lookbook_click';
-
-          // Shopify Analytics Event
-          if (window.Shopify && window.Shopify.Analytics) {
-            window.Shopify.Analytics.addPayloadImpression({
-              'product': {
-                'id': productId,
-                'name': productTitle
-              },
-              'section': {
-                'name': 'living-lookbook'
-              }
-            });
-          }
-
-          // Google Analytics (if available)
-          if (window.gtag) {
-            gtag('event', eventName, {
-              'product_id': productId,
-              'product_name': productTitle
-            });
-          }
-
-          // Custom event for tracking
-          window.dispatchEvent(new CustomEvent('living-lookbook:click', {
-            detail: { productId, productTitle, eventName }
-          }));
-        }, { signal: abortController.signal });
-      }
-
-      // Intersection Observer for Lazy Script Loading
-      function setupIntersectionObserver() {
-        if (!('IntersectionObserver' in window)) {
-          initAll();
-          return;
-        }
-
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              initAll();
-              observer.disconnect();
-            }
-          });
-        }, { threshold: 0.1 });
-
-        observer.observe(section);
-      }
-
-      // Shopify Section Lifecycle
-      function handleSectionLoad() {
-        initAll();
-      }
-
-      function handleSectionUnload() {
-        abortController.abort();
-        timers.forEach(clearTimer);
-        timers.clear();
-      }
-
-      // Debounce Helper
-      function debounce(fn, delay) {
-        let timeoutId;
-        return function(...args) {
-          clearTimer(timeoutId);
-          timeoutId = setTimeout_(() => fn(...args), delay);
-        };
-      }
-
-      // Initialize All
-      function initAll() {
-        initImageLoading();
-        validateProductLinks();
-        setupImageRetry();
-        initCarousel();
-        initQuickView();
-        initAnalytics();
-      }
-
-      // Shopify Section Events
-      window.addEventListener('shopify:section:load', handleSectionLoad, { signal: abortController.signal });
-      window.addEventListener('shopify:section:unload', handleSectionUnload, { signal: abortController.signal });
-
-      // Initial Setup with Intersection Observer
-      setupIntersectionObserver();
-    })();
-  </script>
 </section>
 
 {% schema %}
@@ -977,11 +286,7 @@
     { "type": "color", "id": "bg_color", "label": "Background", "default": "#080706" },
     { "type": "color", "id": "text_color", "label": "Text", "default": "#f7efe2" },
     { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#b9aa96" },
-    { "type": "color", "id": "accent_color", "label": "Pin accent", "default": "#c9974a" },
-    { "type": "checkbox", "id": "enable_carousel", "label": "Enable carousel mode (desktop)" },
-    { "type": "checkbox", "id": "carousel_enabled_mobile", "label": "Enable carousel on mobile", "default": true },
-    { "type": "checkbox", "id": "enable_quick_view", "label": "Enable quick view modal", "default": true },
-    { "type": "checkbox", "id": "enable_analytics", "label": "Enable analytics tracking", "default": true }
+    { "type": "color", "id": "accent_color", "label": "Pin accent", "default": "#c9974a" }
   ],
   "blocks": [
     {
