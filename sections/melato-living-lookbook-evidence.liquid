@@ -69,10 +69,11 @@
     <div class="mea__board" role="list" aria-label="{{ archive_label | escape }} Living Lookbook evidence archive">
       {% for record in evidence_items %}
         {% assign fields = record | strip | split: '|' %}
-        {% assign image_url = fields[0] | strip %}
-        {% assign image_width = fields[1] | strip %}
-        {% assign image_height = fields[2] | strip %}
-        {% assign image_kind = fields[3] | strip %}
+        {% assign image_url      = fields[0] | strip %}
+        {% assign image_width    = fields[1] | strip %}
+        {% assign image_height   = fields[2] | strip %}
+        {% assign image_kind     = fields[3] | strip %}
+        {% assign product_handle = fields[4] | strip %}
         {% assign evidence_number = forloop.index %}
 
         {% capture evidence_code %}
@@ -96,6 +97,7 @@
             data-evidence-index="{{ forloop.index0 }}"
             data-evidence-full="{{ image_full | escape }}"
             data-evidence-code="{{ evidence_code }}"
+            {% if product_handle != blank %}data-product-handle="{{ product_handle | escape }}"{% endif %}
             aria-label="Inspect {{ archive_label | escape }} evidence frame {{ evidence_code }}"
           >
             <span class="mea__mount mea__mount--top" aria-hidden="true"></span>
@@ -179,6 +181,9 @@
     </button>
 
     <p class="mea__viewer-counter" data-evidence-counter>01 / {{ evidence_items.size }}</p>
+
+    <!-- commerce strip — populated by JS when a product handle is available -->
+    <div class="mea__viewer-shop" data-evidence-shop hidden aria-live="polite"></div>
   </div>
 </section>
 

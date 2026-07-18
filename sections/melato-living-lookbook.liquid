@@ -1,112 +1,152 @@
 {%- liquid
-  assign section_anchor = section.settings.section_anchor | default: 'living-lookbook'
+  assign section_anchor = section.settings.section_anchor | default: 'living-lookbook' | handleize
+  assign bg_color       = section.settings.bg_color    | default: '#080706'
+  assign text_color     = section.settings.text_color  | default: '#f7efe2'
+  assign muted_color    = section.settings.muted_color | default: '#b9aa96'
+  assign accent_color   = section.settings.accent_color | default: '#c9974a'
+  assign selector       = section_anchor | append: '-' | append: section.id
+  assign block_count    = section.blocks | size
+  assign max_width      = section.settings.max_width | default: 1360
+  assign case_code      = section.settings.case_code | default: 'LL-01'
+  assign enable_quick_view = section.settings.enable_quick_view | default: true
+  assign enable_analytics  = section.settings.enable_analytics  | default: true
 -%}
 
-<section id="{{ section_anchor | handleize }}-{{ section.id }}" class="melato-living-lookbook" data-section-type="melato-living-lookbook">
+<section id="{{ selector }}" class="melato-living-lookbook" data-section-type="melato-living-lookbook" data-quick-view-enabled="{{ enable_quick_view }}">
   <style>
-    #{{ section_anchor | handleize }}-{{ section.id }} {
-      --ll-bg: {{ section.settings.bg_color | default: '#080706' }};
-      --ll-ink: {{ section.settings.text_color | default: '#f7efe2' }};
-      --ll-muted: {{ section.settings.muted_color | default: '#b9aa96' }};
-      --ll-accent: {{ section.settings.accent_color | default: '#c9974a' }};
-      --ll-line: rgba(247,239,226,.16);
+    /* ─── CSS custom properties ──────────────────────────────────────────── */
+    #{{ selector }} {
+      --ll-bg:     {{ bg_color }};
+      --ll-ink:    {{ text_color }};
+      --ll-muted:  {{ muted_color }};
+      --ll-accent: {{ accent_color }};
+      --ll-line:   rgba(247,239,226,.16);
       background:
-        radial-gradient(circle at 10% 12%, rgba(201,151,74,.18), transparent 32%),
-        radial-gradient(circle at 84% 8%, rgba(247,239,226,.10), transparent 28%),
+        radial-gradient(circle at 10% 12%, rgba(201,151,74,.14), transparent 32%),
+        radial-gradient(circle at 84%  8%, rgba(247,239,226,.08), transparent 28%),
         var(--ll-bg);
       color: var(--ll-ink);
       overflow: clip;
-      border-top: 1px solid rgba(247,239,226,.1);
-      border-bottom: 1px solid rgba(247,239,226,.1);
+      border-top:    1px solid rgba(247,239,226,.10);
+      border-bottom: 1px solid rgba(247,239,226,.10);
     }
+    #{{ selector }} * { box-sizing: border-box; }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} * { box-sizing: border-box; }
-
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__wrap {
-      width: min({{ section.settings.max_width | default: 1360 }}px, calc(100% - 40px));
+    /* ─── Wrapper & header ───────────────────────────────────────────────── */
+    #{{ selector }} .ll__wrap {
+      width: min({{ max_width }}px, calc(100% - 40px));
       margin: 0 auto;
-      padding: clamp(64px, 9vw, 126px) 0;
+      padding: clamp(64px, 9vw, 120px) 0 0;
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__header {
+    /* evidence-style ruled top line */
+    #{{ selector }} .ll__rule {
+      height: 1px;
+      background: rgba(247,239,226,.45);
+      margin-bottom: clamp(1.5rem, 3vw, 3rem);
+    }
+
+    #{{ selector }} .ll__eyebrow {
+      margin: 0 0 .6rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: .62rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(247,239,226,.55);
+    }
+
+    #{{ selector }} .ll__header {
       display: grid;
-      grid-template-columns: minmax(0, .95fr) minmax(280px, .55fr);
+      grid-template-columns: minmax(0, .95fr) minmax(260px, .5fr);
       gap: clamp(24px, 5vw, 84px);
       align-items: end;
-      margin-bottom: clamp(32px, 5vw, 72px);
+      margin-bottom: clamp(36px, 5vw, 80px);
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__kicker,
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__chapter,
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__label {
+    #{{ selector }} .ll__kicker {
       margin: 0;
       color: var(--ll-muted);
       font-size: 10px;
-      line-height: 1.35;
       font-weight: 800;
       letter-spacing: .26em;
       text-transform: uppercase;
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__title {
-      margin: 12px 0 0;
-      max-width: 980px;
-      color: var(--ll-ink);
-      font-family: var(--font-heading-family, inherit);
-      font-size: clamp(46px, 8vw, 118px);
+    #{{ selector }} .ll__title {
+      margin: 10px 0 0;
+      font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
+      font-size: clamp(48px, 8vw, 118px);
       line-height: .82;
-      letter-spacing: -.08em;
+      letter-spacing: -.07em;
       text-transform: uppercase;
       text-wrap: balance;
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__copy {
+    #{{ selector }} .ll__copy {
       margin: 0;
-      color: rgba(247,239,226,.74);
-      font-size: clamp(15px, 1.25vw, 19px);
+      color: rgba(247,239,226,.72);
+      font-size: clamp(15px, 1.2vw, 18px);
       line-height: 1.65;
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__stage {
+    /* ─── Grid stage ─────────────────────────────────────────────────────── */
+    #{{ selector }} .ll__stage {
       display: grid;
       grid-template-columns: repeat(12, minmax(0, 1fr));
-      gap: clamp(14px, 1.7vw, 24px);
-      align-items: stretch;
+      gap: clamp(14px, 1.7vw, 22px);
+      align-items: start;
+      padding-bottom: clamp(48px, 8vw, 110px);
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene {
+    /* ─── Scene card ─────────────────────────────────────────────────────── */
+    #{{ selector }} .ll-scene {
       position: relative;
       grid-column: span 4;
-      min-height: 520px;
       overflow: hidden;
       border: 1px solid var(--ll-line);
-      border-radius: clamp(24px, 3vw, 42px);
-      color: inherit;
-      text-decoration: none;
-      background: rgba(255,255,255,.035);
+      border-radius: clamp(18px, 2.5vw, 36px);
+      background: rgba(255,255,255,.03);
       box-shadow: 0 28px 90px rgba(0,0,0,.34);
       isolation: isolate;
+      cursor: pointer;
       transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+      text-decoration: none;
+      color: inherit;
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n+1) { transform: translateY(34px); }
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n+2) { min-height: 620px; }
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(3n) { transform: translateY(74px); }
+    /* staggered vertical offset — evidence-board pin effect */
+    #{{ selector }} .ll-scene:nth-child(3n+1) { transform: translateY(28px); }
+    #{{ selector }} .ll-scene:nth-child(3n+2) { /* neutral */ }
+    #{{ selector }} .ll-scene:nth-child(3n)   { transform: translateY(60px); }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:hover {
-      transform: translateY(-6px) scale(1.01);
-      border-color: rgba(247,239,226,.32);
+    #{{ selector }} .ll-scene:hover,
+    #{{ selector }} .ll-scene:focus-visible {
+      transform: translateY(-4px) scale(1.01) !important;
+      border-color: rgba(247,239,226,.30);
       box-shadow: 0 34px 110px rgba(0,0,0,.48);
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__image {
+    /* paper-tape mount corners */
+    #{{ selector }} .ll-scene::before,
+    #{{ selector }} .ll-scene::after {
+      content: '';
       position: absolute;
-      inset: 0;
-      z-index: -2;
-      background: linear-gradient(135deg, rgba(201,151,74,.16), rgba(255,255,255,.04));
+      z-index: 3;
+      background: rgba(247,239,226,.28);
+      pointer-events: none;
+    }
+    #{{ selector }} .ll-scene::before { top: 14px; left: 50%; transform: translateX(-50%); width: 44px; height: 7px; border-radius: 2px; }
+    #{{ selector }} .ll-scene::after  { bottom: 14px; left: 50%; transform: translateX(-50%); width: 44px; height: 7px; border-radius: 2px; }
+
+    /* ─── Image layer ────────────────────────────────────────────────────── */
+    #{{ selector }} .ll-scene__image {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      background: rgba(255,255,255,.04);
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__image img {
+    #{{ selector }} .ll-scene__image img {
       width: 100%;
       height: 100%;
       display: block;
@@ -116,161 +156,738 @@
       transition: transform .7s ease, filter .7s ease;
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:hover .living-lookbook-scene__image img {
+    #{{ selector }} .ll-scene:hover .ll-scene__image img {
       transform: scale(1.08);
       filter: saturate(1.06) contrast(1.08);
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__veil {
+    /* pulsing shoppable dot */
+    #{{ selector }} .ll-scene__dot {
       position: absolute;
-      inset: 0;
-      z-index: -1;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.04) 28%, rgba(0,0,0,.72) 100%),
-        linear-gradient(90deg, rgba(0,0,0,.36), rgba(0,0,0,0) 54%);
+      top: 16px;
+      right: 16px;
+      z-index: 4;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--ll-accent);
+      box-shadow: 0 0 0 3px rgba(201,151,74,.28);
+      animation: ll-pulse 2.4s ease-in-out infinite;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+    #{{ selector }} .ll-scene:hover .ll-scene__dot { opacity: 0; }
+
+    @keyframes ll-pulse {
+      0%, 100% { box-shadow: 0 0 0 3px rgba(201,151,74,.28); }
+      50%       { box-shadow: 0 0 0 8px rgba(201,151,74,.04); }
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__content {
-      min-height: inherit;
+    /* ─── Content overlay ────────────────────────────────────────────────── */
+    #{{ selector }} .ll-scene__veil {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.02) 30%, rgba(0,0,0,.72) 100%),
+        linear-gradient(90deg, rgba(0,0,0,.30), transparent 55%);
+      pointer-events: none;
+    }
+
+    #{{ selector }} .ll-scene__body {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: clamp(22px, 3vw, 34px);
+      padding: clamp(18px, 2.5vw, 28px);
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin {
+    /* exhibit chip — evidence aesthetic */
+    #{{ selector }} .ll-scene__exhibit {
       align-self: flex-start;
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      max-width: min(100%, 360px);
-      padding: 10px 13px 10px 10px;
+      display: inline-block;
+      padding: 5px 10px;
+      background: rgba(8,7,6,.56);
       border: 1px solid rgba(247,239,226,.22);
-      border-radius: 999px;
-      background: rgba(8,7,6,.54);
-      color: var(--ll-ink);
-      backdrop-filter: blur(16px);
-    }
-
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin::before {
-      content: "";
-      width: 14px;
-      height: 14px;
-      flex: 0 0 14px;
-      border: 3px solid var(--ll-bg);
-      border-radius: 50%;
-      background: var(--ll-accent);
-      box-shadow: 0 0 0 1px rgba(247,239,226,.34), 0 0 22px rgba(201,151,74,.8);
-    }
-
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__label {
-      display: block;
+      border-radius: 4px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
       color: rgba(247,239,226,.72);
-      letter-spacing: .18em;
+      backdrop-filter: blur(12px);
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin__title {
-      display: block;
-      margin-top: 3px;
-      color: var(--ll-ink);
-      font-size: 12px;
-      line-height: 1.25;
-      letter-spacing: .01em;
+    /* product pin (bottom) */
+    #{{ selector }} .ll-scene__pin {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__title {
+    #{{ selector }} .ll-scene__title {
       display: block;
-      margin: 14px 0 0;
-      max-width: 520px;
-      font-family: var(--font-heading-family, inherit);
-      font-size: clamp(28px, 3.5vw, 58px);
-      line-height: .9;
+      font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
+      font-size: clamp(28px, 3.2vw, 52px);
+      line-height: .88;
       letter-spacing: -.06em;
       text-transform: uppercase;
       text-wrap: balance;
-    }
-
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__text {
-      display: block;
-      margin: 14px 0 0;
       max-width: 440px;
-      color: rgba(247,239,226,.76);
-      font-size: 14px;
-      line-height: 1.58;
     }
 
-    #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene__cta {
+    #{{ selector }} .ll-scene__sub {
+      display: block;
+      color: rgba(247,239,226,.72);
+      font-size: 13px;
+      line-height: 1.5;
+      max-width: 380px;
+    }
+
+    #{{ selector }} .ll-scene__shop-label {
       display: inline-flex;
+      align-items: center;
+      gap: 6px;
       width: fit-content;
-      margin-top: 20px;
-      color: var(--ll-ink);
+      padding: 8px 14px 8px 10px;
+      border: 1px solid rgba(247,239,226,.24);
+      border-radius: 999px;
+      background: rgba(8,7,6,.56);
+      backdrop-filter: blur(14px);
       font-size: 10px;
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing: .18em;
       text-transform: uppercase;
-      border-bottom: 1px solid rgba(247,239,226,.45);
+      color: var(--ll-ink);
+      transition: background .2s, border-color .2s;
     }
 
-    @media (max-width: 990px) {
-      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__header,
-      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__stage { grid-template-columns: 1fr; }
-      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene,
-      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(n) {
-        grid-column: auto;
-        min-height: 520px;
-        transform: none;
+    #{{ selector }} .ll-scene__shop-label::before {
+      content: '';
+      width: 10px; height: 10px;
+      flex: 0 0 10px;
+      border-radius: 50%;
+      background: var(--ll-accent);
+      border: 2px solid var(--ll-bg);
+      box-shadow: 0 0 14px rgba(201,151,74,.7);
+    }
+
+    #{{ selector }} .ll-scene:hover .ll-scene__shop-label {
+      background: rgba(201,151,74,.18);
+      border-color: rgba(201,151,74,.5);
+    }
+
+    /* ─── Section footer strip ───────────────────────────────────────────── */
+    #{{ selector }} .ll__footer {
+      border-top: 1px solid rgba(247,239,226,.18);
+      padding: 1.25rem 0;
+      margin-top: clamp(2rem, 4vw, 4rem);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: .58rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(247,239,226,.45);
+    }
+
+    /* ─── Shoppable quick-panel ──────────────────────────────────────────── */
+    #{{ selector }} .ll-panel-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 800;
+      background: rgba(0,0,0,.62);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s ease;
+    }
+
+    #{{ selector }} .ll-panel-overlay.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .ll-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 801;
+      background: #0f0e0d;
+      border-top: 1px solid rgba(247,239,226,.18);
+      border-radius: 22px 22px 0 0;
+      max-height: 88vh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      transform: translateY(100%);
+      transition: transform .32s cubic-bezier(.32,.72,0,1);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (min-width: 768px) {
+      .ll-panel {
+        top: 0;
+        bottom: 0;
+        left: auto;
+        right: 0;
+        width: min(440px, 92vw);
+        max-height: none;
+        border-radius: 0;
+        border-top: none;
+        border-left: 1px solid rgba(247,239,226,.18);
+        transform: translateX(100%);
+        transition: transform .32s cubic-bezier(.32,.72,0,1);
       }
     }
 
+    .ll-panel.is-open {
+      transform: translateY(0);
+    }
+
+    @media (min-width: 768px) {
+      .ll-panel.is-open { transform: translateX(0); }
+    }
+
+    .ll-panel__inner {
+      padding: 0 0 env(safe-area-inset-bottom, 0);
+    }
+
+    .ll-panel__close {
+      position: absolute;
+      top: 16px; right: 16px;
+      z-index: 2;
+      width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(247,239,226,.1);
+      border: 1px solid rgba(247,239,226,.18);
+      border-radius: 50%;
+      color: #f7efe2;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1;
+      transition: background .18s;
+    }
+    .ll-panel__close:hover { background: rgba(247,239,226,.2); }
+
+    .ll-panel__image {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+      background: rgba(255,255,255,.04);
+    }
+
+    @media (min-width: 768px) {
+      .ll-panel__image { aspect-ratio: 3 / 4; max-height: 46vh; }
+    }
+
+    .ll-panel__info {
+      padding: 20px 24px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .ll-panel__label {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 9px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(247,239,226,.48);
+      margin: 0;
+    }
+
+    .ll-panel__title {
+      margin: 0;
+      font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
+      font-size: clamp(22px, 5vw, 32px);
+      line-height: .9;
+      letter-spacing: -.04em;
+      text-transform: uppercase;
+      color: #f7efe2;
+    }
+
+    .ll-panel__price {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      color: #f7efe2;
+    }
+
+    .ll-panel__price-compare {
+      text-decoration: line-through;
+      color: rgba(247,239,226,.45);
+      margin-left: 8px;
+      font-size: 13px;
+    }
+
+    .ll-panel__options-label {
+      margin: 0 0 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(247,239,226,.72);
+    }
+
+    .ll-panel__variants {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .ll-panel__variant-btn {
+      min-width: 44px;
+      padding: 8px 13px;
+      border: 1px solid rgba(247,239,226,.26);
+      border-radius: 6px;
+      background: transparent;
+      color: #f7efe2;
+      font-size: 12px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .18s, border-color .18s, color .18s;
+    }
+
+    .ll-panel__variant-btn:hover { background: rgba(247,239,226,.1); border-color: rgba(247,239,226,.5); }
+    .ll-panel__variant-btn.is-selected { background: #c9974a; border-color: #c9974a; color: #080706; font-weight: 700; }
+    .ll-panel__variant-btn:disabled { opacity: .38; cursor: not-allowed; }
+
+    .ll-panel__atc {
+      width: 100%;
+      padding: 14px;
+      background: #c9974a;
+      color: #080706;
+      border: none;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: opacity .2s, transform .15s;
+      margin-top: 4px;
+    }
+
+    .ll-panel__atc:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+    .ll-panel__atc:disabled { opacity: .45; cursor: not-allowed; }
+    .ll-panel__atc.is-adding { opacity: .65; cursor: wait; }
+
+    .ll-panel__view-link {
+      display: block;
+      text-align: center;
+      color: rgba(247,239,226,.58);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color .18s;
+    }
+    .ll-panel__view-link:hover { color: #f7efe2; }
+
+    .ll-panel__msg {
+      font-size: 12px;
+      text-align: center;
+      padding: 6px 0 0;
+      min-height: 20px;
+      color: #8fcf8a;
+    }
+    .ll-panel__msg.is-error { color: #e07070; }
+
+    .ll-panel__skeleton {
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .ll-panel__skeleton-line {
+      height: 14px;
+      border-radius: 4px;
+      background: rgba(247,239,226,.08);
+      animation: ll-skel 1.4s ease-in-out infinite;
+    }
+
+    @keyframes ll-skel {
+      0%, 100% { opacity: .5; }
+      50% { opacity: 1; }
+    }
+
+    /* ─── Responsive ─────────────────────────────────────────────────────── */
+    @media (max-width: 990px) {
+      #{{ selector }} .ll__header { grid-template-columns: 1fr; }
+      #{{ selector }} .ll__stage  { grid-template-columns: 1fr; }
+      #{{ selector }} .ll-scene,
+      #{{ selector }} .ll-scene:nth-child(n) { grid-column: auto; transform: none; }
+    }
     @media (max-width: 640px) {
-      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook__wrap { width: min(100% - 28px, {{ section.settings.max_width | default: 1360 }}px); }
-      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene,
-      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-scene:nth-child(n) { min-height: 440px; }
-      #{{ section_anchor | handleize }}-{{ section.id }} .living-lookbook-pin { border-radius: 22px; align-items: flex-start; }
+      #{{ selector }} .ll__wrap { width: calc(100% - 28px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #{{ selector }} .ll-scene__dot { animation: none; }
+      #{{ selector }} .ll-scene, .ll-panel, #{{ selector }} .ll-scene__image img { transition: none !important; }
     }
   </style>
 
-  <div class="living-lookbook__wrap">
-    <div class="living-lookbook__header">
+  <div class="ll__wrap">
+    <!-- ruled top line -->
+    <div class="ll__rule" aria-hidden="true"></div>
+    <!-- monospace eyebrow -->
+    <p class="ll__eyebrow">MELATO / LIVING LOOKBOOK / AUTHORIZED VIEWING</p>
+
+    <div class="ll__header">
       <div>
-        {%- if section.settings.kicker != blank -%}<p class="living-lookbook__kicker">{{ section.settings.kicker }}</p>{%- endif -%}
-        {%- if section.settings.title != blank -%}<h2 class="living-lookbook__title">{{ section.settings.title }}</h2>{%- endif -%}
+        {%- if section.settings.kicker != blank -%}
+          <p class="ll__kicker">{{ section.settings.kicker | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.title != blank -%}
+          <h2 class="ll__title">{{ section.settings.title | escape }}</h2>
+        {%- endif -%}
       </div>
-      {%- if section.settings.copy != blank -%}<p class="living-lookbook__copy">{{ section.settings.copy }}</p>{%- endif -%}
+      {%- if section.settings.copy != blank -%}
+        <p class="ll__copy">{{ section.settings.copy | escape }}</p>
+      {%- endif -%}
     </div>
 
-    <div class="living-lookbook__stage" aria-label="{{ section.settings.title | escape }}">
+    <div class="ll__stage" role="list" aria-label="{{ section.settings.title | default: 'Living Lookbook' | escape }}">
       {%- for block in section.blocks -%}
         {%- assign product = block.settings.product -%}
         {%- if product != blank -%}
           {%- assign scene_image = block.settings.image | default: product.featured_image -%}
-          <a class="living-lookbook-scene" href="{{ product.url }}" aria-label="Shop {{ product.title | escape }}" {{ block.shopify_attributes }}>
-            <div class="living-lookbook-scene__image">
+          {%- assign exhibit_index = forloop.index -%}
+          {%- if exhibit_index < 10 -%}{%- assign exhibit_code = '0' | append: exhibit_index -%}{%- else -%}{%- assign exhibit_code = exhibit_index | append: '' -%}{%- endif -%}
+
+          <div
+            class="ll-scene"
+            role="listitem"
+            tabindex="0"
+            data-product-handle="{{ product.handle }}"
+            data-product-url="{{ product.url }}"
+            data-product-image="{{ scene_image | image_url: width: 800 | prepend: 'https:' }}"
+            aria-label="Shop {{ product.title | escape }} — {{ block.settings.title | default: block.settings.chapter | escape }}"
+            {{ block.shopify_attributes }}>
+
+            <div class="ll-scene__image">
               {%- if scene_image != blank -%}
-                {{ scene_image | image_url: width: 1800 | image_tag: loading: 'lazy', sizes: '(min-width: 990px) 33vw, 100vw', widths: '480, 720, 960, 1200, 1500, 1800', alt: scene_image.alt | default: product.title }}
+                <picture>
+                  <source srcset="{{ scene_image | image_url: width: 480, format: 'webp' }} 480w, {{ scene_image | image_url: width: 800, format: 'webp' }} 800w" type="image/webp">
+                  {{ scene_image | image_url: width: 800 | image_tag:
+                      loading: forloop.index <= 3 ? 'eager' : 'lazy',
+                      fetchpriority: forloop.index == 1 ? 'high' : 'low',
+                      sizes: '(max-width: 990px) 100vw, 33vw',
+                      alt: scene_image.alt | default: product.title }}
+                </picture>
               {%- endif -%}
             </div>
-            <div class="living-lookbook-scene__veil"></div>
-            <div class="living-lookbook-scene__content">
-              <span class="living-lookbook-pin">
-                <span>
-                  <span class="living-lookbook-pin__label">Shop the photo</span>
-                  <span class="living-lookbook-pin__title">{{ product.title }}</span>
-                </span>
-              </span>
-              <span>
-                {%- if block.settings.chapter != blank -%}<span class="living-lookbook-scene__chapter">{{ block.settings.chapter }}</span>{%- endif -%}
-                {%- if block.settings.title != blank -%}<span class="living-lookbook-scene__title">{{ block.settings.title }}</span>{%- endif -%}
-                {%- if block.settings.text != blank -%}<span class="living-lookbook-scene__text">{{ block.settings.text }}</span>{%- endif -%}
-                <span class="living-lookbook-scene__cta">Open product</span>
-              </span>
+
+            <span class="ll-scene__dot" aria-hidden="true"></span>
+            <div class="ll-scene__veil" aria-hidden="true"></div>
+
+            <div class="ll-scene__body" aria-hidden="true">
+              <span class="ll-scene__exhibit">{{ case_code | escape }} / {{ exhibit_code }}</span>
+              <div class="ll-scene__pin">
+                {%- if block.settings.title != blank -%}
+                  <span class="ll-scene__title">{{ block.settings.title | escape }}</span>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <span class="ll-scene__sub">{{ block.settings.text | escape }}</span>
+                {%- endif -%}
+                <span class="ll-scene__shop-label">{{ product.title | escape }}</span>
+              </div>
             </div>
-          </a>
+          </div>
         {%- endif -%}
       {%- endfor -%}
     </div>
+
+    <!-- section footer strip -->
+    <footer class="ll__footer" aria-hidden="true">
+      <span>THE LIVING LOOKBOOK / MELATO AUTHORIZED VIEWING</span>
+      <span>{{ case_code | escape }} / {{ block_count }} EXHIBITS</span>
+    </footer>
   </div>
+
+  <!-- overlay backdrop -->
+  <div class="ll-panel-overlay" data-ll-overlay aria-hidden="true"></div>
 </section>
+
+<!-- shoppable panel (lives outside section so it can be fixed/full-screen) -->
+{%- if enable_quick_view -%}
+<div
+  class="ll-panel"
+  id="ll-panel-{{ section.id }}"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Product quick view"
+  aria-hidden="true"
+  hidden
+  data-ll-panel
+  data-section-id="{{ section.id }}">
+  <button class="ll-panel__close" data-ll-panel-close aria-label="Close product panel">✕</button>
+  <div class="ll-panel__inner" data-ll-panel-inner>
+    <!-- populated by JS -->
+    <div class="ll-panel__skeleton" aria-live="polite" aria-label="Loading product">
+      <div class="ll-panel__skeleton-line" style="width:60%;height:22px"></div>
+      <div class="ll-panel__skeleton-line" style="width:40%;height:16px"></div>
+      <div class="ll-panel__skeleton-line" style="width:80%;height:12px;margin-top:8px"></div>
+      <div class="ll-panel__skeleton-line" style="width:100%;height:44px;margin-top:16px"></div>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+<script>
+(function () {
+  'use strict';
+
+  const sectionEl = document.getElementById({{ selector | json }});
+  if (!sectionEl) return;
+
+  const panel      = document.getElementById('ll-panel-{{ section.id }}');
+  const overlay    = sectionEl.querySelector('[data-ll-overlay]');
+  if (!panel || !overlay) return;
+
+  const panelInner = panel.querySelector('[data-ll-panel-inner]');
+  const closeBtn   = panel.querySelector('[data-ll-panel-close]');
+
+  let activeHandle = null;
+  let productCache = {};
+  let selectedVariantId = null;
+  let lastFocused = null;
+
+  /* ── helpers ── */
+  function fmt(cents) {
+    const n = (cents / 100).toFixed(2);
+    const sym = (window.DRIP && window.DRIP.shop.moneyFormat) || 'CA${{ amount }}';
+    return sym.replace('{{ amount }}', n).replace('{{amount}}', n);
+  }
+
+  /* ── open / close ── */
+  function openPanel(handle, productUrl, productImageUrl) {
+    if (handle === activeHandle) { panel.classList.add('is-open'); return; }
+    activeHandle = handle;
+    selectedVariantId = null;
+    lastFocused = document.activeElement;
+
+    panel.removeAttribute('hidden');
+    panel.setAttribute('aria-hidden', 'false');
+    overlay.classList.add('is-open');
+    panel.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+
+    renderSkeleton();
+    fetchProduct(handle, productUrl, productImageUrl);
+    closeBtn.focus();
+  }
+
+  function closePanel() {
+    panel.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+    setTimeout(function () {
+      panel.setAttribute('aria-hidden', 'true');
+      panel.setAttribute('hidden', '');
+      activeHandle = null;
+    }, 320);
+    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+  }
+
+  /* ── fetch ── */
+  function fetchProduct(handle, productUrl, productImageUrl) {
+    if (productCache[handle]) {
+      renderPanel(productCache[handle], productUrl, productImageUrl);
+      return;
+    }
+    fetch('/products/' + encodeURIComponent(handle) + '.js')
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (data) {
+        productCache[handle] = data;
+        renderPanel(data, productUrl, productImageUrl);
+      })
+      .catch(function () {
+        panelInner.innerHTML = '<div class="ll-panel__info"><p class="ll-panel__label">Could not load product. <a href="' + productUrl + '" class="ll-panel__view-link" style="display:inline">View product page →</a></p></div>';
+      });
+  }
+
+  /* ── render ── */
+  function renderSkeleton() {
+    panelInner.innerHTML = '<div class="ll-panel__skeleton" aria-live="polite"><div class="ll-panel__skeleton-line" style="width:60%;height:22px"></div><div class="ll-panel__skeleton-line" style="width:40%;height:16px;margin-top:8px"></div><div class="ll-panel__skeleton-line" style="width:80%;height:12px;margin-top:8px"></div><div class="ll-panel__skeleton-line" style="width:100%;height:44px;margin-top:16px"></div></div>';
+  }
+
+  function renderPanel(product, productUrl, editorialImageUrl) {
+    const firstVariant = product.variants[0];
+    selectedVariantId = firstVariant.id;
+
+    const imageUrl = editorialImageUrl || (firstVariant.featured_image ? firstVariant.featured_image.src : (product.images[0] ? product.images[0].src : ''));
+
+    /* size option */
+    const sizeOpt = product.options.indexOf('Size') !== -1 ? product.options.indexOf('Size') : (product.options.indexOf('Taille') !== -1 ? product.options.indexOf('Taille') : -1);
+    const hasVariants = product.variants.length > 1;
+
+    let variantHTML = '';
+    if (hasVariants && sizeOpt !== -1) {
+      const sizes = [];
+      const seenVariants = {};
+      product.variants.forEach(function (v) {
+        const sizeVal = v.options[sizeOpt];
+        if (!seenVariants[sizeVal]) {
+          seenVariants[sizeVal] = v;
+          sizes.push({ label: sizeVal, variant: v });
+        }
+      });
+      variantHTML = '<p class="ll-panel__options-label">Select size</p><div class="ll-panel__variants">' +
+        sizes.map(function (s) {
+          const disabled = !s.variant.available ? ' disabled' : '';
+          const sel = s.variant.id === selectedVariantId ? ' is-selected' : '';
+          return '<button type="button" class="ll-panel__variant-btn' + sel + '" data-variant-id="' + s.variant.id + '" data-available="' + s.variant.available + '"' + disabled + '>' + s.label + (s.variant.available ? '' : ' <small>—</small>') + '</button>';
+        }).join('') + '</div>';
+    } else if (hasVariants) {
+      variantHTML = '<p class="ll-panel__options-label">Select option</p><div class="ll-panel__variants">' +
+        product.variants.map(function (v) {
+          const sel = v.id === selectedVariantId ? ' is-selected' : '';
+          return '<button type="button" class="ll-panel__variant-btn' + sel + '" data-variant-id="' + v.id + '">' + v.title + '</button>';
+        }).join('') + '</div>';
+    }
+
+    const comparePrice = firstVariant.compare_at_price > firstVariant.price
+      ? '<s class="ll-panel__price-compare">' + fmt(firstVariant.compare_at_price) + '</s>'
+      : '';
+
+    panelInner.innerHTML =
+      (imageUrl ? '<img class="ll-panel__image" src="' + imageUrl + '" alt="' + escapeHtml(product.title) + '" loading="lazy">' : '') +
+      '<div class="ll-panel__info">' +
+        '<p class="ll-panel__label">Melato / shop this photo</p>' +
+        '<h3 class="ll-panel__title">' + escapeHtml(product.title) + '</h3>' +
+        '<p class="ll-panel__price" data-ll-price>' + fmt(firstVariant.price) + comparePrice + '</p>' +
+        variantHTML +
+        '<button class="ll-panel__atc" data-ll-atc>ADD TO BAG</button>' +
+        '<p class="ll-panel__msg" data-ll-msg aria-live="polite"></p>' +
+        '<a class="ll-panel__view-link" href="' + productUrl + '">View full product page →</a>' +
+      '</div>';
+
+    bindPanelEvents(product);
+  }
+
+  function bindPanelEvents(product) {
+    /* variant selection */
+    panelInner.querySelectorAll('.ll-panel__variant-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        panelInner.querySelectorAll('.ll-panel__variant-btn').forEach(function (b) { b.classList.remove('is-selected'); });
+        btn.classList.add('is-selected');
+        selectedVariantId = parseInt(btn.dataset.variantId, 10);
+        const v = product.variants.find(function (x) { return x.id === selectedVariantId; });
+        if (v) {
+          const priceEl = panelInner.querySelector('[data-ll-price]');
+          if (priceEl) {
+            const cmp = v.compare_at_price > v.price ? '<s class="ll-panel__price-compare">' + fmt(v.compare_at_price) + '</s>' : '';
+            priceEl.innerHTML = fmt(v.price) + cmp;
+          }
+        }
+      });
+    });
+
+    /* add to cart */
+    const atcBtn = panelInner.querySelector('[data-ll-atc]');
+    const msgEl  = panelInner.querySelector('[data-ll-msg]');
+    if (!atcBtn) return;
+
+    atcBtn.addEventListener('click', function () {
+      if (!selectedVariantId) { msgEl.textContent = 'Please select a size.'; msgEl.className = 'll-panel__msg is-error'; return; }
+      atcBtn.disabled = true;
+      atcBtn.classList.add('is-adding');
+      atcBtn.textContent = 'ADDING…';
+      msgEl.textContent = '';
+      msgEl.className = 'll-panel__msg';
+
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+        body: JSON.stringify({ id: selectedVariantId, quantity: 1 })
+      })
+        .then(function (r) { if (!r.ok) return r.json().then(function (e) { throw new Error(e.description || 'Error'); }); return r.json(); })
+        .then(function () {
+          atcBtn.textContent = 'ADDED ✓';
+          msgEl.textContent = 'Item added to your bag.';
+          msgEl.className = 'll-panel__msg';
+          /* refresh cart count if DRIP cart drawer is present */
+          if (window.MelatoCart && typeof window.MelatoCart.refresh === 'function') window.MelatoCart.refresh();
+          fetch('/cart.js').then(function (r) { return r.json(); }).then(function (c) {
+            document.querySelectorAll('[data-cart-count],[data-cart-badge],[aria-label*="cart"]').forEach(function (el) {
+              if (el.tagName === 'INPUT') return;
+              el.textContent = c.item_count;
+            });
+          });
+          setTimeout(function () {
+            atcBtn.disabled = false;
+            atcBtn.classList.remove('is-adding');
+            atcBtn.textContent = 'ADD TO BAG';
+          }, 2400);
+        })
+        .catch(function (err) {
+          atcBtn.disabled = false;
+          atcBtn.classList.remove('is-adding');
+          atcBtn.textContent = 'ADD TO BAG';
+          msgEl.textContent = err.message || 'Could not add item. Try again.';
+          msgEl.className = 'll-panel__msg is-error';
+        });
+    });
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── scene clicks ── */
+  sectionEl.addEventListener('click', function (e) {
+    const scene = e.target.closest('.ll-scene');
+    if (!scene) return;
+    e.preventDefault();
+    openPanel(scene.dataset.productHandle, scene.dataset.productUrl, scene.dataset.productImage);
+  });
+
+  sectionEl.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      const scene = e.target.closest('.ll-scene');
+      if (scene) { e.preventDefault(); openPanel(scene.dataset.productHandle, scene.dataset.productUrl, scene.dataset.productImage); }
+    }
+  });
+
+  /* ── panel close ── */
+  closeBtn.addEventListener('click', closePanel);
+  overlay.addEventListener('click', closePanel);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePanel(); });
+
+  /* ── Shopify section reload ── */
+  document.addEventListener('shopify:section:load', function (e) {
+    if (e.target.contains(sectionEl)) productCache = {};
+  });
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": {{ section.settings.title | default: 'Living Lookbook' | json }},
+  "description": {{ section.settings.copy | default: '' | json }},
+  "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": {{ block_count }},
+    "itemListElement": [
+      {%- for block in section.blocks -%}
+        {%- if block.settings.product -%}
+          {"@type":"ListItem","position":{{ forloop.index }},"url":{{ block.settings.product.url | prepend: request.origin | json }},"name":{{ block.settings.product.title | json }}}{{ ',' unless forloop.last }}
+        {%- endif -%}
+      {%- endfor -%}
+    ]
+  }
+}
+</script>
 
 {% schema %}
 {
@@ -278,26 +895,28 @@
   "tag": "section",
   "class": "section-melato-living-lookbook",
   "settings": [
-    { "type": "text", "id": "section_anchor", "label": "Section anchor", "default": "living-lookbook" },
-    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Editorial commerce" },
-    { "type": "text", "id": "title", "label": "Title", "default": "The Living Lookbook" },
-    { "type": "textarea", "id": "copy", "label": "Intro copy", "default": "A cinematic lookbook that behaves like a shop floor: every editorial photo is a direct doorway to the exact Melato piece it shows." },
-    { "type": "range", "id": "max_width", "min": 1100, "max": 1600, "step": 20, "unit": "px", "label": "Maximum width", "default": 1360 },
-    { "type": "color", "id": "bg_color", "label": "Background", "default": "#080706" },
-    { "type": "color", "id": "text_color", "label": "Text", "default": "#f7efe2" },
-    { "type": "color", "id": "muted_color", "label": "Muted text", "default": "#b9aa96" },
-    { "type": "color", "id": "accent_color", "label": "Pin accent", "default": "#c9974a" }
+    { "type": "text",     "id": "section_anchor", "label": "Section anchor",   "default": "living-lookbook" },
+    { "type": "text",     "id": "kicker",          "label": "Kicker",           "default": "Editorial commerce" },
+    { "type": "text",     "id": "title",           "label": "Title",            "default": "The Living Lookbook" },
+    { "type": "textarea", "id": "copy",            "label": "Intro copy",       "default": "A cinematic lookbook that behaves like a shop floor: every editorial photo is a direct doorway to the exact Melato piece it shows." },
+    { "type": "text",     "id": "case_code",       "label": "Case code",        "default": "LL-01" },
+    { "type": "range",    "id": "max_width",       "label": "Maximum width",    "min": 1100, "max": 1600, "step": 20, "unit": "px", "default": 1360 },
+    { "type": "color",    "id": "bg_color",        "label": "Background",       "default": "#080706" },
+    { "type": "color",    "id": "text_color",      "label": "Text",             "default": "#f7efe2" },
+    { "type": "color",    "id": "muted_color",     "label": "Muted text",       "default": "#b9aa96" },
+    { "type": "color",    "id": "accent_color",    "label": "Pin accent",       "default": "#c9974a" },
+    { "type": "checkbox", "id": "enable_quick_view", "label": "Enable shoppable quick-view panel", "default": true },
+    { "type": "checkbox", "id": "enable_analytics",  "label": "Enable analytics events",           "default": true }
   ],
   "blocks": [
     {
       "type": "scene",
       "name": "Shoppable photo",
       "settings": [
-        { "type": "product", "id": "product", "label": "Product shown in this photo" },
-        { "type": "image_picker", "id": "image", "label": "Editorial photo", "info": "If empty, the selected product image is used." },
-        { "type": "text", "id": "chapter", "label": "Chapter label", "default": "Scene 01" },
-        { "type": "text", "id": "title", "label": "Scene title", "default": "Worn like a memory" },
-        { "type": "textarea", "id": "text", "label": "Scene text", "default": "Tap the image to move from editorial mood into the exact product page." }
+        { "type": "product",      "id": "product", "label": "Product shown in this photo" },
+        { "type": "image_picker", "id": "image",   "label": "Editorial photo", "info": "If empty, the selected product image is used." },
+        { "type": "text",         "id": "title",   "label": "Scene title",     "default": "Worn like a memory" },
+        { "type": "textarea",     "id": "text",    "label": "Scene caption",   "default": "Tap to open product." }
       ]
     }
   ],
@@ -305,9 +924,9 @@
     {
       "name": "Melato Living Lookbook",
       "blocks": [
-        { "type": "scene", "settings": { "chapter": "Scene 01", "title": "Motion study", "text": "A product-linked frame for your strongest campaign image." } },
-        { "type": "scene", "settings": { "chapter": "Scene 02", "title": "Soft signal", "text": "Every displayed photo opens the product it features." } },
-        { "type": "scene", "settings": { "chapter": "Scene 03", "title": "After-hours uniform", "text": "Build a living editorial grid from real products, not dead inspiration." } }
+        { "type": "scene", "settings": { "title": "Motion study",      "text": "A product-linked frame for your strongest campaign image." } },
+        { "type": "scene", "settings": { "title": "Soft signal",       "text": "Every displayed photo opens the product it features." } },
+        { "type": "scene", "settings": { "title": "After-hours uniform","text": "Build a living editorial grid from real products." } }
       ]
     }
   ]

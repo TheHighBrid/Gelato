@@ -3,8 +3,8 @@
 
   const drawer = document.getElementById('cart-drawer') || document.querySelector('.cart-drawer');
   const overlay = document.getElementById('drip-overlay') || document.querySelector('[data-overlay]');
-  const COMPLIMENTARY_DELIVERY_MESSAGE = 'Complimentary delivery on all orders.';
-  const FREE_SHIPPING_THRESHOLD = 0;
+  const NO_THRESHOLD_MESSAGE = 'Complimentary delivery on all orders.';
+  const FREE_SHIPPING_THRESHOLD = (window.DRIP && window.DRIP.shop && window.DRIP.shop.freeShippingThreshold) || 0;
   const pendingForms = new WeakSet();
   let lastFocused = null;
 
@@ -87,12 +87,42 @@
     drawer.querySelectorAll('[data-checkout-btn], button[name="checkout"]').forEach((button) => { button.disabled = !count; });
   }
 
-  function updateShipping() {
-    drawer.querySelectorAll('[data-shipping-bar], .cart-free-shipping').forEach((bar) => {
-      const text = bar.querySelector('[data-shipping-text], .cart-free-shipping__text');
-      if (text) text.textContent = COMPLIMENTARY_DELIVERY_MESSAGE;
-      bar.hidden = true;
-      bar.style.display = 'none';
+  function updateShipping(cart) {
+    const bars = drawer.querySelectorAll('[data-shipping-bar], .cart-free-shipping');
+    bars.forEach((bar) => {
+      const threshold = FREE_SHIPPING_THRESHOLD;
+      if (!threshold || threshold <= 0) {
+        // No threshold configured — show flat "complimentary delivery" message
+        const textEl = bar.querySelector('[data-shipping-text], .cart-free-shipping__text');
+        if (textEl) textEl.textContent = NO_THRESHOLD_MESSAGE;
+        bar.hidden = false;
+        bar.style.display = '';
+        return;
+      }
+      const total     = (cart && cart.total_price) ? cart.total_price : 0;
+      const remaining = Math.max(0, threshold - total);
+      const pct       = Math.min(100, Math.round((total / threshold) * 100));
+      const unlocked  = total >= threshold;
+
+      const textEl = bar.querySelector('[data-shipping-text], .cart-free-shipping__text');
+      const fillEl = bar.querySelector('[data-shipping-fill], .cart-free-shipping__fill');
+      const progressEl = bar.querySelector('[role="progressbar"], .cart-free-shipping__bar');
+
+      if (textEl) {
+        textEl.innerHTML = unlocked
+          ? '<span class="cart-free-shipping__unlocked">✓ Free shipping unlocked!</span>'
+          : '<strong>' + formatMoney(remaining) + '</strong> away from free shipping';
+      }
+      if (fillEl) {
+        fillEl.style.width = pct + '%';
+        fillEl.classList.toggle('is-complete', unlocked);
+      }
+      if (progressEl) {
+        progressEl.setAttribute('aria-valuenow', pct);
+        progressEl.setAttribute('aria-valuetext', unlocked ? 'Free shipping unlocked' : pct + '% to free shipping');
+      }
+      bar.hidden = false;
+      bar.style.display = '';
     });
   }
 
@@ -106,7 +136,7 @@
     }
 
     container.innerHTML = cart.items.map((item) => {
-      const img = item.image ? '<img class="cart-item__img" src="' + item.image + '" alt="' + escapeHtml(item.title) + '" width="80" height="100" loading="lazy">' : '';
+      const img = item.image ? '<img class="cart-item__img" src="' + item.image + '" alt="' + escapeHtml(item.title) + '" width="88" height="110" loading="lazy">' : '';
       const variant = item.variant_title && item.variant_title !== 'Default Title' ? '<span class="cart-item__variant">' + escapeHtml(item.variant_title) + '</span>' : '';
       const savings = item.original_line_price && item.original_line_price > item.final_line_price ? '<span class="cart-item__savings">Save ' + formatMoney(item.original_line_price - item.final_line_price) + '</span>' : '';
       return '<div class="cart-item" role="listitem" data-line-key="' + escapeHtml(item.key) + '"><a href="' + item.url + '" class="cart-item__img-link" tabindex="-1" aria-hidden="true">' + img + '</a><div class="cart-item__info"><div class="cart-item__top"><a href="' + item.url + '" class="cart-item__title">' + escapeHtml(item.product_title) + '</a><button class="cart-item__remove" type="button" aria-label="Remove ' + escapeHtml(item.product_title) + '" data-remove-line>×</button></div>' + variant + savings + '<div class="cart-item__footer"><div class="qty-stepper" aria-label="Quantity for ' + escapeHtml(item.product_title) + '"><button class="qty-stepper__btn" type="button" aria-label="Decrease quantity" data-qty-change="-1">−</button><input class="qty-stepper__value" type="number" value="' + item.quantity + '" min="0" aria-label="Quantity"><button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1">+</button></div><span class="price">' + formatMoney(item.final_line_price) + '</span></div></div></div>';
@@ -118,7 +148,7 @@
     renderItems(cart);
     updateCounts(cart.item_count);
     updateSubtotal(cart.total_price);
-    updateShipping();
+    updateShipping(cart);
     updateCheckout(cart.item_count);
   }
 
