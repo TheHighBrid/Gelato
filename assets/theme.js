@@ -26,23 +26,31 @@ function formatMoney(cents, format) {
                .replace('{{amount_with_comma_separator}}', amount.replace('.', ','));
 }
 
+const focusTrapHandlers = new WeakMap();
+
 function trapFocus(element) {
+  releaseFocus(element);
   const focusable = $$('a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])', element);
   if (!focusable.length) return;
   const first = focusable[0];
   const last  = focusable[focusable.length - 1];
-  element.addEventListener('keydown', e => {
+  const handler = e => {
     if (e.key !== 'Tab') return;
     if (e.shiftKey) {
       if (document.activeElement === first) { e.preventDefault(); last.focus(); }
     } else {
       if (document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
-  });
+  };
+  focusTrapHandlers.set(element, handler);
+  element.addEventListener('keydown', handler);
 }
 
 function releaseFocus(element) {
-  element.removeEventListener('keydown', () => {});
+  const handler = focusTrapHandlers.get(element);
+  if (!handler) return;
+  element.removeEventListener('keydown', handler);
+  focusTrapHandlers.delete(element);
 }
 
 /* ==========================================================================
@@ -94,8 +102,11 @@ const Overlay = {
   close() {
     this.el?.classList.remove('is-visible');
     document.body.style.overflow = '';
-    this.callbacks.forEach(cb => cb());
+    // Clear first because a component callback may call Overlay.close() itself.
+    // Keeping the callbacks in place until after iteration caused recursion.
+    const callbacks = this.callbacks;
     this.callbacks = [];
+    callbacks.forEach(cb => cb());
   }
 };
 
@@ -236,6 +247,7 @@ const SearchDrawer = {
   close() {
     this.isOpen = false;
     this.drawer.classList.remove('is-open');
+    Overlay.close();
   }
 };
 
@@ -278,6 +290,7 @@ const Cart = {
     this.drawer.classList.remove('is-open');
     this.drawer.setAttribute('aria-hidden', 'true');
     Overlay.close();
+    releaseFocus(this.drawer);
   },
 
   async fetchAndRender() {

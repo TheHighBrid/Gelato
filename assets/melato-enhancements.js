@@ -288,7 +288,6 @@
     initSizeGuideModal();
     initMarquee();
     initCardTouchSwap();
-    console.log('[Melato] Enhancements loaded ✦');
   });
 
 })();
