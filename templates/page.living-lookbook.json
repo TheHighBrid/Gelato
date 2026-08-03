@@ -21,7 +21,67 @@
         "archive_note": "Ninety-one living-study photographs, expanded with thirty-five newly filed frames and presented as a continuous evidence archive.",
         "case_code": "LL-02",
         "archive_source": "case02"
-      }
+      },
+      "blocks": {
+        "shop_01": {
+          "type": "shoppable_frame",
+          "settings": {
+            "frame_number": 1,
+            "product": "ojos-velour-track-jacket"
+          }
+        },
+        "shop_04": {
+          "type": "shoppable_frame",
+          "settings": {
+            "frame_number": 4,
+            "product": "ojos-velour-track-jacket"
+          }
+        },
+        "shop_10": {
+          "type": "shoppable_frame",
+          "settings": {
+            "frame_number": 8,
+            "product": "the-taupe-secret-retro-panel-jacket"
+          }
+        },
+        "shop_18": {
+          "type": "shoppable_frame",
+          "settings": {
+            "frame_number": 9,
+            "product": "the-noir-alibi-lace-corset-dress"
+          }
+        },
+        "shop_24": {
+          "type": "shoppable_frame",
+          "settings": {
+            "frame_number": 10,
+            "product": "the-conquista-premium-velour-track-jacket-by-melato"
+          }
+        },
+        "shop_18b": {
+          "type": "shoppable_frame",
+          "settings": {
+            "frame_number": 18,
+            "product": "the-conquista-premium-velour-track-jacket-by-melato"
+          }
+        },
+        "shop_24b": {
+          "type": "shoppable_frame",
+          "settings": {
+            "frame_number": 24,
+            "product": "the-conquista-premium-velour-track-jacket-by-melato"
+          }
+        }
+      },
+      "block_order": [
+        "shop_01",
+        "shop_04",
+        "shop_10",
+        "shop_18",
+        "shop_24",
+        "shop_18b",
+        "shop_24b"
+      ]
     },
     "evidence_case03": {
       "type": "melato-living-lookbook-evidence",
