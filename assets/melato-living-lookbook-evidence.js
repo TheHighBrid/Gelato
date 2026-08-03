@@ -13,6 +13,9 @@ const initializeMelatoEvidenceArchives = (scope = document) => {
       const closeButton = archive.querySelector('[data-evidence-close]');
       const previousButton = archive.querySelector('[data-evidence-previous]');
       const nextButton = archive.querySelector('[data-evidence-next]');
+      const viewerProduct = archive.querySelector('[data-evidence-product]');
+      const viewerProductTitle = archive.querySelector('[data-evidence-product-title]');
+      const viewerProductLink = archive.querySelector('[data-evidence-product-link]');
 
       if (!triggers.length || !viewer || !viewerImage) return;
 
@@ -30,6 +33,16 @@ const initializeMelatoEvidenceArchives = (scope = document) => {
         viewerImage.alt = `Melato Living Lookbook evidence frame ${code}`;
         viewerLabel.textContent = `EXHIBIT ${code}`;
         viewerCounter.textContent = `${code} / ${pad(triggers.length)}`;
+
+        if (viewerProduct) {
+          const hasProduct = Boolean(trigger.dataset.productUrl);
+          viewerProduct.hidden = !hasProduct;
+          if (hasProduct) {
+            viewerProductTitle.textContent = trigger.dataset.productTitle;
+            viewerProductLink.href = trigger.dataset.productUrl;
+            viewerProductLink.setAttribute('aria-label', `Shop ${trigger.dataset.productTitle}, ${trigger.dataset.productPrice}`);
+          }
+        }
       };
 
       const openViewer = (index) => {
@@ -54,6 +67,33 @@ const initializeMelatoEvidenceArchives = (scope = document) => {
       triggers.forEach((trigger, index) => {
         trigger.addEventListener('click', () => openViewer(index));
       });
+
+      archive.querySelectorAll('.mea__shop-tag').forEach((link) => {
+        link.addEventListener('click', (event) => event.stopPropagation());
+      });
+
+      const revealTargets = archive.querySelectorAll('.mea__evidence, .mea__chapter, .mea__case-note');
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const revealObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-revealed');
+            revealObserver.unobserve(entry.target);
+          });
+        }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+        revealTargets.forEach((target) => revealObserver.observe(target));
+      } else {
+        revealTargets.forEach((target) => target.classList.add('is-revealed'));
+      }
+
+      let touchStartX = 0;
+      viewer.addEventListener('touchstart', (event) => {
+        touchStartX = event.changedTouches[0].clientX;
+      }, { passive: true });
+      viewer.addEventListener('touchend', (event) => {
+        const distance = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(distance) > 55) render(activeIndex + (distance < 0 ? 1 : -1));
+      }, { passive: true });
 
       closeButton.addEventListener('click', closeViewer);
       previousButton.addEventListener('click', () => render(activeIndex - 1));
@@ -80,7 +120,7 @@ const initializeMelatoEvidenceArchives = (scope = document) => {
         }
 
         if (event.key === 'Tab') {
-          const focusable = [closeButton, previousButton, nextButton].filter(Boolean);
+          const focusable = [closeButton, previousButton, viewerProduct && !viewerProduct.hidden ? viewerProductLink : null, nextButton].filter(Boolean);
           const first = focusable[0];
           const last = focusable[focusable.length - 1];
 
