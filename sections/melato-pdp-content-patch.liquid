@@ -1,151 +1,184 @@
 {%- liquid
-assign badge_1 = product.metafields.custom.pdp_badge_1.value
-assign badge_2 = product.metafields.custom.pdp_badge_2.value
-assign badge_3 = product.metafields.custom.pdp_badge_3.value
 assign story_content = product.metafields.custom.pdp_story_content.value
 assign technical_details = product.metafields.custom.pdp_technical_details.value
 assign technical_paragraph = product.metafields.custom.pdp_technical_paragraph.value
 assign fit_details = product.metafields.custom.pdp_fit_details.value
 assign material_details = product.metafields.custom.pdp_material_details.value
+assign material_text = product.metafields.custom.fabric_composition.value | default: product.metafields.custom.composition.value | default: product.metafields.custom.material.value
 assign care_details = product.metafields.custom.pdp_care_details.value
 assign shipping_returns_details = product.metafields.custom.pdp_shipping_returns_details.value
-assign hide_dynamic_checkout = product.metafields.custom.hide_dynamic_checkout.value
+assign button_accent = product.metafields.custom.ui_accent.value | default: product.metafields.custom.palette_1.value | default: product.metafields.custom.palette_2.value
+assign title_down = product.title | downcase
+assign tags_down = product.tags | join: ' ' | downcase
+if button_accent == blank
+  if title_down contains 'pink' or title_down contains 'rose' or title_down contains 'blush' or tags_down contains ' pink'
+    assign button_accent = '#D88C9A'
+  elsif title_down contains 'barolo' or title_down contains 'wine' or title_down contains 'cherry' or tags_down contains 'burgundy'
+    assign button_accent = '#8E263C'
+  elsif title_down contains 'blue' or title_down contains 'cobalt' or tags_down contains 'blue'
+    assign button_accent = '#315F9D'
+  elsif title_down contains 'green' or title_down contains 'olive' or title_down contains 'forest' or tags_down contains 'green'
+    assign button_accent = '#687A4B'
+  elsif title_down contains 'cocoa' or title_down contains 'umber' or title_down contains 'caramel' or tags_down contains 'brown'
+    assign button_accent = '#7A533D'
+  elsif title_down contains 'ivory' or title_down contains 'pearl' or title_down contains 'cream'
+    assign button_accent = '#B89B70'
+  else
+    assign button_accent = '#D3A74A'
+  endif
+endif
 -%}
-<style>
-.melato-pdp-rebuild .pdp-proof-mini {
-display: none !important;
-}
-{% if hide_dynamic_checkout %}
+<style id="MelatoPDPRefinement-{{ section.id }}">
+.melato-pdp-rebuild .pdp-trust-row,
+.melato-pdp-rebuild .pdp-proof-mini,
 .melato-pdp-rebuild .pdp-dynamic-checkout,
 .melato-pdp-rebuild .shopify-payment-button {
-display: none !important;
+  display: none !important;
 }
-{% endif %}
+.melato-pdp-rebuild .pdp-atc,
+.melato-pdp-rebuild .pdp-sticky-atc button:not(:disabled) {
+  background: {{ button_accent }} !important;
+  border-color: {{ button_accent }} !important;
+}
+body.template-product .melato-pdp-rebuild .pdp-panel .pdp-story-tech__story h2,
+body.template-product .melato-pdp-rebuild .pdp-panel .pdp-story-tech__details h2,
+body[class*="template-product"] .melato-pdp-rebuild .pdp-panel .pdp-story-tech__story h2,
+body[class*="template-product"] .melato-pdp-rebuild .pdp-panel .pdp-story-tech__details h2 {
+  font-family: var(--font-body-family, inherit) !important;
+  font-size: 13px !important;
+  line-height: 1.3 !important;
+  letter-spacing: .08em !important;
+  font-weight: 700 !important;
+  text-transform: none !important;
+  margin: 0 0 10px !important;
+}
 .melato-pdp-rebuild .pdp-content-list {
-margin: 12px 0 0;
-padding-left: 20px;
-color: rgba(255, 255, 255, 0.78);
-line-height: 1.65;
+  margin: 12px 0 0;
+  padding-left: 20px;
+  color: rgba(255,255,255,.78);
+  line-height: 1.65;
 }
-.melato-pdp-rebuild .pdp-content-list li + li {
-margin-top: 7px;
-}
+.melato-pdp-rebuild .pdp-content-list li + li { margin-top: 7px; }
 .melato-pdp-rebuild .pdp-technical-paragraph {
-margin: 18px 0 0;
-color: rgba(255, 255, 255, 0.78);
-line-height: 1.72;
-max-width: 76ch;
+  margin: 18px 0 0;
+  color: rgba(255,255,255,.78);
+  line-height: 1.72;
+  max-width: 76ch;
+}
+@media (max-width: 749px) {
+  body.template-product .melato-pdp-rebuild .pdp-panel .pdp-story-tech__story h2,
+  body.template-product .melato-pdp-rebuild .pdp-panel .pdp-story-tech__details h2,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-panel .pdp-story-tech__story h2,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-panel .pdp-story-tech__details h2 {
+    font-size: 12px !important;
+    margin-bottom: 8px !important;
+  }
 }
 </style>
 <script type="application/json" id="MelatoPDPContentPatchData-{{ section.id }}">
 {
-"badge1": {{ badge_1 | json }},
-"badge2": {{ badge_2 | json }},
-"badge3": {{ badge_3 | json }},
-"story": {{ story_content | json }},
-"technicalDetails": {{ technical_details | json }},
-"technicalParagraph": {{ technical_paragraph | json }},
-"fit": {{ fit_details | json }},
-"material": {{ material_details | json }},
-"care": {{ care_details | json }},
-"shippingReturns": {{ shipping_returns_details | json }},
-"hideDynamicCheckout": {{ hide_dynamic_checkout | json }}
+  "story": {{ story_content | json }},
+  "technicalDetails": {{ technical_details | json }},
+  "technicalParagraph": {{ technical_paragraph | json }},
+  "fit": {{ fit_details | json }},
+  "material": {{ material_details | json }},
+  "materialText": {{ material_text | json }},
+  "care": {{ care_details | json }},
+  "shippingReturns": {{ shipping_returns_details | json }}
 }
 </script>
 <script>
 (function() {
-function initializeMelatoPDPContentPatch() {
-var dataElement = document.getElementById('MelatoPDPContentPatchData-{{ section.id }}');
-var root = document.querySelector('.melato-pdp-rebuild');
-if (!dataElement || !root) return;
-var data;
-try {
-data = JSON.parse(dataElement.textContent || '{}');
-} catch (error) {
-return;
-}
-var proofStack = root.querySelector('.pdp-proof-mini');
-if (proofStack) proofStack.remove();
-var badges = root.querySelectorAll('.pdp-trust-row span');
-[data.badge1, data.badge2, data.badge3].forEach(function(text, index) {
-if (text && badges[index]) badges[index].textContent = text;
-});
-if (data.hideDynamicCheckout) {
-var dynamicCheckout = root.querySelector('.pdp-dynamic-checkout');
-if (dynamicCheckout) dynamicCheckout.remove();
-}
-var storyBlock = root.querySelector('.pdp-story-tech__story');
-if (storyBlock && data.story) {
-var storyHeading = storyBlock.querySelector('h2');
-var storyBody = storyBlock.querySelector('.pdp-rte--story');
-if (storyHeading) storyHeading.textContent = 'The story.';
-if (storyBody) storyBody.textContent = data.story;
-}
-var technicalBlock = root.querySelector('.pdp-story-tech__details');
-if (technicalBlock) {
-var technicalList = technicalBlock.querySelector('.pdp-detail-list');
-if (technicalList && Array.isArray(data.technicalDetails) && data.technicalDetails.length) {
-technicalList.textContent = '';
-data.technicalDetails.forEach(function(item) {
-var listItem = document.createElement('li');
-listItem.textContent = item;
-technicalList.appendChild(listItem);
-});
-}
-if (data.technicalParagraph) {
-var existingParagraph = technicalBlock.querySelector('.pdp-technical-paragraph');
-var paragraph = existingParagraph || document.createElement('p');
-paragraph.className = 'pdp-technical-paragraph';
-paragraph.textContent = data.technicalParagraph;
-if (!existingParagraph) {
-technicalBlock.appendChild(paragraph);
-}
-}
-}
-function replaceSpecification(label, items) {
-if (!Array.isArray(items) || !items.length) return;
-var target = Array.prototype.find.call(
-root.querySelectorAll('.pdp-spec'),
-function(details) {
-var summary = details.querySelector('summary');
-return summary && summary.textContent.trim().toLowerCase() === label.toLowerCase();
-}
-);
-if (!target) return;
-var body = target.querySelector('.pdp-rte');
-if (!body) return;
-body.textContent = '';
-var list = document.createElement('ul');
-list.className = 'pdp-content-list';
-items.forEach(function(item) {
-var listItem = document.createElement('li');
-listItem.textContent = item;
-list.appendChild(listItem);
-});
-body.appendChild(list);
-}
-replaceSpecification('Fit', data.fit);
-replaceSpecification('Material', data.material);
-replaceSpecification('Care', data.care);
-replaceSpecification('Shipping & returns', data.shippingReturns);
-}
-if (document.readyState === 'loading') {
-document.addEventListener('DOMContentLoaded', initializeMelatoPDPContentPatch, { once: true });
-} else {
-initializeMelatoPDPContentPatch();
-}
+  function initMelatoPDPRefinement() {
+    var dataElement = document.getElementById('MelatoPDPContentPatchData-{{ section.id }}');
+    var root = document.querySelector('.melato-pdp-rebuild');
+    if (!dataElement || !root) return;
+    var data = {};
+    try { data = JSON.parse(dataElement.textContent || '{}'); } catch (error) { return; }
+
+    ['.pdp-trust-row', '.pdp-proof-mini', '.pdp-dynamic-checkout', '.shopify-payment-button'].forEach(function(selector) {
+      root.querySelectorAll(selector).forEach(function(element) { element.remove(); });
+    });
+
+    var storyBlock = root.querySelector('.pdp-story-tech__story');
+    if (storyBlock) {
+      var storyHeading = storyBlock.querySelector('h2');
+      var storyBody = storyBlock.querySelector('.pdp-rte--story');
+      if (storyHeading) storyHeading.textContent = 'Story';
+      if (storyBody && data.story) storyBody.textContent = data.story;
+    }
+
+    var technicalBlock = root.querySelector('.pdp-story-tech__details');
+    if (technicalBlock) {
+      var technicalHeading = technicalBlock.querySelector('h2');
+      if (technicalHeading) technicalHeading.textContent = 'Construction';
+      var technicalList = technicalBlock.querySelector('.pdp-detail-list');
+      if (technicalList && Array.isArray(data.technicalDetails) && data.technicalDetails.length) {
+        technicalList.textContent = '';
+        data.technicalDetails.forEach(function(item) {
+          var li = document.createElement('li');
+          li.textContent = item;
+          technicalList.appendChild(li);
+        });
+      }
+      if (data.technicalParagraph) {
+        var paragraph = technicalBlock.querySelector('.pdp-technical-paragraph') || document.createElement('p');
+        paragraph.className = 'pdp-technical-paragraph';
+        paragraph.textContent = data.technicalParagraph;
+        if (!paragraph.parentNode) technicalBlock.appendChild(paragraph);
+      }
+    }
+
+    function findSpecification(label) {
+      return Array.prototype.find.call(root.querySelectorAll('.pdp-spec'), function(details) {
+        var summary = details.querySelector('summary');
+        return summary && summary.textContent.trim().toLowerCase() === label.toLowerCase();
+      });
+    }
+
+    function replaceWithList(label, items) {
+      if (!Array.isArray(items) || !items.length) return false;
+      var target = findSpecification(label);
+      if (!target) return false;
+      var body = target.querySelector('.pdp-rte');
+      if (!body) return false;
+      body.textContent = '';
+      var list = document.createElement('ul');
+      list.className = 'pdp-content-list';
+      items.forEach(function(item) {
+        var li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
+      });
+      body.appendChild(list);
+      return true;
+    }
+
+    replaceWithList('Fit', data.fit);
+    if (!replaceWithList('Material', data.material) && data.materialText) {
+      var materialTarget = findSpecification('Material');
+      if (materialTarget) {
+        var materialBody = materialTarget.querySelector('.pdp-rte');
+        if (materialBody) materialBody.textContent = data.materialText;
+      }
+    }
+    replaceWithList('Care', data.care);
+    replaceWithList('Shipping & returns', data.shippingReturns);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMelatoPDPRefinement, { once: true });
+  } else {
+    initMelatoPDPRefinement();
+  }
 })();
 </script>
 {% schema %}
 {
-"name": "Melato PDP content patch",
-"tag": "section",
-"class": "section-melato-pdp-content-patch",
-"settings": [],
-"presets": [
-{
-"name": "Melato PDP content patch"
-}
-]
+  "name": "Melato PDP content patch",
+  "tag": "section",
+  "class": "section-melato-pdp-content-patch",
+  "settings": [],
+  "presets": [{ "name": "Melato PDP content patch" }]
 }
 {% endschema %}

@@ -1,585 +1,104 @@
-{% comment %}
-  sections/melato-fit-concierge.liquid
-  Full redesign: dark-palette hero, 3-step interactive fit navigator,
-  styled accordion, conversion strip.
-{% endcomment %}
-
 {%- liquid
-  assign start_blocks    = section.blocks | where: 'type', 'start_card'
+  assign start_blocks = section.blocks | where: 'type', 'start_card'
   assign category_blocks = section.blocks | where: 'type', 'category'
-  assign cta_blocks      = section.blocks | where: 'type', 'cta'
+  assign cta_blocks = section.blocks | where: 'type', 'cta'
 -%}
 
-<div class="mfc" id="FitConcierge-{{ section.id }}">
+<div class="melato-fit-bleed">
+<div class="melato-fit">
+  {%- if section.settings.intro != blank -%}<div class="melato-fit__intro">{{ section.settings.intro }}</div>{%- endif -%}
 
-  <!-- ── Hero strip ── -->
-  <header class="mfc__hero">
-    <div class="mfc__hero-inner">
-      <p class="mfc__hero-eyebrow">MELATO / FIT CONCIERGE</p>
-      <h1 class="mfc__hero-title">{{ section.settings.hero_title | default: 'Fit Concierge' }}</h1>
-      <p class="mfc__hero-sub">{{ section.settings.hero_sub | default: 'We make sure the garment fits the person, not the other way around.' }}</p>
-      {%- if section.settings.hero_cta_label != blank -%}
-        <a href="{{ section.settings.hero_cta_url | default: '#mfc-accordion' }}" class="melato-global-pill">
-          {{ section.settings.hero_cta_label | escape }}
-        </a>
-      {%- endif -%}
+  {%- if start_blocks.size > 0 -%}
+    <div class="melato-fit__start-grid">
+      {%- for block in start_blocks -%}
+        {% render 'melato-fit-card', title: block.settings.title, text: block.settings.text, cta_label: block.settings.cta_label, url: block.settings.url %}
+      {%- endfor -%}
     </div>
-  </header>
+  {%- endif -%}
 
-  <div class="mfc__body">
+  {%- if category_blocks.size > 0 -%}
+    <div class="melato-fit__accordion">
+      {%- for block in category_blocks -%}
+        <details class="melato-fit__row">
+          <summary class="melato-fit__row-title">{{ block.settings.title }}</summary>
+          <div class="melato-fit__row-text">{{ block.settings.text }}</div>
+        </details>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
 
-    <!-- ── 3-step navigator ── -->
-    <section class="mfc__navigator" aria-label="Fit navigator" id="mfc-navigator">
-      <div class="mfc__nav-intro">
-        <p class="mfc__nav-eyebrow">STEP-BY-STEP</p>
-        <h2 class="mfc__nav-title">Find your fit</h2>
-      </div>
-
-      <!-- Step 1: Category -->
-      <div class="mfc__step mfc__step--1 is-active" data-step="1" aria-label="Step 1: What are you shopping for?">
-        <p class="mfc__step-label">01 &mdash; What are you shopping for?</p>
-        <div class="mfc__step-tiles">
-          <button type="button" class="mfc__tile" data-cat="tracksuits">
-            <span class="mfc__tile-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 .55.45 1 1 1h2a1 1 0 0 0 1-1v-5h4v5c0 .55.45 1 1 1h2a1 1 0 0 0 1-1V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
-            </span>
-            <span class="mfc__tile-label">Tracksuits</span>
-          </button>
-          <button type="button" class="mfc__tile" data-cat="denim">
-            <span class="mfc__tile-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12l1 10H5L6 2z"/><path d="M5 12v10h4l3-6 3 6h4V12"/></svg>
-            </span>
-            <span class="mfc__tile-label">Denim</span>
-          </button>
-          <button type="button" class="mfc__tile" data-cat="outerwear">
-            <span class="mfc__tile-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 12 8 8 3"/><path d="M10.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-5.5"/></svg>
-            </span>
-            <span class="mfc__tile-label">Outerwear</span>
-          </button>
-          <button type="button" class="mfc__tile" data-cat="polo">
-            <span class="mfc__tile-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/><line x1="12" y1="6" x2="12" y2="11"/></svg>
-            </span>
-            <span class="mfc__tile-label">Polo / Shirts</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Step 2: Fit preference -->
-      <div class="mfc__step mfc__step--2" data-step="2" aria-label="Step 2: How do you like your fit?" hidden>
-        <button type="button" class="mfc__back-btn" data-nav-back>← Back</button>
-        <p class="mfc__step-label">02 &mdash; How do you like your fit?</p>
-        <div class="mfc__step-tiles">
-          <button type="button" class="mfc__tile" data-fit="true-to-size">
-            <span class="mfc__tile-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-            </span>
-            <span class="mfc__tile-label">True to size</span>
-          </button>
-          <button type="button" class="mfc__tile" data-fit="relaxed">
-            <span class="mfc__tile-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-            </span>
-            <span class="mfc__tile-label">Relaxed &amp; oversized</span>
-          </button>
-          <button type="button" class="mfc__tile" data-fit="layering">
-            <span class="mfc__tile-icon" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/></svg>
-            </span>
-            <span class="mfc__tile-label">I&apos;ll layer over it</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Step 3: Recommendation -->
-      <div class="mfc__step mfc__step--3" data-step="3" aria-label="Step 3: Your fit recommendation" hidden>
-        <button type="button" class="mfc__back-btn" data-nav-back>← Back</button>
-        <p class="mfc__step-label">03 &mdash; Your recommendation</p>
-        <div class="mfc__recommendation" data-recommendation aria-live="polite"></div>
-      </div>
-    </section>
-
-    <!-- ── Category accordion ── -->
-    <section class="mfc__accordion-section" id="mfc-accordion" aria-label="Size guidance by garment">
-      <div class="mfc__acc-header">
-        <p class="mfc__nav-eyebrow">BY GARMENT</p>
-        <h2 class="mfc__acc-title">{{ section.settings.accordion_title | default: 'Sizing by category' }}</h2>
-      </div>
-
-      {%- if category_blocks.size > 0 -%}
-        <div class="mfc__accordion" role="list">
-          {%- for block in category_blocks -%}
-            <details class="mfc__row" {{ block.shopify_attributes }}>
-              <summary class="mfc__row-title">
-                {%- if block.settings.icon_svg != blank -%}
-                  <span class="mfc__row-icon" aria-hidden="true">{{ block.settings.icon_svg }}</span>
-                {%- else -%}
-                  <span class="mfc__row-icon mfc__row-icon--default" aria-hidden="true">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                  </span>
-                {%- endif -%}
-                {{ block.settings.title | escape }}
-                <span class="mfc__row-toggle" aria-hidden="true"></span>
-              </summary>
-              <div class="mfc__row-body">{{ block.settings.text }}</div>
-            </details>
-          {%- endfor -%}
-        </div>
-      {%- endif -%}
-    </section>
-
-    <!-- ── Conversion strip ── -->
-    <section class="mfc__cta-strip" aria-label="Get fit help">
-      <p class="mfc__nav-eyebrow">STILL UNSURE?</p>
-      <h2 class="mfc__cta-strip-title">{{ section.settings.cta_title | default: 'We\u2019re here for every measurement.' }}</h2>
-      <div class="mfc__cta-strip-btns">
-        <a href="{{ section.settings.care_url | default: '/pages/contact' }}" class="melato-global-pill melato-global-pill--new">
-          {{ section.settings.care_label | default: 'Email Customer Care' | escape }}
-        </a>
-        <a href="{{ section.settings.call_url | default: '/pages/contact' }}" class="melato-global-pill melato-global-pill--shop">
-          {{ section.settings.call_label | default: 'Book a styled drop call' | escape }}
-        </a>
-      </div>
-    </section>
-
-  </div><!-- /mfc__body -->
-</div><!-- /mfc -->
+  {%- if cta_blocks.size > 0 -%}
+    <div class="melato-fit__cta-row">
+      {%- for block in cta_blocks -%}
+        <a href="{{ block.settings.url | default: '#' }}" class="melato-fit__cta-link">{{ block.settings.label }}</a>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</div>
+</div>
 
 {% stylesheet %}
-/* ── tokens ── */
-.mfc {
-  --mfc-bg:     #080706;
-  --mfc-ink:    #f4ead8;
-  --mfc-muted:  #b9aa96;
-  --mfc-accent: #c9974a;
-  --mfc-line:   rgba(244,234,216,.14);
-  --mfc-surface:#121110;
-  background: var(--mfc-bg);
-  color: var(--mfc-ink);
-}
-.mfc * { box-sizing: border-box; }
-
-/* ── hero ── */
-.mfc__hero {
-  background: linear-gradient(160deg, #0f0d0b 60%, rgba(201,151,74,.06) 100%);
-  border-bottom: 1px solid var(--mfc-line);
-  padding: clamp(60px, 10vw, 120px) 0 clamp(48px, 7vw, 90px);
-}
-.mfc__hero-inner {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 0 clamp(20px, 5vw, 48px);
-  text-align: center;
-}
-.mfc__hero-eyebrow {
-  margin: 0 0 .8rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .62rem;
-  letter-spacing: .24em;
-  text-transform: uppercase;
-  color: rgba(244,234,216,.48);
-}
-.mfc__hero-title {
-  margin: 0 0 .6rem;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(52px, 9vw, 110px);
-  line-height: .82;
-  letter-spacing: -.06em;
-  text-transform: uppercase;
-}
-.mfc__hero-sub {
-  margin: 0 0 2rem;
-  font-size: clamp(15px, 1.3vw, 18px);
-  line-height: 1.6;
-  color: rgba(244,234,216,.7);
-  max-width: 560px;
-  margin-inline: auto;
-  margin-bottom: 2rem;
-}
-
-/* ── shared heading util ── */
-.mfc__nav-eyebrow {
-  margin: 0 0 .5rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .6rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: rgba(244,234,216,.44);
-}
-
-/* ── body wrapper ── */
-.mfc__body {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: 0 clamp(20px, 5vw, 48px);
-}
-
-/* ── navigator ── */
-.mfc__navigator {
-  padding: clamp(48px, 7vw, 90px) 0 clamp(32px, 5vw, 64px);
-  border-bottom: 1px solid var(--mfc-line);
-}
-.mfc__nav-intro { margin-bottom: clamp(28px, 4vw, 48px); }
-.mfc__nav-title {
-  margin: 0;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(32px, 4.5vw, 56px);
-  letter-spacing: -.04em;
-  line-height: .9;
-  text-transform: uppercase;
-}
-
-.mfc__step-label {
-  margin: 0 0 1.4rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .72rem;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: rgba(244,234,216,.58);
-}
-
-/* tiles grid */
-.mfc__step-tiles {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-@media (min-width: 600px) { .mfc__step-tiles { grid-template-columns: repeat(4, 1fr); } }
-
-.mfc__tile {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: clamp(20px, 3vw, 32px) 16px;
-  background: var(--mfc-surface);
-  border: 1px solid var(--mfc-line);
-  border-radius: 12px;
-  color: var(--mfc-ink);
-  cursor: pointer;
-  transition: background .2s, border-color .2s, transform .15s;
-  font-family: inherit;
-}
-.mfc__tile:hover, .mfc__tile:focus-visible {
-  background: rgba(201,151,74,.12);
-  border-color: rgba(201,151,74,.5);
-  transform: translateY(-2px);
-}
-.mfc__tile:focus-visible { outline: 2px solid var(--mfc-accent); outline-offset: 2px; }
-.mfc__tile-icon { color: var(--mfc-accent); line-height: 0; }
-.mfc__tile-label { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; text-align: center; }
-
-/* back button */
-.mfc__back-btn {
-  background: none;
-  border: none;
-  color: var(--mfc-muted);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .7rem;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-bottom: 1.25rem;
-  padding: 0;
-  transition: color .18s;
-}
-.mfc__back-btn:hover { color: var(--mfc-ink); }
-
-/* recommendation card */
-.mfc__recommendation {
-  padding: clamp(20px, 3vw, 32px);
-  background: var(--mfc-surface);
-  border: 1px solid var(--mfc-line);
-  border-left: 3px solid var(--mfc-accent);
-  border-radius: 10px;
-}
-.mfc__rec-label {
-  margin: 0 0 .4rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .62rem;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--mfc-accent);
-}
-.mfc__rec-advice {
-  margin: 0 0 1rem;
-  font-size: clamp(15px, 1.3vw, 17px);
-  line-height: 1.6;
-  color: var(--mfc-ink);
-}
-.mfc__rec-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--mfc-accent);
-  text-decoration: none;
-  border-bottom: 1px solid rgba(201,151,74,.4);
-  padding-bottom: 2px;
-  transition: border-color .18s;
-}
-.mfc__rec-link:hover { border-color: var(--mfc-accent); }
-
-/* ── accordion ── */
-.mfc__accordion-section {
-  padding: clamp(48px, 7vw, 90px) 0;
-  border-bottom: 1px solid var(--mfc-line);
-}
-.mfc__acc-header { margin-bottom: clamp(24px, 3vw, 40px); }
-.mfc__acc-title {
-  margin: 0;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(30px, 4vw, 52px);
-  letter-spacing: -.04em;
-  line-height: .9;
-  text-transform: uppercase;
-}
-
-.mfc__accordion { border-top: 1px solid var(--mfc-line); }
-
-.mfc__row { border-bottom: 1px solid var(--mfc-line); }
-
-.mfc__row-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 1.1rem 0;
-  cursor: pointer;
-  list-style: none;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--mfc-ink);
-  user-select: none;
-}
-.mfc__row-title::-webkit-details-marker { display: none; }
-.mfc__row-title:focus-visible { outline: 2px solid var(--mfc-accent); outline-offset: 2px; }
-
-.mfc__row-icon { color: var(--mfc-accent); flex-shrink: 0; line-height: 0; }
-
-.mfc__row-toggle {
-  margin-left: auto;
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-  position: relative;
-}
-.mfc__row-toggle::before,
-.mfc__row-toggle::after {
-  content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  background: var(--mfc-accent);
-  border-radius: 2px;
-  transition: transform .22s ease, opacity .22s;
-}
-.mfc__row-toggle::before { width: 14px; height: 1.5px; transform: translate(-50%, -50%); }
-.mfc__row-toggle::after  { width: 1.5px; height: 14px; transform: translate(-50%, -50%); }
-.mfc__row[open] .mfc__row-toggle::after { transform: translate(-50%, -50%) rotate(90deg); opacity: 0; }
-
-.mfc__row-body {
-  padding: 0 0 1.1rem clamp(24px, 3vw, 36px);
-  font-size: .9rem;
-  line-height: 1.65;
-  color: rgba(244,234,216,.72);
-}
-
-/* ── conversion strip ── */
-.mfc__cta-strip {
-  padding: clamp(48px, 7vw, 90px) 0;
-  text-align: center;
-}
-.mfc__cta-strip-title {
-  margin: 0 0 2rem;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(28px, 4vw, 52px);
-  letter-spacing: -.04em;
-  line-height: .9;
-  text-transform: uppercase;
-}
-.mfc__cta-strip-btns {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-}
-
-/* global pill compatibility (already defined in melato-global-polish, repeated here for isolation) */
-.mfc .melato-global-pill {
-  min-height: 46px;
-  padding: 0 22px;
-  border-radius: 999px;
-  border: 1px solid rgba(244,234,216,.22);
-  background: rgba(255,255,255,.06);
-  color: #f4ead8;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform .2s, background .2s, border-color .2s, color .2s;
-}
-.mfc .melato-global-pill:hover { transform: translateY(-2px); border-color: rgba(244,234,216,.42); background: #f4ead8; color: #111; }
-.mfc .melato-global-pill--new  { background: #f4ead8; color: #111; border-color: #f4ead8; }
-.mfc .melato-global-pill--shop { background: rgba(255,255,255,.06); }
-
-@media (prefers-reduced-motion: reduce) {
-  .mfc__tile, .mfc__row-toggle::after, .mfc .melato-global-pill { transition: none; }
-}
+.melato-fit-bleed { background: #f4ead8 !important; }
+.melato-fit { max-width: 1000px; margin: 0 auto; padding: 0 1.25rem clamp(2rem,5vw,3.5rem); }
+.melato-fit__intro { max-width: 640px; margin: 0 auto clamp(2rem,4vw,3rem); text-align: center; }
+.melato-fit__intro p { color: #3a3833 !important; margin: 0; }
+.melato-fit__start-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: rgba(10,10,10,.14); border: 1px solid rgba(10,10,10,.14); margin-bottom: clamp(2.5rem,6vw,4rem); }
+@media (min-width: 760px) { .melato-fit__start-grid { grid-template-columns: repeat(4,1fr); } }
+.melato-fit__card { background: #f4ead8 !important; padding: 1.5rem 1.25rem; text-decoration: none; display: flex; flex-direction: column; gap: .5rem; transition: background-color .25s ease; }
+.melato-fit__card:hover, .melato-fit__card:focus-visible { background: #eadcc6 !important; }
+.melato-fit__card:focus-visible { outline: 1px solid #0a0a0a; outline-offset: 4px; }
+.melato-fit__card-title { color: #0a0a0a !important; font-weight: 500; margin: 0; font-size: 1.05rem; }
+.melato-fit__card-text { color: #6f6d68 !important; font-size: .85rem; line-height: 1.45; margin: 0; }
+.melato-fit__card-cta { color: #0a0a0a !important; margin-top: auto; font-size: .8rem; }
+.melato-fit__accordion { border-top: 1px solid rgba(10,10,10,.14); margin-bottom: clamp(2rem,5vw,3rem); }
+.melato-fit__row { border-bottom: 1px solid rgba(10,10,10,.14); }
+.melato-fit__row-title { color: #0a0a0a !important; font-size: 1.05rem; padding: 1.1rem .25rem; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+.melato-fit__row-title::-webkit-details-marker { display: none; }
+.melato-fit__row-title::after { content: '+'; font-size: 1.2rem; color: #6f6d68; transition: transform .2s ease; }
+.melato-fit__row[open] .melato-fit__row-title::after { transform: rotate(45deg); }
+.melato-fit__row-title:focus-visible { outline: 1px solid #0a0a0a; outline-offset: 2px; }
+.melato-fit__row-text { color: #3a3833 !important; padding: 0 .25rem 1.1rem; font-size: .9rem; line-height: 1.55; max-width: 640px; }
+.melato-fit__cta-row { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; justify-content: center; }
+.melato-fit__cta-link { color: #0a0a0a !important; font-size: .88rem; text-decoration: underline; text-underline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .melato-fit__card, .melato-fit__row-title::after { transition: none; } }
 {% endstylesheet %}
-
-<script>
-(function () {
-  'use strict';
-
-  const root = document.getElementById('FitConcierge-{{ section.id }}');
-  if (!root) return;
-
-  // Fit recommendation data
-  const RECS = {
-    'tracksuits': {
-      'true-to-size': { advice: 'Choose your true size for clean structure. The jacket\u2019s shoulder seam should sit exactly at the shoulder point.', link: '/collections/tracksuits', linkLabel: 'Shop tracksuits' },
-      'relaxed':     { advice: 'Size up one for a roomier silhouette. Velour relaxes slightly after the first wear, so a single size up gives a generous fit without going shapeless.', link: '/collections/tracksuits', linkLabel: 'Shop tracksuits' },
-      'layering':    { advice: 'Size up one to two sizes depending on the layers underneath. Prioritise shoulder and chest room \u2014 the arms can afford extra length.', link: '/collections/tracksuits', linkLabel: 'Shop tracksuits' }
-    },
-    'denim': {
-      'true-to-size': { advice: 'Check waist and inseam first. For flare styles, pay attention to the rise and the point where the flare begins \u2014 ideally just below the knee.', link: '/collections/denim', linkLabel: 'Shop denim' },
-      'relaxed':     { advice: 'Size up one at the waist for a relaxed seat and thigh. Denim does not stretch at the waist the way jerseys do, so err on the larger side.', link: '/collections/denim', linkLabel: 'Shop denim' },
-      'layering':    { advice: 'Choose a straight or wide-leg cut and size for the waist. Denim over base layers works best with high-rise styles and relaxed thighs.', link: '/collections/denim', linkLabel: 'Shop denim' }
-    },
-    'outerwear': {
-      'true-to-size': { advice: 'True size will give a tailored silhouette. Check shoulder seam placement and ensure the chest is not pulling across.', link: '/collections/jackets', linkLabel: 'Shop jackets' },
-      'relaxed':     { advice: 'Size up one for a dropped-shoulder, relaxed look. Great over hoodies or thicker knits.', link: '/collections/jackets', linkLabel: 'Shop jackets' },
-      'layering':    { advice: 'Size up one to two to layer comfortably. Prioritise chest and shoulder room. Length is secondary.', link: '/collections/jackets', linkLabel: 'Shop jackets' }
-    },
-    'polo': {
-      'true-to-size': { advice: 'Check shoulder and chest first. Polo shirts are cut slim at the waist \u2014 if you are broad-chested, size up one.', link: '/collections/all', linkLabel: 'Shop polo' },
-      'relaxed':     { advice: 'Size up one for a boxy, relaxed polo silhouette. Works well tucked or untucked.', link: '/collections/all', linkLabel: 'Shop polo' },
-      'layering':    { advice: 'Size up one to two depending on what you\u2019re wearing underneath. Polo over a turtleneck needs chest and neck room.', link: '/collections/all', linkLabel: 'Shop polo' }
-    }
-  };
-
-  let selectedCat = null;
-  let selectedFit = null;
-
-  const steps = {
-    1: root.querySelector('[data-step="1"]'),
-    2: root.querySelector('[data-step="2"]'),
-    3: root.querySelector('[data-step="3"]')
-  };
-  const recContainer = root.querySelector('[data-recommendation]');
-
-  function showStep(n) {
-    Object.keys(steps).forEach(function (k) {
-      const el = steps[k];
-      if (parseInt(k, 10) === n) {
-        el.removeAttribute('hidden');
-        el.classList.add('is-active');
-      } else {
-        el.setAttribute('hidden', '');
-        el.classList.remove('is-active');
-      }
-    });
-  }
-
-  function renderRec() {
-    const rec = (RECS[selectedCat] || {})[selectedFit];
-    if (!rec) return;
-    recContainer.innerHTML =
-      '<p class="mfc__rec-label">Fit recommendation</p>' +
-      '<p class="mfc__rec-advice">' + escapeHtml(rec.advice) + '</p>' +
-      '<a class="mfc__rec-link" href="' + rec.link + '">' + escapeHtml(rec.linkLabel) + ' <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 5l3 3-3 3"/></svg></a>';
-  }
-
-  function escapeHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // Cat tiles
-  if (steps[1]) {
-    steps[1].addEventListener('click', function (e) {
-      const tile = e.target.closest('.mfc__tile[data-cat]');
-      if (!tile) return;
-      selectedCat = tile.dataset.cat;
-      steps[1].querySelectorAll('.mfc__tile').forEach(function (t) { t.classList.remove('is-selected'); });
-      tile.classList.add('is-selected');
-      showStep(2);
-    });
-  }
-
-  // Fit tiles
-  if (steps[2]) {
-    steps[2].addEventListener('click', function (e) {
-      const tile = e.target.closest('.mfc__tile[data-fit]');
-      if (!tile) return;
-      selectedFit = tile.dataset.fit;
-      steps[2].querySelectorAll('.mfc__tile').forEach(function (t) { t.classList.remove('is-selected'); });
-      tile.classList.add('is-selected');
-      renderRec();
-      showStep(3);
-    });
-  }
-
-  // Back buttons
-  root.querySelectorAll('[data-nav-back]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      const step = btn.closest('[data-step]');
-      const current = step ? parseInt(step.dataset.step, 10) : 2;
-      showStep(current - 1);
-    });
-  });
-})();
-</script>
 
 {% schema %}
 {
   "name": "Melato Fit Concierge",
   "tag": "section",
-  "settings": [
-    { "type": "header",   "content": "Hero" },
-    { "type": "text",     "id": "hero_title",      "label": "Hero title",      "default": "Fit Concierge" },
-    { "type": "textarea", "id": "hero_sub",         "label": "Hero subtitle",   "default": "We make sure the garment fits the person, not the other way around." },
-    { "type": "text",     "id": "hero_cta_label",   "label": "Hero CTA label",  "default": "Ask Customer Care" },
-    { "type": "url",      "id": "hero_cta_url",     "label": "Hero CTA URL" },
-    { "type": "header",   "content": "Accordion" },
-    { "type": "text",     "id": "accordion_title",  "label": "Accordion heading", "default": "Sizing by category" },
-    { "type": "header",   "content": "Conversion strip" },
-    { "type": "text",     "id": "cta_title",        "label": "Strip heading",   "default": "We\u2019re here for every measurement." },
-    { "type": "text",     "id": "care_label",       "label": "Primary CTA",     "default": "Email Customer Care" },
-    { "type": "url",      "id": "care_url",         "label": "Primary CTA URL" },
-    { "type": "text",     "id": "call_label",       "label": "Secondary CTA",   "default": "Book a styled drop call" },
-    { "type": "url",      "id": "call_url",         "label": "Secondary CTA URL" }
-  ],
+  "settings": [{ "type": "richtext", "id": "intro", "label": "Intro copy (optional)" }],
   "blocks": [
-    {
-      "type": "category",
-      "name": "Fit category",
-      "settings": [
-        { "type": "text",     "id": "title",    "label": "Category name" },
-        { "type": "textarea", "id": "text",     "label": "Sizing guidance" },
-        { "type": "html",     "id": "icon_svg", "label": "Icon SVG (optional)" }
-      ]
-    }
+    { "type": "start_card", "name": "Start-here card", "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "text", "label": "Text" },
+        { "type": "text", "id": "cta_label", "label": "CTA label" },
+        { "type": "url", "id": "url", "label": "Link" }
+    ]},
+    { "type": "category", "name": "Fit category row", "settings": [
+        { "type": "text", "id": "title", "label": "Category" },
+        { "type": "textarea", "id": "text", "label": "Guidance" }
+    ]},
+    { "type": "cta", "name": "CTA link", "settings": [
+        { "type": "text", "id": "label", "label": "Label" },
+        { "type": "url", "id": "url", "label": "Link" }
+    ]}
   ],
   "max_blocks": 16,
-  "presets": [{
-    "name": "Melato Fit Concierge",
-    "blocks": [
-      { "type": "category", "settings": { "title": "Velour track jackets",  "text": "Choose true size for clean structure. Size up one for a relaxed, dropped-shoulder look. The velour softens slightly after the first wear." } },
-      { "type": "category", "settings": { "title": "Track pants",           "text": "Check waist and inseam. For flare styles, also consider rise and the height of your shoes." } },
-      { "type": "category", "settings": { "title": "Flare pants",           "text": "Prioritise waist, rise, and inseam. Shoe height affects how the flare falls \u2014 platform or block heel recommended." } },
-      { "type": "category", "settings": { "title": "Denim",                 "text": "Relaxed denim should sit comfortably at the thigh. Flare begins below the knee. Check waist and inseam against your measurements." } },
-      { "type": "category", "settings": { "title": "Polo / shirts",         "text": "Check shoulder seam placement and chest width first. Waist and length can vary with tucking style." } },
-      { "type": "category", "settings": { "title": "Bodysuits / delicates", "text": "Check torso length and stretch. The bodysuit should lie flat at the torso without bunching." } },
-      { "type": "category", "settings": { "title": "Outerwear",             "text": "Size around your layering preference. If wearing thick knits underneath, size up one." } }
-    ]
-  }]
+  "presets": [{ "name": "Melato Fit Concierge", "blocks": [
+      { "type": "start_card", "settings": { "title": "I know my size", "text": "Open size guide", "cta_label": "Open guide", "url": "#" } },
+      { "type": "start_card", "settings": { "title": "I am between sizes", "text": "Ask Customer Care", "cta_label": "Ask now", "url": "/pages/delivery-concierge" } },
+      { "type": "start_card", "settings": { "title": "I want a relaxed fit", "text": "View fit notes", "cta_label": "View notes", "url": "#" } },
+      { "type": "start_card", "settings": { "title": "I am buying a full set", "text": "Check jacket and pant pairing", "cta_label": "Check pairing", "url": "#" } },
+      { "type": "category", "settings": { "title": "Velour track jackets", "text": "Choose true size for clean structure. Size up for relaxed styling." } },
+      { "type": "category", "settings": { "title": "Track pants", "text": "Check waist and inseam, especially for flare silhouettes." } },
+      { "type": "category", "settings": { "title": "Flare pants", "text": "Prioritize waist, rise, inseam, and shoe height." } },
+      { "type": "category", "settings": { "title": "Denim", "text": "Relaxed denim should sit comfortably through the thigh. Flare begins below the knee." } },
+      { "type": "category", "settings": { "title": "Polo / shirts", "text": "Check shoulder and chest first." } },
+      { "type": "category", "settings": { "title": "Bodysuits / delicates", "text": "Check torso length and stretch." } },
+      { "type": "category", "settings": { "title": "Outerwear", "text": "Size around layering preference." } },
+      { "type": "cta", "settings": { "label": "Ask Customer Care", "url": "/pages/delivery-concierge" } },
+      { "type": "cta", "settings": { "label": "Read delivery notes", "url": "/pages/delivery-concierge" } }
+  ]}]
 }
 {% endschema %}

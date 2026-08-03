@@ -1,488 +1,79 @@
-{% comment %}
-  sections/melato-delivery-concierge.liquid
-  Upgraded with animated delivery timeline, promise cards with icons,
-  packaging editorial block, and urgent "need it by a date?" CTA.
-{% endcomment %}
+{%- liquid assign clarity_blocks = section.blocks | where: 'type', 'clarity_card' -%}
 
-{%- liquid
-  assign clarity_blocks = section.blocks | where: 'type', 'clarity_card'
--%}
+<div class="melato-delivery-bleed">
+<div class="melato-delivery">
+  {%- if section.settings.intro != blank -%}<div class="melato-delivery__intro">{{ section.settings.intro }}</div>{%- endif -%}
 
-<div class="mdc" id="DeliveryConcierge-{{ section.id }}">
-
-  <!-- ── Hero ── -->
-  <header class="mdc__hero">
-    <div class="mdc__hero-inner">
-      <p class="mdc__eyebrow">MELATO / DELIVERY CONCIERGE</p>
-      <h1 class="mdc__hero-title">{{ section.settings.hero_title | default: 'Delivery Concierge' }}</h1>
-      <p class="mdc__hero-sub">{{ section.settings.hero_sub | default: 'Every order is handled with the same attention as the design itself.' }}</p>
+  {%- if clarity_blocks.size > 0 -%}
+    <div class="melato-delivery__grid">
+      {%- for block in clarity_blocks -%}
+        <div class="melato-delivery__card">
+          <h3 class="melato-delivery__card-title">{{ block.settings.title }}</h3>
+          <p class="melato-delivery__card-text">{{ block.settings.text }}</p>
+        </div>
+      {%- endfor -%}
     </div>
-  </header>
+  {%- endif -%}
 
-  <div class="mdc__body">
+  {%- if section.settings.packaging_text != blank -%}
+    <div class="melato-delivery__packaging">
+      <h2 class="melato-delivery__packaging-title">{{ section.settings.packaging_title | default: 'Packaging' }}</h2>
+      <div class="melato-delivery__packaging-text">{{ section.settings.packaging_text }}</div>
+    </div>
+  {%- endif -%}
 
-    <!-- ── Delivery timeline ── -->
-    <section class="mdc__timeline-section" aria-label="Order journey">
-      <p class="mdc__eyebrow">YOUR ORDER JOURNEY</p>
-      <h2 class="mdc__section-title">{{ section.settings.timeline_title | default: 'From checkout to your door' }}</h2>
-
-      <ol class="mdc__timeline" aria-label="Order stages">
-        {%- assign default_steps = 'Order Confirmed,Garment Checked,Packaged,Dispatched,Delivered' | split: ',' -%}
-        {%- assign timeline_src = section.settings.timeline_steps | default: '' -%}
-        {%- if timeline_src != blank -%}
-          {%- assign tl_steps = timeline_src | newline_to_br | split: '<br />' -%}
-        {%- else -%}
-          {%- assign tl_steps = default_steps -%}
-        {%- endif -%}
-        {%- assign active_step = section.settings.active_step | default: 4 | minus: 1 -%}
-        {%- for step in tl_steps -%}
-          {%- if step != blank -%}
-            {%- assign si = forloop.index0 -%}
-            <li class="mdc__timeline-step{% if si <= active_step %} is-done{% endif %}{% if si == active_step %} is-active{% endif %}">
-              <span class="mdc__step-node" aria-hidden="true">
-                <span class="mdc__step-num">{{ forloop.index }}</span>
-              </span>
-              {%- unless forloop.last -%}
-                <span class="mdc__step-connector" aria-hidden="true"></span>
-              {%- endunless -%}
-              <span class="mdc__step-label">{{ step | strip | escape }}</span>
-            </li>
-          {%- endif -%}
-        {%- endfor -%}
-      </ol>
-    </section>
-
-    <!-- ── Promise cards ── -->
-    {%- if clarity_blocks.size > 0 -%}
-      <section class="mdc__promises" aria-label="Delivery commitments">
-        <p class="mdc__eyebrow">OUR COMMITMENTS</p>
-        <h2 class="mdc__section-title">{{ section.settings.promises_title | default: 'How we handle every order' }}</h2>
-        <div class="mdc__promise-grid">
-          {%- for block in clarity_blocks -%}
-            <article class="mdc__promise-card" {{ block.shopify_attributes }}>
-              {%- if block.settings.icon_svg != blank -%}
-                <span class="mdc__promise-icon" aria-hidden="true">{{ block.settings.icon_svg }}</span>
-              {%- else -%}
-                <span class="mdc__promise-icon mdc__promise-icon--default" aria-hidden="true">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                </span>
-              {%- endif -%}
-              <h3 class="mdc__promise-title">{{ block.settings.title | escape }}</h3>
-              <p class="mdc__promise-text">{{ block.settings.text }}</p>
-            </article>
-          {%- endfor -%}
-        </div>
-      </section>
-    {%- endif -%}
-
-    <!-- ── Packaging editorial block ── -->
-    {%- if section.settings.packaging_text != blank -%}
-      <section class="mdc__packaging" aria-label="Packaging">
-        <div class="mdc__packaging-grid">
-          {%- if section.settings.packaging_image != blank -%}
-            <div class="mdc__packaging-media">
-              {{ section.settings.packaging_image | image_url: width: 900 | image_tag:
-                  loading: 'lazy', alt: 'Melato packaging', class: 'mdc__packaging-img',
-                  widths: '480, 720, 900', sizes: '(min-width: 760px) 45vw, 100vw' }}
-            </div>
-          {%- endif -%}
-          <div class="mdc__packaging-text-col">
-            <p class="mdc__eyebrow">PACKAGING</p>
-            <h2 class="mdc__section-title">{{ section.settings.packaging_title | default: 'Packed with intention' }}</h2>
-            <div class="mdc__packaging-richtext">{{ section.settings.packaging_text }}</div>
-          </div>
-        </div>
-      </section>
-    {%- endif -%}
-
-    <!-- ── Before checkout checklist ── -->
-    {%- if section.settings.checklist != blank -%}
-      <section class="mdc__checklist-section" aria-label="Pre-checkout checklist">
-        <p class="mdc__eyebrow">BEFORE YOU CHECKOUT</p>
-        <h2 class="mdc__section-title">{{ section.settings.checklist_title | default: 'Quick reminders' }}</h2>
+  {%- if section.settings.checklist != blank -%}
+    <div class="melato-delivery__checklist">
+      <h2 class="melato-delivery__checklist-title">{{ section.settings.checklist_title | default: 'Before checkout' }}</h2>
+      <ul class="melato-delivery__checklist-list">
         {%- assign items = section.settings.checklist | newline_to_br | split: '<br />' -%}
-        <ul class="mdc__checklist" role="list">
-          {%- for item in items -%}
-            {%- if item != blank -%}
-              <li class="mdc__checklist-item">{{ item | strip | escape }}</li>
-            {%- endif -%}
-          {%- endfor -%}
-        </ul>
-      </section>
-    {%- endif -%}
-
-    <!-- ── Urgent date CTA ── -->
-    <section class="mdc__date-cta" aria-label="Need it by a date?">
-      <div class="mdc__date-cta-inner">
-        <p class="mdc__eyebrow">TIME-SENSITIVE?</p>
-        <h2 class="mdc__date-cta-title">{{ section.settings.date_cta_title | default: 'Need it for a specific date?' }}</h2>
-        <p class="mdc__date-cta-copy">{{ section.settings.date_cta_copy | default: 'Contact Customer Care before placing your order. We\u2019ll confirm the timeline and do everything possible to make it work.' }}</p>
-        <a href="{{ section.settings.date_cta_url | default: '/pages/contact' }}" class="melato-global-pill melato-global-pill--new">
-          {{ section.settings.date_cta_label | default: 'Contact Customer Care' | escape }}
-        </a>
-      </div>
-    </section>
-
-  </div><!-- /mdc__body -->
+        {%- for item in items -%}{%- if item != blank -%}<li>{{ item }}</li>{%- endif -%}{%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+</div>
 </div>
 
 {% stylesheet %}
-.mdc {
-  --mdc-bg:     #080706;
-  --mdc-ink:    #f4ead8;
-  --mdc-muted:  #b9aa96;
-  --mdc-accent: #c9974a;
-  --mdc-line:   rgba(244,234,216,.14);
-  --mdc-surface:#121110;
-  background: var(--mdc-bg);
-  color: var(--mdc-ink);
-}
-.mdc * { box-sizing: border-box; }
-
-/* ── hero ── */
-.mdc__hero {
-  background: linear-gradient(160deg, #0f0d0b 60%, rgba(201,151,74,.05) 100%);
-  border-bottom: 1px solid var(--mdc-line);
-  padding: clamp(60px, 10vw, 120px) 0 clamp(48px, 7vw, 90px);
-}
-.mdc__hero-inner {
-  max-width: 800px; margin: 0 auto;
-  padding: 0 clamp(20px, 5vw, 48px);
-  text-align: center;
-}
-.mdc__hero-title {
-  margin: .4rem 0 .6rem;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(52px, 9vw, 110px);
-  line-height: .82;
-  letter-spacing: -.06em;
-  text-transform: uppercase;
-}
-.mdc__hero-sub {
-  margin: 0;
-  font-size: clamp(15px, 1.3vw, 18px);
-  line-height: 1.6;
-  color: rgba(244,234,216,.7);
-  max-width: 560px;
-  margin-inline: auto;
-}
-
-/* ── shared ── */
-.mdc__body {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: 0 clamp(20px, 5vw, 48px);
-}
-
-.mdc__eyebrow {
-  margin: 0 0 .5rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .6rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: rgba(244,234,216,.44);
-}
-
-.mdc__section-title {
-  margin: 0 0 clamp(28px, 4vw, 48px);
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(28px, 4vw, 52px);
-  letter-spacing: -.04em;
-  line-height: .9;
-  text-transform: uppercase;
-}
-
-/* ── timeline ── */
-.mdc__timeline-section {
-  padding: clamp(48px, 7vw, 90px) 0;
-  border-bottom: 1px solid var(--mdc-line);
-}
-
-.mdc__timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-@media (min-width: 700px) {
-  .mdc__timeline {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-}
-
-.mdc__timeline-step {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-  flex: 1;
-  position: relative;
-}
-
-@media (min-width: 700px) {
-  .mdc__timeline-step { align-items: center; }
-}
-
-.mdc__step-node {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid var(--mdc-line);
-  background: var(--mdc-surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: background .3s, border-color .3s;
-  position: relative;
-  z-index: 1;
-}
-.mdc__timeline-step.is-done  .mdc__step-node { background: rgba(201,151,74,.18); border-color: var(--mdc-accent); }
-.mdc__timeline-step.is-active .mdc__step-node { background: var(--mdc-accent); border-color: var(--mdc-accent); }
-
-.mdc__step-num {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .65rem;
-  color: var(--mdc-muted);
-}
-.mdc__timeline-step.is-done  .mdc__step-num { color: var(--mdc-accent); }
-.mdc__timeline-step.is-active .mdc__step-num { color: var(--mdc-bg); font-weight: 700; }
-
-/* connector line */
-.mdc__step-connector {
-  background: var(--mdc-line);
-  transition: background .4s;
-}
-
-/* vertical (mobile) */
-.mdc__step-connector {
-  width: 2px;
-  height: 32px;
-  margin-left: 17px;
-}
-.mdc__timeline-step.is-done .mdc__step-connector { background: rgba(201,151,74,.4); }
-
-/* horizontal (desktop) */
-@media (min-width: 700px) {
-  .mdc__step-connector {
-    position: absolute;
-    top: 17px;
-    left: calc(50% + 18px);
-    width: calc(100% - 36px);
-    height: 2px;
-    margin-left: 0;
-  }
-}
-
-.mdc__step-label {
-  font-size: .8rem;
-  color: var(--mdc-muted);
-  font-weight: 500;
-  margin-top: 8px;
-  transition: color .3s;
-}
-.mdc__timeline-step.is-done  .mdc__step-label { color: rgba(244,234,216,.72); }
-.mdc__timeline-step.is-active .mdc__step-label { color: var(--mdc-ink); font-weight: 700; }
-
-@media (min-width: 700px) {
-  .mdc__step-label { text-align: center; font-size: .75rem; }
-}
-
-/* ── promise cards ── */
-.mdc__promises {
-  padding: clamp(48px, 7vw, 90px) 0;
-  border-bottom: 1px solid var(--mdc-line);
-}
-.mdc__promise-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-@media (min-width: 500px) { .mdc__promise-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 900px) { .mdc__promise-grid { grid-template-columns: repeat(3, 1fr); } }
-
-.mdc__promise-card {
-  padding: clamp(20px, 3vw, 32px);
-  background: var(--mdc-surface);
-  border: 1px solid var(--mdc-line);
-  border-top: 3px solid var(--mdc-accent);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  transition: transform .2s;
-}
-.mdc__promise-card:hover { transform: translateY(-2px); }
-.mdc__promise-icon { color: var(--mdc-accent); line-height: 0; }
-.mdc__promise-title {
-  margin: 0;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(20px, 2.2vw, 28px);
-  letter-spacing: -.03em;
-  line-height: .9;
-  text-transform: uppercase;
-}
-.mdc__promise-text {
-  margin: 0;
-  font-size: .88rem;
-  line-height: 1.6;
-  color: rgba(244,234,216,.66);
-}
-
-/* ── packaging editorial ── */
-.mdc__packaging {
-  padding: clamp(48px, 7vw, 90px) 0;
-  border-bottom: 1px solid var(--mdc-line);
-}
-.mdc__packaging-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: clamp(24px, 4vw, 60px);
-  align-items: center;
-}
-@media (min-width: 760px) {
-  .mdc__packaging-grid { grid-template-columns: 1fr 1fr; }
-}
-.mdc__packaging-img { width: 100%; height: auto; display: block; border-radius: 10px; }
-.mdc__packaging-richtext p { font-size: .95rem; line-height: 1.65; color: rgba(244,234,216,.7); margin: 0 0 .8rem; }
-.mdc__packaging-richtext p:last-child { margin-bottom: 0; }
-
-/* ── checklist ── */
-.mdc__checklist-section {
-  padding: clamp(48px, 7vw, 90px) 0;
-  border-bottom: 1px solid var(--mdc-line);
-}
-.mdc__checklist {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: .7rem;
-}
-.mdc__checklist-item {
-  font-size: .9rem;
-  padding-left: 1.5rem;
-  position: relative;
-  color: rgba(244,234,216,.78);
-  line-height: 1.5;
-}
-.mdc__checklist-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: .52rem;
-  width: .6rem; height: .6rem;
-  border: 1.5px solid var(--mdc-accent);
-  border-radius: 2px;
-}
-
-/* ── urgent date CTA ── */
-.mdc__date-cta {
-  padding: clamp(48px, 9vw, 100px) 0;
-}
-.mdc__date-cta-inner {
-  max-width: 640px;
-  margin: 0 auto;
-  text-align: center;
-  padding: clamp(28px, 5vw, 60px);
-  background: rgba(201,151,74,.08);
-  border: 1px solid rgba(201,151,74,.24);
-  border-radius: 16px;
-}
-.mdc__date-cta-title {
-  margin: .5rem 0 .8rem;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(28px, 4.5vw, 52px);
-  letter-spacing: -.04em;
-  line-height: .9;
-  text-transform: uppercase;
-}
-.mdc__date-cta-copy {
-  margin: 0 0 1.8rem;
-  font-size: clamp(14px, 1.2vw, 16px);
-  line-height: 1.65;
-  color: rgba(244,234,216,.7);
-}
-
-/* global pill (isolation) */
-.mdc .melato-global-pill {
-  min-height: 46px;
-  padding: 0 22px;
-  border-radius: 999px;
-  border: 1px solid rgba(244,234,216,.22);
-  background: rgba(255,255,255,.06);
-  color: #f4ead8;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform .2s, background .2s, color .2s;
-}
-.mdc .melato-global-pill:hover { transform: translateY(-2px); background: #f4ead8; color: #111; }
-.mdc .melato-global-pill--new  { background: #f4ead8; color: #111; border-color: #f4ead8; }
-
-@media (prefers-reduced-motion: reduce) {
-  .mdc__step-node, .mdc__step-connector, .mdc__promise-card, .mdc .melato-global-pill { transition: none; }
-}
+.melato-delivery-bleed { background: #f4ead8 !important; }
+.melato-delivery { max-width: 1000px; margin: 0 auto; padding: 0 1.25rem clamp(2rem,5vw,3.5rem); }
+.melato-delivery__intro { max-width: 640px; margin: 0 auto clamp(2rem,4vw,3rem); text-align: center; }
+.melato-delivery__intro p { color: #3a3833 !important; margin: 0; }
+.melato-delivery__grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: rgba(10,10,10,.14); border: 1px solid rgba(10,10,10,.14); margin-bottom: clamp(2.5rem,6vw,4rem); }
+@media (min-width: 760px) { .melato-delivery__grid { grid-template-columns: repeat(3,1fr); } }
+.melato-delivery__card { background: #f4ead8 !important; padding: 1.5rem 1.25rem; }
+.melato-delivery__card-title { color: #0a0a0a !important; font-weight: 500; margin: 0 0 .5rem; font-size: 1.05rem; }
+.melato-delivery__card-text { color: #6f6d68 !important; font-size: .87rem; line-height: 1.5; margin: 0; }
+.melato-delivery__packaging { max-width: 640px; margin: 0 auto clamp(2.5rem,6vw,4rem); text-align: center; }
+.melato-delivery__packaging-title { color: #0a0a0a !important; font-weight: 500; margin: 0 0 .75rem; font-size: 1.3rem; }
+.melato-delivery__packaging-text p { color: #3a3833 !important; font-size: .95rem; line-height: 1.6; margin: 0; }
+.melato-delivery__checklist { max-width: 480px; margin: 0 auto; }
+.melato-delivery__checklist-title { color: #0a0a0a !important; font-weight: 500; margin: 0 0 1rem; text-align: center; font-size: 1.15rem; }
+.melato-delivery__checklist-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .65rem; }
+.melato-delivery__checklist-list li { color: #3a3833; font-size: .9rem; padding-left: 1.4rem; position: relative; }
+.melato-delivery__checklist-list li::before { content: ''; position: absolute; left: 0; top: .45rem; width: .55rem; height: .55rem; border: 1px solid #0a0a0a; }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Melato Delivery Concierge",
-  "tag": "section",
+  "name": "Melato Delivery Concierge", "tag": "section",
   "settings": [
-    { "type": "header",   "content": "Hero" },
-    { "type": "text",     "id": "hero_title",        "label": "Hero title",           "default": "Delivery Concierge" },
-    { "type": "textarea", "id": "hero_sub",           "label": "Hero subtitle",        "default": "Every order is handled with the same attention as the design itself." },
-    { "type": "header",   "content": "Timeline" },
-    { "type": "text",     "id": "timeline_title",    "label": "Timeline heading",     "default": "From checkout to your door" },
-    { "type": "textarea", "id": "timeline_steps",    "label": "Timeline steps (one per line)", "info": "Leave blank to use the default 5-step journey." },
-    { "type": "range",    "id": "active_step",       "label": "Active/highlighted step (1\u20135)", "min": 1, "max": 5, "step": 1, "default": 4 },
-    { "type": "header",   "content": "Promise cards" },
-    { "type": "text",     "id": "promises_title",    "label": "Cards heading",        "default": "How we handle every order" },
-    { "type": "header",   "content": "Packaging" },
-    { "type": "text",     "id": "packaging_title",   "label": "Packaging heading",    "default": "Packed with intention" },
-    { "type": "image_picker", "id": "packaging_image", "label": "Packaging photo" },
-    { "type": "richtext", "id": "packaging_text",    "label": "Packaging story" },
-    { "type": "header",   "content": "Checklist" },
-    { "type": "text",     "id": "checklist_title",   "label": "Checklist heading",    "default": "Quick reminders" },
-    { "type": "textarea", "id": "checklist",         "label": "Checklist (one item per line)" },
-    { "type": "header",   "content": "Date CTA" },
-    { "type": "text",     "id": "date_cta_title",    "label": "CTA title",            "default": "Need it for a specific date?" },
-    { "type": "textarea", "id": "date_cta_copy",     "label": "CTA copy",             "default": "Contact Customer Care before placing your order. We\u2019ll confirm the timeline and do everything possible to make it work." },
-    { "type": "text",     "id": "date_cta_label",    "label": "CTA button label",     "default": "Contact Customer Care" },
-    { "type": "url",      "id": "date_cta_url",      "label": "CTA URL" }
+    { "type": "richtext", "id": "intro", "label": "Intro copy (optional)" },
+    { "type": "text", "id": "packaging_title", "label": "Packaging title", "default": "Packaging" },
+    { "type": "richtext", "id": "packaging_text", "label": "Packaging story" },
+    { "type": "text", "id": "checklist_title", "label": "Checklist title", "default": "Before checkout" },
+    { "type": "textarea", "id": "checklist", "label": "Checklist items (one per line)" }
   ],
-  "blocks": [
-    {
-      "type": "clarity_card",
-      "name": "Promise card",
-      "settings": [
-        { "type": "text",     "id": "title",    "label": "Title" },
-        { "type": "textarea", "id": "text",     "label": "Body copy" },
-        { "type": "html",     "id": "icon_svg", "label": "Icon SVG (optional)" }
-      ]
-    }
-  ],
-  "max_blocks": 6,
-  "presets": [{
-    "name": "Melato Delivery Concierge",
-    "blocks": [
-      { "type": "clarity_card", "settings": { "title": "Processing", "text": "Orders are prepared within 1\u20133 business days. Limited drops and high-volume periods may add one extra day." } },
-      { "type": "clarity_card", "settings": { "title": "Shipping",   "text": "Shipping options and estimated delivery windows are displayed at checkout. Express options are available." } },
-      { "type": "clarity_card", "settings": { "title": "Tracking",   "text": "A tracking link is sent by email once your order ships. Contact us if you haven\u2019t received it within 48 hours of dispatch." } },
-      { "type": "clarity_card", "settings": { "title": "Packaging",  "text": "Every garment is folded, protected, and prepared with care. Melato packaging is designed to arrive presentation-ready." } },
-      { "type": "clarity_card", "settings": { "title": "Date-critical orders", "text": "Contact Customer Care before ordering if timing is critical. We will confirm your window and flag the order for priority prep." } }
-    ]
-  }]
+  "blocks": [{ "type": "clarity_card", "name": "Clarity card", "settings": [
+      { "type": "text", "id": "title", "label": "Title" }, { "type": "textarea", "id": "text", "label": "Text" }
+  ]}],
+  "max_blocks": 8,
+  "presets": [{ "name": "Melato Delivery Concierge", "blocks": [
+      { "type": "clarity_card", "settings": { "title": "Processing", "text": "Orders are prepared before dispatch." } },
+      { "type": "clarity_card", "settings": { "title": "Delivery", "text": "Shipping options and timelines are shown at checkout." } },
+      { "type": "clarity_card", "settings": { "title": "Tracking", "text": "Tracking details are sent once the order ships." } },
+      { "type": "clarity_card", "settings": { "title": "Packaging", "text": "Pieces are folded, protected, and prepared with intention." } },
+      { "type": "clarity_card", "settings": { "title": "Need it for a date?", "text": "Contact Customer Care before ordering." } }
+  ]}]
 }
 {% endschema %}

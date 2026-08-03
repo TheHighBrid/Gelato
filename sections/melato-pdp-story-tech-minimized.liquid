@@ -1,0 +1,202 @@
+<style id="MelatoPDPStoryTechMinimized-{{ section.id }}">
+.melato-pdp-rebuild .pdp-story-tech.pdp-story-panel--minimized {
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 10px !important;
+}
+.melato-pdp-rebuild .pdp-story-tech.pdp-story-panel--minimized .pdp-story-tech__grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 10px !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  align-items: start !important;
+}
+.melato-pdp-rebuild .pdp-story-tech.pdp-story-panel--minimized .pdp-story-tech__story,
+.melato-pdp-rebuild .pdp-story-tech.pdp-story-panel--minimized .pdp-story-tech__details {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.melato-pdp-rebuild .pdp-mini-detail {
+  margin: 0;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 16px;
+  background: rgba(255,255,255,.025);
+  overflow: hidden;
+}
+.melato-pdp-rebuild .pdp-mini-detail > summary {
+  min-height: 46px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  list-style: none;
+  cursor: pointer;
+  color: var(--pdp-title-accent);
+  font-family: var(--font-body-family, inherit);
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: .08em;
+  font-weight: 800;
+  text-transform: none;
+}
+.melato-pdp-rebuild .pdp-mini-detail > summary::-webkit-details-marker {
+  display: none;
+}
+.melato-pdp-rebuild .pdp-mini-detail__icon {
+  width: 9px;
+  height: 9px;
+  flex: 0 0 9px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform .18s ease;
+  opacity: .72;
+}
+.melato-pdp-rebuild .pdp-mini-detail[open] .pdp-mini-detail__icon {
+  transform: rotate(225deg) translate(-1px,-1px);
+}
+.melato-pdp-rebuild .pdp-mini-detail__content {
+  padding: 0 15px 16px;
+  color: rgba(255,255,255,.78);
+  font-size: 13px;
+  line-height: 1.65;
+}
+.melato-pdp-rebuild .pdp-mini-detail__content p {
+  margin: 0;
+}
+.melato-pdp-rebuild .pdp-mini-detail__content ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.melato-pdp-rebuild .pdp-mini-detail__content li + li {
+  margin-top: 6px;
+}
+.melato-pdp-rebuild .pdp-mini-detail__content ul + p {
+  margin-top: 14px;
+}
+@media (max-width: 749px) {
+  .melato-pdp-rebuild .pdp-story-tech.pdp-story-panel--minimized .pdp-story-tech__grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .melato-pdp-rebuild .pdp-mini-detail__icon {
+    transition: none;
+  }
+}
+</style>
+<script>
+(function() {
+  function cleanText(element) {
+    return element ? element.textContent.trim() : '';
+  }
+
+  function createCompactDetail(label, buildContent) {
+    var details = document.createElement('details');
+    details.className = 'pdp-mini-detail';
+
+    var summary = document.createElement('summary');
+    var labelElement = document.createElement('span');
+    labelElement.textContent = label;
+    var icon = document.createElement('span');
+    icon.className = 'pdp-mini-detail__icon';
+    icon.setAttribute('aria-hidden', 'true');
+    summary.appendChild(labelElement);
+    summary.appendChild(icon);
+
+    var content = document.createElement('div');
+    content.className = 'pdp-mini-detail__content';
+    buildContent(content);
+
+    details.appendChild(summary);
+    details.appendChild(content);
+    return details;
+  }
+
+  function minimizeStoryAndConstruction() {
+    var root = document.querySelector('.melato-pdp-rebuild');
+    if (!root) return false;
+
+    var panel = root.querySelector('.pdp-story-tech');
+    var storyBlock = root.querySelector('.pdp-story-tech__story');
+    var constructionBlock = root.querySelector('.pdp-story-tech__details');
+    if (!panel || !storyBlock || !constructionBlock) return false;
+
+    if (panel.classList.contains('pdp-story-panel--minimized')) return true;
+
+    // The original labelled heading is replaced below, so give the region a
+    // durable accessible name before removing its aria-labelledby target.
+    panel.removeAttribute('aria-labelledby');
+    panel.setAttribute('aria-label', 'Product story and construction details');
+
+    var storyText = cleanText(storyBlock.querySelector('.pdp-rte--story'));
+    var constructionItems = Array.prototype.map.call(
+      constructionBlock.querySelectorAll('.pdp-detail-list li'),
+      function(item) { return cleanText(item); }
+    ).filter(Boolean);
+    var constructionParagraph = cleanText(constructionBlock.querySelector('.pdp-technical-paragraph'));
+
+    storyBlock.textContent = '';
+    storyBlock.appendChild(createCompactDetail('Story', function(content) {
+      var paragraph = document.createElement('p');
+      paragraph.textContent = storyText;
+      content.appendChild(paragraph);
+    }));
+
+    constructionBlock.textContent = '';
+    constructionBlock.appendChild(createCompactDetail('Construction', function(content) {
+      if (constructionItems.length) {
+        var list = document.createElement('ul');
+        constructionItems.forEach(function(item) {
+          var listItem = document.createElement('li');
+          listItem.textContent = item;
+          list.appendChild(listItem);
+        });
+        content.appendChild(list);
+      }
+      if (constructionParagraph) {
+        var paragraph = document.createElement('p');
+        paragraph.textContent = constructionParagraph;
+        content.appendChild(paragraph);
+      }
+    }));
+
+    panel.classList.add('pdp-story-panel--minimized');
+    return true;
+  }
+
+  function scheduleMinimize() {
+    minimizeStoryAndConstruction();
+    window.setTimeout(minimizeStoryAndConstruction, 100);
+    window.setTimeout(minimizeStoryAndConstruction, 350);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleMinimize, { once: true });
+  } else {
+    scheduleMinimize();
+  }
+
+  document.addEventListener('shopify:section:load', scheduleMinimize);
+})();
+</script>
+{% schema %}
+{
+  "name": "Minimized PDP details",
+  "tag": "section",
+  "class": "section-melato-pdp-story-tech-minimized",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Minimized PDP details"
+    }
+  ]
+}
+{% endschema %}
