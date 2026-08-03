@@ -1,9 +1,4 @@
 {%- comment -%}
-  snippets/melato-living-lookbook-loader.liquid
-  Loads lookbook-specific assets only on the living-lookbook page template,
-  keeping global <head> clean. Include once in theme.liquid body footer:
-    {% render 'melato-living-lookbook-loader' %}
+Living Lookbook auto-naming and shoppable overlay script disabled on Copy of Gelato v4.9.
+Reason: previous JS mapping caused incorrect product names. Rebuild must be done from the actual lookbook card source with verified card-by-card data.
 {%- endcomment -%}
-{%- if template.name == 'page' and template.suffix == 'living-lookbook' -%}
-  {%- comment -%} Any additional lookbook-only scripts can be added here. {%- endcomment -%}
-{%- endif -%}

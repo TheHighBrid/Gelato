@@ -1,94 +1,62 @@
-{% comment %}
-  sections/melato-concierge-strip.liquid
-  Sticky sub-header nav linking the four Melato concierge service pages.
-  Features: hover popover (desktop), animated chevron, per-pillar notification dot.
-{% endcomment %}
-
 {%- liquid
-  assign has_blocks = section.blocks.size > 0
+  assign has_blocks = false
+  if section.blocks.size > 0
+    assign has_blocks = true
+  endif
 -%}
 
-<nav class="mcs mcs--desktop" id="ConciergeStripDesktop" aria-label="Concierge services">
+{%- comment -%} Desktop sticky pillar nav {%- endcomment -%}
+<nav class="concierge-strip concierge-strip--desktop" id="ConciergeStripDesktop">
   {%- if has_blocks -%}
     {%- for block in section.blocks -%}
       {%- liquid
-        assign strip_url   = block.settings.link | default: '#'
-        assign is_active   = false
+        assign strip_url = block.settings.link | default: '#'
+        assign is_active = false
         if request.path == strip_url
           assign is_active = true
         endif
       -%}
-      <div class="mcs__pillar-wrap" {{ block.shopify_attributes }}>
-        <a href="{{ strip_url }}"
-           class="mcs__pillar{% if is_active %} is-active{% endif %}"
-           aria-current="{% if is_active %}page{% endif %}">
-          <span class="mcs__active-bar" aria-hidden="true"></span>
-          {%- if block.settings.icon != blank -%}
-            <span class="mcs__icon" aria-hidden="true">{{ block.settings.icon }}</span>
-          {%- endif -%}
-          <span class="mcs__copy">
-            <span class="mcs__label">{{ block.settings.label }}</span>
-            <span class="mcs__title">
-              {{ block.settings.title }}
-              {%- if block.settings.has_notification -%}
-                <span class="mcs__notif" aria-label="New"></span>
-              {%- endif -%}
-            </span>
-          </span>
-          <span class="mcs__chevron" aria-hidden="true">
-            <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg>
-          </span>
-        </a>
-        {%- if block.settings.popover_text != blank -%}
-          <div class="mcs__popover" role="tooltip" aria-hidden="true">
-            <p class="mcs__popover-text">{{ block.settings.popover_text | escape }}</p>
-            {%- if block.settings.popover_cta != blank -%}
-              <a href="{{ strip_url }}" class="mcs__popover-cta">{{ block.settings.popover_cta | escape }} &rarr;</a>
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-      </div>
+      <a href="{{ strip_url }}" class="concierge-strip__pillar{% if is_active %} is-active{% endif %}" {{ block.shopify_attributes }}>
+        <span class="concierge-strip__active-bar"></span>
+        {%- if block.settings.icon != blank -%}<span class="concierge-strip__icon">{{ block.settings.icon }}</span>{%- endif -%}
+        <span class="concierge-strip__copy">
+          <span class="concierge-strip__label">{{ block.settings.label }}</span>
+          <span class="concierge-strip__title">{{ block.settings.title }}</span>
+        </span>
+        <span class="concierge-strip__arrow" aria-hidden="true">&rarr;</span>
+      </a>
     {%- endfor -%}
   {%- else -%}
-    <!-- Default hardcoded pillars (used when no blocks are configured) -->
-    <div class="mcs__pillar-wrap">
-      <a href="/pages/order-companion" class="mcs__pillar{% if request.path == '/pages/order-companion' %} is-active{% endif %}">
-        <span class="mcs__active-bar" aria-hidden="true"></span>
-        <span class="mcs__icon" aria-hidden="true">{% render 'melato-concierge-icon-care' %}</span>
-        <span class="mcs__copy"><span class="mcs__label">Care</span><span class="mcs__title">Order Companion</span></span>
-        <span class="mcs__chevron" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg></span>
-      </a>
-    </div>
-    <div class="mcs__pillar-wrap">
-      <a href="/pages/preview-room" class="mcs__pillar{% if request.path == '/pages/preview-room' %} is-active{% endif %}">
-        <span class="mcs__active-bar" aria-hidden="true"></span>
-        <span class="mcs__icon" aria-hidden="true">{% render 'melato-concierge-icon-access' %}</span>
-        <span class="mcs__copy"><span class="mcs__label">Access</span><span class="mcs__title">The Preview Room</span></span>
-        <span class="mcs__chevron" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg></span>
-      </a>
-    </div>
-    <div class="mcs__pillar-wrap">
-      <a href="/pages/fit-concierge" class="mcs__pillar{% if request.path == '/pages/fit-concierge' %} is-active{% endif %}">
-        <span class="mcs__active-bar" aria-hidden="true"></span>
-        <span class="mcs__icon" aria-hidden="true">{% render 'melato-concierge-icon-fit' %}</span>
-        <span class="mcs__copy"><span class="mcs__label">Fit</span><span class="mcs__title">Fit Concierge</span></span>
-        <span class="mcs__chevron" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg></span>
-      </a>
-    </div>
-    <div class="mcs__pillar-wrap">
-      <a href="/pages/delivery-concierge" class="mcs__pillar{% if request.path == '/pages/delivery-concierge' %} is-active{% endif %}">
-        <span class="mcs__active-bar" aria-hidden="true"></span>
-        <span class="mcs__icon" aria-hidden="true">{% render 'melato-concierge-icon-delivery' %}</span>
-        <span class="mcs__copy"><span class="mcs__label">Delivery</span><span class="mcs__title">Delivery Concierge</span></span>
-        <span class="mcs__chevron" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h8M9 5l3 3-3 3"/></svg></span>
-      </a>
-    </div>
+    <a href="/pages/order-companion" class="concierge-strip__pillar{% if request.path == '/pages/order-companion' %} is-active{% endif %}">
+      <span class="concierge-strip__active-bar"></span>
+      <span class="concierge-strip__icon">{% render 'melato-concierge-icon-care' %}</span>
+      <span class="concierge-strip__copy"><span class="concierge-strip__label">Care</span><span class="concierge-strip__title">Order Companion</span></span>
+      <span class="concierge-strip__arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    <a href="/pages/preview-room" class="concierge-strip__pillar{% if request.path == '/pages/preview-room' %} is-active{% endif %}">
+      <span class="concierge-strip__active-bar"></span>
+      <span class="concierge-strip__icon">{% render 'melato-concierge-icon-access' %}</span>
+      <span class="concierge-strip__copy"><span class="concierge-strip__label">Access</span><span class="concierge-strip__title">The Preview Room</span></span>
+      <span class="concierge-strip__arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    <a href="/pages/fit-concierge" class="concierge-strip__pillar{% if request.path == '/pages/fit-concierge' %} is-active{% endif %}">
+      <span class="concierge-strip__active-bar"></span>
+      <span class="concierge-strip__icon">{% render 'melato-concierge-icon-fit' %}</span>
+      <span class="concierge-strip__copy"><span class="concierge-strip__label">Fit</span><span class="concierge-strip__title">Fit Concierge</span></span>
+      <span class="concierge-strip__arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    <a href="/pages/delivery-concierge" class="concierge-strip__pillar{% if request.path == '/pages/delivery-concierge' %} is-active{% endif %}">
+      <span class="concierge-strip__active-bar"></span>
+      <span class="concierge-strip__icon">{% render 'melato-concierge-icon-delivery' %}</span>
+      <span class="concierge-strip__copy"><span class="concierge-strip__label">Delivery</span><span class="concierge-strip__title">Delivery Concierge</span></span>
+      <span class="concierge-strip__arrow" aria-hidden="true">&rarr;</span>
+    </a>
   {%- endif -%}
 </nav>
 
-<!-- Mobile horizontal-scroll pill bar -->
-<nav class="mcs mcs--mobile" id="ConciergeStripMobile" aria-label="Concierge services">
-  <div class="mcs__mobile-track">
+{%- comment -%} Mobile horizontal-scroll pill bar {%- endcomment -%}
+<nav class="concierge-strip concierge-strip--mobile" id="ConciergeStripMobile">
+  <div class="concierge-strip__mobile-track">
     {%- if has_blocks -%}
       {%- for block in section.blocks -%}
         {%- liquid
@@ -98,214 +66,48 @@
             assign is_active = true
           endif
         -%}
-        <a href="{{ strip_url }}" class="mcs__mobile-pill{% if is_active %} is-active{% endif %}" aria-current="{% if is_active %}page{% endif %}">
-          {%- if block.settings.icon != blank -%}<span class="mcs__icon" aria-hidden="true">{{ block.settings.icon }}</span>{%- endif -%}
-          <span class="mcs__mobile-label">
-            {{ block.settings.label }}
-            {%- if block.settings.has_notification -%}<span class="mcs__notif" aria-label="New"></span>{%- endif -%}
-          </span>
+        <a href="{{ strip_url }}" class="concierge-strip__mobile-pill{% if is_active %} is-active{% endif %}">
+          {%- if block.settings.icon != blank -%}<span class="concierge-strip__icon">{{ block.settings.icon }}</span>{%- endif -%}
+          <span class="concierge-strip__mobile-label">{{ block.settings.label }}</span>
         </a>
       {%- endfor -%}
     {%- else -%}
-      <a href="/pages/order-companion"   class="mcs__mobile-pill{% if request.path == '/pages/order-companion'   %} is-active{% endif %}"><span class="mcs__icon" aria-hidden="true">{% render 'melato-concierge-icon-care'     %}</span><span class="mcs__mobile-label">Care</span></a>
-      <a href="/pages/preview-room"      class="mcs__mobile-pill{% if request.path == '/pages/preview-room'      %} is-active{% endif %}"><span class="mcs__icon" aria-hidden="true">{% render 'melato-concierge-icon-access'   %}</span><span class="mcs__mobile-label">Access</span></a>
-      <a href="/pages/fit-concierge"     class="mcs__mobile-pill{% if request.path == '/pages/fit-concierge'     %} is-active{% endif %}"><span class="mcs__icon" aria-hidden="true">{% render 'melato-concierge-icon-fit'      %}</span><span class="mcs__mobile-label">Fit</span></a>
-      <a href="/pages/delivery-concierge" class="mcs__mobile-pill{% if request.path == '/pages/delivery-concierge' %} is-active{% endif %}"><span class="mcs__icon" aria-hidden="true">{% render 'melato-concierge-icon-delivery' %}</span><span class="mcs__mobile-label">Delivery</span></a>
+      <a href="/pages/order-companion" class="concierge-strip__mobile-pill{% if request.path == '/pages/order-companion' %} is-active{% endif %}"><span class="concierge-strip__icon">{% render 'melato-concierge-icon-care' %}</span><span class="concierge-strip__mobile-label">Care</span></a>
+      <a href="/pages/preview-room" class="concierge-strip__mobile-pill{% if request.path == '/pages/preview-room' %} is-active{% endif %}"><span class="concierge-strip__icon">{% render 'melato-concierge-icon-access' %}</span><span class="concierge-strip__mobile-label">Access</span></a>
+      <a href="/pages/fit-concierge" class="concierge-strip__mobile-pill{% if request.path == '/pages/fit-concierge' %} is-active{% endif %}"><span class="concierge-strip__icon">{% render 'melato-concierge-icon-fit' %}</span><span class="concierge-strip__mobile-label">Fit</span></a>
+      <a href="/pages/delivery-concierge" class="concierge-strip__mobile-pill{% if request.path == '/pages/delivery-concierge' %} is-active{% endif %}"><span class="concierge-strip__icon">{% render 'melato-concierge-icon-delivery' %}</span><span class="concierge-strip__mobile-label">Delivery</span></a>
     {%- endif -%}
   </div>
 </nav>
 
 {% stylesheet %}
+.concierge-strip { position: sticky; top: var(--header-height, 0px); z-index: 40; background: #080808; border-bottom: 1px solid rgba(244,234,216,0.10); }
 
-/* ── Base strip ── */
-.mcs {
-  position: sticky;
-  top: var(--header-height, 0px);
-  z-index: 40;
-  background: #080808;
-  border-bottom: 1px solid rgba(244,234,216,.10);
-}
+.concierge-strip--desktop { display: none; height: 64px; }
+@media (min-width: 768px) { .concierge-strip--desktop { display: flex; } }
+.concierge-strip__pillar { flex: 1 1 0; display: flex; align-items: center; gap: 12px; padding: 0 24px; position: relative; text-decoration: none; border-right: 1px solid rgba(244,234,216,0.10); background: transparent; transition: background .2s ease; }
+.concierge-strip__pillar:last-child { border-right: none; }
+.concierge-strip__pillar:hover, .concierge-strip__pillar.is-active { background: #111111; }
+.concierge-strip__active-bar { position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #D3A74A; opacity: 0; }
+.concierge-strip__pillar.is-active .concierge-strip__active-bar { opacity: 1; }
+.concierge-strip__copy { display: flex; flex-direction: column; }
+.concierge-strip__label { font-family: var(--font-mono-family, monospace); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; color: #747474; }
+.concierge-strip__title { font-family: var(--font-body-family, 'Barlow', sans-serif); font-size: 13px; color: #F4EAD8; transition: color .2s ease; }
+.concierge-strip__pillar.is-active .concierge-strip__title, .concierge-strip__pillar:hover .concierge-strip__title { color: #D3A74A; }
+.concierge-strip__arrow { margin-left: auto; color: #D3A74A; font-size: 12px; opacity: 0; transition: opacity .2s ease, transform .2s ease; }
+.concierge-strip__pillar:hover .concierge-strip__arrow { opacity: 1; transform: translateX(4px); }
 
-/* ── Desktop strip ── */
-.mcs--desktop { display: none; height: 64px; }
-@media (min-width: 768px) { .mcs--desktop { display: flex; } }
+.concierge-strip--mobile { display: flex; height: 52px; align-items: center; }
+@media (min-width: 768px) { .concierge-strip--mobile { display: none; } }
+.concierge-strip__mobile-track { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; padding: 0 12px; width: 100%; scrollbar-width: none; }
+.concierge-strip__mobile-track::-webkit-scrollbar { display: none; }
+.concierge-strip__mobile-pill { flex: 0 0 auto; scroll-snap-align: start; display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 999px; border: 1px solid rgba(244,234,216,0.14); text-decoration: none; white-space: nowrap; }
+.concierge-strip__mobile-pill.is-active { background: #111111; border-color: #D3A74A; }
+.concierge-strip__mobile-label { font-family: var(--font-mono-family, monospace); text-transform: uppercase; letter-spacing: .06em; font-size: 11px; color: #F4EAD8; }
+.concierge-strip__mobile-pill.is-active .concierge-strip__mobile-label { color: #D3A74A; }
 
-.mcs__pillar-wrap {
-  flex: 1 1 0;
-  position: relative;
-  border-right: 1px solid rgba(244,234,216,.10);
-}
-.mcs__pillar-wrap:last-child { border-right: none; }
-
-.mcs__pillar {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 0 24px;
-  height: 64px;
-  position: relative;
-  text-decoration: none;
-  background: transparent;
-  transition: background .2s ease;
-}
-.mcs__pillar:hover,
-.mcs__pillar.is-active { background: #111; }
-
-.mcs__active-bar {
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 2px;
-  background: #D3A74A;
-  opacity: 0;
-  transition: opacity .2s;
-}
-.mcs__pillar.is-active .mcs__active-bar { opacity: 1; }
-
-.mcs__copy { display: flex; flex-direction: column; }
-.mcs__label {
-  font-family: var(--font-mono-family, monospace);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  font-size: 11px;
-  color: #747474;
-}
-.mcs__title {
-  font-size: 13px;
-  color: #F4EAD8;
-  transition: color .2s;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.mcs__pillar.is-active .mcs__title,
-.mcs__pillar:hover      .mcs__title { color: #D3A74A; }
-
-/* animated chevron */
-.mcs__chevron {
-  margin-left: auto;
-  color: #D3A74A;
-  opacity: 0;
-  transform: translateX(-4px);
-  transition: opacity .2s, transform .2s;
-  display: flex;
-  align-items: center;
-}
-.mcs__pillar:hover .mcs__chevron,
-.mcs__pillar.is-active .mcs__chevron {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* notification dot */
-.mcs__notif {
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #e03a3a;
-  box-shadow: 0 0 0 2px rgba(224,58,58,.22);
-  animation: mcs-notif-pulse 2s ease-in-out infinite;
-  flex-shrink: 0;
-}
-@keyframes mcs-notif-pulse {
-  0%, 100% { box-shadow: 0 0 0 2px rgba(224,58,58,.22); }
-  50%       { box-shadow: 0 0 0 6px rgba(224,58,58,.04); }
-}
-
-/* ── Hover popover ── */
-.mcs__popover {
-  position: absolute;
-  top: calc(100% + 2px);
-  left: 0;
-  width: 220px;
-  padding: 14px 16px;
-  background: #141312;
-  border: 1px solid rgba(244,234,216,.16);
-  border-top: 2px solid #D3A74A;
-  border-radius: 0 0 10px 10px;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateY(-6px);
-  transition: opacity .22s ease, transform .22s ease;
-  z-index: 50;
-}
-.mcs__pillar-wrap:hover .mcs__popover,
-.mcs__pillar-wrap:focus-within .mcs__popover {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-.mcs__popover-text {
-  margin: 0 0 10px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: rgba(244,234,216,.72);
-}
-.mcs__popover-cta {
-  font-family: var(--font-mono-family, monospace);
-  font-size: 10px;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: #D3A74A;
-  text-decoration: none;
-}
-.mcs__popover-cta:hover { text-decoration: underline; }
-
-/* ── Mobile strip ── */
-.mcs--mobile { display: flex; height: 52px; align-items: center; }
-@media (min-width: 768px) { .mcs--mobile { display: none; } }
-
-.mcs__mobile-track {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-  padding: 0 12px;
-  width: 100%;
-  scrollbar-width: none;
-}
-.mcs__mobile-track::-webkit-scrollbar { display: none; }
-
-.mcs__mobile-pill {
-  flex: 0 0 auto;
-  scroll-snap-align: start;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(244,234,216,.14);
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background .2s, border-color .2s;
-}
-.mcs__mobile-pill.is-active { background: #111; border-color: #D3A74A; }
-.mcs__mobile-label {
-  font-family: var(--font-mono-family, monospace);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  font-size: 11px;
-  color: #F4EAD8;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.mcs__mobile-pill.is-active .mcs__mobile-label { color: #D3A74A; }
-
-/* icon shared */
-.mcs__icon {
-  color: #D3A74A;
-  flex-shrink: 0;
-  line-height: 0;
-  display: inline-flex;
-}
-.mcs__icon svg { width: 18px; height: 18px; }
-
-@media (prefers-reduced-motion: reduce) {
-  .mcs__notif { animation: none; }
-  .mcs__popover, .mcs__chevron { transition: none; }
-}
+.concierge-strip__icon { color: #D3A74A; flex-shrink: 0; line-height: 0; display: inline-flex; }
+.concierge-strip__icon svg { width: 18px; height: 18px; }
 {% endstylesheet %}
 
 {% schema %}
@@ -318,22 +120,19 @@
       "type": "pillar",
       "name": "Pillar",
       "settings": [
-        { "type": "text",     "id": "label",            "label": "Eyebrow label",         "default": "Care" },
-        { "type": "text",     "id": "title",            "label": "Title",                 "default": "Order Companion" },
-        { "type": "url",      "id": "link",             "label": "Page link" },
-        { "type": "textarea", "id": "popover_text",     "label": "Hover popover text",    "info": "2–3 sentence service preview. Shown on hover (desktop only)." },
-        { "type": "text",     "id": "popover_cta",      "label": "Popover CTA label",     "default": "Learn more" },
-        { "type": "checkbox", "id": "has_notification", "label": "Show notification dot", "default": false },
-        { "type": "html",     "id": "icon",             "label": "Icon (inline SVG)",     "info": "Leave blank to use default icon for this pillar." }
+        { "type": "text", "id": "label", "label": "Eyebrow label", "default": "Care" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Order Companion" },
+        { "type": "url", "id": "link", "label": "Page link" },
+        { "type": "html", "id": "icon", "label": "Icon (paste inline SVG, optional — leave blank to use default icon)" }
       ]
     }
   ],
   "default": {
     "blocks": [
-      { "type": "pillar", "settings": { "label": "Care",     "title": "Order Companion",    "link": "/pages/order-companion",    "popover_text": "Track, adjust, or query your order. We handle every post-purchase moment with the same attention as the sale.", "popover_cta": "Open companion" } },
-      { "type": "pillar", "settings": { "label": "Access",   "title": "The Preview Room",   "link": "/pages/preview-room",       "popover_text": "Newsletter subscribers see new pieces before they go public. Join the list to enter.", "popover_cta": "Enter the room" } },
-      { "type": "pillar", "settings": { "label": "Fit",      "title": "Fit Concierge",      "link": "/pages/fit-concierge",      "popover_text": "We make sure the garment fits the person, not the other way around. Get precise sizing guidance by category.", "popover_cta": "Ask about fit" } },
-      { "type": "pillar", "settings": { "label": "Delivery", "title": "Delivery Concierge", "link": "/pages/delivery-concierge", "popover_text": "Understand exactly how we pack, ship, and track your order — and how to reach us if timing matters.", "popover_cta": "See delivery info" } }
+      { "type": "pillar", "settings": { "label": "Care", "title": "Order Companion", "link": "/pages/order-companion" } },
+      { "type": "pillar", "settings": { "label": "Access", "title": "The Preview Room", "link": "/pages/preview-room" } },
+      { "type": "pillar", "settings": { "label": "Fit", "title": "Fit Concierge", "link": "/pages/fit-concierge" } },
+      { "type": "pillar", "settings": { "label": "Delivery", "title": "Delivery Concierge", "link": "/pages/delivery-concierge" } }
     ]
   }
 }

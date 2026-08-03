@@ -1,368 +1,66 @@
-{% comment %}
-  sections/melato-order-companion.liquid
-  Upgraded with iconic journey tracker, pre-filled contact subject links,
-  editorial tone header, and inline care note.
-{% endcomment %}
+<div class="melato-order-bleed">
+<div class="melato-order">
+  {%- if section.settings.intro != blank -%}<div class="melato-order__intro">{{ section.settings.intro }}</div>{%- endif -%}
 
-{%- liquid
-  assign tile_blocks = section.blocks | where: 'type', 'tile'
--%}
+  {%- assign steps = section.settings.timeline | newline_to_br | split: '<br />' -%}
+  {%- if steps.size > 0 -%}
+    <ol class="melato-order__timeline">
+      {%- for step in steps -%}{%- if step != blank -%}
+        <li class="melato-order__step"><span class="melato-order__step-num">{{ forloop.index }}</span><span class="melato-order__step-label">{{ step }}</span></li>
+      {%- endif -%}{%- endfor -%}
+    </ol>
+  {%- endif -%}
 
-<div class="moc" id="OrderCompanion-{{ section.id }}">
-
-  <!-- ── Editorial header ── -->
-  <header class="moc__hero">
-    <div class="moc__hero-inner">
-      <p class="moc__eyebrow">MELATO / ORDER COMPANION</p>
-      <h1 class="moc__hero-title">{{ section.settings.hero_title | default: 'Order Companion' }}</h1>
-      <p class="moc__hero-sub">{{ section.settings.hero_sub | default: 'We\u2019re with you until it\u2019s right.' }}</p>
+  {%- assign tile_blocks = section.blocks | where: 'type', 'tile' -%}
+  {%- if tile_blocks.size > 0 -%}
+    <h2 class="melato-order__tiles-heading">{{ section.settings.tiles_heading | default: 'Need help with this order?' }}</h2>
+    <div class="melato-order__tiles">
+      {%- for block in tile_blocks -%}
+        {% render 'melato-fit-card', title: block.settings.title, text: block.settings.text, cta_label: block.settings.cta_label, url: block.settings.url | default: '#melato-support' %}
+      {%- endfor -%}
     </div>
-  </header>
-
-  <div class="moc__body">
-
-    <!-- ── Journey tracker ── -->
-    <section class="moc__journey" aria-label="Order journey">
-      <p class="moc__eyebrow">YOUR ORDER JOURNEY</p>
-      {%- assign default_steps = 'Order received,Garment checked,Prepared for packaging,Dispatched,Delivered and ready to wear' | split: ',' -%}
-      {%- if section.settings.timeline != blank -%}
-        {%- assign tl_steps = section.settings.timeline | newline_to_br | split: '<br />' -%}
-      {%- else -%}
-        {%- assign tl_steps = default_steps -%}
-      {%- endif -%}
-
-      <ol class="moc__steps" aria-label="Journey steps">
-        {%- for step in tl_steps -%}
-          {%- if step != blank -%}
-            <li class="moc__step">
-              <span class="moc__step-node" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-              </span>
-              {%- unless forloop.last -%}
-                <span class="moc__step-line" aria-hidden="true"></span>
-              {%- endunless -%}
-              <span class="moc__step-text">{{ step | strip | escape }}</span>
-            </li>
-          {%- endif -%}
-        {%- endfor -%}
-      </ol>
-    </section>
-
-    <!-- ── Support tiles ── -->
-    {%- if tile_blocks.size > 0 -%}
-      <section class="moc__support" aria-label="Order support options">
-        <p class="moc__eyebrow">NEED HELP?</p>
-        <h2 class="moc__support-title">{{ section.settings.tiles_heading | default: 'We handle every case personally.' }}</h2>
-        <div class="moc__tiles">
-          {%- for block in tile_blocks -%}
-            {%- liquid
-              assign subject_raw = block.settings.subject | default: block.settings.title | default: 'Order enquiry'
-              assign subject_enc = subject_raw | url_encode
-              assign tile_url = block.settings.url | default: '/pages/contact?subject=' | append: subject_enc
-            -%}
-            <article class="moc__tile" {{ block.shopify_attributes }}>
-              {%- if block.settings.icon_svg != blank -%}
-                <span class="moc__tile-icon" aria-hidden="true">{{ block.settings.icon_svg }}</span>
-              {%- else -%}
-                <span class="moc__tile-icon moc__tile-icon--default" aria-hidden="true">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </span>
-              {%- endif -%}
-              <div class="moc__tile-text">
-                <h3 class="moc__tile-title">{{ block.settings.title | escape }}</h3>
-                {%- if block.settings.text != blank -%}
-                  <p class="moc__tile-sub">{{ block.settings.text | escape }}</p>
-                {%- endif -%}
-              </div>
-              <a href="{{ tile_url }}" class="moc__tile-cta" aria-label="{{ block.settings.cta_label | default: 'Contact us' | escape }} about {{ block.settings.title | escape }}">
-                {{ block.settings.cta_label | default: 'Contact us' | escape }} &rarr;
-              </a>
-            </article>
-          {%- endfor -%}
-        </div>
-      </section>
-    {%- endif -%}
-
-    <!-- ── After delivery care ── -->
-    {%- if section.settings.care_title != blank or section.settings.care_text != blank -%}
-      <section class="moc__care" aria-label="After delivery care">
-        <p class="moc__eyebrow">AFTER IT ARRIVES</p>
-        <h2 class="moc__care-title">{{ section.settings.care_title | default: 'Caring for your Melato piece' }}</h2>
-        {%- if section.settings.care_text != blank -%}
-          <div class="moc__care-text">{{ section.settings.care_text }}</div>
-        {%- endif -%}
-        {%- assign care_items = section.settings.care_list | newline_to_br | split: '<br />' -%}
-        {%- if care_items.size > 0 -%}
-          <ul class="moc__care-list" role="list">
-            {%- for item in care_items -%}
-              {%- if item != blank -%}
-                <li>{{ item | strip | escape }}</li>
-              {%- endif -%}
-            {%- endfor -%}
-          </ul>
-        {%- endif -%}
-      </section>
-    {%- endif -%}
-
-  </div>
+  {%- endif -%}
+</div>
 </div>
 
 {% stylesheet %}
-.moc {
-  --moc-bg:     #080706;
-  --moc-ink:    #f4ead8;
-  --moc-muted:  #b9aa96;
-  --moc-accent: #c9974a;
-  --moc-line:   rgba(244,234,216,.14);
-  --moc-surface:#121110;
-  background: var(--moc-bg);
-  color: var(--moc-ink);
-}
-.moc * { box-sizing: border-box; }
-
-/* hero */
-.moc__hero {
-  background: linear-gradient(160deg, #0f0d0b 60%, rgba(201,151,74,.05) 100%);
-  border-bottom: 1px solid var(--moc-line);
-  padding: clamp(60px, 10vw, 120px) 0 clamp(48px, 7vw, 90px);
-  text-align: center;
-}
-.moc__hero-inner { max-width: 800px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px); }
-.moc__eyebrow {
-  margin: 0 0 .5rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .6rem;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: rgba(244,234,216,.44);
-}
-.moc__hero-title {
-  margin: .3rem 0 .6rem;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(52px, 9vw, 110px);
-  line-height: .82;
-  letter-spacing: -.06em;
-  text-transform: uppercase;
-}
-.moc__hero-sub {
-  margin: 0;
-  font-style: italic;
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(16px, 1.4vw, 20px);
-  line-height: 1.5;
-  color: rgba(244,234,216,.65);
-}
-
-/* body */
-.moc__body { max-width: 1040px; margin: 0 auto; padding: 0 clamp(20px, 5vw, 48px); }
-
-/* journey */
-.moc__journey { padding: clamp(48px, 7vw, 90px) 0; border-bottom: 1px solid var(--moc-line); }
-
-.moc__steps {
-  list-style: none;
-  padding: 0;
-  margin: clamp(24px, 3vw, 40px) 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-@media (min-width: 700px) {
-  .moc__steps { flex-direction: row; align-items: flex-start; }
-}
-
-.moc__step {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex: 1;
-  position: relative;
-}
-@media (min-width: 700px) { .moc__step { align-items: center; } }
-
-.moc__step-node {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  background: rgba(201,151,74,.12);
-  border: 2px solid var(--moc-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--moc-accent);
-  position: relative;
-  z-index: 1;
-}
-.moc__step-line {
-  background: rgba(201,151,74,.28);
-}
-/* vertical mobile */
-.moc__step-line { width: 2px; height: 32px; margin-left: 18px; }
-@media (min-width: 700px) {
-  .moc__step-line {
-    position: absolute;
-    top: 18px;
-    left: calc(50% + 19px);
-    width: calc(100% - 38px);
-    height: 2px;
-    margin-left: 0;
-  }
-}
-
-.moc__step-text {
-  font-size: .8rem;
-  color: rgba(244,234,216,.72);
-  font-weight: 500;
-  margin-top: 8px;
-  line-height: 1.35;
-}
-@media (min-width: 700px) {
-  .moc__step-text { text-align: center; font-size: .75rem; }
-}
-
-/* support tiles */
-.moc__support { padding: clamp(48px, 7vw, 90px) 0; border-bottom: 1px solid var(--moc-line); }
-.moc__support-title {
-  margin: 0 0 clamp(24px, 3vw, 40px);
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(28px, 4vw, 52px);
-  letter-spacing: -.04em;
-  line-height: .9;
-  text-transform: uppercase;
-}
-.moc__tiles {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-}
-@media (min-width: 500px) { .moc__tiles { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 900px) { .moc__tiles { grid-template-columns: repeat(3, 1fr); } }
-
-.moc__tile {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  padding: clamp(16px, 2.5vw, 24px);
-  background: var(--moc-surface);
-  border: 1px solid var(--moc-line);
-  border-radius: 10px;
-  transition: transform .2s, border-color .2s;
-  position: relative;
-}
-.moc__tile:hover { transform: translateY(-2px); border-color: rgba(201,151,74,.36); }
-
-.moc__tile-icon {
-  flex-shrink: 0;
-  color: var(--moc-accent);
-  margin-top: 2px;
-  line-height: 0;
-}
-.moc__tile-text { flex: 1; }
-.moc__tile-title {
-  margin: 0 0 .3rem;
-  font-size: .95rem;
-  font-weight: 600;
-  color: var(--moc-ink);
-}
-.moc__tile-sub {
-  margin: 0 0 .6rem;
-  font-size: .82rem;
-  line-height: 1.45;
-  color: var(--moc-muted);
-}
-.moc__tile-cta {
-  font-size: .78rem;
-  font-weight: 700;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--moc-accent);
-  text-decoration: none;
-  transition: color .18s;
-}
-.moc__tile-cta:hover { color: var(--moc-ink); }
-
-/* after delivery care */
-.moc__care {
-  padding: clamp(48px, 7vw, 90px) 0;
-}
-.moc__care-title {
-  margin: .4rem 0 1rem;
-  font-family: var(--font-heading-family, 'Bebas Neue', sans-serif);
-  font-size: clamp(26px, 3.5vw, 46px);
-  letter-spacing: -.04em;
-  line-height: .9;
-  text-transform: uppercase;
-}
-.moc__care-text { margin-bottom: 1.2rem; }
-.moc__care-text p { font-size: .92rem; line-height: 1.65; color: rgba(244,234,216,.7); margin: 0 0 .6rem; }
-.moc__care-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: .55rem;
-}
-.moc__care-list li {
-  font-size: .88rem;
-  padding-left: 1.4rem;
-  position: relative;
-  color: rgba(244,234,216,.75);
-}
-.moc__care-list li::before {
-  content: '';
-  position: absolute;
-  left: 0; top: .48rem;
-  width: .55rem; height: .55rem;
-  background: var(--moc-accent);
-  border-radius: 50%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .moc__tile, .moc .melato-global-pill { transition: none; }
-}
+.melato-order-bleed { background: #f4ead8 !important; }
+.melato-order { max-width: 1000px; margin: 0 auto; padding: 0 1.25rem clamp(2rem,5vw,3.5rem); }
+.melato-order__intro { max-width: 640px; margin: 0 auto clamp(2.5rem,6vw,4rem); text-align: center; }
+.melato-order__intro p { color: #3a3833 !important; margin: 0; }
+.melato-order__timeline { list-style: none; display: flex; overflow-x: auto; padding: 0; margin: 0 0 clamp(2.5rem,6vw,4rem); border-top: 1px solid rgba(10,10,10,.14); border-bottom: 1px solid rgba(10,10,10,.14); }
+.melato-order__step { flex: 1 0 auto; min-width: 150px; padding: 1.25rem 1rem; border-right: 1px solid rgba(10,10,10,.14); display: flex; align-items: center; gap: .6rem; }
+.melato-order__step:last-child { border-right: none; }
+.melato-order__step-num { font-family: 'Bebas Neue', sans-serif; font-size: .9rem; color: #6f6d68 !important; }
+.melato-order__step-label { font-size: .85rem; color: #0a0a0a !important; }
+.melato-order__tiles-heading { color: #0a0a0a !important; font-weight: 500; text-align: center; margin: 0 0 1.25rem; font-size: 1.2rem; }
+.melato-order__tiles { display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: rgba(10,10,10,.14); border: 1px solid rgba(10,10,10,.14); }
+@media (min-width: 760px) { .melato-order__tiles { grid-template-columns: repeat(3,1fr); } }
+.melato-order__tiles .melato-fit__card { background: #f4ead8 !important; }
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "Melato Order Companion",
-  "tag": "section",
+  "name": "Melato Order Companion", "tag": "section",
   "settings": [
-    { "type": "header",   "content": "Hero" },
-    { "type": "text",     "id": "hero_title",  "label": "Title",          "default": "Order Companion" },
-    { "type": "textarea", "id": "hero_sub",    "label": "Subtitle",       "default": "We\u2019re with you until it\u2019s right." },
-    { "type": "header",   "content": "Journey" },
-    { "type": "textarea", "id": "timeline",    "label": "Journey steps (one per line)", "default": "Order received\nGarment checked\nPrepared for packaging\nDispatched\nDelivered and ready to wear" },
-    { "type": "header",   "content": "Support tiles" },
-    { "type": "text",     "id": "tiles_heading","label": "Tiles heading",  "default": "We handle every case personally." },
-    { "type": "header",   "content": "After delivery" },
-    { "type": "text",     "id": "care_title",  "label": "Care section title", "default": "Caring for your Melato piece" },
-    { "type": "richtext", "id": "care_text",   "label": "Care intro copy" },
-    { "type": "textarea", "id": "care_list",   "label": "Care tips (one per line)", "default": "Machine wash cold, gentle cycle.\nDo not tumble dry. Hang or lay flat to dry.\nSteam to remove creases \u2014 avoid direct iron contact.\nStore folded in a cool, dry place." }
+    { "type": "richtext", "id": "intro", "label": "Intro copy (optional)" },
+    { "type": "textarea", "id": "timeline", "label": "Timeline steps (one per line)", "default": "Order received\nGarment checked\nPrepared for packaging\nDispatched\nDelivered and ready to wear" },
+    { "type": "text", "id": "tiles_heading", "label": "Tiles heading", "default": "Need help with this order?" }
   ],
-  "blocks": [{
-    "type": "tile",
-    "name": "Support tile",
-    "settings": [
-      { "type": "text",     "id": "title",     "label": "Title" },
-      { "type": "text",     "id": "text",      "label": "Descriptor" },
-      { "type": "text",     "id": "cta_label", "label": "CTA label", "default": "Contact us" },
-      { "type": "url",      "id": "url",       "label": "Link (overrides auto subject)" },
-      { "type": "text",     "id": "subject",   "label": "Contact form subject (auto)", "info": "If no URL is set, the CTA links to /pages/contact with this as the subject." },
-      { "type": "html",     "id": "icon_svg",  "label": "Icon SVG (optional)" }
-    ]
-  }],
-  "max_blocks": 9,
-  "presets": [{
-    "name": "Melato Order Companion",
-    "blocks": [
-      { "type": "tile", "settings": { "title": "Change address",          "subject": "Change delivery address",       "text": "Need to update your delivery address before dispatch?" } },
-      { "type": "tile", "settings": { "title": "Order status",            "subject": "Order status enquiry",          "text": "We\u2019ll tell you exactly where your order is." } },
-      { "type": "tile", "settings": { "title": "Damaged or incorrect item","subject": "Damaged or incorrect item",    "text": "Wrong piece or arrived damaged? We resolve this fast." } },
-      { "type": "tile", "settings": { "title": "Return or exchange",       "subject": "Return or exchange request",   "text": "Start a return or swap for a different size." } },
-      { "type": "tile", "settings": { "title": "Fit after delivery",       "subject": "Fit issue after delivery",     "text": "Not fitting as expected? We\u2019ll guide you." } },
-      { "type": "tile", "settings": { "title": "Care question",            "subject": "Garment care question",        "text": "Specific care instructions for your exact piece." } }
-    ]
-  }]
+  "blocks": [{ "type": "tile", "name": "Support tile", "settings": [
+      { "type": "text", "id": "title", "label": "Title" },
+      { "type": "text", "id": "text", "label": "Text" },
+      { "type": "text", "id": "cta_label", "label": "CTA label" },
+      { "type": "url", "id": "url", "label": "Link (defaults to support form below)" }
+  ]}],
+  "max_blocks": 8,
+  "presets": [{ "name": "Melato Order Companion", "blocks": [
+      { "type": "tile", "settings": { "title": "Change address", "cta_label": "Contact us" } },
+      { "type": "tile", "settings": { "title": "Order status", "cta_label": "Contact us" } },
+      { "type": "tile", "settings": { "title": "Damaged or incorrect item", "cta_label": "Contact us" } },
+      { "type": "tile", "settings": { "title": "Return or exchange", "cta_label": "Contact us" } },
+      { "type": "tile", "settings": { "title": "Fit after delivery", "cta_label": "Contact us" } },
+      { "type": "tile", "settings": { "title": "Care question", "cta_label": "Contact us" } }
+  ]}]
 }
 {% endschema %}
