@@ -8,16 +8,6 @@
   display: none !important;
 }
 
-/* Concierge is intentionally offline until its next implementation is ready. */
-#shopify-section-melato-concierge-strip,
-.melato-concierge-strip,
-.concierge-strip,
-.concierge-strip--desktop,
-.concierge-strip--mobile,
-[data-concierge-strip] {
-  display: none !important;
-}
-
 /* Prevent semantic text nodes from reading as one unbroken sentence. */
 .pdp-trust-row,
 [class*="product"] [class*="trust-row"],
@@ -66,59 +56,6 @@ ul.pdp-trust-row {
   gap: 0.45rem 0.8rem;
 }
 
-.melato-cart-cta-group {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.65rem;
-  width: min(100%, 360px);
-  margin-top: 0.5rem;
-}
-
-.melato-cart-cta-group .melato-cart-cta {
-  margin-top: 0;
-  padding-inline: 1rem;
-}
-
-.melato-cart-cta--secondary {
-  background: transparent !important;
-  color: #f5f1e8 !important;
-  border: 1px solid rgba(245, 241, 232, 0.35) !important;
-}
-
-.melato-archive-divider {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: clamp(1.75rem, 4vw, 3rem) 0 0.25rem;
-  color: currentColor;
-  font-family: var(--font-mono-family, monospace);
-  font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.melato-archive-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.22;
-}
-
-.melato-policy-notice {
-  width: min(960px, calc(100% - 32px));
-  margin: clamp(2rem, 5vw, 4rem) auto;
-  padding: clamp(1.5rem, 3vw, 2.5rem);
-  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
-  border-radius: 1rem;
-  background: color-mix(in srgb, currentColor 4%, transparent);
-}
-
-.melato-policy-notice h2 {
-  margin-top: 0;
-}
-
 .melato-audit-spec-card {
   margin-block: clamp(1rem, 2vw, 1.5rem);
   padding: clamp(1rem, 2.5vw, 1.5rem);
@@ -163,10 +100,6 @@ ul.pdp-trust-row {
 }
 
 @media (max-width: 640px) {
-  .melato-cart-cta-group {
-    grid-template-columns: 1fr;
-  }
-
   .melato-audit-spec-card dl {
     grid-template-columns: 1fr;
     gap: 0.25rem;

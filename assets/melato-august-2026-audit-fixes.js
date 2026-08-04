@@ -37,7 +37,7 @@
 
   function closestModule(element) {
     return element?.closest(
-      'section, details, article, .pdp-panel, .accordion, [class*="accordion"], [class*="size-guide"], [class*="measurements"], [data-size-guide], [class*="drawer"]'
+      'details, article, .pdp-panel, .accordion, [class*="accordion"], [class*="size-guide"], [class*="measurements"], [data-size-guide], [class*="drawer"]'
     ) || element?.parentElement;
   }
 
@@ -48,56 +48,26 @@
     module.setAttribute('aria-hidden', 'true');
   }
 
-  function disableConcierge() {
-    document.querySelectorAll(
-      '#shopify-section-melato-concierge-strip, .melato-concierge-strip, .concierge-strip, .concierge-strip--desktop, .concierge-strip--mobile, [data-concierge-strip]'
-    ).forEach((node) => node.remove());
-  }
-
   function fixAnnouncement() {
     const bar = document.querySelector('#melato-announcement-bar, .melato-ann');
     if (!bar) return;
 
     replaceText(bar, [
       [/POPUP SHOW #4\s*[·|•-]*\s*JULY 21\s*[·|•-]*/gi, ''],
-      [/\s*[·|•-]\s*POPUP SHOW #4\s*[·|•-]*\s*JULY 21/gi, ''],
-      [/"?LIKE NEVER CHANGE"?\s*Melato/gi, 'LIKE NEVER CHANGE · MELATO']
+      [/\s*[·|•-]\s*POPUP SHOW #4\s*[·|•-]*\s*JULY 21/gi, '']
     ]);
 
     bar.querySelectorAll('.melato-ann__item').forEach((item) => {
       const text = normalize(item.textContent).toUpperCase();
-      if (text.includes('JULY 21') && !text.includes('AUGUST 20')) item.remove();
+      if (text.includes('JULY 21') && !text.includes('AUGUST 20')) {
+        item.classList.add('melato-audit-hidden');
+        item.setAttribute('aria-hidden', 'true');
+      }
     });
 
-    const groups = Array.from(bar.querySelectorAll('.melato-ann__group'));
-    groups.slice(1).forEach((group) => group.remove());
-    groups[0]?.removeAttribute('aria-hidden');
-  }
-
-  function ensureCartActions(cart) {
-    const emptyState = cart.querySelector('.cart-drawer__empty');
-    if (!emptyState || emptyState.querySelector('.melato-cart-cta-group')) return;
-
-    const primary = Array.from(emptyState.querySelectorAll('a, button')).find((node) => {
-      const text = normalize(node.textContent).toLowerCase();
-      return text === 'shop the uniform' || text === 'shop new arrivals';
+    bar.querySelectorAll('.melato-ann__group').forEach((group, index) => {
+      group.setAttribute('aria-hidden', index === 0 ? 'false' : 'true');
     });
-    if (!primary) return;
-
-    primary.textContent = 'Shop New Arrivals';
-    if (primary.tagName === 'A') primary.setAttribute('href', '/collections/new-arrivals');
-
-    const group = document.createElement('div');
-    group.className = 'melato-cart-cta-group';
-    primary.insertAdjacentElement('beforebegin', group);
-    group.appendChild(primary);
-
-    const secondary = document.createElement('a');
-    secondary.className = 'melato-cart-cta melato-cart-cta--secondary';
-    secondary.href = '/collections/all';
-    secondary.textContent = 'View All Pieces';
-    secondary.setAttribute('data-cart-close', '');
-    group.appendChild(secondary);
   }
 
   function fixCartLanguage() {
@@ -108,18 +78,21 @@
       node.textContent = 'Explore the current Melato rotation.';
     });
 
+    cart.querySelectorAll('.cart-drawer__empty a, .cart-drawer__empty button').forEach((node) => {
+      if (normalize(node.textContent).toLowerCase() !== 'shop the uniform') return;
+      node.textContent = 'Shop new arrivals';
+      if (node.tagName === 'A') node.setAttribute('href', '/collections/new-arrivals');
+    });
+
     cart.querySelectorAll('.cart-drawer__tax-note, [data-cart-tax-note]').forEach((node) => {
-      node.textContent = 'Complimentary standard delivery. Taxes and duties calculated at checkout.';
+      node.textContent = 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.';
     });
 
     replaceText(cart, [
       [/Explore the latest uniform pieces\./gi, 'Explore the current Melato rotation.'],
-      [/Taxes\s*&\s*shipping calculated at checkout/gi, 'Complimentary standard delivery. Taxes and duties calculated at checkout.'],
-      [/Taxes and shipping calculated at checkout/gi, 'Complimentary standard delivery. Taxes and duties calculated at checkout.'],
-      [/Taxes and applicable duties calculated at checkout/gi, 'Taxes and duties calculated at checkout']
+      [/Taxes\s*&\s*shipping calculated at checkout/gi, 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.'],
+      [/Taxes and shipping calculated at checkout/gi, 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.']
     ]);
-
-    ensureCartActions(cart);
   }
 
   function fixReturnsEmail() {
@@ -135,16 +108,10 @@
 
   function fixHomepageCopy() {
     if (path !== '/') return;
-    replaceText(document, [
-      [
-        /Browse selected pieces from the current Melato rotation, then complete the set with matching jackets and pants\./gi,
-        'A curated edit from the current Melato rotation, spanning apparel, accessories, and limited statement pieces.'
-      ],
-      [
-        /A curated edit from the current Melato rotation, spanning apparel, fragrance and limited statement pieces\./gi,
-        'A curated edit from the current Melato rotation, spanning apparel, accessories, and limited statement pieces.'
-      ]
-    ]);
+    replaceText(document, [[
+      /Browse selected pieces from the current Melato rotation, then complete the set with matching jackets and pants\./gi,
+      'A curated edit from the current Melato rotation, spanning apparel, fragrance and limited statement pieces.'
+    ]]);
   }
 
   function fixGeneralCareCopy() {
@@ -163,50 +130,6 @@
     ]);
   }
 
-  function fixAllProductsHeading() {
-    if (path !== '/collections/all') return;
-    const heading = document.querySelector('.melato-collection-title');
-    if (heading && normalize(heading.textContent).toLowerCase() === 'products') {
-      heading.textContent = 'THE MELATO INDEX';
-    }
-
-    const header = heading?.closest('.melato-collection-header__text, .melato-collection-hero__content');
-    if (header && !header.querySelector('.melato-index-intro')) {
-      const intro = document.createElement('p');
-      intro.className = 'melato-collection-desc melato-index-intro';
-      intro.textContent = 'The complete catalogue across the current rotation and archive.';
-      heading.insertAdjacentElement('afterend', intro);
-    }
-  }
-
-  function fixBestSellersOrder() {
-    if (path !== '/collections/best-sellers') return;
-
-    document.querySelectorAll('[data-product-grid], .product-grid, .collection-grid, [class*="products-grid"]').forEach((grid) => {
-      if (grid.dataset.melatoAvailabilitySorted === 'true' && grid.querySelector(':scope > .melato-archive-divider')) return;
-
-      grid.querySelectorAll(':scope > .melato-archive-divider').forEach((divider) => divider.remove());
-
-      const children = Array.from(grid.children);
-      if (children.length < 2) return;
-
-      const soldOut = children.filter((card) => /\bsold out\b/i.test(normalize(card.textContent)));
-      const available = children.filter((card) => !soldOut.includes(card));
-      if (!soldOut.length || !available.length) return;
-
-      available.forEach((card) => grid.appendChild(card));
-
-      const divider = document.createElement('div');
-      divider.className = 'melato-archive-divider';
-      divider.setAttribute('role', 'separator');
-      divider.textContent = 'Archive Icons';
-      grid.appendChild(divider);
-
-      soldOut.forEach((card) => grid.appendChild(card));
-      grid.dataset.melatoAvailabilitySorted = 'true';
-    });
-  }
-
   function fixCollectionFilters() {
     if (!document.body.classList.contains('template-collection')) return;
 
@@ -214,9 +137,6 @@
       [/\bFilter\s+0\b/gi, 'Filter'],
       [/\bIn stock\s*\(\d+\)/gi, 'In stock'],
       [/\bOut of stock\s*\(\d+\)/gi, 'Out of stock'],
-      [/\bClothing Accessories\b/g, 'Accessories'],
-      [/\bMen's Undergarments\b/g, 'Underwear'],
-      [/\bNeckties\b/g, 'Ties'],
       [/\bToiletry Bags\b/g, 'Travel Cases'],
       [/\bEaux De Toilette\b/g, 'Eaux de Toilette'],
       [/\bEaux De Parfum\b/g, 'Eaux de Parfum'],
@@ -231,34 +151,20 @@
       }
     });
 
-    fixAllProductsHeading();
-    fixBestSellersOrder();
-  }
+    if (!/\/collections\/best-sellers/i.test(path)) return;
 
-  function imageDescriptors() {
-    if (path === '/products/petal-veil-eau-de-toilette') {
-      return [
-        'bottle front view',
-        'cap and atomizer close-up',
-        'blush glass base detail',
-        'bottle rear view',
-        'packaging detail',
-        'fragrance editorial view'
-      ];
-    }
+    document.querySelectorAll('[data-product-grid], .product-grid, .collection-grid, [class*="products-grid"]').forEach((grid) => {
+      if (grid.dataset.melatoAvailabilitySorted === 'true') return;
 
-    if (path === '/products/blush-ledger-satin-shirt') {
-      return [
-        'front view',
-        'concealed placket detail',
-        'silk satin texture close-up',
-        'rear view',
-        'collar detail',
-        'cuff detail'
-      ];
-    }
+      const children = Array.from(grid.children);
+      if (children.length < 2) return;
 
-    return ['front view', 'alternate angle', 'rear view', 'detail view', 'close-up detail', 'side view'];
+      const soldOut = children.filter((card) => /\bsold out\b/i.test(normalize(card.textContent)));
+      if (!soldOut.length || soldOut.length === children.length) return;
+
+      soldOut.forEach((card) => grid.appendChild(card));
+      grid.dataset.melatoAvailabilitySorted = 'true';
+    });
   }
 
   function fixPdpSemantics() {
@@ -279,23 +185,27 @@
     const title = normalize(root.querySelector('h1')?.textContent);
     if (!title) return;
 
-    const descriptors = imageDescriptors();
-    root.querySelectorAll('.pdp-gallery img, .melato-fragrance-pdp__gallery img, [class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
+    const descriptors = ['front view', 'alternate angle', 'rear view', 'detail view', 'close-up detail', 'side view'];
+    root.querySelectorAll('.pdp-gallery img, [class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
       const current = normalize(image.getAttribute('alt'));
       const generic = !current || current.toLowerCase() === title.toLowerCase() || current.toLowerCase() === `image: ${title}`.toLowerCase();
       if (generic) image.setAttribute('alt', `${title} ${descriptors[index] || `view ${index + 1}`}`);
     });
   }
 
-  function removeDuplicateBundle() {
-    if (!document.body.classList.contains('template-product')) return;
-    const root = document.querySelector('#main-content') || document;
-    const modules = Array.from(root.querySelectorAll('section')).filter((section) => {
-      const text = normalize(section.textContent).toLowerCase();
-      return text.includes('complete the set') && text.includes('full set price') && text.includes('add full set');
-    });
+  function fixConciergeLabels() {
+    const mappings = [
+      [/fit\s+fit concierge/i, 'Fit Concierge'],
+      [/delivery\s+delivery concierge/i, 'Delivery Concierge'],
+      [/care\s*order companion/i, 'Order Companion'],
+      [/access\s*the preview room/i, 'The Preview Room']
+    ];
 
-    modules.slice(1).forEach((module) => module.remove());
+    document.querySelectorAll('a, button').forEach((control) => {
+      const text = normalize(control.textContent);
+      const mapping = mappings.find(([pattern]) => pattern.test(text));
+      if (mapping) control.setAttribute('aria-label', mapping[1]);
+    });
   }
 
   function insertSpecCard(target, id, title, rows) {
@@ -342,18 +252,17 @@
 
     replaceText(document, [
       [/Premium everyday fit\. Choose your usual size for the intended silhouette\./gi, ''],
-      [/Wash cold inside out where applicable\. Hang dry or lay flat\.[^.]*(?:\.|$)/gi, 'Spray onto pulse points from approximately 10–15 cm away. Avoid rubbing the fragrance into the skin. Store upright in a cool, dry place away from direct sunlight and heat.'],
-      [/Returns are eligible when items are unworn, unwashed, tagged[^.]*\.?/gi, 'Opened or used fragrance products cannot be returned for hygiene and product-integrity reasons. Unopened fragrance products remain eligible under the standard return window unless marked final sale.'],
-      [/Eligible unworn items follow posted policy\.?/gi, 'Opened or used fragrance products cannot be returned. Unopened fragrance products follow the posted return policy.']
+      [/Wash cold inside out where applicable\. Hang dry or lay flat\.[^.]*(?:\.|$)/gi, 'Apply to pulse points. Avoid rubbing the fragrance into the skin. Store upright away from heat and direct sunlight.'],
+      [/Returns are eligible when items are unworn, unwashed, tagged[^.]*\.?/gi, 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.']
     ]);
 
     const anchor = document.querySelector('.pdp-form, form[action*="/cart/add"], [class*="product-form"]');
     insertSpecCard(anchor, 'MelatoFragranceSpecifications', 'Fragrance specifications', [
       ['Size', '100 mL'],
       ['Concentration', 'Eau de Toilette'],
-      ['Application', 'Spray onto pulse points from approximately 10–15 cm away. Avoid rubbing the fragrance into the skin.'],
-      ['Storage', 'Store upright in a cool, dry place away from direct sunlight and heat.'],
-      ['Returns', 'Opened or used fragrance products cannot be returned. Unopened fragrance products follow the posted return policy.']
+      ['Application', 'Apply to pulse points. Avoid rubbing the fragrance into the skin.'],
+      ['Storage', 'Store upright away from heat and direct sunlight.'],
+      ['Returns', 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.']
     ]);
   }
 
@@ -365,8 +274,17 @@
     ]]);
   }
 
+  function fixBlushLedger() {
+    if (path !== '/products/blush-ledger-satin-shirt') return;
+    replaceText(document, [
+      [/Melato piece with Melato’s current-season product language\./gi, 'Silk satin shirt from the current Melato rotation.'],
+      [/Premium construction selected for feel, structure, and everyday wearability\./gi, 'Material currently published: silk. Additional construction specifications must come from verified product records.'],
+      [/Built to sit clean on body without stealing movement\./gi, 'Designed for a relaxed drape. Refer to verified garment measurements when published.'],
+      [/Wash cold inside out where applicable\.[^.]*(?:\.|$)/gi, 'Follow the sewn-in care label. Contact support@melato.ca before cleaning if the label is unclear.']
+    ]);
+  }
+
   function run() {
-    disableConcierge();
     fixAnnouncement();
     fixCartLanguage();
     fixReturnsEmail();
@@ -375,9 +293,10 @@
     fixContactCopy();
     fixCollectionFilters();
     fixPdpSemantics();
-    removeDuplicateBundle();
+    fixConciergeLabels();
     fixPetalVeil();
     fixRexCare();
+    fixBlushLedger();
   }
 
   let timer = null;
