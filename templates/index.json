@@ -151,62 +151,6 @@
         "image_position": "left"
       }
     },
-    "client_concierge": {
-      "type": "melato-concierge-strip",
-      "blocks": {
-        "fit": {
-          "type": "service",
-          "settings": {
-            "title": "Personal fit consultation",
-            "description": "Send us your measurements and preferred silhouette. We will recommend the right size and coordinate matching sets.",
-            "note": "Advice from a real client care specialist",
-            "link": "/pages/fit-concierge"
-          }
-        },
-        "delivery": {
-          "type": "service",
-          "settings": {
-            "title": "Delivery planning",
-            "description": "Ordering for a date? Ask us to review destination, processing and carrier timing before you purchase.",
-            "note": "Practical guidance before checkout",
-            "link": "/pages/delivery-concierge"
-          }
-        },
-        "aftercare": {
-          "type": "service",
-          "settings": {
-            "title": "Order & aftercare",
-            "description": "Get help with an active order, exchange, garment care or an issue after delivery—without searching for the right department.",
-            "note": "One point of contact, before and after delivery",
-            "link": "/pages/order-companion"
-          }
-        },
-        "product": {
-          "type": "service",
-          "settings": {
-            "title": "Private product guidance",
-            "description": "Ask about fabric, construction, styling and upcoming releases to make a considered choice—not a rushed one.",
-            "note": "Detailed product and release assistance",
-            "link": "/pages/preview-room"
-          }
-        }
-      },
-      "block_order": [
-        "fit",
-        "delivery",
-        "aftercare",
-        "product"
-      ],
-      "settings": {
-        "eyebrow": "Melato client services",
-        "heading": "At your service",
-        "intro": "<p>Considered support from discovery through delivery. Our client care team offers practical, personal guidance so every purchase feels as assured as the piece itself.</p>",
-        "availability_title": "Client care is available",
-        "availability_text": "Replies are typically sent within one business day.",
-        "contact_label": "Speak with client care",
-        "contact_url": "/pages/contact"
-      }
-    },
     "testimonials": {
       "type": "testimonials",
       "blocks": {
@@ -276,7 +220,6 @@
     "featured_collection",
     "177543262208e0278d",
     "brand_story",
-    "client_concierge",
     "testimonials",
     "1781310906e62d22b0"
   ]
