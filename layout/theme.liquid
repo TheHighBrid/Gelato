@@ -82,9 +82,8 @@
   {%- section 'melato-header' -%}
 
   {%- if melato_is_fragrance_product -%}
-    <main id="main-content" class="main-content" role="main" tabindex="-1">
-      {%- section 'melato-fragrance-product' -%}
-    </main>
+    {%- capture melato_fragrance_output -%}{%- section 'melato-fragrance-product' -%}{%- endcapture -%}
+    <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_fragrance_output, context: 'main' %}</main>
   {%- else -%}
     {%- capture melato_main_output -%}{{ content_for_layout }}{%- endcapture -%}
     <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_main_output, context: 'main' %}</main>
