@@ -20,6 +20,24 @@
     assign output = output | replace: 'POPUP SHOW #4 · JULY 21', ''
     assign output = output | replace: '<span>"LIKE NEVER CHANGE"</span><small>Melato</small>', '<span>LIKE NEVER CHANGE · MELATO</span>'
     assign output = output | replace: '<span>LIKE NEVER CHANGE</span><small>Melato</small>', '<span>LIKE NEVER CHANGE · MELATO</span>'
+    assign output = output | replace: '@keyframes melato-ann-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }', '@keyframes melato-ann-scroll { from { transform: translateX(100%); } to { transform: translateX(-100%); } }'
+
+    # The original marquee duplicated its complete message group. Keep one group
+    # in source HTML and animate that single group instead.
+    assign hidden_group_marker = '<div class="melato-ann__group" aria-hidden="true">'
+    if output contains hidden_group_marker
+      assign announcement_before_hidden = output | split: hidden_group_marker | first
+      assign announcement_after_hidden = output | split: hidden_group_marker | last
+      assign announcement_tail_parts = announcement_after_hidden | split: '</div>'
+      capture announcement_tail
+        for tail_part in announcement_tail_parts
+          unless forloop.first
+            {{ tail_part }}{% unless forloop.last %}</div>{% endunless %}
+          endunless
+        endfor
+      endcapture
+      assign output = announcement_before_hidden | append: announcement_tail
+    endif
   endif
 
   if context == 'cart'
@@ -40,6 +58,11 @@
     assign output = output | replace: 'A curated edit from the current Melato rotation, spanning apparel, fragrance and limited statement pieces.', 'A curated edit from the current Melato rotation, spanning apparel, accessories, and limited statement pieces.'
     assign output = output | replace: 'Visit Us In-Store', 'Visit the Melatelier pop-up'
     assign output = output | replace: 'Melatelier is located at Tanger Outlets Ottawa.', 'The Melatelier pop-up opens only on announced dates.'
+
+    # Explicit source-level text boundaries stop HTML parsers from joining titles
+    # to prices and full-set labels to totals.
+    assign output = output | replace: '</h3><p>', '</h3> <p>'
+    assign output = output | replace: '<span>Full set price</span><strong>', '<span>Full set price</span> <strong>'
 
     # Customer-facing taxonomy, never backend vocabulary.
     assign output = output | replace: 'Clothing Accessories', 'Accessories'
