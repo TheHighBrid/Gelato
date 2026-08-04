@@ -7,6 +7,12 @@ on:
     paths:
       - scripts/apply_august_2026_audit_fixes.py
       - .github/workflows/apply-august-2026-audit-fixes.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - scripts/apply_august_2026_audit_fixes.py
+      - .github/workflows/apply-august-2026-audit-fixes.yml
 
 permissions:
   contents: write
@@ -16,7 +22,7 @@ jobs:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out branch
+      - name: Check out audit branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
