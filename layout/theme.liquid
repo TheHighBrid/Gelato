@@ -67,12 +67,19 @@
 
   {%- liquid
     assign melato_is_fragrance_product = false
+    assign melato_filter_main_output = false
+
     if template.name == 'product' and product
       assign melato_product_type_down = product.product_type | downcase
       assign melato_product_title_down = product.title | downcase
       if melato_product_type_down contains 'fragrance' or melato_product_type_down contains 'eau de toilette' or melato_product_type_down contains 'eau de parfum' or melato_product_title_down contains 'eau de toilette' or melato_product_title_down contains 'eau de parfum'
         assign melato_is_fragrance_product = true
       endif
+      assign melato_filter_main_output = true
+    elsif template.name == 'index' or template.name == 'collection'
+      assign melato_filter_main_output = true
+    elsif request.path == '/pages/faq' or request.path == '/pages/contact' or request.path contains '/policies/refund-policy'
+      assign melato_filter_main_output = true
     endif
   -%}
 
@@ -84,21 +91,25 @@
   {%- if melato_is_fragrance_product -%}
     {%- capture melato_fragrance_output -%}{%- section 'melato-fragrance-product' -%}{%- endcapture -%}
     <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_fragrance_output, context: 'main' %}</main>
-  {%- else -%}
+  {%- elsif melato_filter_main_output -%}
     {%- capture melato_main_output -%}{{ content_for_layout }}{%- endcapture -%}
     <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_main_output, context: 'main' %}</main>
+  {%- else -%}
+    <main id="main-content" class="main-content" role="main" tabindex="-1">{{ content_for_layout }}</main>
   {%- endif -%}
 
   {%- section 'melato-footer' -%}
 
   {%- liquid
     assign melato_show_size_guide = false
-    if template.name == 'product' and product and melato_is_fragrance_product == false
-      assign melato_size_type = product.product_type | downcase
-      assign melato_size_title = product.title | downcase
-      if melato_size_type contains 'jacket' or melato_size_title contains 'jacket' or melato_size_type contains 'pant' or melato_size_title contains 'pant' or melato_size_type contains 'trouser' or melato_size_title contains 'trouser' or melato_size_type contains 'jean' or melato_size_title contains 'jean' or melato_size_type contains 'denim' or melato_size_title contains 'denim' or melato_size_type contains 'shirt' or melato_size_title contains 'shirt' or melato_size_type contains 'top' or melato_size_title contains 'top' or melato_size_type contains 'tee' or melato_size_title contains 'tee' or melato_size_type contains 'polo' or melato_size_title contains 'polo' or melato_size_type contains 'dress' or melato_size_title contains 'dress' or melato_size_type contains 'skirt' or melato_size_title contains 'skirt' or melato_size_type contains 'bodysuit' or melato_size_title contains 'bodysuit' or melato_size_type contains 'coat' or melato_size_title contains 'coat' or melato_size_type contains 'vest' or melato_size_title contains 'vest' or melato_size_type contains 'tracksuit' or melato_size_title contains 'tracksuit'
-        assign melato_show_size_guide = true
-      endif
+    if template.name == 'product' and product
+      unless melato_is_fragrance_product
+        assign melato_size_type = product.product_type | downcase
+        assign melato_size_title = product.title | downcase
+        if melato_size_type contains 'jacket' or melato_size_title contains 'jacket' or melato_size_type contains 'pant' or melato_size_title contains 'pant' or melato_size_type contains 'trouser' or melato_size_title contains 'trouser' or melato_size_type contains 'jean' or melato_size_title contains 'jean' or melato_size_type contains 'denim' or melato_size_title contains 'denim' or melato_size_type contains 'shirt' or melato_size_title contains 'shirt' or melato_size_type contains 'top' or melato_size_title contains 'top' or melato_size_type contains 'tee' or melato_size_title contains 'tee' or melato_size_type contains 'polo' or melato_size_title contains 'polo' or melato_size_type contains 'dress' or melato_size_title contains 'dress' or melato_size_type contains 'skirt' or melato_size_title contains 'skirt' or melato_size_type contains 'bodysuit' or melato_size_title contains 'bodysuit' or melato_size_type contains 'coat' or melato_size_title contains 'coat' or melato_size_type contains 'vest' or melato_size_title contains 'vest' or melato_size_type contains 'tracksuit' or melato_size_title contains 'tracksuit'
+          assign melato_show_size_guide = true
+        endif
+      endunless
     endif
   -%}
 
