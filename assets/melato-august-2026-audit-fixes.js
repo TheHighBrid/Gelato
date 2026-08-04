@@ -183,6 +183,8 @@
     if (path !== '/collections/best-sellers') return;
 
     document.querySelectorAll('[data-product-grid], .product-grid, .collection-grid, [class*="products-grid"]').forEach((grid) => {
+      if (grid.dataset.melatoAvailabilitySorted === 'true' && grid.querySelector(':scope > .melato-archive-divider')) return;
+
       grid.querySelectorAll(':scope > .melato-archive-divider').forEach((divider) => divider.remove());
 
       const children = Array.from(grid.children);
@@ -233,7 +235,7 @@
     fixBestSellersOrder();
   }
 
-  function imageDescriptors(title) {
+  function imageDescriptors() {
     if (path === '/products/petal-veil-eau-de-toilette') {
       return [
         'bottle front view',
@@ -277,7 +279,7 @@
     const title = normalize(root.querySelector('h1')?.textContent);
     if (!title) return;
 
-    const descriptors = imageDescriptors(title);
+    const descriptors = imageDescriptors();
     root.querySelectorAll('.pdp-gallery img, .melato-fragrance-pdp__gallery img, [class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
       const current = normalize(image.getAttribute('alt'));
       const generic = !current || current.toLowerCase() === title.toLowerCase() || current.toLowerCase() === `image: ${title}`.toLowerCase();
