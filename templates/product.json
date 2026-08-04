@@ -21,6 +21,10 @@
       "type": "melato-pdp-story-tech-minimized",
       "settings": {}
     },
+    "melato_complete_the_set": {
+      "type": "melato-complete-the-set",
+      "settings": {}
+    },
     "safe_accent": {
       "type": "melato-product-safe-accent",
       "settings": {}
@@ -32,6 +36,10 @@
         "heading": "MORE FROM THE COLLECTION",
         "max_products": 4
       }
+    },
+    "melato_concierge_strip_pdp": {
+      "type": "melato-concierge-strip",
+      "settings": {}
     },
     "1781310708d3669657": {
       "type": "apps",
@@ -60,8 +68,10 @@
     "main_product",
     "melato_pdp_content_patch",
     "melato_pdp_story_tech_minimized",
+    "melato_complete_the_set",
     "safe_accent",
     "tag_recommendations",
+    "melato_concierge_strip_pdp",
     "1781310708d3669657",
     "178131075496c98f64"
   ]
