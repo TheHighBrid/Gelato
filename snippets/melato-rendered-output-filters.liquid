@@ -32,7 +32,10 @@
       capture announcement_tail
         for tail_part in announcement_tail_parts
           unless forloop.first
-            {{ tail_part }}{% unless forloop.last %}</div>{% endunless %}
+            echo tail_part
+            unless forloop.last
+              echo '</div>'
+            endunless
           endunless
         endfor
       endcapture
@@ -135,13 +138,7 @@
 
     if request.path == '/policies/refund-policy'
       unless output contains 'Opened or used fragrance products cannot be returned for hygiene and product-integrity reasons.'
-        capture fragrance_policy_notice
-          <section class="melato-policy-notice" id="MelatoFragranceReturnPolicy" aria-labelledby="MelatoFragranceReturnPolicyTitle">
-            <h2 id="MelatoFragranceReturnPolicyTitle">Fragrance returns</h2>
-            <p>Opened or used fragrance products cannot be returned for hygiene and product-integrity reasons. Unopened fragrance products remain eligible under the standard return window unless marked final sale.</p>
-            <p>For return support, contact <a href="mailto:support@melato.ca">support@melato.ca</a>.</p>
-          </section>
-        endcapture
+        assign fragrance_policy_notice = "<section class='melato-policy-notice' id='MelatoFragranceReturnPolicy' aria-labelledby='MelatoFragranceReturnPolicyTitle'><h2 id='MelatoFragranceReturnPolicyTitle'>Fragrance returns</h2><p>Opened or used fragrance products cannot be returned for hygiene and product-integrity reasons. Unopened fragrance products remain eligible under the standard return window unless marked final sale.</p><p>For return support, contact <a href='mailto:support@melato.ca'>support@melato.ca</a>.</p></section>"
         assign output = output | append: fragrance_policy_notice
       endunless
     endif
