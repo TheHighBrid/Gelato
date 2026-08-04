@@ -1,7 +1,7 @@
 {% comment %}
   snippets/cart-drawer.liquid
-  v2.5 — Cart Drawer CRO Upgrade + inert toggling for closed-state a11y/SEO cleanliness
-  - Dynamic free-shipping progress bar with live copy
+  v2.6 — Complimentary delivery safety + cart drawer CRO
+  - Free-shipping progress math is guarded when the threshold is zero
   - Per-line remove button + savings badge
   - Upsell rail auto-populated from complementary collection
   - Collapsible order note + gift wrap checkbox
@@ -12,13 +12,19 @@
 {%- liquid
   assign free_threshold_cents = settings.cart_free_shipping_threshold | times: 100 | round
   assign cart_total = cart.total_price
-  assign remaining_cents = free_threshold_cents | minus: cart_total
-  if remaining_cents <= 0
-    assign shipping_unlocked = true
-  else
-    assign shipping_unlocked = false
+  assign remaining_cents = 0
+  assign progress_pct = 100
+  assign shipping_unlocked = true
+
+  if free_threshold_cents > 0
+    assign remaining_cents = free_threshold_cents | minus: cart_total
+    if remaining_cents <= 0
+      assign shipping_unlocked = true
+    else
+      assign shipping_unlocked = false
+    endif
+    assign progress_pct = cart_total | times: 100 | divided_by: free_threshold_cents | at_most: 100
   endif
-  assign progress_pct = cart_total | times: 100 | divided_by: free_threshold_cents | at_most: 100
 -%}
 
 <div
@@ -92,8 +98,8 @@
       <div class="cart-drawer__empty">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" opacity=".3" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         <p class="cart-drawer__empty-text">Your cart is empty.</p>
-        <p class="cart-drawer__empty-sub">Explore the latest uniform pieces.</p>
-        <a href="/collections/drop-001-texture-form" class="melato-cart-cta" data-cart-close>Shop the Uniform</a>
+        <p class="cart-drawer__empty-sub">Explore the current Melato rotation.</p>
+        <a href="/collections/new-arrivals" class="melato-cart-cta" data-cart-close>Shop New Arrivals</a>
       </div>
     {%- else -%}
       {%- for item in cart.items -%}
@@ -233,7 +239,7 @@
       <span class="cart-subtotal__label">Subtotal</span>
       <span class="cart-subtotal__amount" data-cart-subtotal>{{ cart.total_price | money }}</span>
     </div>
-    <p class="cart-drawer__tax-note">Taxes &amp; shipping calculated at checkout</p>
+    <p class="cart-drawer__tax-note">Complimentary standard delivery. Taxes and applicable duties calculated at checkout.</p>
     <form id="cart-form" action="/cart" method="post">
       <input type="hidden" name="note" data-note-hidden value="{{ cart.note | escape }}">
       <button
