@@ -10,9 +10,9 @@
     assign melato_meta_description = page_description
 
     if template.name == 'collection' and collection.handle == 'all'
-      assign melato_meta_title = 'All Products'
+      assign melato_meta_title = 'The Melato Index'
       if melato_meta_description == blank
-        assign melato_meta_description = 'Shop Melato premium garments, tracksuits, denim, accessories and more. Orders ship from Canada with 1 to 3 business day dispatch.'
+        assign melato_meta_description = 'The complete Melato catalogue across the current rotation and archive.'
       endif
     elsif template.name == 'page' and page.handle == 'contact'
       assign melato_meta_title = page.title | default: 'Contact'
@@ -65,32 +65,33 @@
 >
   <a href="#main-content" class="skip-to-content">{{ 'accessibility.skip_to_content' | t }}</a>
 
+  {%- liquid
+    assign melato_is_fragrance_product = false
+    assign melato_filter_main_output = false
+
+    if template.name == 'product' and product
+      assign melato_product_type_down = product.product_type | downcase
+      assign melato_product_title_down = product.title | downcase
+      if melato_product_type_down contains 'fragrance' or melato_product_type_down contains 'eau de toilette' or melato_product_type_down contains 'eau de parfum' or melato_product_title_down contains 'eau de toilette' or melato_product_title_down contains 'eau de parfum'
+        assign melato_is_fragrance_product = true
+      endif
+      assign melato_filter_main_output = true
+    elsif template.name == 'index' or template.name == 'collection'
+      assign melato_filter_main_output = true
+    elsif request.path == '/pages/faq' or request.path == '/pages/contact' or request.path contains '/policies/refund-policy'
+      assign melato_filter_main_output = true
+    endif
+  -%}
+
   {%- capture melato_announcement_output -%}{%- section 'melato-announcement-bar' -%}{%- endcapture -%}
   {% render 'melato-rendered-output-filters', html: melato_announcement_output, context: 'announcement' %}
 
   {%- section 'melato-header' -%}
-  {%- comment -%} Melato Concierge Strip: sticky sub-header nav. Skipped on the homepage because its concierge is intentionally placed near the bottom, on the four dedicated service pages, and on product/cart where it is already placed inline. {%- endcomment -%}
-  {%- unless template.name == 'index' or template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room' or template.name == 'product' or template.name == 'cart' -%}
-    {%- capture melato_concierge_output -%}{%- section 'melato-concierge-strip' -%}{%- endcapture -%}
-    {% render 'melato-rendered-output-filters', html: melato_concierge_output, context: 'main' %}
-  {%- endunless -%}
 
-  {%- liquid
-    assign melato_filter_main_output = false
-    if template.name == 'index' or template.name == 'collection'
-      assign melato_filter_main_output = true
-    elsif request.path == '/pages/faq' or request.path == '/pages/contact' or request.path contains '/policies/refund-policy'
-      assign melato_filter_main_output = true
-    elsif template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room'
-      assign melato_filter_main_output = true
-    elsif template.name == 'product' and product
-      if product.handle == 'petal-veil-eau-de-toilette' or product.handle == 'rex-x-fur-jacket-copy' or product.handle == 'blush-ledger-satin-shirt'
-        assign melato_filter_main_output = true
-      endif
-    endif
-  -%}
-
-  {%- if melato_filter_main_output -%}
+  {%- if melato_is_fragrance_product -%}
+    {%- capture melato_fragrance_output -%}{%- section 'melato-fragrance-product' -%}{%- endcapture -%}
+    <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_fragrance_output, context: 'main' %}</main>
+  {%- elsif melato_filter_main_output -%}
     {%- capture melato_main_output -%}{{ content_for_layout }}{%- endcapture -%}
     <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_main_output, context: 'main' %}</main>
   {%- else -%}
@@ -102,11 +103,13 @@
   {%- liquid
     assign melato_show_size_guide = false
     if template.name == 'product' and product
-      assign melato_size_type = product.product_type | downcase
-      assign melato_size_title = product.title | downcase
-      if melato_size_type contains 'jacket' or melato_size_title contains 'jacket' or melato_size_type contains 'pant' or melato_size_title contains 'pant' or melato_size_type contains 'trouser' or melato_size_title contains 'trouser' or melato_size_type contains 'jean' or melato_size_title contains 'jean' or melato_size_type contains 'denim' or melato_size_title contains 'denim' or melato_size_type contains 'shirt' or melato_size_title contains 'shirt' or melato_size_type contains 'top' or melato_size_title contains 'top' or melato_size_type contains 'tee' or melato_size_title contains 'tee' or melato_size_type contains 'polo' or melato_size_title contains 'polo' or melato_size_type contains 'dress' or melato_size_title contains 'dress' or melato_size_type contains 'skirt' or melato_size_title contains 'skirt' or melato_size_type contains 'bodysuit' or melato_size_title contains 'bodysuit' or melato_size_type contains 'coat' or melato_size_title contains 'coat' or melato_size_type contains 'vest' or melato_size_title contains 'vest' or melato_size_type contains 'tracksuit' or melato_size_title contains 'tracksuit'
-        assign melato_show_size_guide = true
-      endif
+      unless melato_is_fragrance_product
+        assign melato_size_type = product.product_type | downcase
+        assign melato_size_title = product.title | downcase
+        if melato_size_type contains 'jacket' or melato_size_title contains 'jacket' or melato_size_type contains 'pant' or melato_size_title contains 'pant' or melato_size_type contains 'trouser' or melato_size_title contains 'trouser' or melato_size_type contains 'jean' or melato_size_title contains 'jean' or melato_size_type contains 'denim' or melato_size_title contains 'denim' or melato_size_type contains 'shirt' or melato_size_title contains 'shirt' or melato_size_type contains 'top' or melato_size_title contains 'top' or melato_size_type contains 'tee' or melato_size_title contains 'tee' or melato_size_type contains 'polo' or melato_size_title contains 'polo' or melato_size_type contains 'dress' or melato_size_title contains 'dress' or melato_size_type contains 'skirt' or melato_size_title contains 'skirt' or melato_size_type contains 'bodysuit' or melato_size_title contains 'bodysuit' or melato_size_type contains 'coat' or melato_size_title contains 'coat' or melato_size_type contains 'vest' or melato_size_title contains 'vest' or melato_size_type contains 'tracksuit' or melato_size_title contains 'tracksuit'
+          assign melato_show_size_guide = true
+        endif
+      endunless
     endif
   -%}
 
