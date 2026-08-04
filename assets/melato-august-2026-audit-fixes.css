@@ -18,16 +18,28 @@
   gap: 0.55rem 1rem;
 }
 
+ul.pdp-trust-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 .pdp-trust-row > span,
+.pdp-trust-row > li,
 [class*="product"] [class*="trust-row"] > span,
-[class*="product"] [class*="assurance"] > span {
+[class*="product"] [class*="trust-row"] > li,
+[class*="product"] [class*="assurance"] > span,
+[class*="product"] [class*="assurance"] > li {
   display: inline-flex;
   align-items: center;
 }
 
 .pdp-trust-row > span:not(:last-child)::after,
+.pdp-trust-row > li:not(:last-child)::after,
 [class*="product"] [class*="trust-row"] > span:not(:last-child)::after,
-[class*="product"] [class*="assurance"] > span:not(:last-child)::after {
+[class*="product"] [class*="trust-row"] > li:not(:last-child)::after,
+[class*="product"] [class*="assurance"] > span:not(:last-child)::after,
+[class*="product"] [class*="assurance"] > li:not(:last-child)::after {
   content: "";
   width: 1px;
   height: 0.85em;
