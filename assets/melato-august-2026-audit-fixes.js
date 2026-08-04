@@ -3,11 +3,11 @@
 
   const path = window.location.pathname.replace(/\/+$/, '') || '/';
   const SKIP_TEXT_PARENTS = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'OPTION']);
-
   const normalize = (value) => String(value || '').replace(/\s+/g, ' ').trim();
 
   function walkTextNodes(root, callback) {
     if (!root || !document.createTreeWalker) return;
+
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         if (!node.parentElement || SKIP_TEXT_PARENTS.has(node.parentElement.tagName)) {
@@ -24,18 +24,20 @@
 
   function replaceText(root, replacements) {
     walkTextNodes(root, (node) => {
-      let value = node.nodeValue;
-      let next = value;
+      const current = node.nodeValue;
+      let next = current;
+
       replacements.forEach(([pattern, replacement]) => {
         next = next.replace(pattern, replacement);
       });
-      if (next !== value) node.nodeValue = next;
+
+      if (next !== current) node.nodeValue = next;
     });
   }
 
   function closestModule(element) {
     return element?.closest(
-      'section, details, article, .pdp-panel, .accordion, [class*="accordion"], [class*="product-info"], [class*="product__info"], [class*="size-guide"], [class*="drawer"]'
+      'details, article, .pdp-panel, .accordion, [class*="accordion"], [class*="size-guide"], [class*="measurements"], [data-size-guide], [class*="drawer"]'
     ) || element?.parentElement;
   }
 
@@ -69,23 +71,24 @@
   }
 
   function fixCartLanguage() {
-    document.querySelectorAll('.cart-drawer__empty-sub').forEach((node) => {
+    const cart = document.querySelector('#cart-drawer');
+    if (!cart) return;
+
+    cart.querySelectorAll('.cart-drawer__empty-sub').forEach((node) => {
       node.textContent = 'Explore the current Melato rotation.';
     });
 
-    document.querySelectorAll('.cart-drawer__empty a, .cart-drawer__empty button').forEach((node) => {
-      const text = normalize(node.textContent).toLowerCase();
-      if (text === 'shop the uniform') {
-        node.textContent = 'Shop new arrivals';
-        if (node.tagName === 'A') node.setAttribute('href', '/collections/new-arrivals');
-      }
+    cart.querySelectorAll('.cart-drawer__empty a, .cart-drawer__empty button').forEach((node) => {
+      if (normalize(node.textContent).toLowerCase() !== 'shop the uniform') return;
+      node.textContent = 'Shop new arrivals';
+      if (node.tagName === 'A') node.setAttribute('href', '/collections/new-arrivals');
     });
 
-    document.querySelectorAll('.cart-drawer__tax-note, [data-cart-tax-note]').forEach((node) => {
+    cart.querySelectorAll('.cart-drawer__tax-note, [data-cart-tax-note]').forEach((node) => {
       node.textContent = 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.';
     });
 
-    replaceText(document.querySelector('#cart-drawer') || document, [
+    replaceText(cart, [
       [/Explore the latest uniform pieces\./gi, 'Explore the current Melato rotation.'],
       [/Taxes\s*&\s*shipping calculated at checkout/gi, 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.'],
       [/Taxes and shipping calculated at checkout/gi, 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.']
@@ -150,9 +153,9 @@
 
     if (!/\/collections\/best-sellers/i.test(path)) return;
 
-    const grids = document.querySelectorAll('[data-product-grid], .product-grid, .collection-grid, [class*="products-grid"]');
-    grids.forEach((grid) => {
+    document.querySelectorAll('[data-product-grid], .product-grid, .collection-grid, [class*="products-grid"]').forEach((grid) => {
       if (grid.dataset.melatoAvailabilitySorted === 'true') return;
+
       const children = Array.from(grid.children);
       if (children.length < 2) return;
 
@@ -164,43 +167,26 @@
     });
   }
 
-  function ensureFragranceNavigation() {
-    const nav = document.querySelector('.mxh__nav');
-    if (!nav || nav.querySelector('a[href*="/collections/fragrance"]')) return;
-
-    const denimLink = Array.from(nav.querySelectorAll('a')).find((link) => normalize(link.textContent).toLowerCase().includes('denim'));
-    if (!denimLink) return;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'mxh__nav-item melato-audit-fragrance-nav';
-
-    const link = document.createElement('a');
-    link.className = 'mxh__nav-link';
-    link.href = '/collections/fragrance';
-    link.innerHTML = '<span aria-hidden="true">FR</span> Fragrance';
-
-    wrapper.appendChild(link);
-    const denimWrapper = denimLink.closest('.mxh__nav-item') || denimLink;
-    denimWrapper.insertAdjacentElement('afterend', wrapper);
-  }
-
   function fixPdpSemantics() {
-    document.querySelectorAll('.pdp-trust-row, [class*="trust-row"], [class*="assurance"]').forEach((row) => {
+    if (!document.body.classList.contains('template-product')) return;
+    const root = document.querySelector('#main-content') || document;
+
+    root.querySelectorAll('.pdp-trust-row, [class*="trust-row"], [class*="assurance"]').forEach((row) => {
       if (row.matches('script, style')) return;
       row.setAttribute('role', 'list');
       Array.from(row.children).forEach((child) => child.setAttribute('role', 'listitem'));
     });
 
-    replaceText(document, [[
+    replaceText(root, [[
       /Customers rate us\s+([0-9.]+)\/5\s+based on\s+(\d+)\s+reviews?\.?/gi,
       'MELATO STORE RATING $1/5 from $2 verified customer reviews'
     ]]);
 
-    const title = normalize(document.querySelector('h1')?.textContent);
+    const title = normalize(root.querySelector('h1')?.textContent);
     if (!title) return;
 
     const descriptors = ['front view', 'alternate angle', 'rear view', 'detail view', 'close-up detail', 'side view'];
-    document.querySelectorAll('.pdp-gallery img, [class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
+    root.querySelectorAll('.pdp-gallery img, [class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
       const current = normalize(image.getAttribute('alt'));
       const generic = !current || current.toLowerCase() === title.toLowerCase() || current.toLowerCase() === `image: ${title}`.toLowerCase();
       if (generic) image.setAttribute('alt', `${title} ${descriptors[index] || `view ${index + 1}`}`);
@@ -224,13 +210,30 @@
 
   function insertSpecCard(target, id, title, rows) {
     if (!target || document.getElementById(id)) return;
+
     const card = document.createElement('section');
     card.id = id;
     card.className = 'melato-audit-spec-card';
     card.setAttribute('aria-labelledby', `${id}-title`);
 
-    const dl = rows.map(([term, description]) => `<dt>${term}</dt><dd>${description}</dd>`).join('');
-    card.innerHTML = `<p class="melato-audit-spec-card__eyebrow">Product intelligence</p><h2 id="${id}-title">${title}</h2><dl>${dl}</dl>`;
+    const eyebrow = document.createElement('p');
+    eyebrow.className = 'melato-audit-spec-card__eyebrow';
+    eyebrow.textContent = 'Product intelligence';
+
+    const heading = document.createElement('h2');
+    heading.id = `${id}-title`;
+    heading.textContent = title;
+
+    const list = document.createElement('dl');
+    rows.forEach(([term, description]) => {
+      const dt = document.createElement('dt');
+      const dd = document.createElement('dd');
+      dt.textContent = term;
+      dd.textContent = description;
+      list.append(dt, dd);
+    });
+
+    card.append(eyebrow, heading, list);
     target.insertAdjacentElement('afterend', card);
   }
 
@@ -289,7 +292,6 @@
     fixGeneralCareCopy();
     fixContactCopy();
     fixCollectionFilters();
-    ensureFragranceNavigation();
     fixPdpSemantics();
     fixConciergeLabels();
     fixPetalVeil();
