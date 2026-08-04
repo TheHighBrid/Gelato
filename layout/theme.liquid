@@ -61,8 +61,8 @@
   <a href="#main-content" class="skip-to-content">{{ 'accessibility.skip_to_content' | t }}</a>
   {%- section 'melato-announcement-bar' -%}
   {%- section 'melato-header' -%}
-  {%- comment -%} Melato Concierge Strip: sticky sub-header nav. Skipped on the four dedicated service pages (already included in their own templates) and on product/cart (already placed inline with custom styling there) to avoid duplicates. {%- endcomment -%}
-  {%- unless template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room' or template.name == 'product' or template.name == 'cart' -%}
+  {%- comment -%} Melato Concierge Strip: sticky sub-header nav. Skipped on the homepage because its concierge is intentionally placed near the bottom, on the four dedicated service pages, and on product/cart where it is already placed inline. {%- endcomment -%}
+  {%- unless template.name == 'index' or template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room' or template.name == 'product' or template.name == 'cart' -%}
     {%- section 'melato-concierge-strip' -%}
   {%- endunless -%}
   <main id="main-content" class="main-content" role="main" tabindex="-1">{{ content_for_layout }}</main>
