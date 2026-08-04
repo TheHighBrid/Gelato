@@ -44,12 +44,16 @@
     assign output = output | replace: 'Wash cold on a gentle cycle, wash inside out', 'Care varies by product and material. Always follow the product page and sewn-in care label'
 
     # Availability labels are customer-facing states, not variant-count totals.
-    for count in (0..200)
-      assign in_stock_count = 'In stock (' | append: count | append: ')'
-      assign out_stock_count = 'Out of stock (' | append: count | append: ')'
-      assign output = output | replace: in_stock_count, 'In stock'
-      assign output = output | replace: out_stock_count, 'Out of stock'
-    endfor
+    if template.name == 'collection' and collection
+      for filter in collection.filters
+        for value in filter.values
+          if value.label == 'In stock' or value.label == 'Out of stock'
+            assign counted_label = value.label | append: ' (' | append: value.count | append: ')'
+            assign output = output | replace: counted_label, value.label
+          endif
+        endfor
+      endfor
+    endif
 
     # Explicit list semantics prevent assurance copy from collapsing into one phrase.
     assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
@@ -73,8 +77,6 @@
         assign output = output | replace: 'Premium construction selected for feel, structure, and everyday wearability.', 'Material currently published: silk. Additional construction specifications must come from verified product records.'
         assign output = output | replace: 'Built to sit clean on body without stealing movement.', 'Designed for a relaxed drape. Refer to verified garment measurements when published.'
         assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Follow the sewn-in care label. Contact support@melato.ca before cleaning if the label is unclear.'
-      else
-        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Follow the product page and sewn-in care label. Contact support@melato.ca before cleaning if the instructions are unclear.'
       endif
     endif
   endif
