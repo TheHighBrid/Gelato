@@ -1,0 +1,394 @@
+{% comment %}
+  Dedicated fragrance PDP.
+  Deliberately excludes apparel fit, clothing measurements, laundry guidance,
+  complete-the-set apparel logic, and the global garment size guide.
+{% endcomment %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+  assign volume = product.metafields.custom.volume.value | default: section.settings.default_volume
+  assign concentration = product.metafields.custom.fragrance_concentration.value | default: section.settings.default_concentration
+  assign fragrance_family = product.metafields.custom.fragrance_family.value
+  assign top_notes = product.metafields.custom.top_notes.value
+  assign heart_notes = product.metafields.custom.heart_notes.value | default: product.metafields.custom.middle_notes.value
+  assign base_notes = product.metafields.custom.base_notes.value
+  assign application_copy = product.metafields.custom.application.value | default: section.settings.application
+  assign storage_copy = product.metafields.custom.storage.value | default: section.settings.storage
+  assign returns_copy = section.settings.returns_copy
+-%}
+
+<section id="MelatoFragrance-{{ section.id }}" class="melato-fragrance-pdp" aria-labelledby="MelatoFragranceTitle-{{ section.id }}">
+  <div class="melato-fragrance-pdp__shell">
+    <div class="melato-fragrance-pdp__gallery" aria-label="{{ product.title | escape }} product gallery">
+      {%- if featured_media -%}
+        <figure class="melato-fragrance-pdp__hero-media">
+          {{ featured_media
+            | image_url: width: 1800
+            | image_tag:
+              class: 'melato-fragrance-pdp__image',
+              loading: 'eager',
+              fetchpriority: 'high',
+              widths: '600,900,1200,1500,1800',
+              sizes: '(max-width: 899px) 100vw, 58vw',
+              alt: featured_media.alt | default: product.title | append: ' bottle front view'
+          }}
+        </figure>
+      {%- endif -%}
+
+      {%- if product.media.size > 1 -%}
+        <div class="melato-fragrance-pdp__thumbs" role="list" aria-label="Alternate fragrance views">
+          {%- for media in product.media limit: 8 -%}
+            {%- liquid
+              case forloop.index
+                when 1
+                  assign view_label = 'bottle front view'
+                when 2
+                  assign view_label = 'alternate bottle angle'
+                when 3
+                  assign view_label = 'bottle rear view'
+                when 4
+                  assign view_label = 'atomizer detail'
+                else
+                  assign view_label = 'fragrance detail view ' | append: forloop.index
+              endcase
+              assign media_alt = media.alt | default: product.title | append: ' ' | append: view_label
+            -%}
+            <button
+              class="melato-fragrance-pdp__thumb{% if media.id == featured_media.id %} is-active{% endif %}"
+              type="button"
+              role="listitem"
+              data-fragrance-thumb
+              data-media-src="{{ media | image_url: width: 1800 }}"
+              data-media-alt="{{ media_alt | escape }}"
+              aria-label="Show {{ view_label }}"
+            >
+              {{ media
+                | image_url: width: 240
+                | image_tag:
+                  class: 'melato-fragrance-pdp__thumb-image',
+                  loading: 'lazy',
+                  widths: '120,180,240',
+                  sizes: '84px',
+                  alt: media_alt
+              }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="melato-fragrance-pdp__buybox">
+      <p class="melato-fragrance-pdp__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h1 id="MelatoFragranceTitle-{{ section.id }}" class="melato-fragrance-pdp__title">{{ product.title }}</h1>
+
+      {%- if product.metafields.custom.pdp_hook.value != blank -%}
+        <p class="melato-fragrance-pdp__hook">{{ product.metafields.custom.pdp_hook.value }}</p>
+      {%- endif -%}
+
+      <div class="melato-fragrance-pdp__price" aria-label="Price">
+        <span>{{ current_variant.price | money }}</span>
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <s>{{ current_variant.compare_at_price | money }}</s>
+        {%- endif -%}
+      </div>
+
+      <ul class="melato-fragrance-pdp__assurances" aria-label="Purchase assurances">
+        <li>Fast dispatch</li>
+        <li>Complimentary delivery on all orders</li>
+        <li>Secure checkout</li>
+      </ul>
+
+      {% form 'product', product, class: 'melato-fragrance-pdp__form' %}
+        {%- if product.has_only_default_variant -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+        {%- else -%}
+          {%- for option in product.options_with_values -%}
+            <fieldset class="melato-fragrance-pdp__option">
+              <legend>{{ option.name }}</legend>
+              <div class="melato-fragrance-pdp__choices">
+                {%- for value in option.values -%}
+                  <label class="melato-fragrance-pdp__choice{% if option.selected_value == value %} is-selected{% endif %}">
+                    <input
+                      type="radio"
+                      name="options[{{ option.name | escape }}]"
+                      value="{{ value | escape }}"
+                      {% if option.selected_value == value %}checked{% endif %}
+                      data-fragrance-option
+                      data-option-position="{{ option.position }}"
+                    >
+                    <span>{{ value }}</span>
+                  </label>
+                {%- endfor -%}
+              </div>
+            </fieldset>
+          {%- endfor -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" data-fragrance-variant-id>
+        {%- endif -%}
+
+        <div class="melato-fragrance-pdp__atc-row">
+          <label class="visually-hidden" for="FragranceQuantity-{{ section.id }}">Quantity</label>
+          <input id="FragranceQuantity-{{ section.id }}" class="melato-fragrance-pdp__quantity" type="number" name="quantity" min="1" value="1">
+          <button class="melato-fragrance-pdp__atc" type="submit" name="add" {% unless current_variant.available %}disabled{% endunless %} data-fragrance-atc>
+            {% if current_variant.available %}Add to cart{% else %}Sold out{% endif %}
+          </button>
+        </div>
+
+        {%- if additional_checkout_buttons and current_variant.available -%}
+          <div class="melato-fragrance-pdp__dynamic-checkout">{{ content_for_additional_checkout_buttons }}</div>
+        {%- endif -%}
+      {% endform %}
+
+      <dl class="melato-fragrance-pdp__core-specs">
+        <div><dt>Size</dt><dd>{{ volume }}</dd></div>
+        <div><dt>Concentration</dt><dd>{{ concentration }}</dd></div>
+        {%- if fragrance_family != blank -%}<div><dt>Fragrance family</dt><dd>{{ fragrance_family }}</dd></div>{%- endif -%}
+      </dl>
+    </div>
+  </div>
+
+  <div class="melato-fragrance-pdp__content">
+    {%- if product.description != blank -%}
+      <section class="melato-fragrance-pdp__panel" aria-labelledby="FragranceStory-{{ section.id }}">
+        <p class="melato-fragrance-pdp__panel-eyebrow">The fragrance</p>
+        <h2 id="FragranceStory-{{ section.id }}">Story</h2>
+        <div class="rte">{{ product.description }}</div>
+      </section>
+    {%- endif -%}
+
+    {%- if top_notes != blank or heart_notes != blank or base_notes != blank -%}
+      <section class="melato-fragrance-pdp__panel" aria-labelledby="FragranceNotes-{{ section.id }}">
+        <p class="melato-fragrance-pdp__panel-eyebrow">Composition</p>
+        <h2 id="FragranceNotes-{{ section.id }}">Notes</h2>
+        <dl class="melato-fragrance-pdp__notes">
+          {%- if top_notes != blank -%}<div><dt>Top</dt><dd>{{ top_notes }}</dd></div>{%- endif -%}
+          {%- if heart_notes != blank -%}<div><dt>Heart</dt><dd>{{ heart_notes }}</dd></div>{%- endif -%}
+          {%- if base_notes != blank -%}<div><dt>Base</dt><dd>{{ base_notes }}</dd></div>{%- endif -%}
+        </dl>
+      </section>
+    {%- endif -%}
+
+    <section class="melato-fragrance-pdp__panel" aria-labelledby="FragranceUse-{{ section.id }}">
+      <p class="melato-fragrance-pdp__panel-eyebrow">Use and storage</p>
+      <h2 id="FragranceUse-{{ section.id }}">Care</h2>
+      <dl class="melato-fragrance-pdp__notes">
+        <div><dt>Application</dt><dd>{{ application_copy }}</dd></div>
+        <div><dt>Storage</dt><dd>{{ storage_copy }}</dd></div>
+        <div><dt>Returns</dt><dd>{{ returns_copy }}</dd></div>
+      </dl>
+    </section>
+  </div>
+</section>
+
+<script type="application/json" data-fragrance-variants>{{ product.variants | json }}</script>
+<script>
+  (() => {
+    const root = document.getElementById('MelatoFragrance-{{ section.id }}');
+    if (!root) return;
+
+    const mainImage = root.querySelector('.melato-fragrance-pdp__image');
+    root.querySelectorAll('[data-fragrance-thumb]').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (!mainImage) return;
+        mainImage.src = button.dataset.mediaSrc;
+        mainImage.alt = button.dataset.mediaAlt || {{ product.title | json }};
+        root.querySelectorAll('[data-fragrance-thumb]').forEach((thumb) => thumb.classList.toggle('is-active', thumb === button));
+      });
+    });
+
+    const variantsNode = root.nextElementSibling?.matches('[data-fragrance-variants]')
+      ? root.nextElementSibling
+      : document.querySelector('[data-fragrance-variants]');
+    const variants = variantsNode ? JSON.parse(variantsNode.textContent) : [];
+    const variantInput = root.querySelector('[data-fragrance-variant-id]');
+    const addButton = root.querySelector('[data-fragrance-atc]');
+
+    root.querySelectorAll('[data-fragrance-option]').forEach((input) => {
+      input.addEventListener('change', () => {
+        const selections = Array.from(root.querySelectorAll('[data-fragrance-option]:checked')).map((choice) => choice.value);
+        const variant = variants.find((item) => selections.every((value, index) => item.options[index] === value));
+        if (!variant || !variantInput) return;
+        variantInput.value = variant.id;
+        if (addButton) {
+          addButton.disabled = !variant.available;
+          addButton.textContent = variant.available ? 'Add to cart' : 'Sold out';
+        }
+        root.querySelectorAll('.melato-fragrance-pdp__choice').forEach((choice) => {
+          const radio = choice.querySelector('input');
+          choice.classList.toggle('is-selected', Boolean(radio?.checked));
+        });
+      });
+    });
+  })();
+</script>
+
+<style>
+  #MelatoFragrance-{{ section.id }} {
+    --fragrance-bg: {{ section.settings.background }};
+    --fragrance-surface: {{ section.settings.surface }};
+    --fragrance-text: {{ section.settings.text }};
+    --fragrance-muted: {{ section.settings.muted }};
+    --fragrance-accent: {{ section.settings.accent }};
+    background: var(--fragrance-bg);
+    color: var(--fragrance-text);
+    padding: clamp(24px, 4vw, 64px) clamp(16px, 4vw, 56px) clamp(64px, 8vw, 120px);
+  }
+
+  #MelatoFragrance-{{ section.id }} * { box-sizing: border-box; }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__shell {
+    width: min(1440px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(340px, .65fr);
+    gap: clamp(30px, 5vw, 80px);
+    align-items: start;
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__gallery { min-width: 0; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__hero-media {
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border-radius: 22px;
+    background: var(--fragrance-surface);
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__thumbs {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__thumb {
+    appearance: none;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 0;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--fragrance-surface);
+    cursor: pointer;
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__thumb.is-active { border-color: var(--fragrance-accent); }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__thumb-image { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__buybox {
+    position: sticky;
+    top: calc(var(--header-height, 60px) + 28px);
+    padding: clamp(24px, 3vw, 42px);
+    border: 1px solid color-mix(in srgb, var(--fragrance-text) 15%, transparent);
+    border-radius: 22px;
+    background: color-mix(in srgb, var(--fragrance-surface) 92%, transparent);
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__eyebrow,
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__panel-eyebrow {
+    margin: 0 0 10px;
+    font-family: var(--font-mono-family, monospace);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--fragrance-muted);
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__title {
+    margin: 0;
+    font-size: clamp(38px, 5vw, 72px);
+    line-height: .94;
+    letter-spacing: -.045em;
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__hook { color: var(--fragrance-muted); line-height: 1.65; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__price { display: flex; align-items: baseline; gap: 12px; margin: 20px 0; font-size: 20px; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__price s { color: var(--fragrance-muted); font-size: 15px; }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__assurances {
+    list-style: none;
+    margin: 0 0 26px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    color: var(--fragrance-muted);
+    font-size: 12px;
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__assurances li:not(:last-child)::after { content: '·'; margin-inline-start: 16px; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__form { display: grid; gap: 18px; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__option { border: 0; padding: 0; margin: 0; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__option legend { margin-bottom: 10px; font-size: 12px; text-transform: uppercase; letter-spacing: .12em; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__choices { display: flex; flex-wrap: wrap; gap: 8px; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__choice input { position: absolute; opacity: 0; pointer-events: none; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__choice span { display: inline-flex; min-height: 42px; align-items: center; padding: 0 16px; border: 1px solid color-mix(in srgb, var(--fragrance-text) 20%, transparent); border-radius: 999px; cursor: pointer; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__choice.is-selected span { border-color: var(--fragrance-accent); background: var(--fragrance-accent); color: var(--fragrance-bg); }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__atc-row { display: grid; grid-template-columns: 74px 1fr; gap: 10px; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__quantity,
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__atc { min-height: 54px; border-radius: 999px; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__quantity { width: 100%; border: 1px solid color-mix(in srgb, var(--fragrance-text) 20%, transparent); background: transparent; color: inherit; text-align: center; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__atc { border: 1px solid var(--fragrance-accent); background: var(--fragrance-accent); color: var(--fragrance-bg); text-transform: uppercase; letter-spacing: .1em; font-weight: 800; cursor: pointer; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__atc:disabled { opacity: .45; cursor: not-allowed; }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__core-specs,
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__notes { margin: 26px 0 0; display: grid; gap: 12px; }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__core-specs > div,
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__notes > div { display: grid; grid-template-columns: minmax(110px, .35fr) 1fr; gap: 16px; padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--fragrance-text) 12%, transparent); }
+  #MelatoFragrance-{{ section.id }} dt { font-weight: 700; }
+  #MelatoFragrance-{{ section.id }} dd { margin: 0; color: var(--fragrance-muted); line-height: 1.6; }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__content {
+    width: min(1440px, 100%);
+    margin: clamp(48px, 7vw, 96px) auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__panel { padding: clamp(24px, 3vw, 40px); border: 1px solid color-mix(in srgb, var(--fragrance-text) 12%, transparent); border-radius: 22px; background: color-mix(in srgb, var(--fragrance-surface) 82%, transparent); }
+  #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__panel h2 { margin: 0 0 18px; font-size: clamp(28px, 3vw, 46px); }
+  #MelatoFragrance-{{ section.id }} .rte { color: var(--fragrance-muted); line-height: 1.7; }
+
+  @media (max-width: 899px) {
+    #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__shell { grid-template-columns: 1fr; }
+    #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__buybox { position: static; }
+    #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__content { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__thumbs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__core-specs > div,
+    #MelatoFragrance-{{ section.id }} .melato-fragrance-pdp__notes > div { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Melato fragrance product",
+  "tag": "section",
+  "class": "section melato-fragrance-product-section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Melato fragrance" },
+    { "type": "text", "id": "default_volume", "label": "Default volume", "default": "100 mL" },
+    { "type": "text", "id": "default_concentration", "label": "Default concentration", "default": "Eau de Toilette" },
+    { "type": "textarea", "id": "application", "label": "Application", "default": "Apply to pulse points. Avoid rubbing the fragrance into the skin." },
+    { "type": "textarea", "id": "storage", "label": "Storage", "default": "Store upright away from heat and direct sunlight." },
+    { "type": "textarea", "id": "returns_copy", "label": "Returns copy", "default": "Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance." },
+    { "type": "color", "id": "background", "label": "Background", "default": "#080808" },
+    { "type": "color", "id": "surface", "label": "Surface", "default": "#111111" },
+    { "type": "color", "id": "text", "label": "Text", "default": "#F5F1E8" },
+    { "type": "color", "id": "muted", "label": "Muted text", "default": "#AAA49A" },
+    { "type": "color", "id": "accent", "label": "Accent", "default": "#D8C7A7" }
+  ],
+  "presets": [{ "name": "Melato fragrance product" }]
+}
+{% endschema %}
