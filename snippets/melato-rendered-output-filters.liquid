@@ -37,7 +37,7 @@
     assign output = output | replace: 'Visit Us In-Store', 'Visit the Melatelier pop-up'
     assign output = output | replace: 'Melatelier is located at Tanger Outlets Ottawa.', 'The Melatelier pop-up opens only on announced dates.'
     assign output = output | replace: 'Clothing Accessories', 'Accessories'
-    assign output = output | replace: 'Men''s Undergarments', 'Underwear'
+    assign output = output | replace: "Men's Undergarments", 'Underwear'
     assign output = output | replace: 'Neckties', 'Ties'
     assign output = output | replace: 'Toiletry Bags', 'Travel Cases'
     assign output = output | replace: 'Eaux De Toilette', 'Eaux de Toilette'
@@ -52,7 +52,6 @@
     assign output = output | replace: 'issue after delivery—without searching for the right department.One point of contact', 'issue after delivery, without searching for the right department. One point of contact'
     assign output = output | replace: 'Wash cold on a gentle cycle, wash inside out', 'Care varies by product and material. Always follow the product page and sewn-in care label'
     assign output = output | replace: '<span>Full set price</span><strong>', '<span>Full set price</span> <strong>'
-    assign output = output | replace: '<span>Full set price</span>\n        <strong>', '<span>Full set price</span> <strong>'
 
     if template.name == 'collection' and collection.handle == 'all'
       assign output = output | replace: '<p class="melato-collection-eyebrow">Collection</p>', '<p class="melato-collection-eyebrow">Catalogue</p>'
