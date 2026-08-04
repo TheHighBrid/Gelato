@@ -72,7 +72,7 @@
 </section>
 
 {% stylesheet %}
-.melato-concierge { --concierge-ink: #171714; --concierge-paper: #f3efe6; --concierge-muted: #67645d; --concierge-line: rgba(23,23,20,.18); background: var(--concierge-paper); color: var(--concierge-ink); border-block: 1px solid var(--concierge-line); }
+.melato-concierge { --concierge-ink: #f3efe6; --concierge-paper: #171714; --concierge-copy: #cbc7bd; --concierge-muted: #9d998f; --concierge-line: rgba(243,239,230,.18); background: var(--concierge-paper); color: var(--concierge-ink); border-block: 1px solid var(--concierge-line); }
 .melato-concierge * { box-sizing: border-box; }
 .melato-concierge__shell { width: min(100% - 40px, 1440px); margin-inline: auto; padding-block: clamp(64px, 8vw, 120px) clamp(40px, 6vw, 80px); }
 .melato-concierge__header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .55fr); align-items: end; gap: 40px; margin-bottom: clamp(44px, 6vw, 84px); }
@@ -85,16 +85,16 @@
 .melato-concierge__number { padding-top: 7px; color: var(--concierge-muted); font-size: 10px; letter-spacing: .18em; }
 .melato-concierge__service-body { display: grid; grid-template-columns: minmax(220px, .7fr) minmax(280px, 1fr) minmax(180px, .55fr); gap: clamp(24px, 4vw, 72px); align-items: baseline; }
 .melato-concierge__service-title { color: var(--concierge-ink); font-family: var(--font-heading-family, serif); font-size: clamp(24px, 2.5vw, 38px); line-height: 1; letter-spacing: -.03em; }
-.melato-concierge__service-copy { max-width: 510px; color: #3f3d38; font-size: 14px; line-height: 1.65; }
+.melato-concierge__service-copy { max-width: 510px; color: var(--concierge-copy); font-size: 14px; line-height: 1.65; }
 .melato-concierge__service-note { color: var(--concierge-muted); font-size: 10px; line-height: 1.5; letter-spacing: .12em; text-transform: uppercase; }
 .melato-concierge__arrow { padding-top: 3px; font-size: 20px; transition: transform .3s ease; }
-.melato-concierge__service:hover { padding-inline: 16px; background: rgba(23,23,20,.035); }
+.melato-concierge__service:hover { padding-inline: 16px; background: rgba(243,239,230,.055); }
 .melato-concierge__service:hover .melato-concierge__arrow { transform: translate(4px, -4px); }
 .melato-concierge__service:focus-visible, .melato-concierge__contact:focus-visible { outline: 2px solid var(--concierge-ink); outline-offset: 4px; }
 .melato-concierge__footer { display: flex; align-items: center; justify-content: space-between; gap: 28px; padding-top: clamp(30px, 4vw, 52px); }
 .melato-concierge__availability { display: flex; align-items: flex-start; gap: 12px; color: var(--concierge-muted); font-size: 12px; line-height: 1.5; }
 .melato-concierge__availability strong { display: block; color: var(--concierge-ink); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
-.melato-concierge__status { width: 7px; height: 7px; margin-top: 5px; flex: 0 0 auto; border-radius: 50%; background: #426b46; box-shadow: 0 0 0 4px rgba(66,107,70,.12); }
+.melato-concierge__status { width: 7px; height: 7px; margin-top: 5px; flex: 0 0 auto; border-radius: 50%; background: #6b9b70; box-shadow: 0 0 0 4px rgba(107,155,112,.16); }
 .melato-concierge__contact { display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; min-width: 260px; min-height: 50px; padding: 0 18px; color: var(--concierge-paper); background: var(--concierge-ink); border: 1px solid var(--concierge-ink); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-decoration: none; text-transform: uppercase; transition: color .25s ease, background .25s ease; }
 .melato-concierge__contact:hover { color: var(--concierge-ink); background: transparent; }
 @media (max-width: 990px) {
