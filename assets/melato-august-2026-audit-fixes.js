@@ -37,7 +37,7 @@
 
   function closestModule(element) {
     return element?.closest(
-      'details, article, section, .pdp-panel, .accordion, [class*="accordion"], [class*="size-guide"], [class*="measurements"], [data-size-guide], [class*="drawer"]'
+      'details, article, .pdp-panel, .accordion, [class*="accordion"], [class*="size-guide"], [class*="measurements"], [data-size-guide], [class*="drawer"]'
     ) || element?.parentElement;
   }
 
@@ -233,7 +233,7 @@
   }
 
   function fixProductTextSpacing(root) {
-    root.querySelectorAll('.melato-set__total, .m-cts__pricing, .purchase-summary, [class*="purchase-summary"], [class*="sticky-product"], [class*="product-summary"]').forEach((container) => {
+    root.querySelectorAll('.pdp-set-total, .pdp-sticky-atc > div, .melato-set__total, .m-cts__pricing, .purchase-summary, [class*="purchase-summary"], [class*="sticky-product"], [class*="product-summary"]').forEach((container) => {
       const price = container.querySelector(':scope > strong, :scope > [class*="price"], [class*="price"]');
       if (price) addSemanticSeparator(price.parentElement, price);
     });
@@ -242,6 +242,14 @@
       const firstPrice = row.querySelector(':scope > *');
       if (firstPrice) addSemanticSeparator(row, firstPrice);
     });
+  }
+
+  function setGalleryAlt(image, title, descriptor) {
+    if (!image) return;
+    const current = normalize(image.getAttribute('alt'));
+    const lower = current.toLowerCase();
+    const generic = !current || lower === title.toLowerCase() || lower === `image: ${title}`.toLowerCase();
+    if (generic) image.setAttribute('alt', `${title} ${descriptor}`);
   }
 
   function fixPdpSemantics() {
@@ -263,11 +271,15 @@
     if (!title) return;
 
     const descriptors = galleryDescriptors();
-    root.querySelectorAll('.pdp-gallery img, [class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
-      const current = normalize(image.getAttribute('alt'));
-      const lower = current.toLowerCase();
-      const generic = !current || lower === title.toLowerCase() || lower === `image: ${title}`.toLowerCase();
-      if (generic) image.setAttribute('alt', `${title} ${descriptors[index] || `view ${index + 1}`}`);
+    setGalleryAlt(root.querySelector('.pdp-main-image'), title, descriptors[0]);
+    root.querySelectorAll('.pdp-thumbs .pdp-thumb-image').forEach((image, index) => {
+      setGalleryAlt(image, title, descriptors[index] || `view ${index + 1}`);
+    });
+    root.querySelectorAll('.pdp-editorial .pdp-editorial-image').forEach((image, index) => {
+      setGalleryAlt(image, title, descriptors[index + 1] || `detail view ${index + 1}`);
+    });
+    root.querySelectorAll('[class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
+      setGalleryAlt(image, title, descriptors[index] || `view ${index + 1}`);
     });
 
     fixProductTextSpacing(root);
@@ -362,7 +374,7 @@
   function fixDuplicateHargneuxSetBuilder() {
     if (path !== '/products/hargneux-velour-track-pant') return;
     const root = document.querySelector('#main-content') || document;
-    const candidates = Array.from(root.querySelectorAll('.melato-set, .m-cts, [class*="complete-the-set"], section')).filter((node) => {
+    const candidates = Array.from(root.querySelectorAll('.pdp-set, .melato-set, .m-cts, [class*="complete-the-set"]')).filter((node) => {
       const text = normalize(node.textContent).toLowerCase();
       return text.includes('complete the set') && text.includes('full set price');
     });
