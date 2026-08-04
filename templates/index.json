@@ -38,189 +38,60 @@
     "ticker": {
       "type": "ticker",
       "blocks": {
-        "item1": {
-          "type": "item",
-          "settings": {
-            "text": "THE CULTURE WEARS US"
-          }
-        },
-        "item3": {
-          "type": "item",
-          "settings": {
-            "text": "1980s retro UNIFORMS"
-          }
-        },
-        "item4": {
-          "type": "item",
-          "settings": {
-            "text": "CUT WITH INTENT"
-          }
-        },
-        "item5": {
-          "type": "item",
-          "settings": {
-            "text": "BUILT FOR MOVEMENT"
-          }
-        },
-        "item_BXgTdL": {
-          "type": "item",
-          "settings": {
-            "text": "Complimentary delivery on all orders."
-          }
-        },
-        "item_g67bjG": {
-          "type": "item",
-          "settings": {
-            "text": "HIGH-END GARMENTS"
-          }
-        },
-        "item6": {
-          "type": "item",
-          "settings": {
-            "text": "PREMIUM BAMBOO fabrics"
-          }
-        },
-        "item7": {
-          "type": "item",
-          "settings": {
-            "text": "PREMIUM VELOUR material"
-          }
-        }
+        "item1": {"type": "item", "settings": {"text": "THE CULTURE WEARS US"}},
+        "item3": {"type": "item", "settings": {"text": "1980s retro UNIFORMS"}},
+        "item4": {"type": "item", "settings": {"text": "CUT WITH INTENT"}},
+        "item5": {"type": "item", "settings": {"text": "BUILT FOR MOVEMENT"}},
+        "item_BXgTdL": {"type": "item", "settings": {"text": "Complimentary delivery on all orders."}},
+        "item_g67bjG": {"type": "item", "settings": {"text": "HIGH-END GARMENTS"}},
+        "item6": {"type": "item", "settings": {"text": "PREMIUM BAMBOO fabrics"}},
+        "item7": {"type": "item", "settings": {"text": "PREMIUM VELOUR material"}}
       },
-      "block_order": [
-        "item1",
-        "item3",
-        "item4",
-        "item5",
-        "item_BXgTdL",
-        "item_g67bjG",
-        "item6",
-        "item7"
-      ],
-      "settings": {
-        "speed": 80,
-        "separator": "MELATO",
-        "direction": "left",
-        "padding": 8,
-        "background_color": "#f5f1e8",
-        "text_color": "#ffc475",
-        "border_color": "#2a2a2a"
-      }
+      "block_order": ["item1","item3","item4","item5","item_BXgTdL","item_g67bjG","item6","item7"],
+      "settings": {"speed":80,"separator":"MELATO","direction":"left","padding":8,"background_color":"#f5f1e8","text_color":"#ffc475","border_color":"#2a2a2a"}
     },
     "featured_collection": {
       "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Core collection",
-        "title": "THE UNIFORM",
-        "collection": "frontpage",
-        "products_to_show": 12,
-        "columns_desktop": 4,
-        "columns_mobile": 2,
-        "show_view_all": true,
-        "view_all_label": "View the Uniform"
-      }
+      "settings": {"eyebrow":"Core collection","title":"THE UNIFORM","collection":"frontpage","products_to_show":12,"columns_desktop":4,"columns_mobile":2,"show_view_all":true,"view_all_label":"View the Uniform"}
     },
     "177543262208e0278d": {
       "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_264325d_kWF34h": {
-          "type": "ai_gen_block_264325d",
-          "disabled": true,
-          "settings": {
-            "image": "shopify://shop_images/Whisk_1e59bd99feb93f1be6148ff4ae809332dr.png",
-            "aspect_ratio": "natural",
-            "image_fit": "cover",
-            "desktop_width_percent": 100
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_264325d_kWF34h"
-      ],
+      "blocks": {"ai_gen_block_264325d_kWF34h":{"type":"ai_gen_block_264325d","disabled":true,"settings":{"image":"shopify://shop_images/Whisk_1e59bd99feb93f1be6148ff4ae809332dr.png","aspect_ratio":"natural","image_fit":"cover","desktop_width_percent":100},"blocks":{}}},
+      "block_order": ["ai_gen_block_264325d_kWF34h"],
       "settings": {}
     },
     "brand_story": {
       "type": "brand-story",
-      "settings": {
-        "eyebrow": "The Melato Standard",
-        "heading": "THE\nCULTURE\nWEARS US",
-        "body": "Melato is built around presence, identity, movement, and cultural self-definition. Everyday pieces designed to carry taste, intent, and character.",
-        "cta_label": "Our Story",
-        "cta_url": "/pages/our-story",
-        "image_position": "left"
-      }
+      "settings": {"eyebrow":"The Melato Standard","heading":"THE\nCULTURE\nWEARS US","body":"Melato is built around presence, identity, movement, and cultural self-definition. Everyday pieces designed to carry taste, intent, and character.","cta_label":"Our Story","cta_url":"/pages/our-story","image_position":"left"}
+    },
+    "client_concierge": {
+      "type": "melato-concierge-strip",
+      "blocks": {
+        "fit": {"type":"service","settings":{"title":"Personal fit consultation","description":"Send us your measurements and preferred silhouette. We will recommend the right size and coordinate matching sets.","note":"Advice from a real client care specialist","link":"/pages/fit-concierge"}},
+        "delivery": {"type":"service","settings":{"title":"Delivery planning","description":"Ordering for a date? Ask us to review destination, processing and carrier timing before you purchase.","note":"Practical guidance before checkout","link":"/pages/delivery-concierge"}},
+        "aftercare": {"type":"service","settings":{"title":"Order & aftercare","description":"Get help with an active order, exchange, garment care or an issue after delivery—without searching for the right department.","note":"One point of contact, before and after delivery","link":"/pages/order-companion"}},
+        "product": {"type":"service","settings":{"title":"Private product guidance","description":"Ask about fabric, construction, styling and upcoming releases to make a considered choice—not a rushed one.","note":"Detailed product and release assistance","link":"/pages/preview-room"}}
+      },
+      "block_order": ["fit","delivery","aftercare","product"],
+      "settings": {"eyebrow":"Melato client services","heading":"At your service","intro":"<p>Considered support from discovery through delivery. Our client care team offers practical, personal guidance so every purchase feels as assured as the piece itself.</p>","availability_title":"Client care is available","availability_text":"Replies are typically sent within one business day.","contact_label":"Speak with client care","contact_url":"/pages/contact"}
     },
     "testimonials": {
       "type": "testimonials",
       "blocks": {
-        "t1": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "text": "Best quality tracksuit I've worn in a long time. The fabric, the fit, the colourway... Everything is perfect.",
-            "author": "Roxy C."
-          }
-        },
-        "t2": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "text": "The tracksuit is A1, premium quality. love the products and the people behind them. I was here on DAY 1 and DROP 000 and I will always be here 🧡",
-            "author": "KENZA A."
-          }
-        },
-        "testimonial_GwnGA6": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 4,
-            "text": "Last time it sold out quick. I couldn’t cop more.",
-            "author": "DIJA S."
-          }
-        },
-        "t3": {
-          "type": "testimonial",
-          "settings": {
-            "rating": 5,
-            "text": "Top tier threads for the yutes. Backed by the mandem. YN Fully certi and heavy stamped.",
-            "author": "NAGA"
-          }
-        }
+        "t1": {"type":"testimonial","settings":{"rating":5,"text":"Best quality tracksuit I've worn in a long time. The fabric, the fit, the colourway... Everything is perfect.","author":"Roxy C."}},
+        "t2": {"type":"testimonial","settings":{"rating":5,"text":"The tracksuit is A1, premium quality. love the products and the people behind them. I was here on DAY 1 and DROP 000 and I will always be here 🧡","author":"KENZA A."}},
+        "testimonial_GwnGA6": {"type":"testimonial","settings":{"rating":4,"text":"Last time it sold out quick. I couldn’t cop more.","author":"DIJA S."}},
+        "t3": {"type":"testimonial","settings":{"rating":5,"text":"Top tier threads for the yutes. Backed by the mandem. YN Fully certi and heavy stamped.","author":"NAGA"}}
       },
-      "block_order": [
-        "t1",
-        "t2",
-        "testimonial_GwnGA6",
-        "t3"
-      ],
-      "settings": {
-        "heading": "THEY SPEAK\nFOR US"
-      }
+      "block_order": ["t1","t2","testimonial_GwnGA6","t3"],
+      "settings": {"heading":"THEY SPEAK\nFOR US"}
     },
     "1781310906e62d22b0": {
       "type": "apps",
-      "blocks": {
-        "klaviyo_email_marketing_sms_form_embed_block_CYb8J4": {
-          "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507",
-          "settings": {
-            "formId": ""
-          }
-        }
-      },
-      "block_order": [
-        "klaviyo_email_marketing_sms_form_embed_block_CYb8J4"
-      ],
+      "blocks": {"klaviyo_email_marketing_sms_form_embed_block_CYb8J4":{"type":"shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507","settings":{"formId":""}}},
+      "block_order": ["klaviyo_email_marketing_sms_form_embed_block_CYb8J4"],
       "settings": {}
     }
   },
-  "order": [
-    "melato_conversion_2026",
-    "video_cYyTzg",
-    "ticker",
-    "featured_collection",
-    "177543262208e0278d",
-    "brand_story",
-    "testimonials",
-    "1781310906e62d22b0"
-  ]
+  "order": ["melato_conversion_2026","video_cYyTzg","ticker","featured_collection","177543262208e0278d","brand_story","client_concierge","testimonials","1781310906e62d22b0"]
 }
