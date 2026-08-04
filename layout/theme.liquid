@@ -64,13 +64,19 @@
   data-product-type="{% if product %}{{ product.product_type | escape }}{% endif %}"
 >
   <a href="#main-content" class="skip-to-content">{{ 'accessibility.skip_to_content' | t }}</a>
-  {%- section 'melato-announcement-bar' -%}
+
+  {%- capture melato_announcement_output -%}{%- section 'melato-announcement-bar' -%}{%- endcapture -%}
+  {% render 'melato-rendered-output-filters', html: melato_announcement_output, context: 'announcement' %}
+
   {%- section 'melato-header' -%}
   {%- comment -%} Melato Concierge Strip: sticky sub-header nav. Skipped on the homepage because its concierge is intentionally placed near the bottom, on the four dedicated service pages, and on product/cart where it is already placed inline. {%- endcomment -%}
   {%- unless template.name == 'index' or template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room' or template.name == 'product' or template.name == 'cart' -%}
-    {%- section 'melato-concierge-strip' -%}
+    {%- capture melato_concierge_output -%}{%- section 'melato-concierge-strip' -%}{%- endcapture -%}
+    {% render 'melato-rendered-output-filters', html: melato_concierge_output, context: 'main' %}
   {%- endunless -%}
-  <main id="main-content" class="main-content" role="main" tabindex="-1">{{ content_for_layout }}</main>
+
+  {%- capture melato_main_output -%}{{ content_for_layout }}{%- endcapture -%}
+  <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_main_output, context: 'main' %}</main>
   {%- section 'melato-footer' -%}
 
   {%- liquid
@@ -84,7 +90,8 @@
     endif
   -%}
 
-  <div class="melato-utility-layer" aria-label="Store utilities"><div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>{%- render 'cart-drawer' -%}{%- render 'search-drawer' -%}{%- render 'mobile-menu' -%}{%- render 'quick-view-modal' -%}{%- if melato_show_size_guide -%}{%- render 'size-guide-modal' -%}{%- endif -%}<div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div></div>
+  {%- capture melato_cart_output -%}{%- render 'cart-drawer' -%}{%- endcapture -%}
+  <div class="melato-utility-layer" aria-label="Store utilities"><div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>{% render 'melato-rendered-output-filters', html: melato_cart_output, context: 'cart' %}{%- render 'search-drawer' -%}{%- render 'mobile-menu' -%}{%- render 'quick-view-modal' -%}{%- if melato_show_size_guide -%}{%- render 'size-guide-modal' -%}{%- endif -%}<div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div></div>
   <script>window.DRIP={shop:{currency:{{ shop.currency | json }},moneyFormat:{{ shop.money_format | json }},locale:{{ request.locale.iso_code | json }},freeShippingThreshold:0,routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},search:{{ routes.search_url | json }},collections:{{ routes.collections_url | json }}}},cart:{{ cart | json }},customer:{{ customer | json }},strings:{addedToCart:{{ 'cart.added' | t | json }},cartEmpty:{{ 'cart.empty' | t | json }},soldOut:{{ 'products.sold_out' | t | json }},unavailable:{{ 'products.unavailable' | t | json }},addToCart:{{ 'products.add_to_cart' | t | json }},outOfStock:{{ 'products.out_of_stock' | t | json }}}};</script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-hero-video.js' | asset_url }}" defer></script>
