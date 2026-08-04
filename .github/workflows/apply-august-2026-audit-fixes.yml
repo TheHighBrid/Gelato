@@ -1,0 +1,46 @@
+name: Apply August 2026 audit fixes
+
+on:
+  push:
+    branches:
+      - agent/apply-august-4-commerce-audit
+    paths:
+      - scripts/apply_august_2026_audit_fixes.py
+      - .github/workflows/apply-august-2026-audit-fixes.yml
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: agent/apply-august-4-commerce-audit
+
+      - name: Apply exact source fixes
+        env:
+          MELATO_ONE_SHOT: '1'
+        run: python3 scripts/apply_august_2026_audit_fixes.py
+
+      - name: Validate JavaScript
+        run: node --check assets/melato-august-2026-audit-fixes.js
+
+      - name: Validate repository diff
+        run: git diff --check
+
+      - name: Commit generated source fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "Apply source-level August 2026 audit fixes"
+          git push origin HEAD:agent/apply-august-4-commerce-audit
