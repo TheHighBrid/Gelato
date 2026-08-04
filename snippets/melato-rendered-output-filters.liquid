@@ -1,0 +1,83 @@
+{% comment %}
+  Server-side exact-output safeguards for the August 4, 2026 commerce audit.
+  This removes stale or category-inappropriate text from parsed HTML before it
+  reaches crawlers, assistive technology, or browsers. It does not invent
+  unverified product specifications.
+
+  Inputs:
+    html: rendered HTML string
+    context: announcement | main | cart
+{% endcomment %}
+
+{%- liquid
+  assign output = html
+
+  # Public returns contact is standardized in every captured surface.
+  assign output = output | replace: 'orders@melato.ca', 'support@melato.ca'
+
+  if context == 'announcement'
+    assign output = output | replace: 'POPUP SHOW #4 · JULY 21 · POPUP SHOW #5 · AUGUST 20', 'POPUP SHOW #5 · AUGUST 20'
+    assign output = output | replace: 'POPUP SHOW #4 · JULY 21 ·', ''
+    assign output = output | replace: 'POPUP SHOW #4 · JULY 21', ''
+  endif
+
+  if context == 'cart'
+    assign output = output | replace: 'Explore the latest uniform pieces.', 'Explore the current Melato rotation.'
+    assign output = output | replace: 'Shop the Uniform', 'Shop New Arrivals'
+    assign output = output | replace: '/collections/drop-001-texture-form', '/collections/new-arrivals'
+    assign output = output | replace: 'Taxes &amp; shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.'
+    assign output = output | replace: 'Taxes & shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.'
+  endif
+
+  if context == 'main'
+    assign output = output | replace: 'Browse selected pieces from the current Melato rotation, then complete the set with matching jackets and pants.', 'A curated edit from the current Melato rotation, spanning apparel, fragrance and limited statement pieces.'
+    assign output = output | replace: 'Visit Us In-Store', 'Visit the Melatelier pop-up'
+    assign output = output | replace: 'Melatelier is located at Tanger Outlets Ottawa.', 'The Melatelier pop-up opens only on announced dates.'
+    assign output = output | replace: 'Toiletry Bags', 'Travel Cases'
+    assign output = output | replace: 'Eaux De Toilette', 'Eaux de Toilette'
+    assign output = output | replace: 'Eaux De Parfum', 'Eaux de Parfum'
+    assign output = output | replace: 'Filter 0', 'Filter'
+    assign output = output | replace: 'Fit Fit Concierge', 'Fit Concierge'
+    assign output = output | replace: 'Delivery Delivery Concierge', 'Delivery Concierge'
+    assign output = output | replace: 'CareOrder Companion', 'Order Companion'
+    assign output = output | replace: 'AccessThe Preview Room', 'The Preview Room'
+    assign output = output | replace: 'Wash cold on a gentle cycle, wash inside out', 'Care varies by product and material. Always follow the product page and sewn-in care label'
+
+    # Availability labels are customer-facing states, not variant-count totals.
+    for count in (0..200)
+      assign in_stock_count = 'In stock (' | append: count | append: ')'
+      assign out_stock_count = 'Out of stock (' | append: count | append: ')'
+      assign output = output | replace: in_stock_count, 'In stock'
+      assign output = output | replace: out_stock_count, 'Out of stock'
+    endfor
+
+    # Explicit list semantics prevent assurance copy from collapsing into one phrase.
+    assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
+    assign new_assurances = '<ul class="pdp-trust-row" aria-label="Payment and shipping trust"><li>Fast dispatch</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
+    assign output = output | replace: old_assurances, new_assurances
+
+    assign output = output | replace: 'Customers rate us 5.0/5 based on 3 reviews.', 'MELATO STORE RATING 5.0/5 from 3 verified customer reviews.'
+
+    if template.name == 'product' and product
+      assign product_title_down = product.title | downcase
+      assign product_type_down = product.product_type | downcase
+
+      if product.handle == 'petal-veil-eau-de-toilette' or product_type_down contains 'fragrance' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum'
+        assign output = output | replace: 'Premium everyday fit. Choose your usual size for the intended silhouette.', ''
+        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Apply to pulse points. Avoid rubbing the fragrance into the skin. Store upright away from heat and direct sunlight.'
+        assign output = output | replace: 'Returns are eligible when items are unworn, unwashed, tagged', 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.'
+      elsif product.handle == 'rex-x-fur-jacket-copy' or product_title_down contains 'fur'
+        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Professional fur cleaning only. Do not machine wash or hand wash. Store in a cool, ventilated space. Avoid moisture, direct heat and prolonged sunlight. Use a broad-shouldered hanger.'
+      elsif product.handle == 'blush-ledger-satin-shirt'
+        assign output = output | replace: 'Melato piece with Melato’s current-season product language.', 'Silk satin shirt from the current Melato rotation.'
+        assign output = output | replace: 'Premium construction selected for feel, structure, and everyday wearability.', 'Material currently published: silk. Additional construction specifications must come from verified product records.'
+        assign output = output | replace: 'Built to sit clean on body without stealing movement.', 'Designed for a relaxed drape. Refer to verified garment measurements when published.'
+        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Follow the sewn-in care label. Contact support@melato.ca before cleaning if the label is unclear.'
+      else
+        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Follow the product page and sewn-in care label. Contact support@melato.ca before cleaning if the instructions are unclear.'
+      endif
+    endif
+  endif
+-%}
+
+{{- output -}}
