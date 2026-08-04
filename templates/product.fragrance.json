@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "main": {
+      "type": "melato-fragrance-product",
+      "settings": {
+        "eyebrow": "Melato fragrance",
+        "default_volume": "100 mL",
+        "default_concentration": "Eau de Toilette",
+        "application": "Apply to pulse points. Avoid rubbing the fragrance into the skin.",
+        "storage": "Store upright away from heat and direct sunlight.",
+        "returns_copy": "Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.",
+        "background": "#080808",
+        "surface": "#111111",
+        "text": "#F5F1E8",
+        "muted": "#AAA49A",
+        "accent": "#D8C7A7"
+      }
+    },
+    "related": {
+      "type": "related-products",
+      "settings": {
+        "eyebrow": "The fragrance wardrobe",
+        "heading": "Discover another scent",
+        "products_to_show": 4
+      }
+    }
+  },
+  "order": ["main", "related"]
+}

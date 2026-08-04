@@ -1,0 +1,111 @@
+/*
+ * Melato August 2026 commerce audit safeguards.
+ * Scoped, additive rules only. Source templates remain authoritative.
+ */
+
+.melato-audit-hidden,
+[hidden].melato-audit-hidden {
+  display: none !important;
+}
+
+/* Prevent semantic text nodes from reading as one unbroken sentence. */
+.pdp-trust-row,
+[class*="product"] [class*="trust-row"],
+[class*="product"] [class*="assurance"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 1rem;
+}
+
+ul.pdp-trust-row {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pdp-trust-row > span,
+.pdp-trust-row > li,
+[class*="product"] [class*="trust-row"] > span,
+[class*="product"] [class*="trust-row"] > li,
+[class*="product"] [class*="assurance"] > span,
+[class*="product"] [class*="assurance"] > li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.pdp-trust-row > span:not(:last-child)::after,
+.pdp-trust-row > li:not(:last-child)::after,
+[class*="product"] [class*="trust-row"] > span:not(:last-child)::after,
+[class*="product"] [class*="trust-row"] > li:not(:last-child)::after,
+[class*="product"] [class*="assurance"] > span:not(:last-child)::after,
+[class*="product"] [class*="assurance"] > li:not(:last-child)::after {
+  content: "";
+  width: 1px;
+  height: 0.85em;
+  margin-inline-start: 1rem;
+  background: currentColor;
+  opacity: 0.28;
+}
+
+.pdp-price-row,
+[class*="product"] [class*="price-row"] {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 0.8rem;
+}
+
+.melato-audit-spec-card {
+  margin-block: clamp(1rem, 2vw, 1.5rem);
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: 1rem;
+  background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.melato-audit-spec-card__eyebrow {
+  margin: 0 0 0.55rem;
+  font-family: var(--font-mono-family, monospace);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.68;
+}
+
+.melato-audit-spec-card h2,
+.melato-audit-spec-card h3 {
+  margin: 0 0 0.85rem;
+}
+
+.melato-audit-spec-card dl {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 0.38fr) minmax(0, 1fr);
+  gap: 0.65rem 1rem;
+  margin: 0;
+}
+
+.melato-audit-spec-card dt {
+  font-weight: 700;
+}
+
+.melato-audit-spec-card dd {
+  margin: 0;
+}
+
+.melato-audit-rating-label {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+@media (max-width: 640px) {
+  .melato-audit-spec-card dl {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+  }
+
+  .melato-audit-spec-card dd {
+    margin-bottom: 0.65rem;
+  }
+}
