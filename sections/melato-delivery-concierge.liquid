@@ -7,7 +7,7 @@
   {%- if clarity_blocks.size > 0 -%}
     <div class="melato-delivery__grid">
       {%- for block in clarity_blocks -%}
-        <div class="melato-delivery__card">
+        <div class="melato-delivery__card" {{ block.shopify_attributes }}>
           <h3 class="melato-delivery__card-title">{{ block.settings.title }}</h3>
           <p class="melato-delivery__card-text">{{ block.settings.text }}</p>
         </div>
@@ -69,11 +69,12 @@
   ]}],
   "max_blocks": 8,
   "presets": [{ "name": "Melato Delivery Concierge", "blocks": [
-      { "type": "clarity_card", "settings": { "title": "Processing", "text": "Orders are prepared before dispatch." } },
-      { "type": "clarity_card", "settings": { "title": "Delivery", "text": "Shipping options and timelines are shown at checkout." } },
+      { "type": "clarity_card", "settings": { "title": "Processing", "text": "Orders are usually prepared within 1 to 3 business days." } },
+      { "type": "clarity_card", "settings": { "title": "Complimentary delivery", "text": "Complimentary standard delivery is available on all orders. Estimated transit appears during checkout." } },
+      { "type": "clarity_card", "settings": { "title": "Taxes and duties", "text": "Taxes and applicable duties are calculated at checkout where available." } },
       { "type": "clarity_card", "settings": { "title": "Tracking", "text": "Tracking details are sent once the order ships." } },
       { "type": "clarity_card", "settings": { "title": "Packaging", "text": "Pieces are folded, protected, and prepared with intention." } },
-      { "type": "clarity_card", "settings": { "title": "Need it for a date?", "text": "Contact Customer Care before ordering." } }
+      { "type": "clarity_card", "settings": { "title": "Need it for a date?", "text": "Contact Customer Care before ordering when timing is important." } }
   ]}]
 }
 {% endschema %}
