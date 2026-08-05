@@ -26,6 +26,12 @@
 {%- endif -%}
 {%- assign melato_description = melato_description | strip | truncate: 160 -%}
 
+{%- assign melato_incomplete_locale = false -%}
+{%- if request.locale.iso_code == 'ar' or request.path == '/ar' or request.path contains '/ar/' or request.path == '/en-fr' or request.path contains '/en-fr/' -%}
+  {%- assign melato_incomplete_locale = true -%}
+{%- endif -%}
+{%- if melato_incomplete_locale -%}<meta name="robots" content="noindex,follow">{%- endif -%}
+
 {%- if page_description == blank and melato_description != blank -%}<meta name="description" content="{{ melato_description | escape }}">{%- endif -%}
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@melato_ca">
@@ -40,5 +46,7 @@
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does order processing take?","acceptedAnswer":{"@type":"Answer","text":"Orders are usually prepared within 1 to 3 business days. During limited drops, holidays, or high-volume periods, processing may take slightly longer."}},{"@type":"Question","name":"How long does shipping take?","acceptedAnswer":{"@type":"Answer","text":"Delivery times depend on destination and the available service. Estimated delivery information appears during checkout and tracking is sent after dispatch."}},{"@type":"Question","name":"Do you offer complimentary delivery?","acceptedAnswer":{"@type":"Answer","text":"Complimentary standard delivery is available on all orders. Taxes and applicable duties are calculated at checkout."}},{"@type":"Question","name":"Will I receive tracking?","acceptedAnswer":{"@type":"Answer","text":"Once your order ships, tracking details are sent to the email or phone number used at checkout."}},{"@type":"Question","name":"How does Melato fit?","acceptedAnswer":{"@type":"Answer","text":"Fit varies by product and silhouette. Use the product-specific fit guidance and available measurements, or contact Melato Customer Care before ordering."}},{"@type":"Question","name":"How do I start a return?","acceptedAnswer":{"@type":"Answer","text":"Email support@melato.ca with your order number, the item you want to return, and the reason for return. We will review the request and send next steps if approved."}}]}
 </script>
 {%- endif -%}
+{{ 'melato-audit-completion-2026.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'melato-audit-guard.js' | asset_url }}" defer></script>
 <script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script>
+<script src="{{ 'melato-audit-completion-2026.js' | asset_url }}" defer></script>
