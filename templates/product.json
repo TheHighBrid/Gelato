@@ -44,7 +44,16 @@
     },
     "melato_concierge_strip_pdp": {
       "type": "melato-concierge-strip",
-      "settings": {}
+      "disabled": true,
+      "settings": {
+        "eyebrow": "Melato client services",
+        "heading": "At your service",
+        "intro": "<p>Considered support from discovery through delivery. Our client care team offers practical, personal guidance so every purchase feels as assured as the piece itself.</p>",
+        "availability_title": "Client care is available",
+        "availability_text": "Replies are typically sent within one business day.",
+        "contact_label": "Speak with client care",
+        "contact_url": ""
+      }
     },
     "1781310708d3669657": {
       "type": "apps",
