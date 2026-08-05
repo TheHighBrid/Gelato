@@ -19,6 +19,12 @@
     assign output = output | replace: 'POPUP SHOW #4 · JULY 21 · POPUP SHOW #5 · AUGUST 20', 'POPUP SHOW #5 · AUGUST 20'
     assign output = output | replace: 'POPUP SHOW #4 · JULY 21 ·', ''
     assign output = output | replace: 'POPUP SHOW #4 · JULY 21', ''
+    assign output = output | replace: '&quot;LIKE NEVER CHANGE&quot;Melato', 'COMME NEVER CHANGE · MELATO'
+    assign output = output | replace: '"LIKE NEVER CHANGE"Melato', 'COMME NEVER CHANGE · MELATO'
+    assign output = output | replace: 'LIKE NEVER CHANGEMelato', 'COMME NEVER CHANGE · MELATO'
+    assign output = output | replace: '&quot;LIKE NEVER CHANGE&quot;', 'COMME NEVER CHANGE'
+    assign output = output | replace: '"LIKE NEVER CHANGE"', 'COMME NEVER CHANGE'
+    assign output = output | replace: 'LIKE NEVER CHANGE', 'COMME NEVER CHANGE'
   endif
 
   if context == 'cart'
@@ -33,6 +39,9 @@
     assign output = output | replace: 'Browse selected pieces from the current Melato rotation, then complete the set with matching jackets and pants.', 'A curated edit from the current Melato rotation, spanning apparel, fragrance and limited statement pieces.'
     assign output = output | replace: 'Visit Us In-Store', 'Visit the Melatelier pop-up'
     assign output = output | replace: 'Melatelier is located at Tanger Outlets Ottawa.', 'The Melatelier pop-up opens only on announced dates.'
+    assign output = output | replace: 'Clothing Accessories', 'Accessories'
+    assign output = output | replace: "Men's Undergarments", 'Underwear'
+    assign output = output | replace: 'Neckties', 'Ties'
     assign output = output | replace: 'Toiletry Bags', 'Travel Cases'
     assign output = output | replace: 'Eaux De Toilette', 'Eaux de Toilette'
     assign output = output | replace: 'Eaux De Parfum', 'Eaux de Parfum'
@@ -41,18 +50,23 @@
     assign output = output | replace: 'Delivery Delivery Concierge', 'Delivery Concierge'
     assign output = output | replace: 'CareOrder Companion', 'Order Companion'
     assign output = output | replace: 'AccessThe Preview Room', 'The Preview Room'
+    assign output = output | replace: '01 Personal fit consultationSend us your measurements', '01 Personal fit consultation. Send us your measurements'
+    assign output = output | replace: 'coordinate matching sets.Advice from a real client care specialist', 'coordinate matching sets. Advice from a real client care specialist'
+    assign output = output | replace: 'issue after delivery—without searching for the right department.One point of contact', 'issue after delivery, without searching for the right department. One point of contact'
     assign output = output | replace: 'Wash cold on a gentle cycle, wash inside out', 'Care varies by product and material. Always follow the product page and sewn-in care label'
+    assign output = output | replace: '<span>Full set price</span><strong>', '<span>Full set price</span> <strong>'
+    assign output = output | replace: 'You may request, correction of, or deletion of your personal information', 'You may request access to, correction of, or deletion of your personal information'
 
-    # Availability labels are customer-facing states, not variant-count totals.
-    if template.name == 'collection' and collection
-      for filter in collection.filters
-        for value in filter.values
-          if value.label == 'In stock' or value.label == 'Out of stock'
-            assign counted_label = value.label | append: ' (' | append: value.count | append: ')'
-            assign output = output | replace: counted_label, value.label
-          endif
-        endfor
-      endfor
+    if template.name == 'collection' and collection.handle == 'all'
+      assign output = output | replace: '<p class="melato-collection-eyebrow">Collection</p>', '<p class="melato-collection-eyebrow">Catalogue</p>'
+      assign output = output | replace: '<h1 class="melato-collection-title">Products</h1>', '<h1 class="melato-collection-title">All Products</h1><p class="melato-collection-desc melato-index-intro">The complete catalogue across the current rotation and archive.</p>'
+      assign output = output | replace: '<h1 class="melato-collection-title">THE MELATO INDEX</h1>', '<h1 class="melato-collection-title">All Products</h1>'
+    endif
+
+    if request.path contains '/policies/'
+      assign output = output | replace: '<div class="shopify-policy__title"><h1>Refund policy</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Refund policy</p></div>'
+      assign output = output | replace: '<div class="shopify-policy__title"><h1>Terms of service</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Terms of service</p></div>'
+      assign output = output | replace: '<div class="shopify-policy__title"><h1>Privacy policy</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Privacy policy</p></div>'
     endif
 
     # Explicit list semantics prevent assurance copy from collapsing into one phrase.
@@ -69,7 +83,10 @@
       if product.handle == 'petal-veil-eau-de-toilette' or product_type_down contains 'fragrance' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum'
         assign output = output | replace: 'Premium everyday fit. Choose your usual size for the intended silhouette.', ''
         assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Apply to pulse points. Avoid rubbing the fragrance into the skin. Store upright away from heat and direct sunlight.'
-        assign output = output | replace: 'Returns are eligible when items are unworn, unwashed, tagged', 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.'
+        assign output = output | replace: 'Eligible unworn items follow posted policy.', 'Unopened fragrance products follow the posted Melato return policy.'
+        assign output = output | replace: 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.', 'Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening if you need return assistance.'
+        assign output = output | replace: 'Contact support@melato.ca before use if you may need return assistance., and returned within the posted policy window.', 'Contact support@melato.ca before opening if you need return assistance.'
+        assign output = output | replace: 'Contact support@melato.ca before use if you may need return assistance.', 'Contact support@melato.ca before opening if you need return assistance.'
       elsif product.handle == 'rex-x-fur-jacket-copy' or product_title_down contains 'fur'
         assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Professional fur cleaning only. Do not machine wash or hand wash. Store in a cool, ventilated space. Avoid moisture, direct heat and prolonged sunlight. Use a broad-shouldered hanger.'
       elsif product.handle == 'blush-ledger-satin-shirt'

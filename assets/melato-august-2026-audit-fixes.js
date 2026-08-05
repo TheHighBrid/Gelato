@@ -54,7 +54,9 @@
 
     replaceText(bar, [
       [/POPUP SHOW #4\s*[·|•-]*\s*JULY 21\s*[·|•-]*/gi, ''],
-      [/\s*[·|•-]\s*POPUP SHOW #4\s*[·|•-]*\s*JULY 21/gi, '']
+      [/\s*[·|•-]\s*POPUP SHOW #4\s*[·|•-]*\s*JULY 21/gi, ''],
+      [/"?LIKE NEVER CHANGE"?\s*Melato/gi, 'LIKE NEVER CHANGE · MELATO'],
+      [/LIKE NEVER CHANGE\s*MELATO/gi, 'LIKE NEVER CHANGE · MELATO']
     ]);
 
     bar.querySelectorAll('.melato-ann__item').forEach((item) => {
@@ -66,7 +68,18 @@
     });
 
     bar.querySelectorAll('.melato-ann__group').forEach((group, index) => {
-      group.setAttribute('aria-hidden', index === 0 ? 'false' : 'true');
+      const isClone = index > 0;
+      group.setAttribute('aria-hidden', isClone ? 'true' : 'false');
+      if (isClone) {
+        group.setAttribute('role', 'presentation');
+        group.setAttribute('inert', '');
+        group.querySelectorAll('a, button, input, select, textarea, [tabindex]').forEach((control) => {
+          control.setAttribute('tabindex', '-1');
+        });
+      } else {
+        group.removeAttribute('role');
+        group.removeAttribute('inert');
+      }
     });
   }
 
@@ -130,13 +143,35 @@
     ]);
   }
 
+  function fixAllProductsHeading() {
+    if (path !== '/collections/all') return;
+
+    const heading = document.querySelector('.melato-collection-title');
+    const eyebrow = document.querySelector('.melato-collection-eyebrow');
+    const header = heading?.closest('.melato-collection-header__text, .melato-collection-hero__content');
+
+    if (heading && normalize(heading.textContent).toLowerCase() === 'products') {
+      heading.textContent = 'THE MELATO INDEX';
+    }
+    if (eyebrow && normalize(eyebrow.textContent).toLowerCase() === 'collection') {
+      eyebrow.textContent = 'Catalogue';
+    }
+    if (header && !header.querySelector('.melato-index-intro')) {
+      const intro = document.createElement('p');
+      intro.className = 'melato-collection-desc melato-index-intro';
+      intro.textContent = 'The complete catalogue across the current rotation and archive.';
+      heading?.insertAdjacentElement('afterend', intro);
+    }
+  }
+
   function fixCollectionFilters() {
     if (!document.body.classList.contains('template-collection')) return;
 
     replaceText(document, [
       [/\bFilter\s+0\b/gi, 'Filter'],
-      [/\bIn stock\s*\(\d+\)/gi, 'In stock'],
-      [/\bOut of stock\s*\(\d+\)/gi, 'Out of stock'],
+      [/\bClothing Accessories\b/g, 'Accessories'],
+      [/\bMen's Undergarments\b/g, 'Underwear'],
+      [/\bNeckties\b/g, 'Ties'],
       [/\bToiletry Bags\b/g, 'Travel Cases'],
       [/\bEaux De Toilette\b/g, 'Eaux de Toilette'],
       [/\bEaux De Parfum\b/g, 'Eaux de Parfum'],
@@ -151,20 +186,70 @@
       }
     });
 
-    if (!/\/collections\/best-sellers/i.test(path)) return;
+    fixAllProductsHeading();
+  }
 
-    document.querySelectorAll('[data-product-grid], .product-grid, .collection-grid, [class*="products-grid"]').forEach((grid) => {
-      if (grid.dataset.melatoAvailabilitySorted === 'true') return;
+  function galleryDescriptors() {
+    if (path === '/products/petal-veil-eau-de-toilette') {
+      return [
+        'bottle front view',
+        'cap and atomizer detail',
+        'blush glass base detail',
+        'bottle rear view',
+        'packaging detail',
+        'editorial bottle view'
+      ];
+    }
 
-      const children = Array.from(grid.children);
-      if (children.length < 2) return;
+    if (path === '/products/blush-ledger-satin-shirt') {
+      return [
+        'front view',
+        'concealed placket detail',
+        'satin texture close-up',
+        'rear view',
+        'collar detail',
+        'cuff detail'
+      ];
+    }
 
-      const soldOut = children.filter((card) => /\bsold out\b/i.test(normalize(card.textContent)));
-      if (!soldOut.length || soldOut.length === children.length) return;
+    if (path === '/products/hargneux-velour-track-pant') {
+      return [
+        'front view',
+        'side-panel detail',
+        'rear view',
+        'velour texture close-up',
+        'waistband detail',
+        'hem detail'
+      ];
+    }
 
-      soldOut.forEach((card) => grid.appendChild(card));
-      grid.dataset.melatoAvailabilitySorted = 'true';
+    return ['front view', 'alternate angle', 'rear view', 'detail view', 'close-up detail', 'side view'];
+  }
+
+  function addSemanticSeparator(parent, beforeElement) {
+    if (!parent || !beforeElement || beforeElement.dataset.melatoTextSeparated === 'true') return;
+    parent.insertBefore(document.createTextNode(' '), beforeElement);
+    beforeElement.dataset.melatoTextSeparated = 'true';
+  }
+
+  function fixProductTextSpacing(root) {
+    root.querySelectorAll('.pdp-set-total, .pdp-sticky-atc > div, .melato-set__total, .m-cts__pricing, .purchase-summary, [class*="purchase-summary"], [class*="sticky-product"], [class*="product-summary"]').forEach((container) => {
+      const price = container.querySelector(':scope > strong, :scope > [class*="price"], [class*="price"]');
+      if (price) addSemanticSeparator(price.parentElement, price);
     });
+
+    root.querySelectorAll('.pdp-price-row, [class*="price-row"]').forEach((row) => {
+      const firstPrice = row.querySelector(':scope > *');
+      if (firstPrice) addSemanticSeparator(row, firstPrice);
+    });
+  }
+
+  function setGalleryAlt(image, title, descriptor) {
+    if (!image) return;
+    const current = normalize(image.getAttribute('alt'));
+    const lower = current.toLowerCase();
+    const generic = !current || lower === title.toLowerCase() || lower === `image: ${title}`.toLowerCase();
+    if (generic) image.setAttribute('alt', `${title} ${descriptor}`);
   }
 
   function fixPdpSemantics() {
@@ -185,15 +270,32 @@
     const title = normalize(root.querySelector('h1')?.textContent);
     if (!title) return;
 
-    const descriptors = ['front view', 'alternate angle', 'rear view', 'detail view', 'close-up detail', 'side view'];
-    root.querySelectorAll('.pdp-gallery img, [class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
-      const current = normalize(image.getAttribute('alt'));
-      const generic = !current || current.toLowerCase() === title.toLowerCase() || current.toLowerCase() === `image: ${title}`.toLowerCase();
-      if (generic) image.setAttribute('alt', `${title} ${descriptors[index] || `view ${index + 1}`}`);
+    const descriptors = galleryDescriptors();
+    setGalleryAlt(root.querySelector('.pdp-main-image'), title, descriptors[0]);
+    root.querySelectorAll('.pdp-thumbs .pdp-thumb-image').forEach((image, index) => {
+      setGalleryAlt(image, title, descriptors[index] || `view ${index + 1}`);
     });
+    root.querySelectorAll('.pdp-editorial .pdp-editorial-image').forEach((image, index) => {
+      setGalleryAlt(image, title, descriptors[index + 1] || `detail view ${index + 1}`);
+    });
+    root.querySelectorAll('[class*="product-gallery"] img, [class*="product__media"] img').forEach((image, index) => {
+      setGalleryAlt(image, title, descriptors[index] || `view ${index + 1}`);
+    });
+
+    fixProductTextSpacing(root);
   }
 
   function fixConciergeLabels() {
+    replaceText(document, [
+      [/01\s+Personal fit consultationSend us your measurements/gi, '01 Personal fit consultation. Send us your measurements'],
+      [/coordinate matching sets\.Advice from a real client care specialist/gi, 'coordinate matching sets. Advice from a real client care specialist'],
+      [/issue after delivery[—-]without searching for the right department\.One point of contact/gi, 'issue after delivery, without searching for the right department. One point of contact'],
+      [/Fit\s+Fit Concierge/gi, 'Fit Concierge'],
+      [/Delivery\s+Delivery Concierge/gi, 'Delivery Concierge'],
+      [/Care\s*Order Companion/gi, 'Order Companion'],
+      [/Access\s*The Preview Room/gi, 'The Preview Room']
+    ]);
+
     const mappings = [
       [/fit\s+fit concierge/i, 'Fit Concierge'],
       [/delivery\s+delivery concierge/i, 'Delivery Concierge'],
@@ -253,7 +355,10 @@
     replaceText(document, [
       [/Premium everyday fit\. Choose your usual size for the intended silhouette\./gi, ''],
       [/Wash cold inside out where applicable\. Hang dry or lay flat\.[^.]*(?:\.|$)/gi, 'Apply to pulse points. Avoid rubbing the fragrance into the skin. Store upright away from heat and direct sunlight.'],
-      [/Returns are eligible when items are unworn, unwashed, tagged[^.]*\.?/gi, 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.']
+      [/Eligible unworn items follow posted policy\./gi, 'Unopened fragrance products follow the posted Melato return policy.'],
+      [/Returns follow the posted Melato policy\. Contact support@melato\.ca before use if you may need return assistance\./gi, 'Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening if you need return assistance.'],
+      [/Contact support@melato\.ca before use if you may need return assistance\.,?\s*and returned within the posted policy window\./gi, 'Contact support@melato.ca before opening if you need return assistance.'],
+      [/Contact support@melato\.ca before use if you may need return assistance\./gi, 'Contact support@melato.ca before opening if you need return assistance.']
     ]);
 
     const anchor = document.querySelector('.pdp-form, form[action*="/cart/add"], [class*="product-form"]');
@@ -262,8 +367,23 @@
       ['Concentration', 'Eau de Toilette'],
       ['Application', 'Apply to pulse points. Avoid rubbing the fragrance into the skin.'],
       ['Storage', 'Store upright away from heat and direct sunlight.'],
-      ['Returns', 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.']
+      ['Returns', 'Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening if you need return assistance.']
     ]);
+  }
+
+  function fixDuplicateHargneuxSetBuilder() {
+    if (path !== '/products/hargneux-velour-track-pant') return;
+    const root = document.querySelector('#main-content') || document;
+    const candidates = Array.from(root.querySelectorAll('.pdp-set, .melato-set, .m-cts, [class*="complete-the-set"]')).filter((node) => {
+      const text = normalize(node.textContent).toLowerCase();
+      return text.includes('complete the set') && text.includes('full set price');
+    });
+
+    const unique = candidates.filter((node, index, list) => !list.some((other, otherIndex) => otherIndex < index && other.contains(node)));
+    unique.slice(1).forEach((module) => {
+      module.classList.add('melato-audit-hidden');
+      module.setAttribute('aria-hidden', 'true');
+    });
   }
 
   function fixRexCare() {
@@ -295,6 +415,7 @@
     fixPdpSemantics();
     fixConciergeLabels();
     fixPetalVeil();
+    fixDuplicateHargneuxSetBuilder();
     fixRexCare();
     fixBlushLedger();
   }
