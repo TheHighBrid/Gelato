@@ -44,12 +44,6 @@
             "text": "THE CULTURE WEARS US"
           }
         },
-        "item3": {
-          "type": "item",
-          "settings": {
-            "text": "1980s retro UNIFORMS"
-          }
-        },
         "item4": {
           "type": "item",
           "settings": {
@@ -65,40 +59,19 @@
         "item_BXgTdL": {
           "type": "item",
           "settings": {
-            "text": "Complimentary delivery on all orders."
-          }
-        },
-        "item_g67bjG": {
-          "type": "item",
-          "settings": {
-            "text": "HIGH-END GARMENTS"
-          }
-        },
-        "item6": {
-          "type": "item",
-          "settings": {
-            "text": "PREMIUM BAMBOO fabrics"
-          }
-        },
-        "item7": {
-          "type": "item",
-          "settings": {
-            "text": "PREMIUM VELOUR material"
+            "text": "COMPLIMENTARY DELIVERY ON ALL ORDERS"
           }
         }
       },
       "block_order": [
         "item1",
-        "item3",
         "item4",
         "item5",
-        "item_BXgTdL",
-        "item_g67bjG",
-        "item6",
-        "item7"
+        "item_BXgTdL"
       ],
       "settings": {
-        "speed": 80,
+        "accessible_label": "Melato announcements",
+        "speed": 45,
         "separator": "MELATO",
         "direction": "left",
         "padding": 8,
@@ -254,20 +227,21 @@
         "heading": "THEY SPEAK\nFOR US"
       }
     },
-    "1781310906e62d22b0": {
-      "type": "apps",
-      "blocks": {
-        "klaviyo_email_marketing_sms_form_embed_block_CYb8J4": {
-          "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507",
-          "settings": {
-            "formId": ""
-          }
-        }
-      },
-      "block_order": [
-        "klaviyo_email_marketing_sms_form_embed_block_CYb8J4"
-      ],
-      "settings": {}
+    "newsletter_capture": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Private access",
+        "heading": "JOIN THE COLLECTIVE",
+        "subheading": "Priority access to new releases, restocks, private styling notes, and new chapters of The Living Book.",
+        "placeholder": "Email address",
+        "button_label": "Enter the Collective",
+        "note": "Sent with restraint. Unsubscribe whenever you choose.",
+        "success_message": "You are on the list. Watch your inbox for the next chapter.",
+        "background_color": "#080808",
+        "text_color": "#f5f1e8",
+        "muted_color": "#9b968d",
+        "accent_color": "#d3a74a"
+      }
     }
   },
   "order": [
@@ -279,6 +253,6 @@
     "brand_story",
     "client_concierge",
     "testimonials",
-    "1781310906e62d22b0"
+    "newsletter_capture"
   ]
 }
