@@ -1,0 +1,179 @@
+{% comment %}
+  Melato native variant waitlist.
+
+  Uses Shopify's customer form so the submitted profile is tagged with the
+  selected product, variant ID and SKU. Automated restock delivery still
+  requires a Shopify Flow/Klaviyo workflow that acts on these tags.
+
+  Required input:
+    product: Shopify product object
+{% endcomment %}
+
+{%- liquid
+  assign bis_variant = product.selected_or_first_available_variant
+  assign bis_id = 'BackInStock-' | append: product.id
+  assign bis_form_id = 'BackInStockForm-' | append: product.id
+  assign bis_product_title = product.title | strip_html | replace: ',', '' | strip
+  assign bis_variant_title = bis_variant.title | strip_html | replace: ',', '' | strip
+  assign bis_sku = bis_variant.sku | default: 'not-assigned' | replace: ',', '' | strip
+  capture bis_tags
+    echo 'back-in-stock, BIS Product: ' | append: bis_product_title
+    echo ', BIS Product Handle: ' | append: product.handle
+    echo ', BIS Variant: ' | append: bis_variant_title
+    echo ', BIS Variant ID: ' | append: bis_variant.id
+    echo ', BIS SKU: ' | append: bis_sku
+  endcapture
+-%}
+
+<div
+  class="melato-bis"
+  id="{{ bis_id }}"
+  data-bis-root
+  data-product-id="{{ product.id }}"
+  data-product-handle="{{ product.handle | escape }}"
+  {% if bis_variant.available %}hidden aria-hidden="true"{% else %}aria-hidden="false"{% endif %}
+>
+  {% form 'customer', id: bis_form_id, class: 'melato-bis__form', novalidate: 'novalidate' %}
+    <input type="hidden" name="contact[tags]" value="{{ bis_tags | strip | escape }}" data-bis-tags>
+    <input type="hidden" name="contact[accepts_marketing]" value="true">
+
+    {% if form.posted_successfully? %}
+      <div class="melato-bis__message melato-bis__message--success" role="status" tabindex="-1">
+        <span aria-hidden="true">✓</span>
+        <span>You are on the priority notification list for this silhouette.</span>
+      </div>
+    {% else %}
+      {% if form.errors %}
+        <div class="melato-bis__message melato-bis__message--error" role="alert">
+          {{ form.errors | default_errors }}
+        </div>
+      {% endif %}
+
+      <div class="melato-bis__content">
+        <p class="melato-bis__eyebrow">Inventory notice</p>
+        <h2 class="melato-bis__title">Silhouette currently unavailable</h2>
+        <p class="melato-bis__subtitle">
+          Join the priority list for
+          <strong data-bis-variant-label>{{ bis_variant.title }}</strong>.
+          We will contact you if inventory returns or the next allocation opens.
+        </p>
+
+        <div class="melato-bis__input-group">
+          <label class="visually-hidden" for="BisEmail-{{ product.id }}">Email address for stock notification</label>
+          <input
+            type="email"
+            name="contact[email]"
+            id="BisEmail-{{ product.id }}"
+            class="melato-bis__input"
+            value="{{ customer.email | default: form.email | escape }}"
+            placeholder="ENTER YOUR EMAIL ADDRESS"
+            autocomplete="email"
+            inputmode="email"
+            required
+          >
+          <button type="submit" class="melato-bis__button">Join waitlist</button>
+        </div>
+
+        <p class="melato-bis__consent">
+          By joining, you agree to receive this inventory alert and related Melato product updates. Unsubscribe at any time.
+        </p>
+      </div>
+    {% endif %}
+  {% endform %}
+
+  <script type="application/json" data-bis-variants>{{ product.variants | json }}</script>
+</div>
+
+<style>
+  .melato-bis[hidden]{display:none!important}
+  .melato-bis{margin:18px 0 4px;padding:20px;background:#0c0c0d;border:1px solid rgba(255,255,255,.12);border-radius:18px;color:#f5f1e8}
+  .melato-bis__eyebrow{margin:0 0 7px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#d3a74a}
+  .melato-bis__title{margin:0 0 8px;font-size:14px;line-height:1.25;letter-spacing:.14em;text-transform:uppercase;color:#fff}
+  .melato-bis__subtitle{margin:0 0 14px;font-size:12px;line-height:1.55;color:#aaa49b}
+  .melato-bis__subtitle strong{color:#f5f1e8;font-weight:700}
+  .melato-bis__input-group{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+  .melato-bis__input,.melato-bis__button{min-height:48px;border-radius:12px;font:inherit}
+  .melato-bis__input{width:100%;box-sizing:border-box;background:#050505;border:1px solid rgba(255,255,255,.2);color:#fff;padding:0 14px;font-size:12px;letter-spacing:.05em;outline:none}
+  .melato-bis__input:focus{border-color:#d3a74a;box-shadow:0 0 0 2px rgba(211,167,74,.16)}
+  .melato-bis__button{border:0;background:#f5f1e8;color:#080808;padding:0 18px;font-size:11px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;cursor:pointer;transition:background .2s,transform .15s}
+  .melato-bis__button:hover{background:#fff;transform:translateY(-1px)}
+  .melato-bis__consent{margin:10px 0 0;font-size:10px;line-height:1.45;color:#77726b}
+  .melato-bis__message{display:flex;align-items:flex-start;gap:9px;font-size:11px;line-height:1.5;letter-spacing:.06em;text-transform:uppercase}
+  .melato-bis__message--success{color:#86d7a2}
+  .melato-bis__message--error{color:#ff969e}
+  .melato-bis__message--error ul{margin:0;padding-left:18px}
+  @media(max-width:560px){.melato-bis__input-group{grid-template-columns:1fr}.melato-bis__button{width:100%}}
+</style>
+
+<script>
+(function(){
+  var root=document.getElementById({{ bis_id | json }});
+  if(!root||root.dataset.bisReady==='true') return;
+  root.dataset.bisReady='true';
+
+  var section=root.closest('.melato-clean-product')||document;
+  var productForm=section.querySelector('form[action*="/cart/add"]');
+  var variantsNode=root.querySelector('[data-bis-variants]');
+  var tagsInput=root.querySelector('[data-bis-tags]');
+  var variantLabel=root.querySelector('[data-bis-variant-label]');
+  var dynamicCheckout=section.querySelector('.melato-clean-product__dynamic-checkout');
+  var variants=[];
+
+  try{variants=JSON.parse(variantsNode.textContent||'[]');}catch(error){return;}
+  if(!productForm||!variants.length) return;
+
+  var variantSelect=productForm.querySelector('[name="id"]');
+  if(variantSelect){
+    Array.prototype.forEach.call(variantSelect.options,function(option){
+      if(/sold out/i.test(option.textContent||'')) option.disabled=false;
+    });
+  }
+
+  function selectedOptions(){
+    return Array.prototype.map.call(section.querySelectorAll('.melato-clean-product__option'),function(group){
+      var checked=group.querySelector('input:checked');
+      return checked?checked.value:null;
+    });
+  }
+
+  function resolveVariant(){
+    var options=selectedOptions();
+    var byOptions=variants.find(function(variant){
+      return options.length&&variant.options.every(function(value,index){return options[index]===value;});
+    });
+    if(byOptions) return byOptions;
+    if(variantSelect){
+      return variants.find(function(variant){return String(variant.id)===String(variantSelect.value);});
+    }
+    return variants[0];
+  }
+
+  function cleanTag(value){return String(value||'not-assigned').replace(/,/g,'').trim();}
+
+  function syncWaitlist(){
+    var variant=resolveVariant();
+    if(!variant) return;
+
+    var isAvailable=Boolean(variant.available);
+    root.hidden=isAvailable;
+    root.setAttribute('aria-hidden',isAvailable?'true':'false');
+    if(dynamicCheckout) dynamicCheckout.hidden=!isAvailable;
+
+    if(variantLabel) variantLabel.textContent=variant.title||'Selected variant';
+    if(tagsInput){
+      tagsInput.value=[
+        'back-in-stock',
+        'BIS Product: '+cleanTag({{ product.title | json }}),
+        'BIS Product Handle: '+cleanTag({{ product.handle | json }}),
+        'BIS Variant: '+cleanTag(variant.title),
+        'BIS Variant ID: '+cleanTag(variant.id),
+        'BIS SKU: '+cleanTag(variant.sku)
+      ].join(', ');
+    }
+  }
+
+  productForm.addEventListener('change',function(){window.setTimeout(syncWaitlist,0);});
+  document.addEventListener('variant:change',syncWaitlist);
+  syncWaitlist();
+})();
+</script>
