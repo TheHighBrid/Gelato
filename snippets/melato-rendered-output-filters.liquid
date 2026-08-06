@@ -95,6 +95,49 @@
     endif
 
     if template.name == 'product' and product
+      # Render the native customer-tag waitlist immediately after the first PDP form.
+      unless output contains 'data-bis-root'
+        capture bis_markup
+          render 'back-in-stock-form', product: product
+        endcapture
+        assign product_form_end_with_waitlist = '</form>' | append: bis_markup
+        assign output = output | replace_first: '</form>', product_form_end_with_waitlist
+      endunless
+
+      # Replace the legacy modal trigger with the accessible inline drawer.
+      assign product_has_size_option = false
+      for product_option_name in product.options
+        assign product_option_name_down = product_option_name | downcase
+        if product_option_name_down == 'size' or product_option_name_down == 'taille'
+          assign product_has_size_option = true
+          break
+        endif
+      endfor
+
+      if product_has_size_option
+        if output contains 'class="melato-size-guide-trigger"'
+          assign output = output | replace: 'class="melato-size-guide-trigger"', 'class="size-guide-trigger" data-open-size-drawer'
+        else
+          capture size_trigger_markup
+            echo '<button type="button" class="size-guide-trigger" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/><path d="M19 3v18"/></svg> Size Guide &amp; Silhouette Fit</button>'
+          endcapture
+          if output contains '<legend>Size</legend>'
+            assign size_legend_with_trigger = '<legend>Size</legend>' | append: size_trigger_markup
+            assign output = output | replace_first: '<legend>Size</legend>', size_legend_with_trigger
+          elsif output contains '<legend>Taille</legend>'
+            assign size_legend_with_trigger = '<legend>Taille</legend>' | append: size_trigger_markup
+            assign output = output | replace_first: '<legend>Taille</legend>', size_legend_with_trigger
+          endif
+        endif
+
+        unless output contains 'data-size-drawer'
+          capture size_drawer_markup
+            render 'size-guide-drawer', product: product
+          endcapture
+          assign output = output | append: size_drawer_markup
+        endunless
+      endif
+
       # Explicit list semantics prevent assurance copy from collapsing into one phrase.
       assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
       assign new_assurances = '<ul class="pdp-trust-row" aria-label="Payment and shipping trust"><li>Fast dispatch</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
