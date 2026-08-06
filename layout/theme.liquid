@@ -84,9 +84,7 @@
     elsif template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room'
       assign melato_filter_main_output = true
     elsif template.name == 'product' and product
-      if product.handle == 'petal-veil-eau-de-toilette' or product.handle == 'rex-x-fur-jacket-copy' or product.handle == 'blush-ledger-satin-shirt'
-        assign melato_filter_main_output = true
-      endif
+      assign melato_filter_main_output = true
     endif
   -%}
 
