@@ -27,6 +27,7 @@ jobs:
                       '<li>Fast dispatch</li>',
                       '<li>Secure checkout</li>',
                       'class="product-assurances"',
+                      'Complimentary delivery is available on all orders.',
                   ],
                   'required': [
                       'product.metafields.melato.product_story',
@@ -51,9 +52,40 @@ jobs:
                   ],
                   'required': [],
               },
+              'sections/melato-announcement-bar.liquid': {
+                  'banned': [
+                      '"default":"Shop now"',
+                  ],
+                  'required': [
+                      'assign fallback_message = section.settings.fallback_message',
+                  ],
+              },
+              'snippets/cart-drawer.liquid': {
+                  'banned': [
+                      'Free shipping unlocked!',
+                      'away from free shipping',
+                      'Complimentary standard delivery.',
+                  ],
+                  'required': [],
+              },
+              'sections/melato-footer.liquid': {
+                  'banned': [
+                      'shop.enabled_payment_types',
+                      'payment_type_svg_tag',
+                  ],
+                  'required': [],
+              },
               'templates/index.json': {
                   'banned': [
                       '"text": "Complimentary delivery on all orders."',
+                  ],
+                  'required': [],
+              },
+              'config/settings_data.json': {
+                  'banned': [
+                      '"cart_free_shipping_bar":true',
+                      '"show_payment_icons":true',
+                      'COMPLIMENTARY DELIVERY ON ALL ORDERS',
                   ],
                   'required': [],
               },
@@ -71,7 +103,7 @@ jobs:
                       failures.append(f'{filename}: removed UI returned: {needle!r}')
               for needle in policy['required']:
                   if needle not in text:
-                      failures.append(f'{filename}: canonical PDP data contract missing: {needle!r}')
+                      failures.append(f'{filename}: required Melato policy contract missing: {needle!r}')
 
           if failures:
               print('Melato brand policy regression detected:')
