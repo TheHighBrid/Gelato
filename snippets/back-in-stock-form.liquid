@@ -19,7 +19,7 @@
   endif
 
   if bis_is_fragrance
-    assign bis_unavailable_heading = 'Size currently unavailable'
+    assign bis_unavailable_heading = bis_variant_title | append: ' currently unavailable'
   elsif product.has_only_default_variant
     assign bis_unavailable_heading = 'Currently unavailable'
   else
