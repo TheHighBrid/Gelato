@@ -12,139 +12,17 @@
     "melato_luxury_product_page_zn3JqW": {
       "type": "melato-luxury-product-page",
       "blocks": {
-        "badge_KPHLzY": {
-          "type": "badge",
-          "settings": {
-            "text": "Limited production"
-          }
-        },
-        "badge_UqNQyG": {
-          "type": "badge",
-          "settings": {
-            "text": "Material-led"
-          }
-        },
-        "badge_Ue4XX4": {
-          "type": "badge",
-          "settings": {
-            "text": "Statement piece"
-          }
-        }
+        "badge_KPHLzY": {"type": "badge", "settings": {"text": "Limited production"}}
       },
-      "block_order": [
-        "badge_KPHLzY",
-        "badge_UqNQyG",
-        "badge_Ue4XX4"
-      ],
+      "block_order": ["badge_KPHLzY"],
       "name": "Melato Luxury Product",
       "settings": {
         "eyebrow": "Product focus",
-        "subtitle": "A premium Melato piece built with clean construction, controlled proportion, and everyday wearability.",
-        "story_heading": "Built through product language",
-        "default_materials": "Premium construction selected for clean movement, everyday wearability, and a composed finish.",
+        "subtitle": "",
+        "story_heading": "",
+        "default_materials": "",
         "extra_gallery_heading": "Editorial close-ups and extra angles"
       }
-    },
-    "main": {
-      "type": "main-product",
-      "disabled": true,
-      "settings": {
-        "show_vendor": false
-      }
-    },
-    "tabs": {
-      "type": "product-tabs",
-      "blocks": {
-        "tab_LtCYk8": {
-          "type": "tab",
-          "settings": {
-            "title": "Description",
-            "content": ""
-          }
-        },
-        "tab_AMVdew": {
-          "type": "tab",
-          "settings": {
-            "title": "Description",
-            "content": ""
-          }
-        },
-        "description": {
-          "type": "tab",
-          "settings": {
-            "title": "Description",
-            "content": ""
-          }
-        },
-        "details": {
-          "type": "tab",
-          "settings": {
-            "title": "Details & Care",
-            "content": "<p>Care instructions adapt by product. Follow the care label and wash cold when applicable.</p>"
-          }
-        },
-        "shipping": {
-          "type": "tab",
-          "settings": {
-            "title": "Shipping & Returns",
-            "content": "<p>Complimentary delivery on all orders. 30 Day return policy</p>"
-          }
-        }
-      },
-      "block_order": [
-        "tab_LtCYk8",
-        "tab_AMVdew",
-        "description",
-        "details",
-        "shipping"
-      ],
-      "disabled": true,
-      "settings": {}
-    },
-    "melato_product_proof_bar_YzU8Ep": {
-      "type": "melato-product-proof-bar",
-      "blocks": {
-        "proof_AEaBBV": {
-          "type": "proof",
-          "settings": {
-            "icon": "✦",
-            "title": "Limited production",
-            "text": "Produced in controlled quantities with a current-season product focus.."
-          }
-        },
-        "proof_FMDchq": {
-          "type": "proof",
-          "settings": {
-            "icon": "☁",
-            "title": "Material",
-            "text": "Fabric language adapts to the selected product."
-          }
-        },
-        "proof_arLeBC": {
-          "type": "proof",
-          "settings": {
-            "icon": "↗",
-            "title": "Express Shipping US & CAN",
-            "text": "Fast Express Shipping is available for the United States and Canada, cost is calculated at checkout."
-          }
-        },
-        "proof_8xQJUa": {
-          "type": "proof",
-          "settings": {
-            "icon": "⌁",
-            "title": "Secure checkout",
-            "text": "Major cards, Shop Pay, Apple Pay, Google Pay."
-          }
-        }
-      },
-      "block_order": [
-        "proof_AEaBBV",
-        "proof_FMDchq",
-        "proof_arLeBC",
-        "proof_8xQJUa"
-      ],
-      "name": "Melato product proof bar",
-      "settings": {}
     },
     "complete_the_set_EHY3pF": {
       "type": "complete-the-set",
@@ -164,97 +42,11 @@
         "heading": "MORE FROM THE COLLECTION",
         "max_products": 4
       }
-    },
-    "related": {
-      "type": "related-products",
-      "disabled": true,
-      "settings": {
-        "eyebrow": "More from the collection",
-        "heading": "YOU MAY ALSO LIKE",
-        "products_to_show": 4
-      }
-    },
-    "recently_viewed": {
-      "type": "recently-viewed",
-      "disabled": true,
-      "settings": {
-        "heading": "RECENTLY VIEWED"
-      }
-    },
-    "related_products_eRkPHx": {
-      "type": "related-products",
-      "disabled": true,
-      "name": "Related products",
-      "settings": {
-        "eyebrow": "More from the collection",
-        "heading": "You might also like",
-        "products_to_show": 4
-      }
-    },
-    "melato_product_trust_accordions_8yHenX": {
-      "type": "melato-product-trust-accordions",
-      "blocks": {
-        "accordion_WQRbqx": {
-          "type": "accordion",
-          "settings": {
-            "title": "Fit",
-            "content": "<p>Relaxed premium fit. Choose your usual size for a clean silhouette, or size up for a looser look.</p>"
-          }
-        },
-        "accordion_NQb8jf": {
-          "type": "accordion",
-          "settings": {
-            "title": "Material",
-            "content": "<p>Fabric language adapts to the selected product.</p>"
-          }
-        },
-        "accordion_RwYKyw": {
-          "type": "accordion",
-          "settings": {
-            "title": "Care",
-            "content": "<p>Follow the care label. Wash cold where applicable. Avoid direct heat over embroidery, patches, prints, or branded details.</p>"
-          }
-        },
-        "accordion_zbH8N8": {
-          "type": "accordion",
-          "settings": {
-            "title": "Shipping",
-            "content": "<p>Orders are usually prepared within 1–3 business days. Complimentary Delivery on all orders.</p>"
-          }
-        },
-        "accordion_nBditA": {
-          "type": "accordion",
-          "settings": {
-            "title": "Returns",
-            "content": "<p>Eligible items may be returned within the posted return window if unworn, unused, unwashed, with tags attached, and in original packaging.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "accordion_WQRbqx",
-        "accordion_NQb8jf",
-        "accordion_RwYKyw",
-        "accordion_zbH8N8",
-        "accordion_nBditA"
-      ],
-      "name": "Melato product accordions",
-      "settings": {
-        "eyebrow": "Product intelligence",
-        "heading": "Fit, material, care, and shipping",
-        "open_first": true
-      }
     }
   },
   "order": [
     "melato_luxury_product_page_zn3JqW",
-    "main",
-    "tabs",
-    "melato_product_proof_bar_YzU8Ep",
     "complete_the_set_EHY3pF",
-    "tag_recommendations_gE6p6L",
-    "related",
-    "recently_viewed",
-    "related_products_eRkPHx",
-    "melato_product_trust_accordions_8yHenX"
+    "tag_recommendations_gE6p6L"
   ]
 }
