@@ -62,12 +62,6 @@
             "text": "BUILT FOR MOVEMENT"
           }
         },
-        "item_BXgTdL": {
-          "type": "item",
-          "settings": {
-            "text": "Complimentary delivery on all orders."
-          }
-        },
         "item_g67bjG": {
           "type": "item",
           "settings": {
@@ -92,7 +86,6 @@
         "item3",
         "item4",
         "item5",
-        "item_BXgTdL",
         "item_g67bjG",
         "item6",
         "item7"

@@ -23,14 +23,14 @@
   endif
 
   assign pdp_hook = product.metafields.custom.pdp_hook.value
-  assign story_copy = product.metafields.custom.story.value | default: product.metafields.custom.product_story.value | default: product.metafields.custom.pdp_story.value | default: product.metafields.custom.pdp_story_content.value
+  assign story_copy = product.metafields.melato.product_story.value | default: product.metafields.custom.story.value | default: product.metafields.custom.product_story.value | default: product.metafields.custom.pdp_story.value | default: product.metafields.custom.pdp_story_content.value
   assign construction_details = product.metafields.custom.design_features.value | default: product.metafields.custom.pdp_technical_details.value
   assign construction_paragraph = product.metafields.custom.pdp_technical_paragraph.value
-  assign fit_copy = product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit.value
+  assign fit_copy = product.metafields.melato.fit.value | default: product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit.value | default: product.metafields.custom.fit_notes.value
   assign fit_details = product.metafields.custom.pdp_fit_details.value
-  assign material_copy = product.metafields.custom.fabric_composition.value | default: product.metafields.custom.composition.value | default: product.metafields.custom.material.value
+  assign material_copy = product.metafields.melato.material_composition.value | default: product.metafields.custom.material_care.value | default: product.metafields.custom.fabric_composition.value | default: product.metafields.custom.composition.value | default: product.metafields.custom.material.value | default: product.metafields.custom.material_profile.value
   assign material_details = product.metafields.custom.pdp_material_details.value
-  assign care_copy = product.metafields.custom.care_short.value | default: product.metafields.custom.care.value
+  assign care_copy = product.metafields.melato.care_instructions.value | default: product.metafields.custom.care_instructions.value | default: product.metafields.custom.care_short.value | default: product.metafields.custom.care.value | default: product.metafields.custom.care_notes.value
   assign care_details = product.metafields.custom.pdp_care_details.value
   assign application_copy = product.metafields.custom.application.value
   assign scent_profile = product.metafields.custom.scent_profile.value
@@ -83,7 +83,7 @@
 
   assign current_colorway = blank
   assign current_type = blank
-  assign colorway_display = blank
+  assign colorway_display = product.metafields.melato.colorway.value | default: product.metafields.custom.colorway.value
   for tag in product.tags
     assign tag_clean = tag | downcase | strip
     if tag_clean contains 'colorway_'
@@ -204,12 +204,6 @@
           {%- if current_variant.compare_at_price > current_variant.price -%}<s class="pdp-compare">{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
         </div>
 
-        <ul class="product-assurances" role="list" aria-label="Purchase assurances">
-          <li>Fast dispatch</li>
-          <li>Complimentary delivery on all orders</li>
-          <li>Secure checkout</li>
-        </ul>
-
         {% form 'product', product, id: product_form_id, class: 'pdp-form' %}
           {%- if product.has_only_default_variant -%}
             <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
@@ -244,7 +238,6 @@
             </button>
           </div>
 
-          {%- if additional_checkout_buttons and current_variant.available -%}<div class="pdp-dynamic-checkout">{{ content_for_additional_checkout_buttons }}</div>{%- endif -%}
         {% endform %}
 
         {% render 'back-in-stock-form', product: product %}

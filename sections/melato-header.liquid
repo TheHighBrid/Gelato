@@ -63,7 +63,7 @@
       <div class="mxh__drawer-grid">
         <div class="mxh__drawer-note">
           <p>{{ section.settings.drawer_note | default: 'Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.' }}</p>
-          <a href="{{ routes.all_products_collection_url }}">Shop all</a>
+          <a href="{{ routes.all_products_collection_url }}">Collection</a>
         </div>
 
         <nav class="mxh__nav" aria-label="Main navigation">
@@ -85,7 +85,7 @@
             {% endfor %}
           {% else %}
             <a class="mxh__nav-link" href="{{ routes.root_url }}"><span>01</span>Home</a>
-            <a class="mxh__nav-link" href="{{ routes.all_products_collection_url }}"><span>02</span>Shop</a>
+            <a class="mxh__nav-link" href="{{ routes.all_products_collection_url }}"><span>02</span>Collection</a>
             <a class="mxh__nav-link" href="{{ routes.search_url }}"><span>03</span>Search</a>
           {% endif %}
         </nav>
