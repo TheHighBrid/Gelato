@@ -1,1 +1,0 @@
-Force Shopify to ingest the corrected hero without the generic Shop Now fallback. Retry after workflow registration.
