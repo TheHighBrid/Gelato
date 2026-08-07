@@ -1,7 +1,7 @@
 {% comment %}
-  Server-side rendered-output safeguards for Melato.
-  These corrections run before HTML reaches browsers, crawlers, parsers,
-  or assistive technology. They do not invent unverified product facts.
+  Server-rendered safeguards for legacy Shopify content.
+  Primary templates should emit correct markup directly. This layer handles
+  older product templates, app output, and Shopify-managed policy HTML.
 
   Inputs:
     html: rendered HTML string
@@ -10,8 +10,6 @@
 
 {%- liquid
   assign output = html
-
-  # Public returns contact is standardized in every captured surface.
   assign output = output | replace: 'orders@melato.ca', 'support@melato.ca'
 
   if context == 'announcement'
@@ -24,7 +22,6 @@
     assign output = output | replace: '&quot;LIKE NEVER CHANGE&quot;', 'COMME NEVER CHANGE'
     assign output = output | replace: '"LIKE NEVER CHANGE"', 'COMME NEVER CHANGE'
     assign output = output | replace: 'LIKE NEVER CHANGE', 'COMME NEVER CHANGE'
-    assign output = output | replace: '<div class="melato-ann__group" aria-hidden="true">', '<div class="melato-ann__group" aria-hidden="true" role="presentation" inert>'
   endif
 
   if context == 'cart'
@@ -52,21 +49,12 @@
     assign output = output | replace: 'Delivery Delivery Concierge', 'Delivery Concierge'
     assign output = output | replace: 'CareOrder Companion', 'Order Companion'
     assign output = output | replace: 'AccessThe Preview Room', 'The Preview Room'
-    assign output = output | replace: '01 Personal fit consultationSend us your measurements', '01 Personal fit consultation. Send us your measurements'
-    assign output = output | replace: 'coordinate matching sets.Advice from a real client care specialist', 'coordinate matching sets. Advice from a real client care specialist'
-    assign output = output | replace: 'issue after delivery—without searching for the right department.One point of contact', 'issue after delivery, without searching for the right department. One point of contact'
-    assign output = output | replace: 'Wash cold on a gentle cycle, wash inside out', 'Care varies by product and material. Always follow the product page and sewn-in care label'
+    assign output = output | replace: 'Client care is availableReplies are typically sent within one business day.', 'Client care is available. Replies are typically sent within one business day.'
     assign output = output | replace: 'You may request, correction of, or deletion of your personal information', 'You may request access to, correction of, or deletion of your personal information'
 
-    # Keep client-service cards readable and navigable without changing their visual layout.
-    assign output = output | replace: '<span class="melato-concierge__service-title">', '<span class="melato-concierge__service-title" role="heading" aria-level="3">'
-    assign output = output | replace: '</span><span class="melato-concierge__service-body">', '</span> <span class="melato-concierge__service-body">'
-    assign output = output | replace: '</span><span class="melato-concierge__service-copy">', '</span> <span class="melato-concierge__service-copy">'
-    assign output = output | replace: '</span><span class="melato-concierge__service-note">', '</span> <span class="melato-concierge__service-note">'
-
+    # Defensive removal for old collection sections that exposed variant counts
+    # as though they were collection product totals.
     if template.name == 'collection'
-      # Shopify filter values can represent variants. Remove ambiguous numeric badges
-      # so collection product totals and filter labels cannot contradict each other.
       assign count_chunks = output | split: '<span class="melato-filter-option__count">'
       if count_chunks.size > 1
         assign output_without_counts = count_chunks | first
@@ -79,23 +67,28 @@
       endif
     endif
 
-    if template.name == 'collection' and collection.handle == 'all'
-      assign output = output | replace: '<p class="melato-collection-eyebrow">Collection</p>', '<p class="melato-collection-eyebrow">Catalogue</p>'
-      assign output = output | replace: '<h1 class="melato-collection-title">Products</h1>', '<h1 class="melato-collection-title">THE MELATO INDEX</h1>'
-      assign output = output | replace: '<h1 class="melato-collection-title">All Products</h1>', '<h1 class="melato-collection-title">THE MELATO INDEX</h1>'
-      unless output contains 'melato-index-intro'
-        assign output = output | replace: '<h1 class="melato-collection-title">THE MELATO INDEX</h1>', '<h1 class="melato-collection-title">THE MELATO INDEX</h1><p class="melato-collection-desc melato-index-intro">The complete catalogue across the current rotation and archive.</p>'
-      endunless
-    endif
-
     if request.path contains '/policies/'
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Refund policy</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Refund policy</p></div>'
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Terms of service</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Terms of service</p></div>'
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Privacy policy</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Privacy policy</p></div>'
+
+      if request.path contains '/policies/refund-policy'
+        assign old_shipping_clause = 'Original shipping fees may be non-refundable unless otherwise required by law or stated during a promotion.'
+        capture policy_clarification
+          echo 'Standard delivery is complimentary and therefore has no original standard-delivery fee to refund. Any paid expedited, special, or international service fees may be non-refundable unless required by law.'
+          echo '<h2>Fragrance</h2>'
+          echo '<p>Unopened fragrance products may be eligible for return under the standard return conditions. Contact support@melato.ca before opening the product if you may need return assistance.</p>'
+          echo '<p>Opened, sprayed, or used fragrance products are reviewed under the posted return conditions and applicable law. Contact client care before returning a fragrance product.</p>'
+        endcapture
+        assign output = output | replace: old_shipping_clause, policy_clarification
+      endif
     endif
 
     if template.name == 'product' and product
-      # Render the native customer-tag waitlist immediately after the first PDP form.
+      assign product_title_down = product.title | downcase
+      assign product_type_down = product.product_type | downcase
+      assign size_guide_page = product.metafields.custom.size_guide.value
+
       unless output contains 'data-bis-root'
         capture bis_markup
           render 'back-in-stock-form', product: product
@@ -104,53 +97,43 @@
         assign output = output | replace_first: '</form>', product_form_end_with_waitlist
       endunless
 
-      # Replace the legacy modal trigger with the accessible inline drawer.
-      assign product_has_size_option = false
-      for product_option_name in product.options
-        assign product_option_name_down = product_option_name | downcase
-        if product_option_name_down == 'size' or product_option_name_down == 'taille'
-          assign product_has_size_option = true
-          break
-        endif
-      endfor
-
-      if product_has_size_option
-        if output contains 'class="melato-size-guide-trigger"'
-          assign output = output | replace: 'class="melato-size-guide-trigger"', 'class="size-guide-trigger" data-open-size-drawer'
-        else
-          capture size_trigger_markup
-            echo '<button type="button" class="size-guide-trigger" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/><path d="M19 3v18"/></svg> Size Guide &amp; Silhouette Fit</button>'
-          endcapture
-          if output contains '<legend>Size</legend>'
-            assign size_legend_with_trigger = '<legend>Size</legend>' | append: size_trigger_markup
-            assign output = output | replace_first: '<legend>Size</legend>', size_legend_with_trigger
-          elsif output contains '<legend>Taille</legend>'
-            assign size_legend_with_trigger = '<legend>Taille</legend>' | append: size_trigger_markup
-            assign output = output | replace_first: '<legend>Taille</legend>', size_legend_with_trigger
+      # Add a size drawer only when this exact product has a guide assigned.
+      if size_guide_page != blank
+        assign product_has_size_option = false
+        for product_option_name in product.options
+          assign product_option_name_down = product_option_name | downcase
+          if product_option_name_down == 'size' or product_option_name_down == 'taille'
+            assign product_has_size_option = true
+            break
           endif
-        endif
+        endfor
 
-        unless output contains 'data-size-drawer'
-          capture size_drawer_markup
-            render 'size-guide-drawer', product: product
-          endcapture
-          assign output = output | append: size_drawer_markup
-        endunless
+        if product_has_size_option
+          if output contains 'class="melato-size-guide-trigger"'
+            assign output = output | replace: 'class="melato-size-guide-trigger"', 'class="size-guide-trigger" data-open-size-drawer'
+          endif
+          unless output contains 'data-size-drawer'
+            capture size_drawer_markup
+              render 'size-guide-drawer', product: product
+            endcapture
+            assign output = output | append: size_drawer_markup
+          endunless
+        endif
       endif
 
-      # Explicit list semantics prevent assurance copy from collapsing into one phrase.
+      # Legacy assurance and rating components.
       assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
-      assign new_assurances = '<ul class="pdp-trust-row" aria-label="Payment and shipping trust"><li>Fast dispatch</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
+      assign new_assurances = '<ul class="product-assurances" role="list" aria-label="Purchase assurances"><li>Fast dispatch</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
       assign output = output | replace: old_assurances, new_assurances
-
       assign output = output | replace: 'Customers rate us 5.0/5 based on 3 reviews.', 'MELATO STORE RATING 5.0/5 from 3 verified customer reviews.'
 
-      # Add text boundaries between adjacent modules without changing presentation.
+      # Preserve text boundaries in secondary purchase and bundle modules.
       assign output = output | replace: '</strong><span', '</strong> <span'
       assign output = output | replace: '</span><strong', '</span> <strong'
       assign output = output | replace: '</h3><p>', '</h3> <p>'
+      assign output = output | replace: '</span><span class="ml-price"', '</span> <span class="ml-price"'
 
-      # Give generic product-title image alts unique, truthful identifiers.
+      # Unique truthful fallbacks where media-specific alt text is not populated.
       assign escaped_product_title = product.title | escape
       assign generic_product_alt = 'alt="' | append: escaped_product_title | append: '"'
       for image_number in (1..18)
@@ -161,26 +144,27 @@
         assign output = output | replace_first: generic_product_alt, numbered_product_alt
       endfor
 
-      assign product_title_down = product.title | downcase
-      assign product_type_down = product.product_type | downcase
+      # Never expose generic technical copy on PROTECTIVE CUSTODY.
+      if product.handle == 'protective-custody'
+        assign output = output | replace: 'A premium Melato piece built with clean construction, controlled proportion, and everyday presence.', ''
+        assign output = output | replace: 'A premium Melato piece built with clean construction, controlled proportion, and everyday wearability.', ''
+        assign output = output | replace: 'A focused Melato piece designed around proportion, texture, and styling range. Built to feel intentional without overexplaining itself.', ''
+        assign output = output | replace: 'A focused Melato piece designed around proportion, texture, and styling range.', ''
+        assign output = output | replace: 'Melato piece with Melato’s current-season product language.', ''
+        assign output = output | replace: 'Premium construction selected for feel, structure, and everyday wearability.', ''
+        assign output = output | replace: 'Premium construction selected for clean movement and everyday wearability.', ''
+        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', ''
+      endif
 
       if product.handle == 'petal-veil-eau-de-toilette' or product_type_down contains 'fragrance' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum'
         assign output = output | replace: 'Premium everyday fit. Choose your usual size for the intended silhouette.', ''
-        assign output = output | replace: '<details class="pdp-spec"><summary>Fit</summary><div class="pdp-rte"></div></details>', '<details class="pdp-spec"><summary>Application</summary><div class="pdp-rte">Apply to pulse points. Avoid rubbing the fragrance into the skin.</div></details>'
+        assign output = output | replace: '<details class="pdp-spec"><summary>Fit</summary><div class="pdp-rte"></div></details>', ''
         assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Apply to pulse points. Avoid rubbing the fragrance into the skin. Store upright away from heat and direct sunlight.'
-        assign output = output | replace: '<strong>Easy returns</strong><span>Eligible unworn items follow posted policy.</span>', '<strong>Easy returns</strong><span>Unopened fragrance products follow the posted Melato return policy.</span>'
         assign output = output | replace: 'Eligible unworn items follow posted policy.', 'Unopened fragrance products follow the posted Melato return policy.'
+        assign output = output | replace: 'Returns are eligible when items are unworn, unwashed, tagged, and returned within the posted policy window.', 'Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening the product if you may need return assistance.'
         assign output = output | replace: 'Orders usually prepare within 1 to 3 business days. Complimentary delivery available on all orders. Returns are eligible when items are unworn, unwashed, tagged, and returned within the posted policy window.', 'Orders usually prepare within 1 to 3 business days. Complimentary delivery is available on all orders. Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening the product if you may need return assistance.'
-        assign output = output | replace: 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.', 'Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening if you need return assistance.'
-        assign output = output | replace: 'Contact support@melato.ca before use if you may need return assistance., and returned within the posted policy window.', 'Contact support@melato.ca before opening if you need return assistance.'
-        assign output = output | replace: 'Contact support@melato.ca before use if you may need return assistance.', 'Contact support@melato.ca before opening if you need return assistance.'
       elsif product.handle == 'rex-x-fur-jacket-copy' or product_title_down contains 'fur'
-        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Professional fur cleaning only. Do not machine wash or hand wash. Store in a cool, ventilated space. Avoid moisture, direct heat and prolonged sunlight. Use a broad-shouldered hanger.'
-      elsif product.handle == 'blush-ledger-satin-shirt'
-        assign output = output | replace: 'Melato piece with Melato’s current-season product language.', 'Silk satin shirt from the current Melato rotation.'
-        assign output = output | replace: 'Premium construction selected for feel, structure, and everyday wearability.', 'Material currently published: silk. Additional construction specifications must come from verified product records.'
-        assign output = output | replace: 'Built to sit clean on body without stealing movement.', 'Designed for a relaxed drape. Refer to verified garment measurements when published.'
-        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Follow the sewn-in care label. Contact support@melato.ca before cleaning if the label is unclear.'
+        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Professional fur cleaning only. Do not machine wash or hand wash. Store in a cool, ventilated space away from moisture, direct heat, and prolonged sunlight. Use a broad-shouldered hanger.'
       endif
     endif
   endif
