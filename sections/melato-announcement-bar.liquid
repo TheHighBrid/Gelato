@@ -1,7 +1,8 @@
 {% comment %}
   Melato announcement bar.
-  The second ticker group is an animation clone only and is excluded from the
-  accessibility tree and keyboard navigation at the source.
+  Only one announcement group is server-rendered. A presentation-only animation
+  clone is created in the browser so parsed HTML and assistive technology receive
+  each announcement once.
 {% endcomment %}
 
 {%- liquid
@@ -101,8 +102,8 @@
     {%- endif -%}
 
     <div class="melato-ann__viewport" aria-label="Store announcements">
-      <div class="melato-ann__track">
-        <div class="melato-ann__group">
+      <div class="melato-ann__track" data-announcement-track>
+        <div class="melato-ann__group" data-announcement-source>
           {%- if section.blocks.size > 0 -%}
             {%- for block in section.blocks -%}
               {%- if block.settings.message != blank -%}
@@ -129,34 +130,6 @@
             </span>
           {%- endif -%}
         </div>
-
-        <div class="melato-ann__group" aria-hidden="true" role="presentation" inert>
-          {%- if section.blocks.size > 0 -%}
-            {%- for block in section.blocks -%}
-              {%- if block.settings.message != blank -%}
-                {%- if block.settings.link != blank -%}
-                  <a class="melato-ann__item" href="{{ block.settings.link }}" tabindex="-1">
-                    <span class="melato-ann__dot" aria-hidden="true"></span>
-                    <span>{{ block.settings.message }}</span>
-                    {%- if block.settings.micro_text != blank -%}<small>{{ block.settings.micro_text }}</small>{%- endif -%}
-                  </a>
-                {%- else -%}
-                  <span class="melato-ann__item">
-                    <span class="melato-ann__dot" aria-hidden="true"></span>
-                    <span>{{ block.settings.message }}</span>
-                    {%- if block.settings.micro_text != blank -%}<small>{{ block.settings.micro_text }}</small>{%- endif -%}
-                  </span>
-                {%- endif -%}
-              {%- endif -%}
-            {%- endfor -%}
-          {%- else -%}
-            <span class="melato-ann__item">
-              <span class="melato-ann__dot" aria-hidden="true"></span>
-              <span>{{ section.settings.fallback_message }}</span>
-              {%- if section.settings.fallback_micro != blank -%}<small>{{ section.settings.fallback_micro }}</small>{%- endif -%}
-            </span>
-          {%- endif -%}
-        </div>
       </div>
     </div>
 
@@ -166,6 +139,25 @@
       <span aria-hidden="true"></span>
     {%- endif -%}
   </div>
+
+  <script>
+  (function(){
+    var bar=document.getElementById('melato-announcement-bar');
+    if(!bar||bar.dataset.cloneReady==='true')return;
+    var track=bar.querySelector('[data-announcement-track]');
+    var source=bar.querySelector('[data-announcement-source]');
+    if(!track||!source)return;
+    var clone=source.cloneNode(true);
+    clone.removeAttribute('data-announcement-source');
+    clone.setAttribute('aria-hidden','true');
+    clone.setAttribute('role','presentation');
+    clone.setAttribute('inert','');
+    clone.querySelectorAll('[id]').forEach(function(node){node.removeAttribute('id')});
+    clone.querySelectorAll('a,button,input,select,textarea,[tabindex]').forEach(function(node){node.setAttribute('tabindex','-1')});
+    track.appendChild(clone);
+    bar.dataset.cloneReady='true';
+  })();
+  </script>
 {% endif %}
 
 <style>
@@ -189,15 +181,7 @@
     {"type":"text","id":"fallback_message","label":"Fallback ticker text","default":"Premium velour tracksuits — limited quantities online"},
     {"type":"text","id":"fallback_micro","label":"Fallback micro text","default":"Melato"}
   ],
-  "blocks":[{
-    "type":"message",
-    "name":"Ticker message",
-    "settings":[
-      {"type":"text","id":"message","label":"Message","default":"Premium velour cut with intent"},
-      {"type":"text","id":"micro_text","label":"Micro text","default":"Melato"},
-      {"type":"url","id":"link","label":"Link (optional)"}
-    ]
-  }],
+  "blocks":[{"type":"message","name":"Ticker message","settings":[{"type":"text","id":"message","label":"Message","default":"Premium velour cut with intent"},{"type":"text","id":"micro_text","label":"Micro text","default":"Melato"},{"type":"url","id":"link","label":"Link (optional)"}]}],
   "max_blocks":8,
   "presets":[{"name":"Announcement Bar"}]
 }
