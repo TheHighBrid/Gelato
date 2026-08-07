@@ -8,6 +8,7 @@
 
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
+  assign product_form_id = 'product-form-' | append: section.id
   assign featured_media = current_variant.featured_media | default: product.featured_media
   assign product_title_down = product.title | downcase
   assign product_type_down = product.product_type | downcase
@@ -174,7 +175,7 @@
           <li>Secure checkout</li>
         </ul>
 
-        {% form 'product', product, class: 'pdp-form', id: 'ProductForm-' | append: section.id %}
+        {% form 'product', product, id: product_form_id, class: 'pdp-form' %}
           {%- if product.has_only_default_variant -%}
             <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
           {%- else -%}
