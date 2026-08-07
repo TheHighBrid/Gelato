@@ -56,11 +56,6 @@
 
     <div class="melato-footer__bottom">
       <p class="melato-footer__copyright">© 2026 Melato. Cut with intent.</p>
-      {% if section.settings.show_payment_icons %}
-        <div class="melato-footer__payments" aria-label="Accepted payment methods">
-          {% for type in shop.enabled_payment_types %}{{ type | payment_type_svg_tag: class: 'melato-footer__payment-icon' }}{% endfor %}
-        </div>
-      {% endif %}
     </div>
   </div>
 </footer>
@@ -79,7 +74,7 @@
     { "type": "range", "id": "logo_width", "label": "Logo width", "min": 120, "max": 320, "step": 4, "unit": "px", "default": 240 },
     { "type": "textarea", "id": "tagline", "label": "Tagline", "default": "Premium garments. Cut with intent." },
     { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
-    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": false },
     { "type": "header", "content": "Colors" },
     { "type": "color", "id": "bg_color", "label": "Footer background", "default": "#111111" },
     { "type": "color", "id": "text_color", "label": "Footer text", "default": "#F5F1E8" }
