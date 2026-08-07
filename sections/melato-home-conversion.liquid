@@ -14,10 +14,6 @@
         {% if section.settings.eyebrow != blank %}<p class="melato-home-conversion__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
         <h1 class="melato-home-conversion__title">{{ section.settings.heading }}</h1>
         {% if section.settings.copy != blank %}<p class="melato-home-conversion__copy">{{ section.settings.copy }}</p>{% endif %}
-        <div class="melato-home-conversion__ctas">
-          <a class="melato-home-conversion__cta" href="{{ section.settings.primary_cta_url | default: routes.all_products_collection_url }}">{{ section.settings.primary_cta_label }}</a>
-          <a class="melato-home-conversion__cta-secondary" href="{{ section.settings.secondary_cta_url | default: '/pages/our-story' }}">{{ section.settings.secondary_cta_label }}</a>
-        </div>
       </div>
     </div>
     <div class="melato-home-conversion__sections">
@@ -46,14 +42,10 @@
   "settings": [
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Limited-drop apparel" },
     { "type": "textarea", "id": "heading", "label": "Heading", "default": "Premium retro made to stand out before it sells out." },
-    { "type": "textarea", "id": "copy", "label": "Copy", "default": "Shop Melato tracksuits and statement pieces built with bold colour-blocking, premium textures, and limited capsule energy." },
-    { "type": "text", "id": "primary_cta_label", "label": "Primary CTA label", "default": "Shop the drop" },
-    { "type": "url", "id": "primary_cta_url", "label": "Primary CTA URL" },
-    { "type": "text", "id": "secondary_cta_label", "label": "Secondary CTA label", "default": "Why Melato" },
-    { "type": "url", "id": "secondary_cta_url", "label": "Secondary CTA URL" },
+    { "type": "textarea", "id": "copy", "label": "Copy", "default": "Melato tracksuits and statement pieces built with bold colour-blocking, premium textures, and limited capsule energy." },
     { "type": "collection", "id": "featured_collection", "label": "Featured product collection" }
   ],
   "presets": [{ "name": "Melato conversion hero" }]
 }
 {% endschema %}
-{% comment %} Direct live policy sync 2026-08-07 {% endcomment %}
+{% comment %} Direct live policy sync 2026-08-07c {% endcomment %}
