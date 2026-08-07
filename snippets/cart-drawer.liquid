@@ -57,34 +57,7 @@
 </button>
   </div>
 
-  <!-- FREE SHIPPING BAR -->
-  {%- if settings.cart_free_shipping_bar and free_threshold_cents > 0 -%}
-  <div class="cart-free-shipping" aria-live="polite" aria-atomic="true" data-shipping-bar>
-    <p class="cart-free-shipping__text" data-shipping-text>
-      {%- if shipping_unlocked -%}
-        <span class="cart-free-shipping__unlocked">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
-          Free shipping unlocked!
-        </span>
-      {%- else -%}
-        <strong>{{ remaining_cents | money }}</strong> away from free shipping
-      {%- endif -%}
-    </p>
-    <div
-      class="cart-free-shipping__bar"
-      role="progressbar"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow="{{ progress_pct }}"
-    >
-      <div
-        class="cart-free-shipping__fill {% if shipping_unlocked %}is-complete{% endif %}"
-        style="width:{{ progress_pct }}%"
-        data-shipping-fill
-      ></div>
-    </div>
-  </div>
-  {%- endif -%}
+  <!-- Promotional shipping progress intentionally removed by Melato brand policy. -->
 
   <!-- CART ITEMS -->
   <div
@@ -239,7 +212,7 @@
       <span class="cart-subtotal__label">Subtotal</span>
       <span class="cart-subtotal__amount" data-cart-subtotal>{{ cart.total_price | money }}</span>
     </div>
-    <p class="cart-drawer__tax-note">Complimentary standard delivery. Taxes and applicable duties calculated at checkout.</p>
+    <p class="cart-drawer__tax-note">Taxes and applicable duties are calculated at checkout.</p>
     <form id="cart-form" action="/cart" method="post">
       <input type="hidden" name="note" data-note-hidden value="{{ cart.note | escape }}">
       <button

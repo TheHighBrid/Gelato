@@ -13,6 +13,7 @@
   assign muted = 'rgba(247,241,232,.72)'
   assign button_bg = '#f7f1e8'
   assign button_fg = '#070707'
+  assign fallback_message = section.settings.fallback_message | replace: ' · COMPLIMENTARY DELIVERY ON ALL ORDERS', '' | replace: 'COMPLIMENTARY DELIVERY ON ALL ORDERS · ', '' | replace: 'COMPLIMENTARY DELIVERY ON ALL ORDERS', ''
 
   case accent
     when 'cream'
@@ -126,7 +127,7 @@
           {%- else -%}
             <span class="melato-ann__item">
               <span class="melato-ann__dot" aria-hidden="true"></span>
-              <span>{{ section.settings.fallback_message }}</span>
+              <span>{{ fallback_message }}</span>
               {%- if section.settings.fallback_micro != blank -%}<small>{{ section.settings.fallback_micro }}</small>{%- endif -%}
             </span>
           {%- endif -%}
