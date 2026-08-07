@@ -1,56 +1,47 @@
-name: Shopify theme sync bridge
+name: Shopify hero sync bridge
 
 on:
   push:
     branches:
-      - agent/force-shopify-theme-sync
+      - agent/force-shopify-hero-sync
     paths:
-      - '.shopify-sync/force-theme-sync.txt'
+      - '.shopify-sync/force-hero-sync.txt'
 
 permissions:
   contents: write
 
 jobs:
-  touch-theme-files:
+  fix-and-touch-hero:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Mark corrected theme files for user merge
+      - name: Prepare Shopify-valid hero source for user merge
         shell: bash
         run: |
-          if [ ! -f .shopify-sync/force-theme-sync.txt ]; then
+          if [ ! -f .shopify-sync/force-hero-sync.txt ]; then
             echo 'Trigger already consumed.'
             exit 0
           fi
           python - <<'PY'
           from pathlib import Path
 
-          liquid_files = [
-              Path('sections/melato-product-page-rebuild.liquid'),
-              Path('sections/melato-header.liquid'),
-              Path('sections/melato-hero.liquid'),
-          ]
-          marker = '\n{% comment %} Melato policy sync marker 2026-08-07 {% endcomment %}\n'
-          for path in liquid_files:
-              text = path.read_text()
-              if 'Melato policy sync marker 2026-08-07' not in text:
-                  path.write_text(text.rstrip() + marker)
-
-          index = Path('templates/index.json')
-          text = index.read_text()
-          needle = ' * IMPORTANT: The contents of this file are auto-generated.\n'
-          replacement = needle + ' * Melato policy sync marker 2026-08-07.\n'
-          if 'Melato policy sync marker 2026-08-07.' not in text:
-              if needle not in text:
-                  raise SystemExit('index.json header marker not found')
-              index.write_text(text.replace(needle, replacement, 1))
+          path = Path('sections/melato-hero.liquid')
+          text = path.read_text()
+          invalid = '          "label": "Primary button label",\n          "default": ""\n'
+          valid = '          "label": "Primary button label"\n'
+          if invalid in text:
+              text = text.replace(invalid, valid, 1)
+          marker = '{% comment %} Melato hero policy sync marker 2026-08-07b {% endcomment %}'
+          if marker not in text:
+              text = text.rstrip() + '\n' + marker + '\n'
+          path.write_text(text)
           PY
-          rm .shopify-sync/force-theme-sync.txt
+          rm .shopify-sync/force-hero-sync.txt
           git config user.name 'melato-sync-bridge'
           git config user.email 'actions@users.noreply.github.com'
-          git add sections/melato-product-page-rebuild.liquid sections/melato-header.liquid sections/melato-hero.liquid templates/index.json .shopify-sync/force-theme-sync.txt
-          git commit -m 'Prepare corrected theme files for Shopify sync'
-          git push origin HEAD:agent/force-shopify-theme-sync
+          git add sections/melato-hero.liquid .shopify-sync/force-hero-sync.txt
+          git commit -m 'Prepare Shopify-valid hero policy sync'
+          git push origin HEAD:agent/force-shopify-hero-sync
