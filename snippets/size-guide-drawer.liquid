@@ -1,178 +1,76 @@
 {% comment %}
-  Melato inline sizing drawer.
-
-  Uses product.metafields.custom.size_guide when assigned. Otherwise it renders
-  the approved baseline garment reference supplied for the theme.
-
-  Required input:
-    product: Shopify product object
+  Product-specific sizing drawer.
+  The drawer renders only when product.metafields.custom.size_guide is assigned.
 {% endcomment %}
 
 {%- liquid
+  assign size_guide_page = product.metafields.custom.size_guide.value
   assign drawer_id = 'SizeGuideDrawer-' | append: product.id
   assign drawer_title_id = 'SizeGuideTitle-' | append: product.id
-  assign size_guide_page = product.metafields.custom.size_guide.value
-  assign product_context = product.title | append: ' ' | append: product.product_type | append: ' ' | append: product.tags | downcase
-  assign has_size_option = false
-  for option_name in product.options
-    assign option_name_down = option_name | downcase
-    if option_name_down == 'size' or option_name_down == 'taille'
-      assign has_size_option = true
-      break
-    endif
-  endfor
 -%}
 
-{% if has_size_option %}
+{%- if size_guide_page != blank -%}
   <div id="{{ drawer_id }}" class="melato-size-drawer" aria-hidden="true" data-size-drawer>
     <button class="melato-size-drawer__overlay" type="button" data-close-size-drawer tabindex="-1" aria-label="Close size guide"></button>
-
-    <aside
-      class="melato-size-drawer__panel"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="{{ drawer_title_id }}"
-      tabindex="-1"
-    >
+    <aside class="melato-size-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="{{ drawer_title_id }}" tabindex="-1">
       <header class="melato-size-drawer__header">
         <div>
           <p class="melato-size-drawer__eyebrow">Melato fit reference</p>
-          <h2 id="{{ drawer_title_id }}" class="melato-size-drawer__title">Silhouette &amp; specifications</h2>
+          <h2 id="{{ drawer_title_id }}" class="melato-size-drawer__title">{{ product.title }} measurements</h2>
         </div>
         <button type="button" class="melato-size-drawer__close" data-close-size-drawer aria-label="Close sizing drawer">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
         </button>
       </header>
-
       <div class="melato-size-drawer__body">
-        {% if size_guide_page != blank %}
-          <div class="melato-size-drawer__metafield rte">
-            {{ size_guide_page.content }}
-          </div>
-        {% else %}
-          <p class="melato-size-drawer__note">
-            All garments are cut with tailored intent. Order your usual size for the intended structured drape. Size up one step for a looser silhouette.
-          </p>
-
-          <div class="melato-size-drawer__table-wrap" tabindex="0" role="region" aria-label="Garment size chart">
-            <table class="melato-size-table">
-              <thead>
-                <tr>
-                  <th scope="col">Size</th>
-                  <th scope="col">Chest (in)</th>
-                  <th scope="col">Length (in)</th>
-                  <th scope="col">Shoulder (in)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row">S</th><td>40–42</td><td>27.5</td><td>20.0</td></tr>
-                <tr><th scope="row">M</th><td>42–44</td><td>28.5</td><td>21.0</td></tr>
-                <tr><th scope="row">L</th><td>44–46</td><td>29.5</td><td>22.0</td></tr>
-                <tr><th scope="row">XL</th><td>46–48</td><td>30.5</td><td>23.0</td></tr>
-              </tbody>
-            </table>
-          </div>
-        {% endif %}
-
-        <div class="melato-size-drawer__footer-note">
-          {% if product_context contains 'velour' and product_context contains 'bamboo' %}
-            <p><strong>Fabric metrics:</strong> Heavyweight velour and bamboo double-knit. Cold wash and line dry unless the sewn-in care label states otherwise.</p>
-          {% elsif product_context contains 'velour' %}
-            <p><strong>Fabric metrics:</strong> Heavyweight velour. Cold wash and line dry unless the sewn-in care label states otherwise.</p>
-          {% elsif product_context contains 'bamboo' %}
-            <p><strong>Fabric metrics:</strong> Bamboo double-knit. Cold wash and line dry unless the sewn-in care label states otherwise.</p>
-          {% else %}
-            <p><strong>Garment care:</strong> Product-specific measurements and the sewn-in care label take priority over this general reference.</p>
-          {% endif %}
-        </div>
+        <div class="melato-size-drawer__metafield rte">{{ size_guide_page.content }}</div>
+        <p class="melato-size-drawer__priority-note">These product-specific garment measurements take priority over general body charts.</p>
       </div>
     </aside>
   </div>
 
   <style>
-    .size-guide-trigger{display:inline-flex;align-items:center;gap:6px;padding:0 0 2px;background:none;border:0;border-bottom:1px solid rgba(211,167,74,.45);color:#d3a74a;font:inherit;font-size:11px;line-height:1.3;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
-    .size-guide-trigger:hover{color:#f5f1e8;border-color:rgba(245,241,232,.55)}
-    .size-guide-trigger:focus-visible{outline:2px solid #d3a74a;outline-offset:4px}
-    .melato-size-drawer{position:fixed;inset:0;z-index:9999;visibility:hidden;pointer-events:none}
-    .melato-size-drawer[aria-hidden="false"]{visibility:visible;pointer-events:auto}
-    .melato-size-drawer__overlay{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:rgba(0,0,0,.76);opacity:0;cursor:default;transition:opacity .28s ease}
-    .melato-size-drawer[aria-hidden="false"] .melato-size-drawer__overlay{opacity:1}
-    .melato-size-drawer__panel{position:absolute;top:0;right:0;width:min(460px,100%);height:100%;box-sizing:border-box;display:flex;flex-direction:column;background:#090909;color:#f5f1e8;border-left:1px solid rgba(255,255,255,.12);box-shadow:-24px 0 70px rgba(0,0,0,.48);transform:translateX(100%);transition:transform .34s cubic-bezier(.16,1,.3,1);outline:none}
-    .melato-size-drawer[aria-hidden="false"] .melato-size-drawer__panel{transform:translateX(0)}
-    .melato-size-drawer__header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:24px;border-bottom:1px solid rgba(255,255,255,.1)}
-    .melato-size-drawer__eyebrow{margin:0 0 7px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#d3a74a}
-    .melato-size-drawer__title{margin:0;font-size:15px;line-height:1.3;letter-spacing:.13em;text-transform:uppercase;color:#fff}
-    .melato-size-drawer__close{flex:0 0 40px;width:40px;height:40px;display:grid;place-items:center;padding:0;border:1px solid rgba(255,255,255,.16);border-radius:50%;background:transparent;color:#f5f1e8;cursor:pointer}
-    .melato-size-drawer__close:hover{border-color:#d3a74a;color:#d3a74a}
-    .melato-size-drawer__body{overflow-y:auto;padding:24px;font-size:13px;line-height:1.65;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent}
-    .melato-size-drawer__note{margin:0 0 20px;color:#aaa49b}
-    .melato-size-drawer__table-wrap{overflow-x:auto;margin:0 0 24px}
-    .melato-size-table{width:100%;min-width:410px;border-collapse:collapse;font-size:11px;letter-spacing:.05em;text-transform:uppercase}
-    .melato-size-table th,.melato-size-table td{padding:13px 9px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08)}
-    .melato-size-table thead th{color:#77726b;font-weight:700}
-    .melato-size-table tbody th{color:#f5f1e8}
-    .melato-size-table td{color:#c5beb3}
-    .melato-size-drawer__metafield table{width:100%;border-collapse:collapse;margin:16px 0}
-    .melato-size-drawer__metafield th,.melato-size-drawer__metafield td{padding:11px 8px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08)}
-    .melato-size-drawer__footer-note{margin-top:22px;padding:16px;background:#111214;border:1px solid rgba(255,255,255,.08);border-radius:14px;color:#89837b;font-size:11px}
-    .melato-size-drawer__footer-note p{margin:0}
-    .melato-size-drawer__footer-note strong{color:#d3a74a;text-transform:uppercase;letter-spacing:.08em}
-    body.melato-size-drawer-open{overflow:hidden}
-    @media(max-width:560px){.melato-size-drawer__panel{width:100%}.melato-size-drawer__header,.melato-size-drawer__body{padding:20px}}
-    @media(prefers-reduced-motion:reduce){.melato-size-drawer__overlay,.melato-size-drawer__panel{transition:none}}
+    .melato-size-drawer{position:fixed;inset:0;z-index:9999;visibility:hidden;pointer-events:none}.melato-size-drawer[aria-hidden="false"]{visibility:visible;pointer-events:auto}.melato-size-drawer__overlay{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;background:rgba(0,0,0,.76);opacity:0;transition:opacity .28s ease}.melato-size-drawer[aria-hidden="false"] .melato-size-drawer__overlay{opacity:1}.melato-size-drawer__panel{position:absolute;top:0;right:0;width:min(480px,100%);height:100%;display:flex;flex-direction:column;background:#090909;color:#f5f1e8;border-left:1px solid rgba(255,255,255,.12);box-shadow:-24px 0 70px rgba(0,0,0,.48);transform:translateX(100%);transition:transform .34s cubic-bezier(.16,1,.3,1);outline:none}.melato-size-drawer[aria-hidden="false"] .melato-size-drawer__panel{transform:translateX(0)}.melato-size-drawer__header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:24px;border-bottom:1px solid rgba(255,255,255,.1)}.melato-size-drawer__eyebrow{margin:0 0 7px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#d3a74a}.melato-size-drawer__title{margin:0;font-size:15px;line-height:1.3;letter-spacing:.1em;text-transform:uppercase}.melato-size-drawer__close{width:40px;height:40px;display:grid;place-items:center;padding:0;border:1px solid rgba(255,255,255,.16);border-radius:50%;background:transparent;color:#f5f1e8;cursor:pointer}.melato-size-drawer__body{overflow-y:auto;padding:24px;font-size:13px;line-height:1.65}.melato-size-drawer__metafield table{width:100%;border-collapse:collapse;margin:16px 0}.melato-size-drawer__metafield th,.melato-size-drawer__metafield td{padding:11px 8px;text-align:left;border-bottom:1px solid rgba(255,255,255,.08)}.melato-size-drawer__priority-note{margin:22px 0 0;padding:14px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:#111214;color:#89837b;font-size:11px}body.melato-size-drawer-open{overflow:hidden}@media(max-width:560px){.melato-size-drawer__panel{width:100%}.melato-size-drawer__header,.melato-size-drawer__body{padding:20px}}@media(prefers-reduced-motion:reduce){.melato-size-drawer__overlay,.melato-size-drawer__panel{transition:none}}
   </style>
 
   <script>
   (function(){
     var drawer=document.getElementById({{ drawer_id | json }});
-    if(!drawer||drawer.dataset.drawerReady==='true') return;
+    if(!drawer||drawer.dataset.drawerReady==='true')return;
     drawer.dataset.drawerReady='true';
-
     var triggers=document.querySelectorAll('[data-open-size-drawer]');
-    var closeControls=drawer.querySelectorAll('[data-close-size-drawer]');
     var panel=drawer.querySelector('.melato-size-drawer__panel');
     var lastTrigger=null;
     var focusableSelector='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 
-    document.querySelectorAll('.melato-sg-modal').forEach(function(oldModal){oldModal.remove();});
-
-    triggers.forEach(function(trigger){
-      trigger.setAttribute('aria-haspopup','dialog');
-      trigger.setAttribute('aria-controls',drawer.id);
-      trigger.setAttribute('aria-expanded','false');
-      trigger.addEventListener('click',function(event){
-        event.preventDefault();
-        lastTrigger=trigger;
-        drawer.setAttribute('aria-hidden','false');
-        trigger.setAttribute('aria-expanded','true');
-        document.body.classList.add('melato-size-drawer-open');
-        window.requestAnimationFrame(function(){panel.focus();});
-      });
-    });
-
+    function openDrawer(trigger){
+      lastTrigger=trigger;
+      drawer.setAttribute('aria-hidden','false');
+      triggers.forEach(function(item){item.setAttribute('aria-expanded','true')});
+      document.body.classList.add('melato-size-drawer-open');
+      window.requestAnimationFrame(function(){panel.focus()});
+    }
     function closeDrawer(){
       drawer.setAttribute('aria-hidden','true');
-      triggers.forEach(function(trigger){trigger.setAttribute('aria-expanded','false');});
+      triggers.forEach(function(item){item.setAttribute('aria-expanded','false')});
       document.body.classList.remove('melato-size-drawer-open');
-      if(lastTrigger) lastTrigger.focus();
+      if(lastTrigger)lastTrigger.focus();
     }
 
-    closeControls.forEach(function(control){control.addEventListener('click',closeDrawer);});
-
+    triggers.forEach(function(trigger){
+      trigger.setAttribute('aria-controls',drawer.id);
+      trigger.addEventListener('click',function(event){event.preventDefault();openDrawer(trigger)});
+    });
+    drawer.querySelectorAll('[data-close-size-drawer]').forEach(function(control){control.addEventListener('click',closeDrawer)});
     drawer.addEventListener('keydown',function(event){
-      if(event.key==='Escape'){
-        event.preventDefault();
-        closeDrawer();
-        return;
-      }
-      if(event.key!=='Tab') return;
+      if(event.key==='Escape'){event.preventDefault();closeDrawer();return}
+      if(event.key!=='Tab')return;
       var focusable=Array.prototype.slice.call(drawer.querySelectorAll(focusableSelector));
-      if(!focusable.length) return;
-      var first=focusable[0];
-      var last=focusable[focusable.length-1];
-      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
-      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+      if(!focusable.length)return;
+      var first=focusable[0],last=focusable[focusable.length-1];
+      if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+      else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
     });
   })();
   </script>
-{% endif %}
+{%- endif -%}
