@@ -1,0 +1,70 @@
+name: Melato render policy cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/melato-render-policy-cleanup.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  prepare-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove latent payment and delivery UI renderers
+        shell: bash
+        run: |
+          git checkout -b agent/render-policy-cleanup-20260807
+          python - <<'PY'
+          from pathlib import Path
+
+          ann_path = Path('sections/melato-announcement-bar.liquid')
+          ann = ann_path.read_text()
+          needle = "  assign button_fg = '#070707'\n\n  case accent\n"
+          replacement = "  assign button_fg = '#070707'\n  assign fallback_message = section.settings.fallback_message | replace: ' · COMPLIMENTARY DELIVERY ON ALL ORDERS', '' | replace: 'COMPLIMENTARY DELIVERY ON ALL ORDERS · ', '' | replace: 'COMPLIMENTARY DELIVERY ON ALL ORDERS', ''\n\n  case accent\n"
+          if needle not in ann:
+              raise SystemExit('announcement assignment anchor not found')
+          ann = ann.replace(needle, replacement, 1)
+          ann = ann.replace('<span>{{ section.settings.fallback_message }}</span>', '<span>{{ fallback_message }}</span>', 1)
+          ann_path.write_text(ann)
+
+          cart_path = Path('snippets/cart-drawer.liquid')
+          cart = cart_path.read_text()
+          start = cart.find('  <!-- FREE SHIPPING BAR -->')
+          end_marker = '  <!-- CART ITEMS -->'
+          end = cart.find(end_marker, start)
+          if start == -1 or end == -1:
+              raise SystemExit('cart free-shipping block anchors not found')
+          cart = cart[:start] + '  <!-- Promotional shipping progress intentionally removed by Melato brand policy. -->\n\n' + cart[end:]
+          cart = cart.replace(
+              '<p class="cart-drawer__tax-note">Complimentary standard delivery. Taxes and applicable duties calculated at checkout.</p>',
+              '<p class="cart-drawer__tax-note">Taxes and applicable duties are calculated at checkout.</p>',
+              1
+          )
+          cart_path.write_text(cart)
+
+          footer_path = Path('sections/melato-footer.liquid')
+          footer = footer_path.read_text()
+          payment_block = '''      {% if section.settings.show_payment_icons %}\n        <div class="melato-footer__payments" aria-label="Accepted payment methods">\n          {% for type in shop.enabled_payment_types %}{{ type | payment_type_svg_tag: class: 'melato-footer__payment-icon' }}{% endfor %}\n        </div>\n      {% endif %}\n'''
+          if payment_block not in footer:
+              raise SystemExit('footer payment block not found')
+          footer = footer.replace(payment_block, '', 1)
+          footer = footer.replace(
+              '{ "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true },',
+              '{ "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": false },',
+              1
+          )
+          footer_path.write_text(footer)
+          PY
+
+          git config user.name 'melato-render-policy-cleanup'
+          git config user.email 'actions@users.noreply.github.com'
+          git add sections/melato-announcement-bar.liquid snippets/cart-drawer.liquid sections/melato-footer.liquid
+          git commit -m 'Remove latent payment and delivery renderers'
+          git push origin HEAD:agent/render-policy-cleanup-20260807
