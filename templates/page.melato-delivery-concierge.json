@@ -83,12 +83,23 @@
       "type": "melato-support-form",
       "settings": {
         "heading": "Delivery Concierge support",
-        "topics": "Delivery estimate\nAddress question\nPackaging question\nOrder timing\nTracking issue"
+        "topics": "Delivery estimate\nAddress question\nPackaging question\nOrder timing\nTracking issue",
+        "show_order_number": true,
+        "button_label": "Send to Melato Customer Care",
+        "anchor_id": "melato-support"
       }
     },
     "strip": {
       "type": "melato-concierge-strip",
-      "settings": {}
+      "settings": {
+        "eyebrow": "Melato client services",
+        "heading": "At your service",
+        "intro": "<p>Considered support from discovery through delivery. Our client care team offers practical, personal guidance so every purchase feels assured.</p>",
+        "availability_title": "Client care is available",
+        "availability_text": "Replies are typically sent within one business day.",
+        "contact_label": "Speak with client care",
+        "contact_url": ""
+      }
     }
   },
   "order": [
