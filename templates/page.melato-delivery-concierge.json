@@ -82,7 +82,7 @@
     "support": {
       "type": "melato-support-form",
       "settings": {
-        "heading": "Delivery Concierge support                                                                                                                                                                                                                                                                        Delivery Concierge support                                                                        DELIVERY CONCIERGE SUPPORT",
+        "heading": "DELIVERY CONCIERGE SUPPORT",
         "topics": "Delivery estimate\nAddress question\nPackaging question\nOrder timing\nTracking issue",
         "show_order_number": true,
         "button_label": "Send to Melato Customer Care",
