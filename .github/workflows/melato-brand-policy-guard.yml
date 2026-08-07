@@ -1,0 +1,82 @@
+name: Melato brand policy guard
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  protect-brand-policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Block removed commerce UI from returning
+        shell: python
+        run: |
+          from pathlib import Path
+
+          checks = {
+              'sections/melato-product-page-rebuild.liquid': {
+                  'banned': [
+                      'content_for_additional_checkout_buttons',
+                      '<li>Fast dispatch</li>',
+                      '<li>Secure checkout</li>',
+                      'class="product-assurances"',
+                  ],
+                  'required': [
+                      'product.metafields.melato.product_story',
+                      'product.metafields.melato.material_composition',
+                      'product.metafields.melato.fit',
+                      'product.metafields.melato.care_instructions',
+                      'product.metafields.melato.colorway',
+                  ],
+              },
+              'sections/melato-header.liquid': {
+                  'banned': [
+                      '>Shop all</a>',
+                      '<span>02</span>Shop</a>',
+                  ],
+                  'required': [],
+              },
+              'sections/melato-hero.liquid': {
+                  'banned': [
+                      '>Shop Now</a>',
+                      '"default": "Shop Now"',
+                      '"cta_label": "Shop Now"',
+                  ],
+                  'required': [],
+              },
+              'templates/index.json': {
+                  'banned': [
+                      '"text": "Complimentary delivery on all orders."',
+                  ],
+                  'required': [],
+              },
+          }
+
+          failures = []
+          for filename, policy in checks.items():
+              path = Path(filename)
+              if not path.exists():
+                  failures.append(f'{filename}: required policy file is missing')
+                  continue
+              text = path.read_text()
+              for needle in policy['banned']:
+                  if needle in text:
+                      failures.append(f'{filename}: removed UI returned: {needle!r}')
+              for needle in policy['required']:
+                  if needle not in text:
+                      failures.append(f'{filename}: canonical PDP data contract missing: {needle!r}')
+
+          if failures:
+              print('Melato brand policy regression detected:')
+              for failure in failures:
+                  print(f' - {failure}')
+              raise SystemExit(1)
+
+          print('Melato brand policy guard passed.')
