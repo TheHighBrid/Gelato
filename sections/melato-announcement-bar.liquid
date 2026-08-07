@@ -1,460 +1,108 @@
 {% comment %}
-  sections/melato-announcement-bar.liquid
-  v5 — 5-Layer Priority Color Engine
-
-  PRIORITY (highest wins):
-  L1 — Metafield hex  : product/collection.metafields.custom.bar_bg / bar_fg
-  L2 — Hex tag pair   : bar_bg_RRGGBB + bar_fg_RRGGBB on product tags
-  L3 — Named accent   : accent_<name> tag (22 palettes)
-  L4 — Auto by type   : product.type / collection.handle
-  L5 — Customizer     : section.settings.default_accent
+  Melato announcement bar.
+  The second ticker group is an animation clone only and is excluded from the
+  accessibility tree and keyboard navigation at the source.
 {% endcomment %}
 
 {%- liquid
-
-  assign accent = section.settings.default_accent
-
-  # ─ L4: Auto by product type / collection handle ─────
-  if template.name == 'product' and product
-    assign ptype = product.type | downcase
-    if ptype == 'track jacket'
-      assign accent = 'burgundy'
-    elsif ptype == 'track pants'
-      assign accent = 'charcoal'
-    elsif ptype == 'tracksuit'
-      assign accent = 'black'
-    elsif ptype == 'jeans' or ptype == 'denim jacket' or ptype == 'denim'
-      assign accent = 'blue'
-    elsif ptype == 'dress' or ptype == 'skirt'
-      assign accent = 'pink'
-    elsif ptype == 'bodysuit' or ptype == 'undergarment' or ptype == 'intimates'
-      assign accent = 'purple'
-    elsif ptype == 'top'
-      assign accent = 'cream'
-    elsif ptype == 'set'
-      assign accent = 'gold'
-    elsif ptype == 'shirt'
-      assign accent = 'teal'
-    elsif ptype == 'trousers'
-      assign accent = 'green'
-    endif
-  elsif template.name == 'collection' and collection
-    assign ch = collection.handle
-    if ch contains 'women' or ch contains 'zellige' or ch contains 'eve'
-      assign accent = 'pink'
-    elsif ch contains 'denim'
-      assign accent = 'blue'
-    elsif ch contains 'tracksuit' or ch contains 'velour'
-      assign accent = 'black'
-    elsif ch contains 'jacket'
-      assign accent = 'burgundy'
-    elsif ch contains 'accessori'
-      assign accent = 'gold'
-    elsif ch contains 'sale' or ch contains 'archive'
-      assign accent = 'red'
-    elsif ch contains 'new' or ch contains 'drop'
-      assign accent = 'lime'
-    endif
-  endif
-
-  # ─ L3: Named accent tag ─────────────────────────
-  for t in product.tags
-    if t == 'accent_teal' or t == 'accent_purple' or t == 'accent_burgundy' or t == 'accent_lime' or t == 'accent_orange' or t == 'accent_blue' or t == 'accent_navy'
-      assign accent = t | remove: 'accent_'
-    endif
-    if t == 'accent_red' or t == 'accent_pink' or t == 'accent_gold' or t == 'accent_green' or t == 'accent_silver' or t == 'accent_black' or t == 'accent_cream'
-      assign accent = t | remove: 'accent_'
-    endif
-    if t == 'accent_brown' or t == 'accent_emerald' or t == 'accent_charcoal' or t == 'accent_yellow' or t == 'accent_gray' or t == 'accent_fuchsia' or t == 'accent_turquoise' or t == 'accent_white'
-      assign accent = t | remove: 'accent_'
-    endif
-  endfor
-
-  # ─ L2: Hex tag pair ───────────────────────────────
-  assign hex_bg_tag = blank
-  assign hex_fg_tag = blank
-  for t in product.tags
-    if t contains 'bar_bg_'
-      assign hex_bg_tag = t | remove: 'bar_bg_'
-    endif
-    if t contains 'bar_fg_'
-      assign hex_fg_tag = t | remove: 'bar_fg_'
-    endif
-  endfor
-
-  # ─ L1: Metafield override ──────────────────────────
-  assign mf_bg = blank
-  assign mf_fg = blank
-  if template.name == 'product' and product
-    assign mf_bg = product.metafields.custom.bar_bg.value
-    assign mf_fg = product.metafields.custom.bar_fg.value
-  elsif template.name == 'collection' and collection
-    assign mf_bg = collection.metafields.custom.bar_bg.value
-    assign mf_fg = collection.metafields.custom.bar_fg.value
-  endif
-
-  # ─ Resolve palette vars from accent name ───────────────────
-  assign bg        = '#070707'
-  assign fg        = '#f7f1e8'
-  assign muted     = 'rgba(247,241,232,.72)'
-  assign border_c  = 'rgba(247,241,232,.18)'
+  assign accent = section.settings.default_accent | default: 'black'
+  assign bg = '#070707'
+  assign fg = '#f7f1e8'
+  assign muted = 'rgba(247,241,232,.72)'
   assign button_bg = '#f7f1e8'
   assign button_fg = '#070707'
 
-  if accent == 'teal'
-    assign bg = '#0b3f3c'
-    assign fg = '#f2fffb'
-    assign muted = 'rgba(242,255,251,.76)'
-    assign border_c = 'rgba(242,255,251,.2)'
-    assign button_bg = '#c9fff2'
-    assign button_fg = '#082523'
-  endif
-  if accent == 'purple'
-    assign bg = '#241335'
-    assign fg = '#fff7ff'
-    assign muted = 'rgba(255,247,255,.76)'
-    assign border_c = 'rgba(255,247,255,.2)'
-    assign button_bg = '#f1d7ff'
-    assign button_fg = '#1a0b27'
-  endif
-  if accent == 'burgundy'
-    assign bg = '#3a0f19'
-    assign fg = '#fff7f5'
-    assign muted = 'rgba(255,247,245,.76)'
-    assign border_c = 'rgba(255,247,245,.2)'
-    assign button_bg = '#ffd7dd'
-    assign button_fg = '#2a0811'
-  endif
-  if accent == 'lime'
-    assign bg = '#cce96a'
-    assign fg = '#111606'
-    assign muted = 'rgba(17,22,6,.72)'
-    assign border_c = 'rgba(17,22,6,.2)'
-    assign button_bg = '#111606'
-    assign button_fg = '#f5ffd7'
-  endif
-  if accent == 'orange'
-    assign bg = '#5a2a08'
-    assign fg = '#fff3e8'
-    assign muted = 'rgba(255,243,232,.74)'
-    assign border_c = 'rgba(255,243,232,.2)'
-    assign button_bg = '#ffd9b3'
-    assign button_fg = '#2b1203'
-  endif
-  if accent == 'blue'
-    assign bg = '#102a46'
-    assign fg = '#f2f9ff'
-    assign muted = 'rgba(242,249,255,.74)'
-    assign border_c = 'rgba(242,249,255,.2)'
-    assign button_bg = '#d5ecff'
-    assign button_fg = '#071b30'
-  endif
-  if accent == 'navy'
-    assign bg = '#071428'
-    assign fg = '#eef4ff'
-    assign muted = 'rgba(238,244,255,.74)'
-    assign border_c = 'rgba(238,244,255,.18)'
-    assign button_bg = '#c8dcff'
-    assign button_fg = '#071428'
-  endif
-  if accent == 'red'
-    assign bg = '#4a0b0b'
-    assign fg = '#fff5f5'
-    assign muted = 'rgba(255,245,245,.76)'
-    assign border_c = 'rgba(255,245,245,.2)'
-    assign button_bg = '#ffd1d1'
-    assign button_fg = '#2b0505'
-  endif
-  if accent == 'pink'
-    assign bg = '#4a1931'
-    assign fg = '#fff5fb'
-    assign muted = 'rgba(255,245,251,.76)'
-    assign border_c = 'rgba(255,245,251,.2)'
-    assign button_bg = '#ffd6ec'
-    assign button_fg = '#2a0718'
-  endif
-  if accent == 'gold'
-    assign bg = '#6a4a0a'
-    assign fg = '#fff9e8'
-    assign muted = 'rgba(255,249,232,.76)'
-    assign border_c = 'rgba(255,249,232,.2)'
-    assign button_bg = '#fff0ba'
-    assign button_fg = '#2b1d03'
-  endif
-  if accent == 'green'
-    assign bg = '#12341f'
-    assign fg = '#f3fff7'
-    assign muted = 'rgba(243,255,247,.76)'
-    assign border_c = 'rgba(243,255,247,.2)'
-    assign button_bg = '#cffff0'
-    assign button_fg = '#071f12'
-  endif
-  if accent == 'emerald'
-    assign bg = '#063a29'
-    assign fg = '#e8fff5'
-    assign muted = 'rgba(232,255,245,.76)'
-    assign border_c = 'rgba(232,255,245,.2)'
-    assign button_bg = '#b8ffde'
-    assign button_fg = '#032718'
-  endif
-  if accent == 'silver'
-    assign bg = '#d8d8d8'
-    assign fg = '#111111'
-    assign muted = 'rgba(17,17,17,.68)'
-    assign border_c = 'rgba(17,17,17,.18)'
-    assign button_bg = '#111111'
-    assign button_fg = '#f4f4f4'
-  endif
-  if accent == 'cream'
-    assign bg = '#f2e5d0'
-    assign fg = '#1d140c'
-    assign muted = 'rgba(29,20,12,.68)'
-    assign border_c = 'rgba(29,20,12,.18)'
-    assign button_bg = '#1d140c'
-    assign button_fg = '#f8ead6'
-  endif
-  if accent == 'brown'
-    assign bg = '#2e180b'
-    assign fg = '#fff0e0'
-    assign muted = 'rgba(255,240,224,.76)'
-    assign border_c = 'rgba(255,240,224,.2)'
-    assign button_bg = '#ffd4a8'
-    assign button_fg = '#1a0c04'
-  endif
-  if accent == 'charcoal'
-    assign bg = '#1c1c1e'
-    assign fg = '#f0ede8'
-    assign muted = 'rgba(240,237,232,.72)'
-    assign border_c = 'rgba(240,237,232,.16)'
-    assign button_bg = '#f0ede8'
-    assign button_fg = '#1c1c1e'
-  endif
-  if accent == 'yellow'
-    assign bg = '#f5d200'
-    assign fg = '#1a1400'
-    assign muted = 'rgba(26,20,0,.72)'
-    assign border_c = 'rgba(26,20,0,.2)'
-    assign button_bg = '#1a1400'
-    assign button_fg = '#f5d200'
-  endif
-  if accent == 'gray'
-    assign bg = '#2e2e2e'
-    assign fg = '#f0f0f0'
-    assign muted = 'rgba(240,240,240,.7)'
-    assign border_c = 'rgba(240,240,240,.16)'
-    assign button_bg = '#f0f0f0'
-    assign button_fg = '#2e2e2e'
-  endif
-  if accent == 'fuchsia'
-    assign bg = '#4a0a3a'
-    assign fg = '#ffe8fd'
-    assign muted = 'rgba(255,232,253,.76)'
-    assign border_c = 'rgba(255,232,253,.2)'
-    assign button_bg = '#ffb3f7'
-    assign button_fg = '#2a0420'
-  endif
-  if accent == 'turquoise'
-    assign bg = '#083a3a'
-    assign fg = '#e8ffff'
-    assign muted = 'rgba(232,255,255,.76)'
-    assign border_c = 'rgba(232,255,255,.2)'
-    assign button_bg = '#b3ffff'
-    assign button_fg = '#042424'
-  endif
-  if accent == 'white'
-    assign bg = '#ffffff'
-    assign fg = '#0a0a0a'
-    assign muted = 'rgba(10,10,10,.65)'
-    assign border_c = 'rgba(10,10,10,.16)'
-    assign button_bg = '#0a0a0a'
-    assign button_fg = '#ffffff'
-  endif
-
-  # L2 overrides named palette
-  if hex_bg_tag != blank and hex_fg_tag != blank
-    assign bg = '#' | append: hex_bg_tag
-    assign fg = '#' | append: hex_fg_tag
-    assign muted = 'rgba(255,255,255,.72)'
-    assign border_c = 'rgba(255,255,255,.2)'
-    assign button_bg = fg
-    assign button_fg = bg
-  endif
-
-  # L1 overrides everything
-  if mf_bg != blank and mf_fg != blank
-    assign clean_bg = mf_bg | remove: '#'
-    assign clean_fg = mf_fg | remove: '#'
-    assign bg = '#' | append: clean_bg
-    assign fg = '#' | append: clean_fg
-    assign muted = 'rgba(255,255,255,.72)'
-    assign border_c = 'rgba(255,255,255,.2)'
-    assign button_bg = fg
-    assign button_fg = bg
-  endif
-
+  case accent
+    when 'cream'
+      assign bg = '#f2e5d0'
+      assign fg = '#1d140c'
+      assign muted = 'rgba(29,20,12,.68)'
+      assign button_bg = '#1d140c'
+      assign button_fg = '#f8ead6'
+    when 'burgundy'
+      assign bg = '#3a0f19'
+      assign fg = '#fff7f5'
+      assign muted = 'rgba(255,247,245,.76)'
+      assign button_bg = '#ffd7dd'
+      assign button_fg = '#2a0811'
+    when 'blue'
+      assign bg = '#102a46'
+      assign fg = '#f2f9ff'
+      assign muted = 'rgba(242,249,255,.74)'
+      assign button_bg = '#d5ecff'
+      assign button_fg = '#071b30'
+    when 'pink'
+      assign bg = '#4a1931'
+      assign fg = '#fff5fb'
+      assign muted = 'rgba(255,245,251,.76)'
+      assign button_bg = '#ffd6ec'
+      assign button_fg = '#2a0718'
+    when 'gold'
+      assign bg = '#6a4a0a'
+      assign fg = '#fff9e8'
+      assign muted = 'rgba(255,249,232,.76)'
+      assign button_bg = '#fff0ba'
+      assign button_fg = '#2b1d03'
+    when 'green', 'emerald', 'teal', 'turquoise'
+      assign bg = '#12341f'
+      assign fg = '#f3fff7'
+      assign muted = 'rgba(243,255,247,.76)'
+      assign button_bg = '#cffff0'
+      assign button_fg = '#071f12'
+    when 'red'
+      assign bg = '#4a0b0b'
+      assign fg = '#fff5f5'
+      assign muted = 'rgba(255,245,245,.76)'
+      assign button_bg = '#ffd1d1'
+      assign button_fg = '#2b0505'
+    when 'lime', 'yellow'
+      assign bg = '#cce96a'
+      assign fg = '#111606'
+      assign muted = 'rgba(17,22,6,.72)'
+      assign button_bg = '#111606'
+      assign button_fg = '#f5ffd7'
+    when 'white', 'silver'
+      assign bg = '#ffffff'
+      assign fg = '#0a0a0a'
+      assign muted = 'rgba(10,10,10,.65)'
+      assign button_bg = '#0a0a0a'
+      assign button_fg = '#ffffff'
+    when 'brown', 'orange'
+      assign bg = '#2e180b'
+      assign fg = '#fff0e0'
+      assign muted = 'rgba(255,240,224,.76)'
+      assign button_bg = '#ffd4a8'
+      assign button_fg = '#1a0c04'
+    when 'purple', 'fuchsia'
+      assign bg = '#241335'
+      assign fg = '#fff7ff'
+      assign muted = 'rgba(255,247,255,.76)'
+      assign button_bg = '#f1d7ff'
+      assign button_fg = '#1a0b27'
+    when 'gray', 'charcoal', 'navy'
+      assign bg = '#1c1c1e'
+      assign fg = '#f0ede8'
+      assign muted = 'rgba(240,237,232,.72)'
+      assign button_bg = '#f0ede8'
+      assign button_fg = '#1c1c1e'
+  endcase
 -%}
 
 {% if section.settings.enabled %}
-<style>
-  #shopify-section-{{ section.id }} {
-    --ab-bg:     {{ bg }};
-    --ab-fg:     {{ fg }};
-    --ab-muted:  {{ muted }};
-    --ab-border: {{ border_c }};
-    --ab-btn-bg: {{ button_bg }};
-    --ab-btn-fg: {{ button_fg }};
-    --ab-h:      {{ section.settings.height }}px;
-    --ab-fs:     {{ section.settings.font_size }}px;
-    --ab-speed:  {{ section.settings.speed }}s;
-  }
-  .melato-ann {
-    min-height: var(--ab-h);
-    background:
-      radial-gradient(circle at 14% 20%, rgba(255,255,255,.1), transparent 28%),
-      linear-gradient(135deg, rgba(255,255,255,.06), transparent 46%),
-      var(--ab-bg);
-    color: var(--ab-fg);
-    border-bottom: 1px solid var(--ab-border);
-    display: grid;
-    grid-template-columns: minmax(108px,.72fr) minmax(0,2.8fr) minmax(108px,.72fr);
-    align-items: center;
-    gap: 14px;
-    padding: 0 clamp(14px,3vw,34px);
-    overflow: hidden;
-    position: relative;
-    isolation: isolate;
-    font-family: var(--font-mono-family,'DM Mono',monospace);
-    transition: background .45s ease, color .45s ease, border-color .3s ease;
-  }
-  .melato-ann::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg,rgba(255,255,255,.07),transparent 16%,transparent 84%,rgba(255,255,255,.07));
-    pointer-events: none;
-    z-index: -1;
-  }
-  .melato-ann__badge {
-    justify-self: start;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 34px;
-    padding: 0 13px;
-    border: 1px solid var(--ab-border);
-    border-radius: 999px;
-    font-size: max(10px,calc(var(--ab-fs) - 2px));
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: .12em;
-    white-space: nowrap;
-    color: var(--ab-fg);
-    background: rgba(255,255,255,.07);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
-    transition: color .45s, border-color .3s, background .45s;
-  }
-  .melato-ann__cta {
-    justify-self: end;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 34px;
-    padding: 0 16px;
-    border-radius: 999px;
-    font-size: max(10px,calc(var(--ab-fs) - 2px));
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: .12em;
-    white-space: nowrap;
-    text-decoration: none;
-    background: var(--ab-btn-bg);
-    color: var(--ab-btn-fg);
-    box-shadow: 0 8px 24px rgba(0,0,0,.14);
-    transition: transform .22s, opacity .22s, background .45s, color .45s;
-  }
-  .melato-ann__cta:hover { transform: translateY(-1px); opacity: .9; }
-  .melato-ann__viewport {
-    width: 100%;
-    overflow: hidden;
-    mask-image: linear-gradient(90deg,transparent 0,black 8%,black 92%,transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg,transparent 0,black 8%,black 92%,transparent 100%);
-  }
-  .melato-ann__track {
-    display: flex;
-    width: max-content;
-    align-items: center;
-    animation: melato-ann-scroll var(--ab-speed) linear infinite;
-    will-change: transform;
-  }
-  .melato-ann:hover .melato-ann__track { animation-play-state: paused; }
-  .melato-ann__group {
-    display: inline-flex;
-    align-items: center;
-    gap: clamp(24px,4vw,56px);
-    padding-right: clamp(24px,4vw,56px);
-  }
-  .melato-ann__item {
-    color: var(--ab-fg);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    font-size: var(--ab-fs);
-    font-weight: 800;
-    text-transform: uppercase;
-    white-space: nowrap;
-    letter-spacing: .12em;
-    transition: color .45s;
-  }
-  .melato-ann__item small {
-    color: var(--ab-muted);
-    font-size: .78em;
-    font-weight: 700;
-    letter-spacing: .1em;
-    transition: color .45s;
-  }
-  .melato-ann__dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: currentColor;
-    opacity: .72;
-    box-shadow: 0 0 0 4px rgba(255,255,255,.07);
-  }
-  @keyframes melato-ann-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  @media (prefers-reduced-motion: reduce) { .melato-ann__track { animation: none; } }
-  @media (max-width: 749px) {
-    .melato-ann {
-      grid-template-columns: 1fr;
-      min-height: max(48px,calc(var(--ab-h) - 8px));
-      padding: 0 14px;
-    }
-    .melato-ann__badge, .melato-ann__cta { display: none; }
-    .melato-ann__item { font-size: max(11px,calc(var(--ab-fs) - 1px)); }
-  }
-</style>
+  <div
+    class="melato-ann"
+    id="melato-announcement-bar"
+    style="--ab-bg:{{ bg }};--ab-fg:{{ fg }};--ab-muted:{{ muted }};--ab-btn-bg:{{ button_bg }};--ab-btn-fg:{{ button_fg }};--ab-h:{{ section.settings.height }}px;--ab-fs:{{ section.settings.font_size }}px;--ab-speed:{{ section.settings.speed }}s"
+  >
+    {%- if section.settings.badge_text != blank -%}
+      <span class="melato-ann__badge">{{ section.settings.badge_text }}</span>
+    {%- else -%}
+      <span aria-hidden="true"></span>
+    {%- endif -%}
 
-<div
-  class="melato-ann"
-  id="melato-announcement-bar"
-  data-accent="{{ accent | escape }}"
-  data-ab-bg="{{ bg | escape }}"
-  data-ab-fg="{{ fg | escape }}"
-  data-ab-btn-bg="{{ button_bg | escape }}"
-  data-ab-btn-fg="{{ button_fg | escape }}"
-  data-ab-muted="{{ muted | escape }}"
-  data-ab-border="{{ border_c | escape }}"
->
-  {%- if section.settings.badge_text != blank -%}
-    <span class="melato-ann__badge">{{ section.settings.badge_text }}</span>
-  {%- else -%}
-    <span aria-hidden="true"></span>
-  {%- endif -%}
-
-  <div class="melato-ann__viewport" aria-label="Store announcements">
-    <div class="melato-ann__track">
-      {%- for copy in (1..2) -%}
-        <div class="melato-ann__group" aria-hidden="{% if copy == 2 %}true{% else %}false{% endif %}">
+    <div class="melato-ann__viewport" aria-label="Store announcements">
+      <div class="melato-ann__track">
+        <div class="melato-ann__group">
           {%- if section.blocks.size > 0 -%}
             {%- for block in section.blocks -%}
               {%- if block.settings.message != blank -%}
@@ -481,71 +129,76 @@
             </span>
           {%- endif -%}
         </div>
-      {%- endfor -%}
-    </div>
-  </div>
 
-  {%- if section.settings.cta_text != blank -%}
-    <a class="melato-ann__cta" href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}">
-      {{ section.settings.cta_text }}
-    </a>
-  {%- else -%}
-    <span aria-hidden="true"></span>
-  {%- endif -%}
-</div>
+        <div class="melato-ann__group" aria-hidden="true" role="presentation" inert>
+          {%- if section.blocks.size > 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.settings.message != blank -%}
+                {%- if block.settings.link != blank -%}
+                  <a class="melato-ann__item" href="{{ block.settings.link }}" tabindex="-1">
+                    <span class="melato-ann__dot" aria-hidden="true"></span>
+                    <span>{{ block.settings.message }}</span>
+                    {%- if block.settings.micro_text != blank -%}<small>{{ block.settings.micro_text }}</small>{%- endif -%}
+                  </a>
+                {%- else -%}
+                  <span class="melato-ann__item">
+                    <span class="melato-ann__dot" aria-hidden="true"></span>
+                    <span>{{ block.settings.message }}</span>
+                    {%- if block.settings.micro_text != blank -%}<small>{{ block.settings.micro_text }}</small>{%- endif -%}
+                  </span>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            <span class="melato-ann__item">
+              <span class="melato-ann__dot" aria-hidden="true"></span>
+              <span>{{ section.settings.fallback_message }}</span>
+              {%- if section.settings.fallback_micro != blank -%}<small>{{ section.settings.fallback_micro }}</small>{%- endif -%}
+            </span>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    {%- if section.settings.cta_text != blank -%}
+      <a class="melato-ann__cta" href="{{ section.settings.cta_link | default: routes.all_products_collection_url }}">{{ section.settings.cta_text }}</a>
+    {%- else -%}
+      <span aria-hidden="true"></span>
+    {%- endif -%}
+  </div>
 {% endif %}
+
+<style>
+.melato-ann{min-height:var(--ab-h);display:grid;grid-template-columns:minmax(108px,.72fr) minmax(0,2.8fr) minmax(108px,.72fr);align-items:center;gap:14px;padding:0 clamp(14px,3vw,34px);overflow:hidden;position:relative;background:var(--ab-bg);color:var(--ab-fg);border-bottom:1px solid color-mix(in srgb,var(--ab-fg) 18%,transparent);font-family:var(--font-mono-family,'DM Mono',monospace)}.melato-ann__badge,.melato-ann__cta{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border-radius:999px;font-size:max(10px,calc(var(--ab-fs) - 2px));font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}.melato-ann__badge{justify-self:start;border:1px solid color-mix(in srgb,var(--ab-fg) 20%,transparent);color:var(--ab-fg);background:color-mix(in srgb,var(--ab-fg) 7%,transparent)}.melato-ann__cta{justify-self:end;background:var(--ab-btn-bg);color:var(--ab-btn-fg);text-decoration:none}.melato-ann__viewport{width:100%;overflow:hidden;mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent)}.melato-ann__track{display:flex;width:max-content;align-items:center;animation:melato-ann-scroll var(--ab-speed) linear infinite;will-change:transform}.melato-ann__group{display:inline-flex;align-items:center;gap:clamp(24px,4vw,56px);padding-right:clamp(24px,4vw,56px)}.melato-ann__item{display:inline-flex;align-items:center;gap:12px;color:var(--ab-fg);font-size:var(--ab-fs);font-weight:800;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;white-space:nowrap}.melato-ann__item small{color:var(--ab-muted);font-size:.78em}.melato-ann__dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.72}@keyframes melato-ann-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}@media(prefers-reduced-motion:reduce){.melato-ann__track{animation:none}.melato-ann__group[aria-hidden="true"]{display:none}}@media(max-width:749px){.melato-ann{grid-template-columns:1fr;min-height:max(48px,calc(var(--ab-h) - 8px));padding:0 14px}.melato-ann__badge,.melato-ann__cta{display:none}.melato-ann__item{font-size:max(11px,calc(var(--ab-fs) - 1px))}}
+</style>
 
 {% schema %}
 {
-  "name": "Announcement Bar",
-  "settings": [
-    { "type": "checkbox", "id": "enabled", "label": "Enable announcement bar", "default": true },
-    {
-      "type": "select",
-      "id": "default_accent",
-      "label": "Default accent (L5 fallback)",
-      "default": "black",
-      "options": [
-        {"value":"black","label":"Black"},{"value":"charcoal","label":"Charcoal"},{"value":"cream","label":"Cream"},
-        {"value":"teal","label":"Teal"},{"value":"purple","label":"Purple"},{"value":"burgundy","label":"Burgundy"},
-        {"value":"lime","label":"Lime"},{"value":"orange","label":"Orange"},{"value":"blue","label":"Blue"},
-        {"value":"navy","label":"Navy"},{"value":"red","label":"Red"},{"value":"pink","label":"Pink"},
-        {"value":"gold","label":"Gold"},{"value":"green","label":"Green"},{"value":"emerald","label":"Emerald"},
-        {"value":"silver","label":"Silver"},{"value":"brown","label":"Brown"},{"value":"yellow","label":"Yellow"},
-        {"value":"gray","label":"Gray"},{"value":"fuchsia","label":"Fuchsia"},{"value":"turquoise","label":"Turquoise"},
-        {"value":"white","label":"White"}
-      ]
-    },
-    { "type": "range", "id": "height", "label": "Bar height (px)", "min": 42, "max": 80, "step": 2, "unit": "px", "default": 56 },
-    { "type": "range", "id": "speed", "label": "Scroll speed (s)", "min": 10, "max": 60, "step": 2, "unit": "s", "default": 26 },
-    { "type": "range", "id": "font_size", "label": "Ticker font size (px)", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 13 },
-    { "type": "text", "id": "badge_text", "label": "Drop badge text", "default": "NEW DROP" },
-    { "type": "text", "id": "cta_text", "label": "CTA button text", "default": "Shop now" },
-    { "type": "url", "id": "cta_link", "label": "CTA link" },
-    { "type": "text", "id": "fallback_message", "label": "Fallback ticker text", "default": "Premium velour tracksuits \u2014 limited quantities online" },
-    { "type": "text", "id": "fallback_micro", "label": "Fallback micro text", "default": "Melato" }
+  "name":"Announcement Bar",
+  "settings":[
+    {"type":"checkbox","id":"enabled","label":"Enable announcement bar","default":true},
+    {"type":"select","id":"default_accent","label":"Default accent","default":"black","options":[
+      {"value":"black","label":"Black"},{"value":"charcoal","label":"Charcoal"},{"value":"cream","label":"Cream"},{"value":"teal","label":"Teal"},{"value":"purple","label":"Purple"},{"value":"burgundy","label":"Burgundy"},{"value":"lime","label":"Lime"},{"value":"orange","label":"Orange"},{"value":"blue","label":"Blue"},{"value":"navy","label":"Navy"},{"value":"red","label":"Red"},{"value":"pink","label":"Pink"},{"value":"gold","label":"Gold"},{"value":"green","label":"Green"},{"value":"emerald","label":"Emerald"},{"value":"silver","label":"Silver"},{"value":"brown","label":"Brown"},{"value":"yellow","label":"Yellow"},{"value":"gray","label":"Gray"},{"value":"fuchsia","label":"Fuchsia"},{"value":"turquoise","label":"Turquoise"},{"value":"white","label":"White"}
+    ]},
+    {"type":"range","id":"height","label":"Bar height (px)","min":42,"max":80,"step":2,"unit":"px","default":56},
+    {"type":"range","id":"speed","label":"Scroll speed (s)","min":10,"max":60,"step":2,"unit":"s","default":26},
+    {"type":"range","id":"font_size","label":"Ticker font size (px)","min":10,"max":18,"step":1,"unit":"px","default":13},
+    {"type":"text","id":"badge_text","label":"Drop badge text","default":"NEW DROP"},
+    {"type":"text","id":"cta_text","label":"CTA button text","default":"Shop now"},
+    {"type":"url","id":"cta_link","label":"CTA link"},
+    {"type":"text","id":"fallback_message","label":"Fallback ticker text","default":"Premium velour tracksuits — limited quantities online"},
+    {"type":"text","id":"fallback_micro","label":"Fallback micro text","default":"Melato"}
   ],
-  "blocks": [
-    {
-      "type": "message",
-      "name": "Ticker message",
-      "settings": [
-        { "type": "text", "id": "message", "label": "Message", "default": "Premium velour cut with intent" },
-        { "type": "text", "id": "micro_text", "label": "Micro text", "default": "Melato" },
-        { "type": "url", "id": "link", "label": "Link (optional)" }
-      ]
-    }
-  ],
-  "max_blocks": 8,
-  "presets": [
-    {
-      "name": "Announcement Bar",
-      "blocks": [
-        { "type": "message", "settings": { "message": "Conquista colorways are live", "micro_text": "Drop now" } },
-        { "type": "message", "settings": { "message": "Premium velour cut with intent", "micro_text": "Melato" } },
-        { "type": "message", "settings": { "message": "Limited release", "micro_text": "Cut with intent" } }
-      ]
-    }
-  ]
+  "blocks":[{
+    "type":"message",
+    "name":"Ticker message",
+    "settings":[
+      {"type":"text","id":"message","label":"Message","default":"Premium velour cut with intent"},
+      {"type":"text","id":"micro_text","label":"Micro text","default":"Melato"},
+      {"type":"url","id":"link","label":"Link (optional)"}
+    ]
+  }],
+  "max_blocks":8,
+  "presets":[{"name":"Announcement Bar"}]
 }
 {% endschema %}
