@@ -44,6 +44,9 @@ jobs:
                       'Shop Pay',
                       'Apple Pay',
                       'Google Pay',
+                      'melato-home-conversion__ctas',
+                      'primary_cta_label',
+                      'secondary_cta_label',
                   ],
                   'required': [],
               },
@@ -68,6 +71,9 @@ jobs:
                   ],
                   'required': [
                       'assign fallback_message = section.settings.fallback_message',
+                      'Melato storefront policy hard-stop',
+                      '.shopify-payment-button',
+                      '.melato-home-conversion__ctas',
                   ],
               },
               'snippets/cart-drawer.liquid': {
@@ -75,8 +81,12 @@ jobs:
                       'Free shipping unlocked!',
                       'away from free shipping',
                       'Complimentary standard delivery.',
+                      'cart_free_shipping_threshold',
                   ],
-                  'required': [],
+                  'required': [
+                      'Taxes and applicable duties are calculated at checkout.',
+                      'v2.7 — Melato cart policy cleanup',
+                  ],
               },
               'sections/melato-footer.liquid': {
                   'banned': [
