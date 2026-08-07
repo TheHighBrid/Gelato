@@ -28,7 +28,10 @@
             {% if product.featured_image != blank %}
               {{ product.featured_image | image_url: width: 900 | image_tag: class: 'melato-home-conversion__product-image', loading: 'lazy', widths: '320, 480, 640, 900', sizes: '(max-width: 749px) 100vw, 25vw', alt: product.featured_image.alt | default: product.title }}
             {% endif %}
-            <div class="melato-home-conversion__product-text"><p class="melato-home-conversion__product-title">{{ product.title }}</p><p class="melato-home-conversion__product-price">{{ product.price | money }}</p></div>
+            <div class="melato-home-conversion__product-text">
+              <p class="melato-home-conversion__product-title">{{ product.title }}</p>
+              <p class="melato-home-conversion__product-price" aria-label="Price">{{ product.price | money }}</p>
+            </div>
           </a>
         {% endfor %}
       </div>
