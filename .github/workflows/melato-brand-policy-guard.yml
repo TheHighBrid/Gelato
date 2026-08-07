@@ -37,6 +37,16 @@ jobs:
                       'product.metafields.melato.colorway',
                   ],
               },
+              'sections/melato-home-conversion.liquid': {
+                  'banned': [
+                      '<strong>Fast dispatch</strong>',
+                      '<strong>Secure checkout</strong>',
+                      'Shop Pay',
+                      'Apple Pay',
+                      'Google Pay',
+                  ],
+                  'required': [],
+              },
               'sections/melato-header.liquid': {
                   'banned': [
                       '>Shop all</a>',
