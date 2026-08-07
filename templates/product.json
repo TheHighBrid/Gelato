@@ -22,14 +22,6 @@
         "accent_2": "#d3a74a"
       }
     },
-    "melato_pdp_content_patch": {
-      "type": "melato-pdp-content-patch",
-      "settings": {}
-    },
-    "melato_pdp_story_tech_minimized": {
-      "type": "melato-pdp-story-tech-minimized",
-      "settings": {}
-    },
     "safe_accent": {
       "type": "melato-product-safe-accent",
       "settings": {}
@@ -40,19 +32,6 @@
         "eyebrow": "STYLE WITH",
         "heading": "MORE FROM THE COLLECTION",
         "max_products": 4
-      }
-    },
-    "melato_concierge_strip_pdp": {
-      "type": "melato-concierge-strip",
-      "disabled": true,
-      "settings": {
-        "eyebrow": "Melato client services",
-        "heading": "At your service",
-        "intro": "<p>Considered support from discovery through delivery. Our client care team offers practical, personal guidance so every purchase feels as assured as the piece itself.</p>",
-        "availability_title": "Client care is available",
-        "availability_text": "Replies are typically sent within one business day.",
-        "contact_label": "Speak with client care",
-        "contact_url": ""
       }
     },
     "1781310708d3669657": {
@@ -80,11 +59,8 @@
   },
   "order": [
     "main_product",
-    "melato_pdp_content_patch",
-    "melato_pdp_story_tech_minimized",
     "safe_accent",
     "tag_recommendations",
-    "melato_concierge_strip_pdp",
     "1781310708d3669657",
     "178131075496c98f64"
   ]
