@@ -1,0 +1,56 @@
+name: Shopify theme sync bridge
+
+on:
+  push:
+    branches:
+      - agent/force-shopify-theme-sync
+    paths:
+      - '.shopify-sync/force-theme-sync.txt'
+
+permissions:
+  contents: write
+
+jobs:
+  touch-theme-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mark corrected theme files for user merge
+        shell: bash
+        run: |
+          if [ ! -f .shopify-sync/force-theme-sync.txt ]; then
+            echo 'Trigger already consumed.'
+            exit 0
+          fi
+          python - <<'PY'
+          from pathlib import Path
+
+          liquid_files = [
+              Path('sections/melato-product-page-rebuild.liquid'),
+              Path('sections/melato-header.liquid'),
+              Path('sections/melato-hero.liquid'),
+          ]
+          marker = '\n{% comment %} Melato policy sync marker 2026-08-07 {% endcomment %}\n'
+          for path in liquid_files:
+              text = path.read_text()
+              if 'Melato policy sync marker 2026-08-07' not in text:
+                  path.write_text(text.rstrip() + marker)
+
+          index = Path('templates/index.json')
+          text = index.read_text()
+          needle = ' * IMPORTANT: The contents of this file are auto-generated.\n'
+          replacement = needle + ' * Melato policy sync marker 2026-08-07.\n'
+          if 'Melato policy sync marker 2026-08-07.' not in text:
+              if needle not in text:
+                  raise SystemExit('index.json header marker not found')
+              index.write_text(text.replace(needle, replacement, 1))
+          PY
+          rm .shopify-sync/force-theme-sync.txt
+          git config user.name 'melato-sync-bridge'
+          git config user.email 'actions@users.noreply.github.com'
+          git add sections/melato-product-page-rebuild.liquid sections/melato-header.liquid sections/melato-hero.liquid templates/index.json .shopify-sync/force-theme-sync.txt
+          git commit -m 'Prepare corrected theme files for Shopify sync'
+          git push origin HEAD:agent/force-shopify-theme-sync
