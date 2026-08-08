@@ -1,0 +1,111 @@
+/*
+  MELATO PDP LAYOUT + CANVAS CONTRACT
+  Owner directive: 2026-08-08
+
+  Product colour metadata may influence announcement/accent systems, but it must
+  never repaint the product-page canvas, primary surface, or base text colour.
+  The desktop PDP uses the previously empty right rail for product details while
+  the image gallery remains the visual anchor on the left.
+*/
+
+body.template-product,
+body.template-product .main-content,
+body.template-product .melato-pdp-rebuild {
+  background: #080808 !important;
+}
+
+body.template-product .melato-pdp-rebuild {
+  --pdp-bg: #080808 !important;
+  --pdp-surface: #111214 !important;
+  --pdp-text: #f5f1e8 !important;
+}
+
+@media (min-width: 1001px) {
+  body.template-product .melato-pdp-rebuild .pdp-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
+    grid-template-areas:
+      "gallery buybox"
+      "gallery story"
+      "gallery specs"
+      "set set"
+      "editorial editorial";
+    column-gap: 28px;
+    row-gap: 18px;
+    align-items: start;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-hero,
+  body.template-product .melato-pdp-rebuild .pdp-content-stack {
+    display: contents;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-gallery {
+    grid-area: gallery;
+    min-width: 0;
+    align-self: start;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-buybox {
+    grid-area: buybox;
+    position: static;
+    min-width: 0;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-story-tech {
+    grid-area: story;
+    min-width: 0;
+    padding: 20px;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-story-tech__grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid {
+    grid-area: specs;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-width: 0;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set {
+    grid-area: set;
+    margin-top: 10px;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial {
+    grid-area: editorial;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-content-stack {
+    margin-top: 0;
+  }
+}
+
+@media (min-width: 1180px) {
+  body.template-product .melato-pdp-rebuild .pdp-buybox {
+    margin-top: 12px;
+  }
+}
+
+@media (max-width: 1000px) {
+  body.template-product .melato-pdp-rebuild .pdp-shell,
+  body.template-product .melato-pdp-rebuild .pdp-hero,
+  body.template-product .melato-pdp-rebuild .pdp-content-stack {
+    display: block;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-buybox {
+    margin-top: 20px;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-content-stack {
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 749px) {
+  body.template-product .melato-pdp-rebuild .pdp-buybox {
+    margin-top: 14px;
+  }
+}
