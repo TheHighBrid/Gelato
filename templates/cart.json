@@ -5,17 +5,9 @@
       "settings": {
         "show_order_note": true
       }
-    },
-    "melato_concierge_strip_cart": {
-      "type": "melato-concierge-strip",
-      "settings": {
-        "style_mode": "light",
-        "mobile_layout": "scroll"
-      }
     }
   },
   "order": [
-    "main",
-    "melato_concierge_strip_cart"
+    "main"
   ]
 }
