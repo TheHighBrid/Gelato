@@ -15,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check PDP JavaScript syntax
+        run: node --check assets/melato-pdp-polish.js
+
       - name: Validate Melato storefront contracts
         shell: python
         run: |
@@ -71,7 +74,52 @@ jobs:
           require('assets/melato-pdp-layout-2026.css', '"gallery buybox"', 'desktop PDP gallery/buybox grid')
           require('assets/melato-pdp-layout-2026.css', '"gallery story"', 'desktop PDP story right rail')
           require('assets/melato-pdp-layout-2026.css', '"gallery specs"', 'desktop PDP specs right rail')
+          require('assets/melato-pdp-layout-2026.css', 'display: contents !important;', 'PDP wrapper specificity recovery')
+          require('assets/melato-pdp-layout-2026.css', 'grid-area: gallery !important;', 'hero gallery placement')
+          require('assets/melato-pdp-layout-2026.css', 'grid-area: specs !important;', 'specification placement')
+          require('assets/melato-pdp-layout-2026.css', 'grid-area: set !important;', 'Complete the Set placement')
+          require('assets/melato-pdp-layout-2026.css', 'cursor: zoom-in;', 'interactive hero image affordance')
           require('layout/theme.liquid', "'melato-pdp-layout-2026.css'", 'PDP layout stylesheet load')
+
+          # Main PDP must keep the image, factual capsules, and set architecture.
+          pdp = text('sections/melato-product-page-rebuild.liquid')
+          for needle, label in (
+              ('class="pdp-gallery"', 'primary product gallery'),
+              ("class: 'pdp-main-image'", 'primary product image'),
+              ('<summary>Construction</summary>', 'Construction capsule'),
+              ('<summary>Fit</summary>', 'Fit capsule'),
+              ('<summary>Material</summary>', 'Material capsule'),
+              ('<summary>Care</summary>', 'Care capsule'),
+              ('<summary>Shipping &amp; returns</summary>', 'Shipping & returns capsule'),
+              ('product.metafields.custom.matching_product.value', 'matching product source'),
+              ('product.metafields.custom.set_partner.value', 'set partner fallback'),
+              ('class="pdp-panel pdp-set"', 'Complete the Set module'),
+          ):
+              if needle not in pdp:
+                  failures.append(f'sections/melato-product-page-rebuild.liquid: missing {label}')
+
+          # Hero gallery receives a second client-side recovery path and accessible zoom.
+          require('assets/melato-pdp-polish.js', 'ensureProductGallery(root);', 'gallery repair')
+          require('assets/melato-pdp-polish.js', 'bindMainImageZoom(root);', 'hero image zoom binding')
+          require('assets/melato-pdp-polish.js', "setAttribute('aria-label', `Open large view of", 'zoom accessible name')
+
+          # Standalone products use a product-aware extra module, while paired products
+          # rely on Complete the Set and must not also receive a generic recommendation rail.
+          extra = text('sections/tag-recommendations.liquid')
+          for needle, label in (
+              ('product.metafields.custom.matching_product.value', 'extra matching-product check'),
+              ('product.metafields.custom.set_partner.value', 'extra set-partner check'),
+              ('matching_product == blank and found_count > 0', 'standalone-only extra render'),
+              ('data-pdp-extra="most-wanted"', 'Most Wanted extra marker'),
+              ("collections['fragrance']", 'fragrance recommendation source'),
+              ("collections['accessories']", 'accessory recommendation source'),
+              ('p_type == current_type', 'same product-type recommendation priority'),
+          ):
+              if needle not in extra:
+                  failures.append(f'sections/tag-recommendations.liquid: missing {label}')
+          require('templates/product.json', '"eyebrow": "FOR YOU"', 'For You extra label')
+          require('templates/product.json', '"heading": "MOST WANTED"', 'Most Wanted extra heading')
+          ban('templates/product.json', 'MORE FROM THE COLLECTION', 'legacy generic PDP recommendation heading')
 
           # 3 + 4. Footer remains readable and contains exactly one copyright source.
           polish = text('snippets/melato-global-polish.liquid')
@@ -80,7 +128,6 @@ jobs:
           require('snippets/melato-global-polish.liquid', "el.closest('footer, .footer, .shopify-section-footer')", 'footer CTA exclusion')
           footer = text('sections/melato-footer.liquid')
           if footer.count('melato-footer__copyright') != 2:
-              # One class in markup and one CSS selector reference is expected.
               failures.append('sections/melato-footer.liquid: unexpected copyright implementation count')
           require('sections/melato-footer.liquid', 'Culture-forward premium apparel', 'footer brand microcopy')
 

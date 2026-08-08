@@ -1,11 +1,22 @@
 /*
   MELATO PDP LAYOUT + STOREFRONT CLEANUP CONTRACT
   Owner directive: 2026-08-08
+  Recovery revision: 2026-08-08
 
   Product colour metadata may influence announcement/accent systems, but it must
   never repaint the product-page canvas, primary surface, or base text colour.
-  The desktop PDP uses the previously empty right rail for product details while
-  the image gallery remains the visual anchor on the left.
+
+  IMPORTANT LAYOUT CONTRACT
+  The consolidated PDP section ships ID-scoped layout CSS inside the section.
+  Any cross-file desktop restructuring must therefore use !important on the
+  layout properties it intentionally replaces. Without that, the section's later
+  ID-scoped rules win and the nested grid can collapse into the wrong cells.
+
+  Desktop hierarchy:
+  - large interactive product gallery on the left
+  - Product Focus, Story/Construction, Fit/Material/Care/Shipping on the right
+  - Complete the Set full-width when a verified partner exists
+  - Editorial imagery full-width after the decision-support content
 */
 
 body.template-product,
@@ -22,91 +33,175 @@ body.template-product .melato-pdp-rebuild {
 
 @media (min-width: 1001px) {
   body.template-product .melato-pdp-rebuild .pdp-shell {
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);
+    display: grid !important;
+    grid-template-columns: minmax(0, 1.16fr) minmax(390px, .84fr) !important;
     grid-template-areas:
       "gallery buybox"
       "gallery story"
       "gallery specs"
       "set set"
-      "editorial editorial";
-    column-gap: 28px;
-    row-gap: 18px;
-    align-items: start;
+      "editorial editorial" !important;
+    column-gap: 30px !important;
+    row-gap: 18px !important;
+    align-items: start !important;
   }
 
+  /*
+    These wrappers must become transparent to the parent PDP grid. The section's
+    inline ID-scoped CSS defines both as grids, so !important is deliberate and
+    required. This is the regression fix that restores the missing hero gallery,
+    specification capsules, and Complete the Set module.
+  */
   body.template-product .melato-pdp-rebuild .pdp-hero,
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
-    display: contents;
+    display: contents !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-gallery {
-    grid-area: gallery;
-    min-width: 0;
-    align-self: start;
+    grid-area: gallery !important;
+    min-width: 0 !important;
+    align-self: start !important;
+    position: sticky;
+    top: 104px;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-media {
+    min-height: min(720px, calc(100vh - 150px));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-image {
+    width: 100% !important;
+    height: auto !important;
+    max-height: calc(100vh - 176px);
+    object-fit: contain;
+    object-position: center;
+    cursor: zoom-in;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-buybox {
-    grid-area: buybox;
-    position: static;
-    min-width: 0;
+    grid-area: buybox !important;
+    position: static !important;
+    min-width: 0 !important;
+    margin-top: 10px !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-story-tech {
-    grid-area: story;
-    min-width: 0;
-    padding: 20px;
+    grid-area: story !important;
+    min-width: 0 !important;
+    padding: 20px !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-story-tech__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-spec-grid {
-    grid-area: specs;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    min-width: 0;
+    grid-area: specs !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    min-width: 0 !important;
+    margin: 0 !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-set {
-    grid-area: set;
-    margin-top: 10px;
+    grid-area: set !important;
+    margin-top: 12px !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-editorial {
-    grid-area: editorial;
+    grid-area: editorial !important;
+    margin-top: 0 !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
-    margin-top: 0;
+    margin-top: 0 !important;
   }
 }
 
-@media (min-width: 1180px) {
-  body.template-product .melato-pdp-rebuild .pdp-buybox {
-    margin-top: 12px;
-  }
+/* Main image lightbox. Injected by melato-pdp-polish.js. */
+.melato-pdp-zoom {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+  place-items: center;
+  padding: 28px;
+  background: rgba(0, 0, 0, .92);
+  backdrop-filter: blur(14px);
+}
+
+.melato-pdp-zoom.is-open {
+  display: grid;
+}
+
+.melato-pdp-zoom__image {
+  display: block;
+  width: auto;
+  max-width: min(92vw, 1500px);
+  height: auto;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 18px;
+  background: #111214;
+}
+
+.melato-pdp-zoom__close {
+  position: fixed;
+  top: 22px;
+  right: 22px;
+  width: 46px;
+  height: 46px;
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 999px;
+  background: #111214;
+  color: #f5f1e8;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
 }
 
 @media (max-width: 1000px) {
   body.template-product .melato-pdp-rebuild .pdp-shell,
   body.template-product .melato-pdp-rebuild .pdp-hero,
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
-    display: block;
+    display: block !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-gallery {
+    position: static;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-media {
+    min-height: 0;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-image {
+    max-height: none;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-buybox {
-    margin-top: 20px;
+    margin-top: 20px !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
-    margin-top: 18px;
+    margin-top: 18px !important;
   }
 }
 
 @media (max-width: 749px) {
   body.template-product .melato-pdp-rebuild .pdp-buybox {
-    margin-top: 14px;
+    margin-top: 14px !important;
+  }
+
+  .melato-pdp-zoom {
+    padding: 12px;
+  }
+
+  .melato-pdp-zoom__image {
+    max-width: 96vw;
+    max-height: 88vh;
   }
 }
 
