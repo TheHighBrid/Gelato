@@ -1,105 +1,176 @@
 {% comment %}
-  MELATO - STYLE WITH / TAG-BASED RECOMMENDATIONS
-  Cleaned so visual cards do not read like "CHU CHŪ..." or duplicate product naming.
+  MELATO PDP EXTRA SECTION
+  - If the product has a verified matching_product / set_partner, the primary PDP
+    renders Complete the Set and this section stays silent.
+  - If no set relationship exists, this section becomes the product-aware
+    "For You / Most Wanted" fallback requested for sunglasses, fragrance, and
+    other standalone products.
+  - Recommendations prioritize the same product type, then a relevant collection,
+    then Best Sellers. Current product, duplicates, and unavailable products are
+    excluded.
 {% endcomment %}
 
-{% assign current_type = blank %}
-{% assign current_colorway = blank %}
+{%- liquid
+  assign matching_product = product.metafields.custom.matching_product.value
+  if matching_product == blank
+    assign matching_product = product.metafields.custom.set_partner.value
+  endif
 
-{% for tag in product.tags %}
-  {% assign tag_clean = tag | downcase | strip %}
-  {% if tag_clean contains 'type_' %}
-    {% assign current_type = tag_clean %}
-  {% endif %}
-  {% if tag_clean contains 'colorway_' %}
-    {% assign current_colorway = tag_clean %}
-  {% endif %}
-{% endfor %}
+  assign current_type = product.product_type | downcase | strip
+  assign current_colorway = blank
+  for tag in product.tags
+    assign tag_clean = tag | downcase | strip
+    if tag_clean contains 'colorway_'
+      assign current_colorway = tag_clean
+    endif
+  endfor
 
-{% assign theme_primary = '#d3a74a' %}
-{% assign theme_secondary = '#f5f1e8' %}
-{% assign theme_border = 'rgba(255,255,255,.14)' %}
+  assign theme_primary = product.metafields.custom.palette_1.value | default: '#d3a74a'
+  assign theme_secondary = product.metafields.custom.palette_2.value | default: '#f5f1e8'
+  assign theme_border = 'rgba(255,255,255,.14)'
 
-{% if current_colorway == 'colorway_chu' %}
-  {% assign theme_primary = '#5ea6d8' %}
-  {% assign theme_secondary = '#d8d8d8' %}
-{% elsif current_colorway == 'colorway_divididos' %}
-  {% assign theme_primary = '#800020' %}
-  {% assign theme_secondary = '#f5e6d3' %}
-{% elsif current_colorway == 'colorway_conquista' %}
-  {% assign theme_primary = '#12a99a' %}
-  {% assign theme_secondary = '#e6ff5e' %}
-{% elsif current_colorway == 'colorway_reliance' %}
-  {% assign theme_primary = '#d39aa1' %}
-  {% assign theme_secondary = '#f5f1ec' %}
-{% endif %}
+  assign max_results = section.settings.max_products | default: 4
+  assign found_count = 0
+  assign found_ids = '|'
+  capture current_id_token
+    echo '|' | append: product.id | append: '|'
+  endcapture
+  assign found_ids = found_ids | append: current_id_token
 
-{% assign max_results = section.settings.max_products | default: 4 %}
-{% assign found_count = 0 %}
+  assign preferred_collection = collections['best-sellers']
+  if current_type contains 'fragrance' or current_type contains 'eau de' or current_type contains 'perfume'
+    assign preferred_collection = collections['fragrance']
+  elsif current_type contains 'sunglass' or current_type contains 'eyewear' or current_type contains 'bag' or current_type contains 'wallet' or current_type contains 'tie' or current_type contains 'accessor'
+    assign preferred_collection = collections['accessories']
+  endif
+-%}
 
 {% capture recommendations_html %}
-  {% if current_type != blank %}
-    {% for p in collections.all.products %}
-      {% if p.id != product.id and found_count < max_results %}
-        {% assign p_has_type = false %}
-        {% for tag in p.tags %}
-          {% assign ptag = tag | downcase | strip %}
-          {% if ptag == current_type %}
-            {% assign p_has_type = true %}
-            {% break %}
-          {% endif %}
-        {% endfor %}
+  {%- if matching_product == blank -%}
+    {%- comment -%}Priority 1: same product type, strongest semantic match.{%- endcomment -%}
+    {%- if current_type != blank -%}
+      {%- for p in collections.all.products -%}
+        {%- if found_count < max_results and p.id != product.id and p.available -%}
+          {%- assign p_type = p.product_type | downcase | strip -%}
+          {%- if p_type == current_type -%}
+            {%- capture id_token -%}|{{ p.id }}|{%- endcapture -%}
+            {%- unless found_ids contains id_token -%}
+              {%- assign found_ids = found_ids | append: id_token -%}
+              {%- assign found_count = found_count | plus: 1 -%}
+              <a href="{{ p.url }}" class="m-recs__card" aria-label="View {{ p.title | escape }}">
+                <div class="m-recs__card-image-wrap">
+                  {%- if p.featured_image -%}
+                    {{ p.featured_image | image_url: width: 900 | image_tag:
+                      class: 'm-recs__card-img m-recs__card-img--primary',
+                      loading: 'lazy',
+                      widths: '360, 540, 700, 900',
+                      sizes: '(min-width: 900px) 25vw, 50vw',
+                      alt: p.featured_image.alt | default: p.title
+                    }}
+                    {%- if p.images[1] -%}
+                      {{ p.images[1] | image_url: width: 900 | image_tag:
+                        class: 'm-recs__card-img m-recs__card-img--secondary',
+                        loading: 'lazy',
+                        widths: '360, 540, 700, 900',
+                        sizes: '(min-width: 900px) 25vw, 50vw',
+                        alt: ''
+                      }}
+                    {%- endif -%}
+                  {%- endif -%}
+                  <span class="m-recs__type-badge">{{ p.product_type | default: 'Melato piece' }}</span>
+                </div>
+                <div class="m-recs__card-meta">
+                  <p class="m-recs__card-title">{{ p.title }}</p>
+                  <p class="m-recs__card-price">{{ p.price | money }}</p>
+                </div>
+              </a>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
 
-        {% if p_has_type %}
-          {% assign found_count = found_count | plus: 1 %}
-          <a href="{{ p.url }}" class="m-recs__card" aria-label="{{ p.title | escape }}">
-            <div class="m-recs__card-image-wrap">
-              {% if p.featured_image %}
-                <img
-                  class="m-recs__card-img m-recs__card-img--primary"
-                  src="{{ p.featured_image | image_url: width: 700 }}"
-                  alt="{{ p.featured_image.alt | default: p.title | escape }}"
-                  loading="lazy"
-                  width="700"
-                  height="700"
-                >
-                {% if p.images[1] %}
-                  <img
-                    class="m-recs__card-img m-recs__card-img--secondary"
-                    src="{{ p.images[1] | image_url: width: 700 }}"
-                    alt="{{ p.images[1].alt | default: p.title | escape }}"
-                    loading="lazy"
-                    width="700"
-                    height="700"
-                    aria-hidden="true"
-                  >
-                {% endif %}
-              {% endif %}
-              <span class="m-recs__type-badge">{{ p.product_type | default: 'Melato piece' }}</span>
-            </div>
-
-            <div class="m-recs__card-meta">
-              <p class="m-recs__card-title">{{ p.title }}</p>
-              <div class="m-recs__card-bottom">
-                <p class="m-recs__card-price">{{ p.price | money }}</p>
-                {% unless p.available %}
-                  <span class="m-recs__sold-out">Sold out</span>
-                {% endunless %}
+    {%- comment -%}Priority 2: relevant collection for standalone products.{%- endcomment -%}
+    {%- if found_count < max_results and preferred_collection != blank -%}
+      {%- for p in preferred_collection.products -%}
+        {%- if found_count < max_results and p.id != product.id and p.available -%}
+          {%- capture id_token -%}|{{ p.id }}|{%- endcapture -%}
+          {%- unless found_ids contains id_token -%}
+            {%- assign found_ids = found_ids | append: id_token -%}
+            {%- assign found_count = found_count | plus: 1 -%}
+            <a href="{{ p.url }}" class="m-recs__card" aria-label="View {{ p.title | escape }}">
+              <div class="m-recs__card-image-wrap">
+                {%- if p.featured_image -%}
+                  {{ p.featured_image | image_url: width: 900 | image_tag:
+                    class: 'm-recs__card-img m-recs__card-img--primary',
+                    loading: 'lazy',
+                    widths: '360, 540, 700, 900',
+                    sizes: '(min-width: 900px) 25vw, 50vw',
+                    alt: p.featured_image.alt | default: p.title
+                  }}
+                  {%- if p.images[1] -%}
+                    {{ p.images[1] | image_url: width: 900 | image_tag:
+                      class: 'm-recs__card-img m-recs__card-img--secondary',
+                      loading: 'lazy',
+                      widths: '360, 540, 700, 900',
+                      sizes: '(min-width: 900px) 25vw, 50vw',
+                      alt: ''
+                    }}
+                  {%- endif -%}
+                {%- endif -%}
+                <span class="m-recs__type-badge">{{ p.product_type | default: 'Melato piece' }}</span>
               </div>
-            </div>
-          </a>
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
+              <div class="m-recs__card-meta">
+                <p class="m-recs__card-title">{{ p.title }}</p>
+                <p class="m-recs__card-price">{{ p.price | money }}</p>
+              </div>
+            </a>
+          {%- endunless -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+
+    {%- comment -%}Priority 3: fill remaining slots from Best Sellers.{%- endcomment -%}
+    {%- assign best_sellers = collections['best-sellers'] -%}
+    {%- if found_count < max_results and best_sellers != blank and best_sellers.id != preferred_collection.id -%}
+      {%- for p in best_sellers.products -%}
+        {%- if found_count < max_results and p.id != product.id and p.available -%}
+          {%- capture id_token -%}|{{ p.id }}|{%- endcapture -%}
+          {%- unless found_ids contains id_token -%}
+            {%- assign found_ids = found_ids | append: id_token -%}
+            {%- assign found_count = found_count | plus: 1 -%}
+            <a href="{{ p.url }}" class="m-recs__card" aria-label="View {{ p.title | escape }}">
+              <div class="m-recs__card-image-wrap">
+                {%- if p.featured_image -%}
+                  {{ p.featured_image | image_url: width: 900 | image_tag:
+                    class: 'm-recs__card-img m-recs__card-img--primary',
+                    loading: 'lazy',
+                    widths: '360, 540, 700, 900',
+                    sizes: '(min-width: 900px) 25vw, 50vw',
+                    alt: p.featured_image.alt | default: p.title
+                  }}
+                {%- endif -%}
+                <span class="m-recs__type-badge">{{ p.product_type | default: 'Melato piece' }}</span>
+              </div>
+              <div class="m-recs__card-meta">
+                <p class="m-recs__card-title">{{ p.title }}</p>
+                <p class="m-recs__card-price">{{ p.price | money }}</p>
+              </div>
+            </a>
+          {%- endunless -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endif -%}
 {% endcapture %}
 
-{% if found_count > 0 %}
-  <section class="m-recs" id="tag-recs-{{ section.id }}" style="--theme-primary: {{ theme_primary }}; --theme-secondary: {{ theme_secondary }}; --theme-border: {{ theme_border }};">
+{% if matching_product == blank and found_count > 0 %}
+  <section class="m-recs" id="tag-recs-{{ section.id }}" data-pdp-extra="most-wanted" style="--theme-primary: {{ theme_primary }}; --theme-secondary: {{ theme_secondary }}; --theme-border: {{ theme_border }};">
     <div class="m-recs__inner">
       <div class="m-recs__header">
-        <p class="m-recs__eyebrow">{{ section.settings.eyebrow | default: 'STYLE WITH' }}</p>
-        <h2 class="m-recs__heading">{{ section.settings.heading | default: 'MORE FROM THE COLLECTION' }}</h2>
+        <p class="m-recs__eyebrow">{{ section.settings.eyebrow | default: 'FOR YOU' }}</p>
+        <h2 class="m-recs__heading">{{ section.settings.heading | default: 'MOST WANTED' }}</h2>
+        <p class="m-recs__intro">A concise edit from the current Melato rotation, selected around this product.</p>
       </div>
 
       <div class="m-recs__grid" style="--cols: {{ found_count | at_most: 4 }}">
@@ -112,120 +183,62 @@
 <style>
   #tag-recs-{{ section.id }}.m-recs{
     background:#080808;
-    border-top:1px solid #1a1a1a;
-    padding:64px 24px 80px;
+    padding:22px 16px 80px;
   }
-  #tag-recs-{{ section.id }} .m-recs__inner{max-width:1200px;margin:0 auto;}
-  #tag-recs-{{ section.id }} .m-recs__header{margin-bottom:34px;}
+  #tag-recs-{{ section.id }} .m-recs__inner{
+    width:min(1440px,calc(100% - 16px));
+    margin:0 auto;
+    padding:30px;
+    background:#111214;
+    border:1px solid rgba(255,255,255,.095);
+    border-radius:26px;
+    box-shadow:0 18px 50px rgba(0,0,0,.24);
+  }
+  #tag-recs-{{ section.id }} .m-recs__header{margin-bottom:24px;max-width:720px;}
   #tag-recs-{{ section.id }} .m-recs__eyebrow{
-    font-size:10px;
-    font-weight:800;
-    letter-spacing:.35em;
-    text-transform:uppercase;
-    color:var(--theme-primary);
-    margin:0 0 10px;
+    font-size:10px;font-weight:900;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--theme-primary);margin:0 0 9px;
   }
   #tag-recs-{{ section.id }} .m-recs__heading{
-    font-size:clamp(22px,3.5vw,34px);
-    font-weight:900;
-    letter-spacing:-.03em;
-    text-transform:uppercase;
-    color:#f0f0f0;
-    line-height:1;
-    margin:0;
+    font-size:clamp(28px,4vw,48px);font-weight:900;letter-spacing:-.035em;
+    text-transform:uppercase;color:#f5f1e8;line-height:.95;margin:0 0 10px;
   }
+  #tag-recs-{{ section.id }} .m-recs__intro{margin:0;color:#9b968d;font-size:14px;line-height:1.55;}
   #tag-recs-{{ section.id }} .m-recs__grid{
-    display:grid;
-    grid-template-columns:repeat(var(--cols,4),1fr);
-    gap:16px;
+    display:grid;grid-template-columns:repeat(var(--cols,4),minmax(0,1fr));gap:14px;
   }
   #tag-recs-{{ section.id }} .m-recs__card{
-    display:block;
-    text-decoration:none;
-    background:#111;
-    border:1px solid #1e1e1e;
-    border-radius:8px;
-    overflow:hidden;
-    transition:border-color .25s, transform .25s;
+    display:block;text-decoration:none;background:#0b0b0c;border:1px solid rgba(255,255,255,.09);
+    border-radius:18px;overflow:hidden;transition:border-color .25s,transform .25s;
   }
-  #tag-recs-{{ section.id }} .m-recs__card:hover{
-    border-color:var(--theme-primary);
-    transform:translateY(-3px);
-  }
+  #tag-recs-{{ section.id }} .m-recs__card:hover{border-color:var(--theme-primary);transform:translateY(-3px);}
   #tag-recs-{{ section.id }} .m-recs__card-image-wrap{
-    position:relative;
-    aspect-ratio:1/1;
-    overflow:hidden;
-    background:#1a1a1a;
+    position:relative;aspect-ratio:4/5;overflow:hidden;background:#171719;
   }
   #tag-recs-{{ section.id }} .m-recs__card-img{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center top;
-    transition:opacity .35s ease, transform .45s ease;
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;
+    transition:opacity .35s ease,transform .45s ease;
   }
   #tag-recs-{{ section.id }} .m-recs__card-img--primary{opacity:1;transform:scale(1);z-index:1;}
-  #tag-recs-{{ section.id }} .m-recs__card-img--secondary{opacity:0;transform:scale(1.04);z-index:2;}
-  #tag-recs-{{ section.id }} .m-recs__card:hover .m-recs__card-img--primary{opacity:0;transform:scale(1.04);}
+  #tag-recs-{{ section.id }} .m-recs__card-img--secondary{opacity:0;transform:scale(1.025);z-index:2;}
+  #tag-recs-{{ section.id }} .m-recs__card:hover .m-recs__card-img--primary{opacity:0;transform:scale(1.025);}
   #tag-recs-{{ section.id }} .m-recs__card:hover .m-recs__card-img--secondary{opacity:1;transform:scale(1);}
   #tag-recs-{{ section.id }} .m-recs__type-badge{
-    position:absolute;
-    top:10px;
-    left:10px;
-    z-index:10;
-    font-size:9px;
-    font-weight:900;
-    letter-spacing:.16em;
-    text-transform:uppercase;
-    padding:5px 9px;
-    border-radius:999px;
-    background:rgba(8,8,8,.76);
-    color:var(--theme-secondary);
-    border:1px solid var(--theme-primary);
+    position:absolute;top:10px;left:10px;z-index:10;font-size:9px;font-weight:900;letter-spacing:.14em;
+    text-transform:uppercase;padding:5px 9px;border-radius:999px;background:rgba(8,8,8,.82);
+    color:var(--theme-secondary);border:1px solid color-mix(in srgb,var(--theme-primary) 70%,transparent);
   }
   #tag-recs-{{ section.id }} .m-recs__card-meta{padding:14px 14px 16px;}
-  #tag-recs-{{ section.id }} .m-recs__card-title{
-    font-size:13px;
-    font-weight:800;
-    letter-spacing:.03em;
-    color:#e8e8e8;
-    margin:0 0 8px;
-    line-height:1.25;
-    text-transform:uppercase;
-  }
-  #tag-recs-{{ section.id }} .m-recs__card-bottom{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-  }
-  #tag-recs-{{ section.id }} .m-recs__card-price{
-    font-size:13px;
-    font-weight:700;
-    color:var(--theme-secondary);
-    margin:0;
-  }
-  #tag-recs-{{ section.id }} .m-recs__sold-out{
-    font-size:9px;
-    font-weight:800;
-    letter-spacing:.15em;
-    text-transform:uppercase;
-    color:#777;
-    border:1px solid #333;
-    padding:3px 7px;
-    border-radius:999px;
-  }
-  @media(max-width:900px){#tag-recs-{{ section.id }} .m-recs__grid{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:480px){#tag-recs-{{ section.id }}.m-recs{padding:48px 12px 64px;}#tag-recs-{{ section.id }} .m-recs__grid{gap:10px;}}
+  #tag-recs-{{ section.id }} .m-recs__card-title{font-size:13px;font-weight:800;color:#f5f1e8;margin:0 0 8px;line-height:1.25;text-transform:uppercase;}
+  #tag-recs-{{ section.id }} .m-recs__card-price{font-size:13px;font-weight:700;color:var(--theme-secondary);margin:0;}
+  @media(max-width:900px){#tag-recs-{{ section.id }} .m-recs__grid{grid-template-columns:repeat(2,minmax(0,1fr));}#tag-recs-{{ section.id }} .m-recs__inner{padding:22px;}}
+  @media(max-width:480px){#tag-recs-{{ section.id }}.m-recs{padding:14px 6px 60px;}#tag-recs-{{ section.id }} .m-recs__inner{width:calc(100% - 12px);padding:18px;border-radius:22px;}#tag-recs-{{ section.id }} .m-recs__grid{gap:9px;}}
   @media(hover:none){#tag-recs-{{ section.id }} .m-recs__card-img--secondary{display:none;}}
 </style>
 
 {% schema %}
 {
-  "name": "You Might Also Like",
+  "name": "PDP extra recommendations",
   "tag": "div",
   "class": "melato-tag-recommendations",
   "settings": [
@@ -233,13 +246,13 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Eyebrow label",
-      "default": "STYLE WITH"
+      "default": "FOR YOU"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "MORE FROM THE COLLECTION"
+      "default": "MOST WANTED"
     },
     {
       "type": "range",
@@ -253,7 +266,7 @@
   ],
   "presets": [
     {
-      "name": "You Might Also Like"
+      "name": "PDP extra recommendations"
     }
   ]
 }
