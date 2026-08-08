@@ -29,8 +29,8 @@
     "tag_recommendations": {
       "type": "tag-recommendations",
       "settings": {
-        "eyebrow": "STYLE WITH",
-        "heading": "MORE FROM THE COLLECTION",
+        "eyebrow": "FOR YOU",
+        "heading": "MOST WANTED",
         "max_products": 4
       }
     },
