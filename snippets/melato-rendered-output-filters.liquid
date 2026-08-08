@@ -24,8 +24,10 @@
     assign output = output | replace: 'Explore the latest uniform pieces.', 'Explore the current Melato rotation.'
     assign output = output | replace: 'Shop the Uniform', 'Shop New Arrivals'
     assign output = output | replace: '/collections/drop-001-texture-form', '/collections/new-arrivals'
-    assign output = output | replace: 'Taxes &amp; shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.'
-    assign output = output | replace: 'Taxes & shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.'
+    assign output = output | replace: 'Taxes &amp; shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties are calculated at checkout.'
+    assign output = output | replace: 'Taxes & shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties are calculated at checkout.'
+    assign output = output | replace: 'Taxes and applicable duties are calculated at checkout.', 'Complimentary standard delivery. Taxes and applicable duties are calculated at checkout.'
+    assign output = output | replace: 'class="cart-drawer__tax-note"', 'class="cart-drawer__policy-note"'
   endif
 
   if context == 'main'
@@ -48,11 +50,21 @@
     assign output = output | replace: 'Client care is availableReplies are typically sent within one business day.', 'Client care is available. Replies are typically sent within one business day.'
     assign output = output | replace: 'You may request, correction of, or deletion of your personal information', 'You may request access to, correction of, or deletion of your personal information'
 
-    assign output = output | replace: '<strong>Fit consultation</strong><span>Personal sizing guidance</span>', '<span class="service-link__title" role="heading" aria-level="3">Fit consultation</span><span class="visually-hidden">. </span><span class="service-link__desc">Personal sizing guidance</span>'
-    assign output = output | replace: '<strong>Delivery planning</strong><span>Timing before checkout</span>', '<span class="service-link__title" role="heading" aria-level="3">Delivery planning</span><span class="visually-hidden">. </span><span class="service-link__desc">Timing before checkout</span>'
-    assign output = output | replace: '<strong>Order companion</strong><span>One contact after purchase</span>', '<span class="service-link__title" role="heading" aria-level="3">Order companion</span><span class="visually-hidden">. </span><span class="service-link__desc">One contact after purchase</span>'
-
     if template.name == 'collection'
+      if output contains '<aside class="melato-collection-service-strip"'
+        assign service_parts = output | split: '<aside class="melato-collection-service-strip"'
+        assign service_tail_parts = service_parts[1] | split: '</aside>'
+        assign service_after = blank
+        for service_segment in service_tail_parts offset: 1
+          if forloop.first
+            assign service_after = service_segment
+          else
+            assign service_after = service_after | append: '</aside>' | append: service_segment
+          endif
+        endfor
+        assign output = service_parts[0] | append: service_after
+      endif
+
       assign count_chunks = output | split: '<span class="melato-filter-option__count">'
       if count_chunks.size > 1
         assign output_without_counts = count_chunks | first
@@ -195,7 +207,7 @@
         assign output = output | replace: 'Silhouette currently unavailable', 'Selected size currently unavailable'
       endif
 
-      if product.handle == 'rex-x-fur-jacket-copy' or product_title_down contains 'fur'
+      if product.handle == 'rex-x-fur-jacket' or product.handle == 'rex-x-fur-jacket-copy' or product_title_down contains 'fur'
         assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Professional fur cleaning only. Do not machine wash or hand wash. Store in a cool, ventilated space away from moisture, direct heat, and prolonged sunlight. Use a broad-shouldered hanger.'
       endif
     endif

@@ -1,7 +1,7 @@
 /*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
- * Melato policy sync marker 2026-08-07.
+ * Melato policy sync marker 2026-08-08.
  *
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
@@ -39,58 +39,15 @@
     "ticker": {
       "type": "ticker",
       "blocks": {
-        "item1": {
-          "type": "item",
-          "settings": {
-            "text": "THE CULTURE WEARS US"
-          }
-        },
-        "item3": {
-          "type": "item",
-          "settings": {
-            "text": "1980s retro UNIFORMS"
-          }
-        },
-        "item4": {
-          "type": "item",
-          "settings": {
-            "text": "CUT WITH INTENT"
-          }
-        },
-        "item5": {
-          "type": "item",
-          "settings": {
-            "text": "BUILT FOR MOVEMENT"
-          }
-        },
-        "item_g67bjG": {
-          "type": "item",
-          "settings": {
-            "text": "HIGH-END GARMENTS"
-          }
-        },
-        "item6": {
-          "type": "item",
-          "settings": {
-            "text": "PREMIUM BAMBOO fabrics"
-          }
-        },
-        "item7": {
-          "type": "item",
-          "settings": {
-            "text": "PREMIUM VELOUR material"
-          }
-        }
+        "item1": {"type": "item", "settings": {"text": "THE CULTURE WEARS US"}},
+        "item3": {"type": "item", "settings": {"text": "1980s retro UNIFORMS"}},
+        "item4": {"type": "item", "settings": {"text": "CUT WITH INTENT"}},
+        "item5": {"type": "item", "settings": {"text": "BUILT FOR MOVEMENT"}},
+        "item_g67bjG": {"type": "item", "settings": {"text": "HIGH-END GARMENTS"}},
+        "item6": {"type": "item", "settings": {"text": "PREMIUM BAMBOO fabrics"}},
+        "item7": {"type": "item", "settings": {"text": "PREMIUM VELOUR material"}}
       },
-      "block_order": [
-        "item1",
-        "item3",
-        "item4",
-        "item5",
-        "item_g67bjG",
-        "item6",
-        "item7"
-      ],
+      "block_order": ["item1", "item3", "item4", "item5", "item_g67bjG", "item6", "item7"],
       "settings": {
         "speed": 80,
         "separator": "MELATO",
@@ -129,9 +86,7 @@
           "blocks": {}
         }
       },
-      "block_order": [
-        "ai_gen_block_264325d_kWF34h"
-      ],
+      "block_order": ["ai_gen_block_264325d_kWF34h"],
       "settings": {}
     },
     "brand_story": {
@@ -143,63 +98,6 @@
         "cta_label": "Our Story",
         "cta_url": "/pages/our-story",
         "image_position": "left"
-      }
-    },
-    "client_concierge": {
-      "type": "melato-concierge-strip",
-      "blocks": {
-        "fit": {
-          "type": "service",
-          "settings": {
-            "title": "Personal fit consultation",
-            "description": "Send us your measurements and preferred silhouette. We will recommend the right size and coordinate matching sets.",
-            "note": "Advice from a real client care specialist",
-            "link": "/pages/fit-concierge"
-          }
-        },
-        "delivery": {
-          "type": "service",
-          "settings": {
-            "title": "Delivery planning",
-            "description": "Ordering for a date? Ask us to review destination, processing and carrier timing before you purchase.",
-            "note": "Practical guidance before checkout",
-            "link": "/pages/delivery-concierge"
-          }
-        },
-        "aftercare": {
-          "type": "service",
-          "settings": {
-            "title": "Order & aftercare",
-            "description": "Get help with an active order, exchange, garment care or an issue after delivery—without searching for the right department.",
-            "note": "One point of contact, before and after delivery",
-            "link": "/pages/order-companion"
-          }
-        },
-        "product": {
-          "type": "service",
-          "settings": {
-            "title": "Private product guidance",
-            "description": "Ask about fabric, construction, styling and upcoming releases to make a considered choice—not a rushed one.",
-            "note": "Detailed product and release assistance",
-            "link": "/pages/preview-room"
-          }
-        }
-      },
-      "block_order": [
-        "fit",
-        "delivery",
-        "aftercare",
-        "product"
-      ],
-      "disabled": true,
-      "settings": {
-        "eyebrow": "Melato client services",
-        "heading": "At your service",
-        "intro": "<p>Considered support from discovery through delivery. Our client care team offers practical, personal guidance so every purchase feels as assured as the piece itself.</p>",
-        "availability_title": "Client care is available",
-        "availability_text": "Replies are typically sent within one business day.",
-        "contact_label": "Speak with client care",
-        "contact_url": "/pages/contact"
       }
     },
     "testimonials": {
@@ -238,29 +136,18 @@
           }
         }
       },
-      "block_order": [
-        "t1",
-        "t2",
-        "testimonial_GwnGA6",
-        "t3"
-      ],
-      "settings": {
-        "heading": "THEY SPEAK\nFOR US"
-      }
+      "block_order": ["t1", "t2", "testimonial_GwnGA6", "t3"],
+      "settings": {"heading": "THEY SPEAK\nFOR US"}
     },
     "1781310906e62d22b0": {
       "type": "apps",
       "blocks": {
         "klaviyo_email_marketing_sms_form_embed_block_CYb8J4": {
           "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507",
-          "settings": {
-            "formId": ""
-          }
+          "settings": {"formId": ""}
         }
       },
-      "block_order": [
-        "klaviyo_email_marketing_sms_form_embed_block_CYb8J4"
-      ],
+      "block_order": ["klaviyo_email_marketing_sms_form_embed_block_CYb8J4"],
       "settings": {}
     }
   },
@@ -271,7 +158,6 @@
     "featured_collection",
     "177543262208e0278d",
     "brand_story",
-    "client_concierge",
     "testimonials",
     "1781310906e62d22b0"
   ]
