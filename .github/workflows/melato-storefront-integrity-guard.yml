@@ -15,6 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Check PDP JavaScript syntax
+        run: node --check assets/melato-pdp-polish.js
+
       - name: Validate Melato storefront contracts
         shell: python
         run: |
