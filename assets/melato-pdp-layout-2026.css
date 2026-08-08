@@ -1,5 +1,5 @@
 /*
-  MELATO PDP LAYOUT + CANVAS CONTRACT
+  MELATO PDP LAYOUT + STOREFRONT CLEANUP CONTRACT
   Owner directive: 2026-08-08
 
   Product colour metadata may influence announcement/accent systems, but it must
@@ -108,4 +108,24 @@ body.template-product .melato-pdp-rebuild {
   body.template-product .melato-pdp-rebuild .pdp-buybox {
     margin-top: 14px;
   }
+}
+
+.cart-drawer__policy-note {
+  margin: 10px 0 14px;
+  color: rgba(245, 241, 232, .72);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.melato-footer .melato-footer__column a[href*="new-arrivals"] {
+  color: rgba(245, 241, 232, .78) !important;
+  font-size: 14px !important;
+}
+
+/* Concierge is intentionally offline pending a complete redesign. */
+.melato-concierge-strip,
+.melato-collection-service-strip,
+[data-melato-concierge],
+[class*="concierge-strip"] {
+  display: none !important;
 }
