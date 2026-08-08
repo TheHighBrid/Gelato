@@ -14,6 +14,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Require explicit owner authorization for announcement color system edits
+        if: github.event_name == 'pull_request'
+        shell: python
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          import os
+          import subprocess
+
+          protected = {
+              'sections/melato-announcement-bar.liquid',
+              'snippets/melato-product-color-engine.liquid',
+              'assets/melato-ann-color.js',
+              'assets/melato-dynamic-bar.js',
+              '.github/workflows/melato-brand-policy-guard.yml',
+              '.github/CODEOWNERS',
+          }
+
+          base = '${{ github.event.pull_request.base.sha }}'
+          head = '${{ github.event.pull_request.head.sha }}'
+          changed = set(
+              subprocess.check_output(
+                  ['git', 'diff', '--name-only', base, head],
+                  text=True,
+              ).splitlines()
+          )
+
+          color_changes = sorted(changed & protected)
+          authorization = 'OWNER AUTHORIZATION: ANNOUNCEMENT COLOR SYSTEM CHANGE APPROVED'
+          body = os.environ.get('PR_BODY') or ''
+
+          if color_changes and authorization not in body:
+              print('Owner-protected announcement color files changed without explicit authorization:')
+              for filename in color_changes:
+                  print(f' - {filename}')
+              print(f'Required PR body marker: {authorization}')
+              raise SystemExit(1)
+
+          print('Announcement color ownership authorization check passed.')
 
       - name: Block removed commerce UI from returning
         shell: python
@@ -70,6 +112,17 @@ jobs:
                       '"default":"Shop now"',
                   ],
                   'required': [
+                      'MELATO OWNER-PROTECTED ANNOUNCEMENT COLOR CONTRACT',
+                      'product.metafields.custom.background_hex_color_code',
+                      'product.metafields.custom.foreground_hex_color_code',
+                      'product.metafields.custom.bar_bg',
+                      'product.metafields.custom.bar_fg',
+                      'product.metafields.custom.palette_1',
+                      'product.metafields.custom.palette_2',
+                      'product.metafields.custom.palette_3',
+                      'data-melato-color-owner="announcement-section"',
+                      'window.setInterval(rotate,4200)',
+                      'background:var(--ab-bg)!important',
                       'assign fallback_message = section.settings.fallback_message',
                       'Melato storefront policy hard-stop',
                       '.shopify-payment-button',

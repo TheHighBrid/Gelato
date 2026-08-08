@@ -1,0 +1,10 @@
+# MELATO owner-protected systems.
+# These files control the product-aware announcement color contract.
+# Any functional change requires explicit review/authorization from the repository owner.
+
+/sections/melato-announcement-bar.liquid @TheHighBrid
+/snippets/melato-product-color-engine.liquid @TheHighBrid
+/assets/melato-ann-color.js @TheHighBrid
+/assets/melato-dynamic-bar.js @TheHighBrid
+/.github/workflows/melato-brand-policy-guard.yml @TheHighBrid
+/.github/CODEOWNERS @TheHighBrid
