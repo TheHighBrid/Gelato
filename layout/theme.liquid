@@ -96,6 +96,7 @@
   {{ 'melato-optimization-2026.css' | asset_url | stylesheet_tag }}
   {{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}
   {{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}
   {% render 'melato-global-polish' %}
@@ -114,22 +115,11 @@
 
   {%- section 'melato-header' -%}
 
-  {%- comment -%}
-    The full concierge section is intentionally omitted before collections.
-    Collection pages include a compact client-service strip after merchandise.
-  {%- endcomment -%}
-  {%- unless template.name == 'index' or template.name == 'collection' or template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room' or template.name == 'product' or template.name == 'cart' -%}
-    {%- capture melato_concierge_output -%}{%- section 'melato-concierge-strip' -%}{%- endcapture -%}
-    {% render 'melato-rendered-output-filters', html: melato_concierge_output, context: 'main' %}
-  {%- endunless -%}
-
   {%- liquid
     assign melato_filter_main_output = false
     if template.name == 'index' or template.name == 'collection'
       assign melato_filter_main_output = true
     elsif request.path == '/pages/faq' or request.path == '/pages/contact' or request.path contains '/policies/refund-policy'
-      assign melato_filter_main_output = true
-    elsif template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room'
       assign melato_filter_main_output = true
     elsif template.name == 'product' and product
       assign melato_filter_main_output = true
@@ -182,6 +172,5 @@
   {% render 'melato-living-lookbook-loader' %}
   {% render 'melato-back-in-stock-loader' %}
   {% render 'melato-product-color-engine' %}
-  {% render 'melato-utility-layer' %}
 </body>
 </html>
