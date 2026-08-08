@@ -85,7 +85,7 @@ jobs:
           pdp = text('sections/melato-product-page-rebuild.liquid')
           for needle, label in (
               ('class="pdp-gallery"', 'primary product gallery'),
-              ('class="pdp-main-image"', 'primary product image'),
+              ("class: 'pdp-main-image'", 'primary product image'),
               ('<summary>Construction</summary>', 'Construction capsule'),
               ('<summary>Fit</summary>', 'Fit capsule'),
               ('<summary>Material</summary>', 'Material capsule'),
