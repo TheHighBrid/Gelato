@@ -1,594 +1,217 @@
 {% comment %}
-  MELATO ATELIER HEADER
-  Target: Gelato v4.9
-  Purpose: one premium menu button, preserved logo, redesigned designer header/drawer/search/cart.
+  MELATO HOUSE HEADER
+  Phase 1 global shell.
+  Keeps the existing Shopify menu, logo, account and cart integrations while
+  replacing the previous pill-heavy visual system with a fashion-house shell.
 {% endcomment %}
 
 {% liquid
-  assign atelier_menu = section.settings.menu
-  if atelier_menu == blank
-    assign atelier_menu = linklists['main-menu']
+  assign house_menu = section.settings.menu
+  if house_menu == blank
+    assign house_menu = linklists['main-menu']
   endif
   assign logo_alt = section.settings.logo.alt | default: shop.name | escape
 %}
 
-<header id="mxh-{{ section.id }}" class="mxh" role="banner" data-mxh>
-  <div class="mxh__bar">
-    <div class="mxh__left">
-      <button class="mxh__menu" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mxh-drawer-{{ section.id }}" data-mxh-menu>
-        <span class="mxh__menu-mark" aria-hidden="true">
-          <svg viewBox="0 0 40 40" focusable="false">
-            <path d="M7 20h26" />
-            <path d="M20 7v26" />
-            <circle cx="20" cy="20" r="15" />
-          </svg>
-        </span>
-        <span class="mxh__menu-text">{{ section.settings.menu_label | default: 'Index' }}</span>
-      </button>
+<header
+  id="mxh-{{ section.id }}"
+  class="mxh melato-house-header"
+  role="banner"
+  data-house-header
+  style="--house-logo-width:{{ section.settings.logo_width | default: 188 }}px;--house-header-bg:{{ section.settings.house_bg_color | default: '#f0e8d9' }};--house-header-fg:{{ section.settings.house_text_color | default: '#090909' }}"
+>
+  <div class="melato-house-header__bar">
+    <div class="melato-house-header__left">
+      <button
+        class="melato-house-header__word"
+        type="button"
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="MelatoHouseMenu-{{ section.id }}"
+        data-house-menu-open
+      >Menu</button>
     </div>
 
-    <div class="mxh__center">
-      <a class="mxh__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
-        {% if section.settings.logo != blank %}
-          {{ section.settings.logo | image_url: width: 900 | image_tag: class: 'mxh__logo-img', alt: logo_alt, loading: 'eager', widths: '140, 180, 220, 280, 360, 480, 640, 900', sizes: '(max-width: 749px) 138px, 210px' }}
-        {% else %}
-          <span class="mxh__wordmark">{{ shop.name }}</span>
-        {% endif %}
-      </a>
-    </div>
-
-    <div class="mxh__right" aria-label="Header tools">
-      <button class="mxh__text-btn mxh__search-btn" type="button" aria-label="Open search" aria-expanded="false" aria-controls="mxh-search-{{ section.id }}" data-mxh-search-open>Search</button>
-      {% if shop.customer_accounts_enabled and section.settings.show_account %}
-        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">Account</a>
+    <a class="melato-house-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+      {% if section.settings.logo != blank %}
+        {{ section.settings.logo
+          | image_url: width: 900
+          | image_tag:
+            class: 'melato-house-header__logo-image',
+            alt: logo_alt,
+            loading: 'eager',
+            fetchpriority: 'high',
+            widths: '140, 180, 220, 280, 360, 480, 640, 900',
+            sizes: '(max-width: 749px) 38vw, 220px'
+        }}
+      {% else %}
+        <span class="melato-house-header__logo-text">{{ shop.name }}</span>
       {% endif %}
-      <a class="mxh__bag" href="{{ routes.cart_url }}" aria-label="Cart with {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}">
+    </a>
+
+    <div class="melato-house-header__right" aria-label="Store tools">
+      <button
+        class="melato-house-header__utility melato-house-header__search-button"
+        type="button"
+        aria-label="Open search"
+        aria-expanded="false"
+        aria-controls="MelatoHouseSearch-{{ section.id }}"
+        data-house-search-open
+      >Search</button>
+
+      {% if shop.customer_accounts_enabled and section.settings.show_account %}
+        <a
+          class="melato-house-header__utility melato-house-header__account"
+          href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+        >Account</a>
+      {% endif %}
+
+      <button
+        class="mxh__bag"
+        type="button"
+        aria-label="Bag with {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}"
+        data-cart-open
+      >
         <span>Bag</span>
-        <span class="mxh__bag-count">{{ cart.item_count }}</span>
-      </a>
+        <span class="mxh__bag-count" data-cart-item-count>{{ cart.item_count }}</span>
+      </button>
     </div>
   </div>
 
-  <div class="mxh__shade" hidden data-mxh-shade></div>
-
-  <aside id="mxh-drawer-{{ section.id }}" class="mxh__drawer" aria-hidden="true" hidden data-mxh-drawer>
-    <div class="mxh__drawer-inner">
-      <div class="mxh__drawer-top">
-        <span class="mxh__drawer-kicker">Melato / Navigation</span>
-        <button class="mxh__close" type="button" aria-label="Close navigation" data-mxh-close>
+  <aside
+    id="MelatoHouseMenu-{{ section.id }}"
+    class="melato-house-menu"
+    aria-label="Melato navigation"
+    aria-hidden="true"
+    hidden
+    data-house-menu
+  >
+    <div class="melato-house-menu__inner">
+      <div class="melato-house-menu__top">
+        <p class="melato-house-menu__mark">Melato / Index</p>
+        <button class="melato-house-menu__close" type="button" aria-label="Close navigation" data-house-menu-close>
           <span></span><span></span>
         </button>
       </div>
 
-      <div class="mxh__drawer-grid">
-        <div class="mxh__drawer-note">
-          <p>{{ section.settings.drawer_note | default: 'Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.' }}</p>
-          <a href="{{ routes.all_products_collection_url }}">Collection</a>
+      <div class="melato-house-menu__grid">
+        <div>
+          <p class="melato-house-menu__section-title">Shop</p>
+          <nav class="melato-house-menu__primary" aria-label="Primary navigation">
+            {% if house_menu != blank and house_menu.links.size > 0 %}
+              {% for link in house_menu.links %}
+                <div class="melato-house-menu__item">
+                  <a class="melato-house-menu__primary-link{% if link.active %} is-active{% endif %}" href="{{ link.url }}">
+                    <span>{{ link.title }}</span>
+                    <small>{{ forloop.index | prepend: '0' }}</small>
+                  </a>
+                  {% if link.links.size > 0 %}
+                    <div class="melato-house-menu__children">
+                      {% for child_link in link.links %}
+                        <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="melato-house-menu__item"><a class="melato-house-menu__primary-link" href="/collections/new-arrivals"><span>New</span><small>01</small></a></div>
+              <div class="melato-house-menu__item"><a class="melato-house-menu__primary-link" href="/collections/men"><span>Men</span><small>02</small></a></div>
+              <div class="melato-house-menu__item"><a class="melato-house-menu__primary-link" href="/collections/womens-zellige-capsule"><span>Women</span><small>03</small></a></div>
+              <div class="melato-house-menu__item"><a class="melato-house-menu__primary-link" href="/collections/tracksuits"><span>The Uniform</span><small>04</small></a></div>
+              <div class="melato-house-menu__item"><a class="melato-house-menu__primary-link" href="/collections/accessories"><span>Objects</span><small>05</small></a></div>
+            {% endif %}
+          </nav>
         </div>
 
-        <nav class="mxh__nav" aria-label="Main navigation">
-          {% if atelier_menu != blank and atelier_menu.links.size > 0 %}
-            {% for link in atelier_menu.links %}
-              <div class="mxh__nav-item">
-                <a class="mxh__nav-link{% if link.active %} is-active{% endif %}" href="{{ link.url }}">
-                  <span>{{ forloop.index | prepend: '0' }}</span>
-                  {{ link.title }}
-                </a>
-                {% if link.links.size > 0 %}
-                  <div class="mxh__subnav">
-                    {% for child_link in link.links %}
-                      <a href="{{ child_link.url }}">{{ child_link.title }}</a>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          {% else %}
-            <a class="mxh__nav-link" href="{{ routes.root_url }}"><span>01</span>Home</a>
-            <a class="mxh__nav-link" href="{{ routes.all_products_collection_url }}"><span>02</span>Collection</a>
-            <a class="mxh__nav-link" href="{{ routes.search_url }}"><span>03</span>Search</a>
-          {% endif %}
-        </nav>
+        <div class="melato-house-menu__secondary">
+          <div class="melato-house-menu__secondary-group melato-house-menu__feature">
+            <p class="melato-house-menu__section-title">Current</p>
+            <p class="melato-house-menu__feature-name">Texture &amp; Form</p>
+            <p class="melato-house-menu__feature-meta">Drop 001 / Melato</p>
+            <a class="melato-house-link" href="/collections/drop-001-texture-form">Explore current drop</a>
+          </div>
+
+          <div class="melato-house-menu__secondary-group">
+            <p class="melato-house-menu__section-title">World of Melato</p>
+            <a href="/collections/the-living-lookbook">Living Book</a>
+            <a href="/pages/our-story">Our Story</a>
+            <a href="/collections/ovum-before-the-world">Collections</a>
+          </div>
+
+          <div class="melato-house-menu__secondary-group">
+            <p class="melato-house-menu__section-title">Client Services</p>
+            <a href="/pages/contact">Contact</a>
+            <a href="/pages/faq">FAQ</a>
+            <a href="/policies/refund-policy">Returns &amp; Refunds</a>
+          </div>
+        </div>
       </div>
 
-      <div class="mxh__drawer-bottom">
-        <button class="mxh__drawer-search" type="button" data-mxh-search-open>Search the archive</button>
-        <a href="{{ routes.cart_url }}">Cart / {{ cart.item_count }}</a>
+      <div class="melato-house-menu__bottom">
+        <button class="melato-house-menu__search" type="button" data-house-search-open>Search Melato</button>
+        <span class="melato-house-menu__mark">{{ localization.country.name }} / {{ localization.country.currency.iso_code }}</span>
       </div>
     </div>
   </aside>
 
-  <section id="mxh-search-{{ section.id }}" class="mxh__search" aria-hidden="true" hidden data-mxh-search>
-    <div class="mxh__search-panel">
-      <button class="mxh__close mxh__search-close" type="button" aria-label="Close search" data-mxh-search-close><span></span><span></span></button>
-      <p class="mxh__search-kicker">Search Melato</p>
-      <form class="mxh__search-form" action="{{ routes.search_url }}" method="get" role="search">
-        <label class="mxh__sr" for="mxh-search-input-{{ section.id }}">Search products</label>
-        <input id="mxh-search-input-{{ section.id }}" type="search" name="q" placeholder="Type what you want" autocomplete="off" data-mxh-search-input>
-        <input type="hidden" name="type" value="product">
-        <input type="hidden" name="options[prefix]" value="last">
-        <button type="submit">Search</button>
-      </form>
+  <section
+    id="MelatoHouseSearch-{{ section.id }}"
+    class="melato-house-search"
+    aria-label="Search Melato"
+    aria-hidden="true"
+    hidden
+    data-house-search
+  >
+    <div class="melato-house-search__inner">
+      <div class="melato-house-search__top">
+        <p class="melato-house-search__mark">Search / Melato</p>
+        <button class="melato-house-search__close" type="button" aria-label="Close search" data-house-search-close>
+          <span></span><span></span>
+        </button>
+      </div>
+
+      <div class="melato-house-search__stage">
+        <form action="{{ routes.search_url }}" method="get" role="search">
+          <label class="melato-house-search__label" for="MelatoHouseSearchInput-{{ section.id }}">Find a piece</label>
+          <div class="melato-house-search__field-row">
+            <input
+              id="MelatoHouseSearchInput-{{ section.id }}"
+              class="melato-house-search__input"
+              type="search"
+              name="q"
+              value="{{ search.terms | escape }}"
+              placeholder="Search"
+              autocomplete="off"
+              aria-describedby="MelatoHouseSearchStatus-{{ section.id }}"
+              data-house-search-input
+            >
+            <input type="hidden" name="type" value="product">
+            <input type="hidden" name="options[prefix]" value="last">
+            <button class="melato-house-search__submit" type="submit">View all results</button>
+          </div>
+          <p id="MelatoHouseSearchStatus-{{ section.id }}" class="melato-house-search__status" role="status" aria-live="polite" data-house-search-status>Type at least two characters.</p>
+          <div class="melato-house-search__results" data-house-search-results></div>
+        </form>
+      </div>
     </div>
   </section>
 </header>
 
-<style>
-  #mxh-{{ section.id }} {
-    --mxh-bg: {{ section.settings.bg_color | default: '#050505' }};
-    --mxh-text: {{ section.settings.text_color | default: '#F6F0E5' }};
-    --mxh-muted: color-mix(in srgb, var(--mxh-text) 62%, transparent);
-    --mxh-line: color-mix(in srgb, var(--mxh-text) 13%, transparent);
-    --mxh-panel: #090909;
-    --mxh-accent: {{ section.settings.accent_color | default: '#D8C7A7' }};
-    --mxh-logo-width: {{ section.settings.logo_width | default: 188 }}px;
-    position: sticky;
-    top: 0;
-    z-index: 1200;
-    width: 100%;
-    color: var(--mxh-text);
-    background: color-mix(in srgb, var(--mxh-bg) 94%, transparent);
-    border-bottom: 1px solid var(--mxh-line);
-    backdrop-filter: blur(18px) saturate(125%);
-    -webkit-backdrop-filter: blur(18px) saturate(125%);
-    isolation: isolate;
-  }
-
-  #mxh-{{ section.id }} *, #mxh-{{ section.id }} *:before, #mxh-{{ section.id }} *:after { box-sizing: border-box; }
-  #mxh-{{ section.id }} a { color: inherit; text-decoration: none; }
-  #mobile-menu.mobile-menu { display: none !important; }
-
-  #mxh-{{ section.id }} .mxh__bar {
-    min-height: 78px;
-    width: min(1440px, 100%);
-    margin: 0 auto;
-    padding: 0 clamp(16px, 4vw, 54px);
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 18px;
-  }
-
-  #mxh-{{ section.id }} .mxh__left,
-  #mxh-{{ section.id }} .mxh__right { display: flex; align-items: center; min-width: 0; }
-  #mxh-{{ section.id }} .mxh__left { justify-content: flex-start; }
-  #mxh-{{ section.id }} .mxh__center { display: flex; justify-content: center; align-items: center; min-width: 0; }
-  #mxh-{{ section.id }} .mxh__right { justify-content: flex-end; gap: 10px; }
-
-  #mxh-{{ section.id }} .mxh__logo { display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
-  #mxh-{{ section.id }} .mxh__logo-img {
-    width: min(var(--mxh-logo-width), 34vw) !important;
-    height: auto !important;
-    max-height: 54px !important;
-    max-width: min(var(--mxh-logo-width), 34vw) !important;
-    object-fit: contain !important;
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-  #mxh-{{ section.id }} .mxh__wordmark { font-family: var(--font-heading-family, sans-serif); font-size: clamp(28px, 4vw, 46px); letter-spacing: -.055em; text-transform: uppercase; }
-
-  #mxh-{{ section.id }} button { font: inherit; color: inherit; }
-  #mxh-{{ section.id }} .mxh__menu,
-  #mxh-{{ section.id }} .mxh__text-btn,
-  #mxh-{{ section.id }} .mxh__bag,
-  #mxh-{{ section.id }} .mxh__drawer-search {
-    border: 1px solid var(--mxh-line);
-    background: rgba(255,255,255,.025);
-    color: var(--mxh-text);
-    min-height: 42px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 0 16px;
-    text-transform: uppercase;
-    letter-spacing: .14em;
-    font-size: 11px;
-    line-height: 1;
-    cursor: pointer;
-    transition: background .22s ease, border-color .22s ease, transform .22s ease, color .22s ease;
-  }
-  #mxh-{{ section.id }} .mxh__menu:hover,
-  #mxh-{{ section.id }} .mxh__text-btn:hover,
-  #mxh-{{ section.id }} .mxh__bag:hover,
-  #mxh-{{ section.id }} .mxh__drawer-search:hover { background: var(--mxh-text); color: var(--mxh-bg); border-color: var(--mxh-text); transform: translateY(-1px); }
-
-  #mxh-{{ section.id }} .mxh__menu-mark { width: 24px; height: 24px; display: grid; place-items: center; }
-  #mxh-{{ section.id }} .mxh__menu-mark svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.35; stroke-linecap: round; stroke-linejoin: round; transition: transform .28s ease; }
-  #mxh-{{ section.id }} .mxh__menu[aria-expanded="true"] .mxh__menu-mark svg { transform: rotate(45deg); }
-  #mxh-{{ section.id }} .mxh__bag-count { min-width: 20px; height: 20px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; background: var(--mxh-text); color: var(--mxh-bg); font-weight: 800; letter-spacing: 0; font-size: 11px; }
-  #mxh-{{ section.id }} .mxh__bag:hover .mxh__bag-count { background: var(--mxh-bg); color: var(--mxh-text); }
-
-  #mxh-{{ section.id }} .mxh__shade { position: fixed; inset: 0; z-index: 1; background: rgba(0,0,0,.58); backdrop-filter: blur(8px); }
-  #mxh-{{ section.id }} .mxh__shade[hidden] { display: none !important; }
-
-  #mxh-{{ section.id }} .mxh__drawer,
-  #mxh-{{ section.id }} .mxh__search {
-    position: fixed;
-    inset: 0;
-    z-index: 2;
-    background: var(--mxh-panel);
-    color: var(--mxh-text);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .25s ease;
-  }
-  #mxh-{{ section.id }} .mxh__drawer.is-open,
-  #mxh-{{ section.id }} .mxh__search.is-open { opacity: 1; pointer-events: auto; }
-  #mxh-{{ section.id }} .mxh__drawer[hidden], #mxh-{{ section.id }} .mxh__search[hidden] { display: none !important; }
-
-  #mxh-{{ section.id }} .mxh__drawer-inner { min-height: 100svh; padding: clamp(20px, 4vw, 58px); display: grid; grid-template-rows: auto 1fr auto; gap: 32px; }
-  #mxh-{{ section.id }} .mxh__drawer-top, #mxh-{{ section.id }} .mxh__drawer-bottom { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
-  #mxh-{{ section.id }} .mxh__drawer-kicker, #mxh-{{ section.id }} .mxh__search-kicker { color: var(--mxh-muted); text-transform: uppercase; letter-spacing: .18em; font-size: 11px; margin: 0; }
-  #mxh-{{ section.id }} .mxh__close { width: 46px; height: 46px; border: 1px solid var(--mxh-line); border-radius: 999px; background: transparent; position: relative; cursor: pointer; }
-  #mxh-{{ section.id }} .mxh__close span { position: absolute; left: 50%; top: 50%; width: 18px; height: 1px; background: currentColor; transform-origin: center; }
-  #mxh-{{ section.id }} .mxh__close span:first-child { transform: translate(-50%,-50%) rotate(45deg); }
-  #mxh-{{ section.id }} .mxh__close span:last-child { transform: translate(-50%,-50%) rotate(-45deg); }
-
-  #mxh-{{ section.id }} .mxh__drawer-grid { display: grid; grid-template-columns: minmax(220px, .72fr) minmax(280px, 1.35fr); gap: clamp(26px, 6vw, 96px); align-items: end; }
-  #mxh-{{ section.id }} .mxh__drawer-note { max-width: 360px; align-self: start; }
-  #mxh-{{ section.id }} .mxh__drawer-note p { margin: 0 0 24px; color: var(--mxh-muted); font-size: clamp(15px, 1.6vw, 19px); line-height: 1.45; letter-spacing: .01em; }
-  #mxh-{{ section.id }} .mxh__drawer-note a { display: inline-flex; border-bottom: 1px solid currentColor; padding-bottom: 5px; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
-  #mxh-{{ section.id }} .mxh__nav { display: grid; gap: 2px; }
-  #mxh-{{ section.id }} .mxh__nav-link { display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 16px; padding: clamp(10px, 1.3vw, 18px) 0; border-bottom: 1px solid var(--mxh-line); font-family: var(--font-heading-family, sans-serif); font-size: clamp(44px, 7.4vw, 118px); line-height: .86; letter-spacing: -.055em; text-transform: uppercase; }
-  #mxh-{{ section.id }} .mxh__nav-link span { color: var(--mxh-accent); font-family: var(--font-body-family, sans-serif); font-size: 11px; letter-spacing: .14em; line-height: 1; }
-  #mxh-{{ section.id }} .mxh__nav-link:hover { color: var(--mxh-accent); }
-  #mxh-{{ section.id }} .mxh__subnav { display: flex; flex-wrap: wrap; gap: 10px 18px; padding: 12px 0 22px 60px; }
-  #mxh-{{ section.id }} .mxh__subnav a { color: var(--mxh-muted); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
-  #mxh-{{ section.id }} .mxh__drawer-bottom a { color: var(--mxh-muted); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
-
-  #mxh-{{ section.id }} .mxh__search { display: grid; place-items: center; padding: 24px; background: rgba(5,5,5,.96); backdrop-filter: blur(18px); }
-  #mxh-{{ section.id }} .mxh__search-panel { width: min(820px, 100%); position: relative; }
-  #mxh-{{ section.id }} .mxh__search-close { position: absolute; right: 0; top: -70px; }
-  #mxh-{{ section.id }} .mxh__search-form { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-top: 18px; }
-  #mxh-{{ section.id }} .mxh__search-form input[type="search"] { width: 100%; min-height: 68px; border: 1px solid var(--mxh-line); border-radius: 999px; background: var(--mxh-text); color: var(--mxh-bg); padding: 0 25px; font-size: 18px; outline: none; }
-  #mxh-{{ section.id }} .mxh__search-form button { min-height: 68px; border: 1px solid var(--mxh-text); border-radius: 999px; background: transparent; color: var(--mxh-text); padding: 0 28px; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; font-weight: 800; cursor: pointer; }
-  #mxh-{{ section.id }} .mxh__sr { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  body.mxh-lock { overflow: hidden; }
-
-  @media (max-width: 749px) {
-    #mxh-{{ section.id }} .mxh__bar { min-height: 70px; padding: 0 14px; gap: 8px; }
-    #mxh-{{ section.id }} .mxh__menu { min-width: 42px; width: 42px; height: 42px; padding: 0; }
-    #mxh-{{ section.id }} .mxh__menu-text, #mxh-{{ section.id }} .mxh__search-btn, #mxh-{{ section.id }} .mxh__account { display: none !important; }
-    #mxh-{{ section.id }} .mxh__logo-img { width: min(var(--mxh-logo-width), 138px) !important; max-width: 138px !important; max-height: 42px !important; }
-    #mxh-{{ section.id }} .mxh__bag { min-height: 42px; padding: 0 12px; font-size: 10px; }
-    #mxh-{{ section.id }} .mxh__drawer-grid { grid-template-columns: 1fr; align-items: start; }
-    #mxh-{{ section.id }} .mxh__drawer-note { order: 2; }
-    #mxh-{{ section.id }} .mxh__nav-link { grid-template-columns: 34px 1fr; font-size: clamp(42px, 15vw, 72px); }
-    #mxh-{{ section.id }} .mxh__subnav { padding-left: 50px; }
-    #mxh-{{ section.id }} .mxh__drawer-bottom { align-items: flex-start; flex-direction: column; }
-    #mxh-{{ section.id }} .mxh__search-form { grid-template-columns: 1fr; }
-  }
-  /* ============================================================
-   MELATO — PREMIUM NAVIGATION DRAWER VISIBILITY FIX
-   Fixes oversized menu links, weak transparency, poor contrast,
-   and luxury menu spacing.
-   ============================================================ */
-
-#mxh-{{ section.id }} .mxh__shade {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 1 !important;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(216, 199, 167, 0.08), transparent 34%),
-    rgba(0, 0, 0, 0.82) !important;
-  backdrop-filter: blur(18px) saturate(120%) !important;
-  -webkit-backdrop-filter: blur(18px) saturate(120%) !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 2 !important;
-  background:
-    linear-gradient(90deg, rgba(5, 5, 5, 0.98) 0%, rgba(7, 7, 7, 0.96) 42%, rgba(7, 7, 7, 0.92) 100%) !important;
-  color: #f6f0e5 !important;
-  overflow-y: auto !important;
-  min-height: 100svh !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-    radial-gradient(circle at 80% 18%, rgba(255,255,255,0.06), transparent 28%);
-  background-size: 100% 110px, cover;
-  opacity: 0.45;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-inner {
-  position: relative !important;
-  z-index: 2 !important;
-  width: min(1320px, calc(100% - 64px)) !important;
-  margin: 0 auto !important;
-  min-height: 100svh !important;
-  padding: clamp(28px, 4vw, 58px) 0 !important;
-  display: grid !important;
-  grid-template-rows: auto 1fr auto !important;
-  gap: clamp(32px, 5vw, 64px) !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-top {
-  min-height: 54px !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.10) !important;
-  padding-bottom: 20px !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-kicker {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  color: rgba(246, 240, 229, 0.62) !important;
-  font-size: 11px !important;
-  letter-spacing: 0.22em !important;
-  text-transform: uppercase !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-kicker::before {
-  content: "";
-  width: 34px;
-  height: 1px;
-  background: rgba(216, 199, 167, 0.65);
-}
-
-#mxh-{{ section.id }} .mxh__close {
-  background: rgba(246, 240, 229, 0.045) !important;
-  border: 1px solid rgba(246, 240, 229, 0.14) !important;
-  color: #f6f0e5 !important;
-  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease !important;
-}
-
-#mxh-{{ section.id }} .mxh__close:hover {
-  background: #f6f0e5 !important;
-  border-color: #f6f0e5 !important;
-  color: #050505 !important;
-  transform: rotate(90deg) !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-grid {
-  display: grid !important;
-  grid-template-columns: minmax(260px, 0.48fr) minmax(420px, 0.92fr) !important;
-  align-items: center !important;
-  gap: clamp(44px, 7vw, 110px) !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-note {
-  align-self: center !important;
-  max-width: 360px !important;
-  padding: 28px !important;
-  border: 1px solid rgba(246, 240, 229, 0.10) !important;
-  background: rgba(255, 255, 255, 0.035) !important;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42) !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-note p {
-  color: rgba(246, 240, 229, 0.76) !important;
-  font-size: clamp(14px, 1.15vw, 17px) !important;
-  line-height: 1.55 !important;
-  margin-bottom: 26px !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-note a {
-  color: #f6f0e5 !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.55) !important;
-  font-size: 11px !important;
-  letter-spacing: 0.16em !important;
-}
-
-#mxh-{{ section.id }} .mxh__nav {
-  width: 100% !important;
-  max-width: 760px !important;
-  margin-left: auto !important;
-  display: grid !important;
-  gap: 0 !important;
-}
-
-#mxh-{{ section.id }} .mxh__nav-item {
-  position: relative !important;
-}
-
-#mxh-{{ section.id }} .mxh__nav-link {
-  display: grid !important;
-  grid-template-columns: 42px 1fr !important;
-  align-items: center !important;
-  gap: 18px !important;
-  padding: clamp(14px, 1.45vw, 22px) 0 !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.10) !important;
-  color: #f6f0e5 !important;
-  font-family: var(--font-heading-family, sans-serif) !important;
-  font-size: clamp(42px, 5.4vw, 84px) !important;
-  line-height: 0.88 !important;
-  letter-spacing: -0.045em !important;
-  text-transform: uppercase !important;
-  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.55) !important;
-  transition: color 180ms ease, transform 180ms ease, padding-left 180ms ease !important;
-}
-
-#mxh-{{ section.id }} .mxh__nav-link span {
-  color: rgba(216, 199, 167, 0.78) !important;
-  font-family: var(--font-body-family, sans-serif) !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.16em !important;
-  line-height: 1 !important;
-}
-
-#mxh-{{ section.id }} .mxh__nav-link:hover,
-#mxh-{{ section.id }} .mxh__nav-link.is-active {
-  color: #d8c7a7 !important;
-  transform: translateX(10px) !important;
-}
-
-#mxh-{{ section.id }} .mxh__subnav {
-  padding: 12px 0 22px 60px !important;
-  gap: 10px 18px !important;
-}
-
-#mxh-{{ section.id }} .mxh__subnav a {
-  color: rgba(246, 240, 229, 0.58) !important;
-  font-size: 11px !important;
-  letter-spacing: 0.14em !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-bottom {
-  border-top: 1px solid rgba(246, 240, 229, 0.10) !important;
-  padding-top: 20px !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-search {
-  background: rgba(246, 240, 229, 0.045) !important;
-  border-color: rgba(246, 240, 229, 0.14) !important;
-}
-
-#mxh-{{ section.id }} .mxh__drawer-bottom a {
-  color: rgba(246, 240, 229, 0.72) !important;
-}
-
-/* Mobile luxury drawer */
-@media (max-width: 749px) {
-  #mxh-{{ section.id }} .mxh__drawer {
-    background: rgba(5, 5, 5, 0.98) !important;
-  }
-
-  #mxh-{{ section.id }} .mxh__drawer-inner {
-    width: calc(100% - 32px) !important;
-    padding: 22px 0 28px !important;
-    gap: 28px !important;
-  }
-
-  #mxh-{{ section.id }} .mxh__drawer-grid {
-    grid-template-columns: 1fr !important;
-    gap: 28px !important;
-    align-items: start !important;
-  }
-
-  #mxh-{{ section.id }} .mxh__nav {
-    max-width: 100% !important;
-    margin-left: 0 !important;
-    order: 1 !important;
-  }
-
-  #mxh-{{ section.id }} .mxh__drawer-note {
-    order: 2 !important;
-    max-width: 100% !important;
-    padding: 22px !important;
-  }
-
-  #mxh-{{ section.id }} .mxh__nav-link {
-    grid-template-columns: 32px 1fr !important;
-    gap: 12px !important;
-    font-size: clamp(38px, 13vw, 62px) !important;
-    line-height: 0.9 !important;
-    padding: 15px 0 !important;
-  }
-
-  #mxh-{{ section.id }} .mxh__nav-link:hover {
-    transform: translateX(4px) !important;
-  }
-
-  #mxh-{{ section.id }} .mxh__drawer-bottom {
-    align-items: stretch !important;
-  }
-
-  #mxh-{{ section.id }} .mxh__drawer-search,
-  #mxh-{{ section.id }} .mxh__drawer-bottom a {
-    width: 100% !important;
-    min-height: 46px !important;
-    justify-content: center !important;
-  }
-}
-</style>
-
-<script>
-  (function() {
-    var root = document.getElementById('mxh-{{ section.id }}');
-    if (!root || root.dataset.ready === 'true') return;
-    root.dataset.ready = 'true';
-
-    var menuBtn = root.querySelector('[data-mxh-menu]');
-    var closeBtn = root.querySelector('[data-mxh-close]');
-    var drawer = root.querySelector('[data-mxh-drawer]');
-    var shade = root.querySelector('[data-mxh-shade]');
-    var search = root.querySelector('[data-mxh-search]');
-    var searchOpeners = root.querySelectorAll('[data-mxh-search-open]');
-    var searchClose = root.querySelector('[data-mxh-search-close]');
-    var searchInput = root.querySelector('[data-mxh-search-input]');
-
-    function lock(yes) { document.body.classList.toggle('mxh-lock', !!yes); }
-
-    function openDrawer() {
-      if (!drawer) return;
-      closeSearch();
-      drawer.hidden = false;
-      if (shade) shade.hidden = false;
-      requestAnimationFrame(function(){ drawer.classList.add('is-open'); });
-      if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
-      drawer.setAttribute('aria-hidden', 'false');
-      lock(true);
-    }
-
-    function closeDrawer() {
-      if (!drawer) return;
-      drawer.classList.remove('is-open');
-      if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
-      drawer.setAttribute('aria-hidden', 'true');
-      window.setTimeout(function(){ drawer.hidden = true; if (shade && !search.classList.contains('is-open')) shade.hidden = true; }, 250);
-      lock(false);
-    }
-
-    function openSearch() {
-      if (!search) return;
-      closeDrawer();
-      search.hidden = false;
-      if (shade) shade.hidden = false;
-      requestAnimationFrame(function(){ search.classList.add('is-open'); });
-      search.setAttribute('aria-hidden', 'false');
-      searchOpeners.forEach(function(btn){ btn.setAttribute('aria-expanded', 'true'); });
-      lock(true);
-      window.setTimeout(function(){ if (searchInput) searchInput.focus(); }, 90);
-    }
-
-    function closeSearch() {
-      if (!search) return;
-      search.classList.remove('is-open');
-      search.setAttribute('aria-hidden', 'true');
-      searchOpeners.forEach(function(btn){ btn.setAttribute('aria-expanded', 'false'); });
-      window.setTimeout(function(){ search.hidden = true; if (shade && !drawer.classList.contains('is-open')) shade.hidden = true; }, 250);
-      lock(false);
-    }
-
-    if (menuBtn) menuBtn.addEventListener('click', function(){ drawer && drawer.classList.contains('is-open') ? closeDrawer() : openDrawer(); });
-    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-    if (shade) shade.addEventListener('click', function(){ closeDrawer(); closeSearch(); });
-    searchOpeners.forEach(function(btn){ btn.addEventListener('click', openSearch); });
-    if (searchClose) searchClose.addEventListener('click', closeSearch);
-    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { closeDrawer(); closeSearch(); } });
-    window.addEventListener('scroll', function(){ root.classList.toggle('is-scrolled', window.scrollY > 8); }, { passive: true });
-  })();
-</script>
-
 {% schema %}
 {
-  "name": "Melato Atelier Header",
+  "name": "Melato House Header",
   "limit": 1,
   "settings": [
     { "type": "link_list", "id": "menu", "label": "Main menu" },
     { "type": "image_picker", "id": "logo", "label": "Logo image" },
     { "type": "range", "id": "logo_width", "label": "Logo width", "min": 120, "max": 320, "step": 4, "unit": "px", "default": 188 },
-    { "type": "text", "id": "menu_label", "label": "Menu button label", "default": "Index" },
-    { "type": "text", "id": "drawer_note", "label": "Drawer note", "default": "Designer apparel, edited with intention. Built in Ottawa. Worn anywhere." },
-    { "type": "checkbox", "id": "show_account", "label": "Show account link on desktop", "default": false },
-    { "type": "header", "content": "Colors" },
-    { "type": "color", "id": "bg_color", "label": "Header background", "default": "#050505" },
-    { "type": "color", "id": "text_color", "label": "Header text", "default": "#F6F0E5" },
-    { "type": "color", "id": "accent_color", "label": "Drawer accent", "default": "#D8C7A7" }
+    { "type": "checkbox", "id": "show_account", "label": "Show account link on desktop", "default": true },
+    { "type": "header", "content": "House colors" },
+    { "type": "color", "id": "house_bg_color", "label": "Default header background", "default": "#f0e8d9" },
+    { "type": "color", "id": "house_text_color", "label": "Default header text", "default": "#090909" },
+    { "type": "color", "id": "house_accent_color", "label": "Accent", "default": "#9d4918" }
   ],
-  "presets": [{ "name": "Melato Atelier Header" }]
+  "presets": [{ "name": "Melato House Header" }]
 }
 {% endschema %}
-{% comment %} Melato policy sync marker 2026-08-07 {% endcomment %}
