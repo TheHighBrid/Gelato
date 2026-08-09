@@ -18,14 +18,35 @@
     return allowed.includes(parsed) ? parsed : fallback;
   };
 
-  const colourCountFromSwatches = (container) => {
-    if (!container || container.dataset.houseColourCountReady === 'true') return;
-    const visibleSwatches = container.querySelectorAll('.swatch').length;
-    const extraLabel = Array.from(container.querySelectorAll('.text-label')).find((node) => /^\+\d+/.test((node.textContent || '').trim()));
-    const extra = extraLabel ? Number.parseInt((extraLabel.textContent || '').replace(/\D/g, ''), 10) || 0 : 0;
-    const total = visibleSwatches + extra;
-    if (!total) return;
+  const renderColourCount = (card) => {
+    if (!card || card.dataset.houseColourCountReady === 'true') return;
 
+    const declaredCount = Number.parseInt(card.dataset.productColourCount || '0', 10) || 0;
+    let container = card.querySelector('.product-card__swatches');
+    let derivedCount = 0;
+
+    if (container) {
+      const visibleSwatches = container.querySelectorAll('.swatch').length;
+      const extraLabel = Array.from(container.querySelectorAll('.text-label')).find((node) => /^\+\d+/.test((node.textContent || '').trim()));
+      const extra = extraLabel ? Number.parseInt((extraLabel.textContent || '').replace(/\D/g, ''), 10) || 0 : 0;
+      derivedCount = visibleSwatches + extra;
+    }
+
+    const total = declaredCount || derivedCount;
+    if (!total) {
+      card.dataset.houseColourCountReady = 'true';
+      return;
+    }
+
+    if (!container) {
+      const info = card.querySelector('.product-card__info');
+      if (!info) return;
+      container = document.createElement('div');
+      container.className = 'product-card__swatches';
+      info.appendChild(container);
+    }
+
+    card.dataset.houseColourCountReady = 'true';
     container.dataset.houseColourCountReady = 'true';
     const label = document.createElement('span');
     label.className = 'text-label melato-house-colour-count';
@@ -35,7 +56,7 @@
   };
 
   const enhanceColourCounts = (scope) => {
-    (scope || document).querySelectorAll('.product-card__swatches').forEach(colourCountFromSwatches);
+    (scope || document).querySelectorAll('[data-product-card]').forEach(renderColourCount);
   };
 
   const createEditorialTile = (root, grid) => {
@@ -71,7 +92,7 @@
     items[3].after(figure);
   };
 
-  const buildDensityControls = (root, grid, mediaQuery, setDensity) => {
+  const buildDensityControls = (root, setDensity) => {
     const toolbar = root.querySelector('[data-collection-toolbar]');
     if (!toolbar) return null;
 
@@ -156,7 +177,7 @@
       root.dispatchEvent(new CustomEvent('melato:collection-density', { detail: { density: next } }));
     };
 
-    controls = buildDensityControls(root, grid, mediaQuery, setDensity);
+    controls = buildDensityControls(root, setDensity);
     setDensity(getPreferredDensity(), false);
 
     const enhanceGrid = () => {
