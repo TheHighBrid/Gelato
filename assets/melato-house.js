@@ -199,7 +199,37 @@
     window.addEventListener('scroll', syncScrollState, { passive: true });
   };
 
-  const boot = () => document.querySelectorAll('[data-house-header]').forEach(initHouseHeader);
+  const syncHousePdpCopy = (root) => {
+    if (!root) return;
+
+    const setKicker = root.querySelector('.pdp-set .pdp-kicker');
+    if (setKicker) setKicker.textContent = 'Complete the look';
+
+    const setCta = root.querySelector('.pdp-set .pdp-set-cta');
+    if (setCta) setCta.textContent = 'View matching piece';
+
+    const setTotalLabel = root.querySelector('.pdp-set-total span');
+    if (setTotalLabel) setTotalLabel.textContent = 'Full look';
+
+    root.querySelectorAll('[data-pdp-atc], [data-pdp-sticky-button]').forEach((button) => {
+      if (!button.disabled) button.textContent = 'Add to bag';
+    });
+  };
+
+  const initHousePdp = (root) => {
+    if (!root || root.dataset.housePdpReady === 'true') return;
+    root.dataset.housePdpReady = 'true';
+    syncHousePdpCopy(root);
+
+    document.addEventListener('variant:change', () => {
+      window.requestAnimationFrame(() => syncHousePdpCopy(root));
+    });
+  };
+
+  const boot = () => {
+    document.querySelectorAll('[data-house-header]').forEach(initHouseHeader);
+    document.querySelectorAll('.melato-pdp-rebuild').forEach(initHousePdp);
+  };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
   else boot();
