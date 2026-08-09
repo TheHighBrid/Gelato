@@ -3,6 +3,7 @@
   Phase 1 global shell.
   Retains essential commerce, information and legal links while changing the
   presentation into a bold Casablanca-influenced Melato masthead.
+  Compatibility contract: melato-footer__copyright remains the single visible copyright source.
 {% endcomment %}
 
 <footer
@@ -70,9 +71,9 @@
     </div>
 
     <div class="melato-house-footer__bottom">
-      <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
+      <span class="melato-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
       <span>{{ localization.country.name }} / {{ localization.country.currency.iso_code }}</span>
-      <span>Comme never change.</span>
+      <span>Culture-forward premium apparel / Comme never change.</span>
     </div>
   </div>
 </footer>
