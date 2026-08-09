@@ -13,10 +13,14 @@
   ID-scoped rules win and the nested grid can collapse into the wrong cells.
 
   Desktop hierarchy:
-  - large interactive product gallery on the left
+  - large interactive sticky product gallery on the left
   - Product Focus, Story/Construction, Fit/Material/Care/Shipping on the right
-  - Complete the Set full-width when a verified partner exists
-  - Editorial imagery full-width after the decision-support content
+  - Complete the Set continues in the right rail when a verified partner exists
+  - Editorial / close-up imagery continues in the right rail below it
+
+  The gallery is intentionally sticky, but no downstream PDP section may span
+  beneath the sticky image on desktop. This prevents the product image from
+  covering Complete the Set or Editorial Photos while scrolling.
 */
 
 body.template-product,
@@ -39,8 +43,8 @@ body.template-product .melato-pdp-rebuild {
       "gallery buybox"
       "gallery story"
       "gallery specs"
-      "set set"
-      "editorial editorial" !important;
+      "gallery set"
+      "gallery editorial" !important;
     column-gap: 30px !important;
     row-gap: 18px !important;
     align-items: start !important;
@@ -49,8 +53,8 @@ body.template-product .melato-pdp-rebuild {
   /*
     These wrappers must become transparent to the parent PDP grid. The section's
     inline ID-scoped CSS defines both as grids, so !important is deliberate and
-    required. This is the regression fix that restores the missing hero gallery,
-    specification capsules, and Complete the Set module.
+    required. This allows every right-rail module to occupy its own grid row while
+    the left gallery remains in one continuous sticky column.
   */
   body.template-product .melato-pdp-rebuild .pdp-hero,
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
@@ -63,6 +67,7 @@ body.template-product .melato-pdp-rebuild {
     align-self: start !important;
     position: sticky;
     top: 104px;
+    z-index: 1;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-main-media {
@@ -105,18 +110,71 @@ body.template-product .melato-pdp-rebuild {
     margin: 0 !important;
   }
 
+  /*
+    Critical sticky-overlap fix: these sections must remain in column two.
+    They must never span both columns while the gallery is sticky.
+  */
   body.template-product .melato-pdp-rebuild .pdp-set {
     grid-area: set !important;
-    margin-top: 12px !important;
+    grid-column: 2 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-top: 0 !important;
+    position: relative;
+    z-index: 2;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-card {
+    min-width: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-image {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-editorial {
     grid-area: editorial !important;
+    grid-column: 2 !important;
+    width: 100% !important;
+    min-width: 0 !important;
     margin-top: 0 !important;
+    position: relative;
+    z-index: 2;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-card {
+    min-width: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-image {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
     margin-top: 0 !important;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1180px) {
+  body.template-product .melato-pdp-rebuild .pdp-set-grid,
+  body.template-product .melato-pdp-rebuild .pdp-editorial-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -187,6 +245,11 @@ body.template-product .melato-pdp-rebuild {
 
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
     margin-top: 18px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set,
+  body.template-product .melato-pdp-rebuild .pdp-editorial {
+    width: auto !important;
   }
 }
 
