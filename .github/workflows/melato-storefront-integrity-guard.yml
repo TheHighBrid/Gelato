@@ -69,16 +69,23 @@ jobs:
           ban('sections/main-collection.liquid', 'melato-collection-service-strip', 'collection concierge strip')
 
           # 2 + 6. PDP canvas is fixed black and desktop details occupy the right rail.
+          layout = text('assets/melato-pdp-layout-2026.css')
           require('assets/melato-pdp-layout-2026.css', 'body.template-product .melato-pdp-rebuild', 'PDP canvas contract')
           require('assets/melato-pdp-layout-2026.css', '--pdp-bg: #080808 !important;', 'fixed black PDP background')
           require('assets/melato-pdp-layout-2026.css', '"gallery buybox"', 'desktop PDP gallery/buybox grid')
           require('assets/melato-pdp-layout-2026.css', '"gallery story"', 'desktop PDP story right rail')
           require('assets/melato-pdp-layout-2026.css', '"gallery specs"', 'desktop PDP specs right rail')
+          require('assets/melato-pdp-layout-2026.css', '"gallery set"', 'Complete the Set right rail row')
+          require('assets/melato-pdp-layout-2026.css', '"gallery editorial"', 'Editorial right rail row')
           require('assets/melato-pdp-layout-2026.css', 'display: contents !important;', 'PDP wrapper specificity recovery')
           require('assets/melato-pdp-layout-2026.css', 'grid-area: gallery !important;', 'hero gallery placement')
           require('assets/melato-pdp-layout-2026.css', 'grid-area: specs !important;', 'specification placement')
           require('assets/melato-pdp-layout-2026.css', 'grid-area: set !important;', 'Complete the Set placement')
+          require('assets/melato-pdp-layout-2026.css', 'grid-area: editorial !important;', 'Editorial placement')
+          require('assets/melato-pdp-layout-2026.css', 'grid-column: 2 !important;', 'downstream PDP right-column lock')
           require('assets/melato-pdp-layout-2026.css', 'cursor: zoom-in;', 'interactive hero image affordance')
+          ban('assets/melato-pdp-layout-2026.css', '"set set"', 'full-width Complete the Set row beneath sticky gallery')
+          ban('assets/melato-pdp-layout-2026.css', '"editorial editorial"', 'full-width Editorial row beneath sticky gallery')
           require('layout/theme.liquid', "'melato-pdp-layout-2026.css'", 'PDP layout stylesheet load')
 
           # Main PDP must keep the image, factual capsules, and set architecture.
