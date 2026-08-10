@@ -1,0 +1,15 @@
+{% comment %}
+  Shared Client Services rail.
+  Only destinations verified as published are included here.
+{% endcomment %}
+
+{%- assign current_service_handle = page.handle | default: '' -%}
+<nav class="melato-service-rail" aria-label="Client Services">
+  <span class="melato-service-rail__mark">Client Services / Melato</span>
+  <div class="melato-service-rail__links">
+    <a href="/pages/contact"{% if current_service_handle == 'contact' %} aria-current="page"{% endif %}>Contact</a>
+    <a href="/pages/faq"{% if current_service_handle == 'faq' %} aria-current="page"{% endif %}>FAQ</a>
+    <a href="/pages/size-guide"{% if current_service_handle == 'size-guide' %} aria-current="page"{% endif %}>Size Guide</a>
+    <a href="/policies/refund-policy"{% if request.path contains '/policies/refund-policy' %} aria-current="page"{% endif %}>Returns</a>
+  </div>
+</nav>
