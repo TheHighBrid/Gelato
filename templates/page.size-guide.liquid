@@ -10,19 +10,19 @@
 <div class="melato-page">
   <header class="melato-page-header">
     <div class="melato-eyebrow">Melato Client Services</div>
-    <h1 class="melato-page-header__title">{{ page.title | default: 'Fit Guidance' }}</h1>
-    <p class="melato-page-header__subtitle">Product-specific fit details stay authoritative. This page supports the measurements and guidance maintained in Shopify.</p>
+    <h1 class="melato-page-header__title">{{ page.title | default: 'Fit Guide' }}</h1>
+    <p class="melato-page-header__subtitle">Category measurements, fit notes and personal sizing support.</p>
   </header>
 
   <div class="melato-container">
-    <div class="melato-card">
-      {% if page.content != blank %}
-        <div class="rte melato-body">{{ page.content }}</div>
-      {% else %}
-        <p class="melato-body" style="color: var(--melato-black); font-weight: 500; margin-bottom: 8px;">Fit is product-specific.</p>
-        <p class="melato-body-sm">Use the fit and measurement details on each product page as the primary reference. For additional help, contact Melato support before ordering.</p>
-      {% endif %}
-    </div>
+    {% if page.content != blank %}
+      <div class="rte">{{ page.content }}</div>
+    {% else %}
+      <div class="melato-card">
+        <h2 class="melato-h3">Fit is product-specific.</h2>
+        <p class="melato-body-sm">Use the measurements and fit notes shown for the piece you are considering. For personal guidance, contact Melato Client Care.</p>
+      </div>
+    {% endif %}
   </div>
 
   {% section 'concierge-strip' %}
