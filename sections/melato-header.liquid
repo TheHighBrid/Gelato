@@ -62,7 +62,8 @@
       {% if shop.customer_accounts_enabled and section.settings.show_account %}
         <a
           class="melato-house-header__utility melato-house-header__account"
-          href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}"
+          href="{{ routes.account_url }}"
+          rel="nofollow"
         >Account</a>
       {% endif %}
 
@@ -143,7 +144,8 @@
             <p class="melato-house-menu__section-title">Client Services</p>
             <a href="/pages/contact">Contact</a>
             <a href="/pages/faq">FAQ</a>
-            <a href="/policies/refund-policy">Returns &amp; Refunds</a>
+            <a href="/pages/size-guide">Size Guide</a>
+            <a href="/policies/refund-policy">Returns</a>
           </div>
         </div>
       </div>
