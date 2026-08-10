@@ -48,7 +48,7 @@
     const routeHint = link.dataset.houseRoute || '';
 
     if (routeHint === 'living-book' || path === '/pages/living-lookbook') {
-      link.setAttribute('href', HOUSE_ROUTES.livingBook);
+      if (path !== HOUSE_ROUTES.livingBook) link.setAttribute('href', HOUSE_ROUTES.livingBook);
       return;
     }
 
@@ -72,20 +72,35 @@
   };
 
   const normalizeCartEmptyState = (root = document) => {
-    if (!root || !root.querySelector) return;
+    if (!root || !root.querySelector) return false;
     const drawer = root.matches && root.matches('.cart-drawer') ? root : root.querySelector('.cart-drawer');
-    if (!drawer) return;
+    if (!drawer) return false;
     const empty = drawer.querySelector('.cart-drawer__empty');
-    if (!empty) return;
+    if (!empty) return false;
+
+    let changed = false;
+    const desiredSub = 'Explore the current Melato rotation.';
+    const desiredCta = 'Shop New Arrivals';
 
     const sub = empty.querySelector('.cart-drawer__empty-sub');
-    if (sub) sub.textContent = 'Explore the current Melato rotation.';
+    if (sub && sub.textContent.trim() !== desiredSub) {
+      sub.textContent = desiredSub;
+      changed = true;
+    }
 
     const cta = empty.querySelector('.melato-cart-cta, a[data-cart-close]');
     if (cta) {
-      cta.textContent = 'Shop New Arrivals';
-      cta.setAttribute('href', HOUSE_ROUTES.newArrivals);
+      if (cta.textContent.trim() !== desiredCta) {
+        cta.textContent = desiredCta;
+        changed = true;
+      }
+      if (pathnameFor(cta.getAttribute('href')) !== HOUSE_ROUTES.newArrivals) {
+        cta.setAttribute('href', HOUSE_ROUTES.newArrivals);
+        changed = true;
+      }
     }
+
+    return changed;
   };
 
   const createSearchCard = (product) => {
@@ -317,8 +332,6 @@
     if (document.documentElement.dataset.houseReleaseGuards === 'true') return;
     document.documentElement.dataset.houseReleaseGuards = 'true';
 
-    // melato-optimization-2026.js can rewrite the verified current-drop route.
-    // Repair the clicked anchor in capture phase before browser navigation.
     document.addEventListener('click', (event) => {
       const link = event.target.closest('a[href]');
       if (link) repairHouseRoute(link);
@@ -328,7 +341,6 @@
       repairHouseRoutes(document);
       normalizeCartEmptyState(document);
 
-      // Retire pre-House cursor/parallax behavior without deleting legacy assets.
       document.querySelectorAll('.custom-cursor').forEach((cursor) => cursor.remove());
       document.querySelectorAll('.parallax[data-speed]').forEach((element) => {
         element.removeAttribute('data-speed');
@@ -337,7 +349,11 @@
 
       const header = document.querySelector('[data-house-header]');
       if (header) {
-        const scrubLegacyHeaderState = () => header.classList.remove('hidden', 'site-header--hidden');
+        const scrubLegacyHeaderState = () => {
+          if (header.classList.contains('hidden') || header.classList.contains('site-header--hidden')) {
+            header.classList.remove('hidden', 'site-header--hidden');
+          }
+        };
         scrubLegacyHeaderState();
         const headerObserver = new MutationObserver(scrubLegacyHeaderState);
         headerObserver.observe(header, { attributes: true, attributeFilter: ['class'] });
@@ -346,14 +362,17 @@
       const drawer = document.querySelector('.cart-drawer');
       if (drawer) {
         let frame = 0;
+        const observeDrawer = (observer) => observer.observe(drawer, { childList: true, subtree: true });
         const cartObserver = new MutationObserver(() => {
           window.cancelAnimationFrame(frame);
           frame = window.requestAnimationFrame(() => {
-            normalizeCartEmptyState(document);
+            cartObserver.disconnect();
+            normalizeCartEmptyState(drawer);
             repairHouseRoutes(drawer);
+            observeDrawer(cartObserver);
           });
         });
-        cartObserver.observe(drawer, { childList: true, subtree: true });
+        observeDrawer(cartObserver);
       }
     };
 
