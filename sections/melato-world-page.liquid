@@ -1,0 +1,36 @@
+{% comment %}
+  Reusable World of Melato editorial page template for future campaigns,
+  pop-ups, collection essays and house notes. Page content remains editable in Shopify.
+{% endcomment %}
+
+{%- liquid
+  assign page_content_down = page.content | downcase
+  assign content_has_h1 = false
+  if page_content_down contains '<h1'
+    assign content_has_h1 = true
+  endif
+-%}
+
+<section class="melato-world-page" aria-labelledby="WorldPageTitle-{{ section.id }}">
+  {% render 'melato-world-rail' %}
+  <header class="melato-world-page__masthead">
+    <p class="melato-world-kicker">{{ section.settings.eyebrow | default: 'World of Melato' }}</p>
+    {%- unless content_has_h1 -%}
+      <h1 id="WorldPageTitle-{{ section.id }}">{{ page.title }}</h1>
+    {%- endunless -%}
+    {%- if section.settings.deck != blank -%}<p class="melato-world-page__deck">{{ section.settings.deck }}</p>{%- endif -%}
+  </header>
+  <div class="melato-world-page__content rte">{{ page.content }}</div>
+</section>
+
+{% schema %}
+{
+  "name": "World editorial page",
+  "tag": "section",
+  "settings": [
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"World of Melato"},
+    {"type":"textarea","id":"deck","label":"Editorial deck","default":"Notes, images and records from the Melato world."}
+  ],
+  "presets": [{"name":"World editorial page"}]
+}
+{% endschema %}
