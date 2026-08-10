@@ -1,7 +1,6 @@
 {% comment %}
-  Melato Concierge Strip
-  A persistent navigation component that connects all 4 client service pillars.
-  Add this section to the bottom of each pillar page template.
+  Melato Client Services navigation
+  Connects the four canonical service pages.
 {% endcomment %}
 
 {{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
@@ -21,8 +20,9 @@
     when 'shipping-returns'
       assign current = 'delivery-policy'
   endcase
+
   assign pillars = 'post-purchase,private-preview,fit-guidance,delivery-policy' | split: ','
-  assign pillar_labels = 'Post-Purchase,Private Preview,Fit Guidance,Delivery' | split: ','
+  assign pillar_labels = 'Order Support,Private Preview,Fit Guide,Delivery & Returns' | split: ','
   assign pillar_urls = '/pages/thank-you,/pages/preview,/pages/size-guide,/pages/shipping-returns' | split: ','
 -%}
 
@@ -113,7 +113,7 @@
 
 <div class="melato-strip" data-concierge-strip data-current-pillar="{{ current }}">
   <div class="melato-strip__inner">
-    <div class="melato-strip__eyebrow">The Concierge Strip</div>
+    <div class="melato-strip__eyebrow">Client Services</div>
 
     <nav class="melato-strip__nav" aria-label="Client services">
       {%- for pillar in pillars -%}
@@ -157,38 +157,38 @@
 
 {% schema %}
 {
-  "name": "Concierge Strip",
+  "name": "Client Services Nav",
   "settings": [
     {
       "type": "select",
       "id": "current_pillar",
-      "label": "Current Pillar",
+      "label": "Current service",
       "options": [
-        { "value": "post-purchase", "label": "Post-Purchase" },
+        { "value": "post-purchase", "label": "Order Support" },
         { "value": "private-preview", "label": "Private Preview" },
-        { "value": "fit-guidance", "label": "Fit Guidance" },
-        { "value": "delivery-policy", "label": "Delivery Policy" }
+        { "value": "fit-guidance", "label": "Fit Guide" },
+        { "value": "delivery-policy", "label": "Delivery & Returns" }
       ],
       "default": "post-purchase",
-      "info": "Select which pillar page this section appears on. The matching nav item will be highlighted."
+      "info": "The current page is detected automatically for the canonical service URLs."
     },
     {
       "type": "richtext",
       "id": "contextual_copy",
-      "label": "Contextual Copy",
-      "default": "<p>Fit, delivery and post-purchase guidance are available through Client Services.</p>",
-      "info": "Bridge text that helps customers navigate between pillars. Supports links."
+      "label": "Support copy",
+      "default": "<p>Need help with an order? Email <a href=\"mailto:support@melato.ca\">support@melato.ca</a> and include your order number.</p>",
+      "info": "Optional support copy shown beneath the service navigation."
     },
     {
       "type": "checkbox",
       "id": "show_contextual",
-      "label": "Show Contextual Copy",
+      "label": "Show support copy",
       "default": true
     }
   ],
   "presets": [
     {
-      "name": "Concierge Strip",
+      "name": "Client Services Nav",
       "category": "Melato"
     }
   ]
