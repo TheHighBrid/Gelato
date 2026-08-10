@@ -18,6 +18,7 @@ jobs:
       - name: Check storefront JavaScript syntax
         run: |
           node --check assets/melato-pdp-polish.js
+          node --check assets/melato-house-legacy-bridge.js
           node --check assets/melato-house.js
           node --check assets/melato-house-collection.js
           node --check assets/melato-house-home.js
@@ -166,7 +167,10 @@ jobs:
           ban('sections/newsletter.liquid', 'data-newsletter-form:', 'legacy newsletter interception marker')
           require('assets/melato-house.js', "currentDrop: '/collections/drop-001-texture-form'", 'verified current-drop route guard')
           require('assets/melato-house.js', 'trapPanelTab', 'House menu/search focus containment')
-          require('assets/melato-house.js', 'stopImmediatePropagation', 'cart legacy-handler isolation')
+          require('layout/theme.liquid', "'melato-house-legacy-bridge.js'", 'legacy compatibility bridge load')
+          require('assets/melato-house-legacy-bridge.js', "document.querySelector('[data-cart-drawer]')", 'legacy cart controller suppression')
+          require('assets/melato-house-legacy-bridge.js', "document.getElementById('melato-product-grid')", 'legacy collection filter suppression')
+          ban('assets/melato-house.js', 'stopImmediatePropagation', 'document-level cart propagation blocking')
 
           # Parse JSON templates after removing Shopify's generated leading comment block.
           for filename in ('templates/index.json', 'templates/index.melato-ovum-redesign.json', 'templates/404.json', 'templates/cart.json', 'templates/product.json'):
