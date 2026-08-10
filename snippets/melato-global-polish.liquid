@@ -1,12 +1,14 @@
 {%- comment -%}
   Melato global polish compatibility shim.
 
-  The Melato House system now owns the global header, footer, body surfaces,
+  The Melato House system owns the global header, footer, body surfaces,
   CTA language and responsive presentation. The previous version of this
   snippet applied broad !important header/footer overrides and reintroduced
   rounded CTA pills after the House styles had loaded.
 
-  It intentionally remains rendered from layout/theme.liquid so existing
-  theme architecture does not change, but it no longer mutates storefront
-  visuals or navigation. Copyright remains owned by melato-footer.liquid.
+  The release-fixes stylesheet is intentionally loaded from this late shim so
+  it runs after legacy theme CSS and merchant custom CSS. It only isolates
+  House surfaces from those older selectors; it does not restore the retired
+  global CTA mutation. Copyright remains owned by melato-footer.liquid.
 {%- endcomment -%}
+{{ 'melato-house-release-fixes.css' | asset_url | stylesheet_tag }}
