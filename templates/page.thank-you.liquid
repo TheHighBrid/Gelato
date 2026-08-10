@@ -11,18 +11,18 @@
   <header class="melato-page-header">
     <div class="melato-eyebrow">Melato Client Services</div>
     <h1 class="melato-page-header__title">{{ page.title | default: 'Thank You' }}</h1>
-    <p class="melato-page-header__subtitle">Order updates and tracking are sent through the contact details used at checkout.</p>
+    <p class="melato-page-header__subtitle">Order status, tracking guidance and support after checkout.</p>
   </header>
 
   <div class="melato-container">
-    <div class="melato-card">
-      {% if page.content != blank %}
-        <div class="rte melato-body">{{ page.content }}</div>
-      {% else %}
-        <p class="melato-body" style="color: var(--melato-black); font-weight: 500; margin-bottom: 8px;">Your selection is secured.</p>
-        <p class="melato-body-sm">Keep your order confirmation email for the authoritative order number, status and tracking information. For assistance, contact Melato support.</p>
-      {% endif %}
-    </div>
+    {% if page.content != blank %}
+      <div class="rte">{{ page.content }}</div>
+    {% else %}
+      <div class="melato-card">
+        <h2 class="melato-h3">Your order is in our hands.</h2>
+        <p class="melato-body-sm">Tracking is sent to the contact details used at checkout once your parcel enters transit.</p>
+      </div>
+    {% endif %}
   </div>
 
   {% section 'concierge-strip' %}
