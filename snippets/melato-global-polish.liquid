@@ -1,7 +1,9 @@
 {%- comment -%}
   Melato global polish
-  Paste this render once inside layout/theme.liquid before </head>:
-  {% render 'melato-global-polish' %}
+  Rendered once inside layout/theme.liquid before </head>.
+
+  Footer contract: global CTA styling must never reinterpret footer navigation,
+  and this snippet must never inject a second copyright line.
 {%- endcomment -%}
 
 <style>
@@ -59,7 +61,7 @@
     border: 1px solid rgba(246,239,227,.2) !important;
     background: rgba(255,255,255,.055) !important;
     color: var(--melato-polish-text) !important;
-    font-size: 10px !important;
+    font-size: 11px !important;
     font-weight: 800 !important;
     letter-spacing: .14em !important;
     text-transform: uppercase !important;
@@ -89,7 +91,7 @@
     color: var(--melato-polish-text) !important;
   }
 
-  /* Footer: move brand lower, make IG card intentional, add bottom copyright line */
+  /* Footer remains a navigation surface, never a CTA-pill surface. */
   footer,
   .footer,
   .shopify-section-footer {
@@ -100,7 +102,7 @@
 
   footer a,
   .footer a {
-    color: rgba(246,239,227,.66) !important;
+    color: rgba(246,239,227,.72) !important;
     text-decoration: none !important;
   }
 
@@ -145,37 +147,12 @@
     color: rgba(246,239,227,.76) !important;
   }
 
-  .melato-footer-copyright-line {
-    width: min(1280px, calc(100% - 40px));
-    margin: 26px auto 0;
-    padding: 18px 0 20px;
-    border-top: 1px solid rgba(246,239,227,.1);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    color: rgba(246,239,227,.48);
-    font-size: 11px;
-    letter-spacing: .08em;
-  }
-
-  .melato-footer-copyright-line strong {
-    color: rgba(246,239,227,.72);
-    font-weight: 700;
-  }
-
   @media (max-width: 740px) {
     .header__heading,
     .header__heading-link,
     .site-header__logo,
     .header__logo {
       transform: translateY(3px);
-    }
-
-    .melato-footer-copyright-line {
-      width: min(100% - 24px, 1280px);
-      align-items: start;
-      flex-direction: column;
     }
 
     footer .footer-block:has(img),
@@ -198,6 +175,7 @@
       const normalize = (value) => (value || '').replace(/\s+/g, ' ').trim().toLowerCase();
 
       document.querySelectorAll('a, button').forEach((el) => {
+        if (el.closest('footer, .footer, .shopify-section-footer')) return;
         const text = normalize(el.textContent);
         if (text === 'new drop' || text === 'new drops' || text === 'new arrivals') {
           el.classList.add('melato-global-pill', 'melato-global-pill--new');
@@ -211,14 +189,6 @@
         el.classList.add('melato-footer-ig-card');
         if (!/instagram/i.test(el.textContent || '')) el.setAttribute('aria-label', 'Instagram');
       });
-
-      const footer = document.querySelector('footer, .footer');
-      if (footer && !footer.querySelector('.melato-footer-copyright-line')) {
-        const line = document.createElement('div');
-        line.className = 'melato-footer-copyright-line';
-        line.innerHTML = '<span><strong>Melato</strong> © 2026</span><span>Culture-forward premium apparel</span>';
-        footer.appendChild(line);
-      }
     });
   })();
 </script>

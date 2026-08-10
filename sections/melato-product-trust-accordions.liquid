@@ -5,6 +5,17 @@
 {%- liquid
   assign product_title_down = product.title | downcase
   assign product_type_down = product.product_type | downcase
+  assign suppress_generic_fit_block = false
+  assign is_fragrance_product = false
+
+  if product_type_down contains 'fragrance' or product_type_down contains 'eau de' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum' or product_title_down contains 'perfume'
+    assign is_fragrance_product = true
+  endif
+
+  if product.handle == 'rex-x-fur-jacket-copy' or is_fragrance_product
+    assign suppress_generic_fit_block = true
+  endif
+
   assign material_content = '<p>Premium construction selected for clean movement, everyday wearability, and a composed finish.</p>'
   if product_type_down == 'jeans' or product.tags contains 'type_jeans' or product.tags contains 'category_denim'
     assign material_content = '<p>Structured denim with a controlled flare silhouette and a clean everyday finish.</p>'
@@ -42,6 +53,11 @@
     <div class="melato-accordion-list">
       {%- for block in section.blocks -%}
         {%- assign accordion_title_down = block.settings.title | downcase -%}
+        {%- if suppress_generic_fit_block -%}
+          {%- if accordion_title_down contains 'fit' or accordion_title_down contains 'design' -%}
+            {%- continue -%}
+          {%- endif -%}
+        {%- endif -%}
         {%- assign rendered_title = block.settings.title -%}
         {%- if accordion_title_down contains 'fit' or accordion_title_down contains 'design' -%}{%- assign rendered_title = 'Design & Fit' -%}{%- endif -%}
         <details class="melato-accordion" {{ block.shopify_attributes }} {% if forloop.first and section.settings.open_first %}open{% endif %}>

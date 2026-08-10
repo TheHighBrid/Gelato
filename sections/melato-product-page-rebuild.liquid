@@ -1,145 +1,108 @@
 {% comment %}
-  Melato Product Page Rebuild
-  Out-of-stock display (Zara-style) added by Claude: greyed ATC box + greyed/disabled size pills.
+  Melato consolidated PDP.
+  Customer-facing product claims come only from approved Shopify metafields.
+  Generic product descriptions, sampling notes, and global size charts are not
+  used as technical specifications.
 {% endcomment %}
 
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
+  assign product_form_id = 'product-form-' | append: section.id
   assign featured_media = current_variant.featured_media | default: product.featured_media
   assign product_title_down = product.title | downcase
   assign product_type_down = product.product_type | downcase
 
-  assign product_accent = product.metafields.custom.palette_1.value | default: product.metafields.custom.palette_2.value | default: product.metafields.custom.palette_3.value | default: current_variant.metafields.custom.theme_accent_2.value | default: section.settings.accent_2
-  assign product_button_accent = current_variant.metafields.custom.theme_accent.value | default: product_accent | default: section.settings.accent
+  assign is_fragrance = false
+  if product_type_down contains 'fragrance' or product_type_down contains 'eau de' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum' or product_title_down contains 'perfume'
+    assign is_fragrance = true
+  endif
+
+  assign is_fur = false
+  if product_type_down contains 'fur' or product_title_down contains 'fur'
+    assign is_fur = true
+  endif
 
   assign pdp_hook = product.metafields.custom.pdp_hook.value
-  assign story_copy = product.metafields.custom.story.value | default: product.metafields.custom.product_story.value | default: product.metafields.custom.pdp_story.value | default: product.metafields.custom.pdp_proof_context.value
-  assign design_features = product.metafields.custom.design_features.value
-  assign legacy_details = product.metafields.custom.pdp_technical_details.value
-
-  assign fit_copy = product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit.value
-  assign material_copy = product.metafields.custom.fabric_composition.value | default: product.metafields.custom.composition.value | default: product.metafields.custom.material.value
-  assign care_copy = product.metafields.custom.care_short.value | default: product.metafields.custom.care.value
-  assign drop_note = product.metafields.custom.drop_note.value
+  assign story_copy = product.metafields.melato.product_story.value | default: product.metafields.custom.story.value | default: product.metafields.custom.product_story.value | default: product.metafields.custom.pdp_story.value | default: product.metafields.custom.pdp_story_content.value
+  assign construction_details = product.metafields.custom.design_features.value | default: product.metafields.custom.pdp_technical_details.value
+  assign construction_paragraph = product.metafields.custom.pdp_technical_paragraph.value
+  assign fit_copy = product.metafields.melato.fit.value | default: product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit.value | default: product.metafields.custom.fit_notes.value
+  assign fit_details = product.metafields.custom.pdp_fit_details.value
+  assign material_copy = product.metafields.melato.material_composition.value | default: product.metafields.custom.material_care.value | default: product.metafields.custom.fabric_composition.value | default: product.metafields.custom.composition.value | default: product.metafields.custom.material.value | default: product.metafields.custom.material_profile.value
+  assign material_details = product.metafields.custom.pdp_material_details.value
+  assign care_copy = product.metafields.melato.care_instructions.value | default: product.metafields.custom.care_instructions.value | default: product.metafields.custom.care_short.value | default: product.metafields.custom.care.value | default: product.metafields.custom.care_notes.value
+  assign care_details = product.metafields.custom.pdp_care_details.value
+  assign application_copy = product.metafields.custom.application.value
+  assign scent_profile = product.metafields.custom.scent_profile.value
+  assign shipping_returns_details = product.metafields.custom.pdp_shipping_returns_details.value
+  assign drop_note = product.metafields.custom.drop_note.value | default: 'Limited Melato production. Restock is not guaranteed.'
   assign matching_product = product.metafields.custom.matching_product.value | default: product.metafields.custom.set_partner.value
-  assign review_count = product.metafields.judgeme.review_widget_data.value.number_of_reviews | default: 0 | plus: 0
 
-  assign material_label = 'Premium construction'
-  assign trust_material = 'Material-led finish'
-  assign type_label = product.product_type | default: 'Melato piece'
-
-  if product_type_down contains 'track jacket' or product_title_down contains 'track jacket'
-    assign fallback_hook = 'A premium track jacket built with clean retro-sport structure, controlled colour blocking, and full-set presence.'
-    assign fallback_story = 'Built as the upper half of the Melato uniform: structured enough to hold shape, relaxed enough to move through the day. The silhouette keeps the attitude clean, with panel work doing the talking instead of excess branding.'
-    assign fallback_fit = 'Relaxed athletic jacket fit. Choose your usual size for a clean silhouette, or size up for a looser oversized read.'
-    assign fallback_material = 'Premium track fabric selected for softness, clean movement, and everyday wearability.'
-  elsif product_type_down contains 'track pant' or product_title_down contains 'track pant'
-    assign fallback_hook = 'A premium track pant cut for movement, comfort, and the full Melato uniform effect.'
-    assign fallback_story = 'Designed to ground the matching jacket and complete the set without losing everyday comfort. The leg shape is relaxed, the panel language is intentional, and the full look stays sharp without trying too hard.'
-    assign fallback_fit = 'Relaxed athletic pant fit with an easy leg. Choose your usual size for a clean drape, or size up for more volume.'
-    assign fallback_material = 'Premium track fabric selected for softness, clean movement, and everyday wearability.'
-  elsif product_type_down contains 'dress' or product_title_down contains 'dress'
-    assign fallback_hook = 'A statement dress built around body line, controlled tension, and after-dark elegance.'
-    assign fallback_story = 'Cut for presence after dark, with shape and texture doing the quiet work. The piece is designed to read refined, fitted, and a little dangerous without becoming costume.'
-    assign fallback_fit = 'Body-following fit. Choose your usual size for a sculpted silhouette, or size up if between sizes.'
-    assign fallback_material = 'Statement fabric construction selected for shape, texture, and elevated eveningwear presence.'
-  elsif product_type_down contains 'bodysuit' or product_title_down contains 'bodysuit'
-    assign fallback_hook = 'A fitted layering piece designed with second-skin attitude and sharp styling range.'
-    assign fallback_story = 'A close-to-body base layer made to anchor the outfit without overpowering it. It sits clean under jackets, denim, or skirts, with enough texture to stand on its own when the styling calls for it.'
-    assign fallback_fit = 'Close-to-body fit with stretch. Choose your usual size for a smooth base layer, or size up for more ease.'
-    assign fallback_material = 'Soft stretch fabric selected for a close body fit and clean layering.'
-  elsif product_type_down contains 'jean' or product_title_down contains 'jean' or product_type_down contains 'denim'
-    assign fallback_hook = 'A directional denim piece cut for shape, attitude, and a stronger silhouette.'
-    assign fallback_story = 'A denim piece built around silhouette first. The shape is designed to change the line of the outfit, giving the lower body more attitude, more length, and more visual weight.'
-    assign fallback_fit = 'Structured denim fit. Choose your usual size for the intended silhouette, or size up if between sizes.'
-    assign fallback_material = 'Structured denim selected for shape retention, clean drape, and a strong finished silhouette.'
-  elsif product_type_down contains 'skirt' or product_title_down contains 'skirt'
-    assign fallback_hook = 'A shaped skirt built for clean tension, strong proportion, and editorial styling.'
-    assign fallback_story = 'Built to sharpen the outfit from the waist down. The silhouette keeps the line clean while the finish gives it enough character to move between everyday styling and evening presence.'
-    assign fallback_fit = 'Shaped skirt fit through the waist and hip. Choose your usual size, or size up if between sizes.'
-    assign fallback_material = 'Structured skirt construction selected for shape and finish.'
-  elsif product_type_down contains 'shirt' or product_title_down contains 'shirt'
-    assign fallback_hook = 'A relaxed shirt cut for easy movement, clean layering, and daily styling.'
-    assign fallback_story = 'Made to sit loose without looking careless. The shape keeps the body easy, the collar keeps it composed, and the styling range runs from warm-weather uniform to layered city wear.'
-    assign fallback_fit = 'Relaxed shirt fit with easy room through the chest and body. Choose your usual size for the intended drape.'
-    assign fallback_material = 'Lightweight shirt fabric with a relaxed drape.'
-  elsif product_type_down contains 'tie' or product_title_down contains 'tie'
-    assign fallback_hook = 'A finishing piece that turns formalwear into a Melato-coded statement.'
-    assign fallback_story = 'Designed as the quiet loud piece: formal from a distance, coded up close. It adds pattern, texture, and a little mischief to tailoring, shirting, or layered styling.'
-    assign fallback_fit = 'One-size accessory fit designed for standard neckwear styling.'
-    assign fallback_material = 'Structured tie construction with patterned surface.'
-  elsif product_type_down contains 'suspender' or product_title_down contains 'suspender'
-    assign fallback_hook = 'A vintage-coded accessory designed to sharpen the silhouette without trying too hard.'
-    assign fallback_story = 'Built to pull the outfit upward, literally and visually. The hardware and strap pattern add old-world tension to denim, trousers, shirting, or a layered Melato uniform.'
-    assign fallback_fit = 'Adjustable accessory fit designed to sit clean over shirts, tees, or tailored layers.'
-    assign fallback_material = 'Patterned strap construction with adjustable hardware.'
-  else
-    assign fallback_hook = 'A premium Melato piece built with clean construction, controlled proportion, and everyday presence.'
-    assign fallback_story = 'A focused Melato piece designed around proportion, texture, and styling range. Built to feel intentional without overexplaining itself.'
-    assign fallback_fit = 'Premium everyday fit. Choose your usual size for the intended silhouette.'
-    assign fallback_material = 'Premium construction selected for clean movement and everyday wearability.'
+  # Internal sampling language must never become a live specification.
+  if product.handle == 'protective-custody'
+    assign material_copy_check = material_copy | strip_html | downcase
+    assign story_copy_check = story_copy | strip_html | downcase
+    assign construction_copy_check = construction_paragraph | strip_html | downcase
+    if material_copy_check contains 'suggested production composition'
+      assign material_copy = blank
+      assign material_details = blank
+    endif
+    if story_copy_check contains 'suggested production composition'
+      assign story_copy = blank
+    endif
+    if construction_copy_check contains 'suggested production composition'
+      assign construction_paragraph = blank
+      assign construction_details = blank
+    endif
   endif
 
-  if product_title_down contains 'bamboo'
-    assign material_label = 'Bamboo-blend track fabric'
-    assign trust_material = 'Soft bamboo-blend feel'
-  elsif product_title_down contains 'velour'
-    assign material_label = 'Premium velour'
-    assign trust_material = 'Plush velour handfeel'
-  elsif product_type_down contains 'jean' or product_title_down contains 'jean' or product_type_down contains 'denim'
-    assign material_label = 'Structured denim'
-    assign trust_material = 'Structured denim finish'
-  elsif product_type_down contains 'bodysuit' or product_title_down contains 'bodysuit'
-    assign material_label = 'Stretch layering fabric'
-    assign trust_material = 'Smooth layering base'
+  if is_fragrance
+    assign fit_copy = blank
+    assign fit_details = blank
+    if application_copy == blank
+      assign application_copy = 'Apply to pulse points. Avoid rubbing the fragrance into the skin.'
+    endif
+    if care_copy == blank and care_details == blank
+      assign care_copy = 'Store upright away from heat and direct sunlight.'
+    endif
   endif
 
-  assign pdp_hook = pdp_hook | default: fallback_hook
-  assign story_copy = story_copy | default: fallback_story
-  assign fit_copy = fit_copy | default: fallback_fit
-  assign material_copy = material_copy | default: fallback_material
-  assign care_copy = care_copy | default: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.'
-  assign drop_note = drop_note | default: 'Limited Melato drop. Restock is not guaranteed.'
+  if is_fur and care_copy == blank and care_details == blank
+    assign care_copy = 'Professional fur cleaning only. Do not machine wash or hand wash. Store in a cool, ventilated space away from moisture, direct heat, and prolonged sunlight. Use a broad-shouldered hanger.'
+  endif
+
+  assign size_guide_page = product.metafields.custom.size_guide.value
+  assign size_guide_handle = size_guide_page.handle | default: '' | downcase
+  assign has_specific_size_guide = false
+  if size_guide_page != blank and size_guide_handle != blank and size_guide_handle != 'size-guide' and size_guide_handle != 'melato-size-guide' and size_guide_handle != 'sizing-guide' and size_guide_handle != 'fit-guide'
+    assign has_specific_size_guide = true
+  endif
+
+  assign product_accent = product.metafields.custom.palette_1.value | default: product.metafields.custom.palette_2.value | default: product.metafields.custom.palette_3.value | default: section.settings.accent_2
+  assign product_button_accent = current_variant.metafields.custom.theme_accent.value | default: product_accent | default: section.settings.accent
 
   assign current_colorway = blank
   assign current_type = blank
-  assign colorway_key = blank
-  assign colorway_display = blank
-
+  assign colorway_display = product.metafields.melato.colorway.value | default: product.metafields.custom.colorway.value
   for tag in product.tags
     assign tag_clean = tag | downcase | strip
     if tag_clean contains 'colorway_'
       assign current_colorway = tag_clean
-      assign colorway_key = tag_clean | remove: 'colorway_' | handleize
+      assign colorway_display = tag_clean | remove: 'colorway_' | replace: '-', ' ' | upcase
     endif
     if tag_clean == 'type_jacket' or tag_clean == 'type_pants'
       assign current_type = tag_clean
     endif
   endfor
 
-  case colorway_key
-    when 'chu'
-      assign colorway_display = 'CHŪ'
-    when 'divididos'
-      assign colorway_display = 'DIVIDIDOS'
-    when 'passionfruit'
-      assign colorway_display = 'PASSION FRUIT'
-    when 'reliance'
-      assign colorway_display = 'RELIANCE'
-    when 'conquista'
-      assign colorway_display = 'CONQUISTA'
-    else
-      assign colorway_display = colorway_key | replace: '-', ' ' | upcase
-  endcase
-
   assign complement_type = blank
   assign complement_label = blank
   if current_type == 'type_jacket'
     assign complement_type = 'type_pants'
-    assign complement_label = 'matching pants'
+    assign complement_label = 'Matching pants'
   elsif current_type == 'type_pants'
     assign complement_type = 'type_jacket'
-    assign complement_label = 'matching jacket'
+    assign complement_label = 'Matching jacket'
   endif
 
   if matching_product == blank and current_colorway != blank and complement_type != blank
@@ -164,98 +127,296 @@
   endif
 -%}
 
-<style>
-  :root{ --melato-product-accent: {{ product_accent }}; }
-  .announcement-bar,
-  .announcement-bar *,
-  [class*="announcement-bar"],
-  [class*="announcement-bar"] *,
-  [class*="announcement"] .announcement-bar,
-  [class*="announcement"] .announcement-bar *,
-  .melato-announcement,
-  .melato-announcement *,
-  .m-announcement,
-  .m-announcement *{
-    color: var(--melato-product-accent) !important;
-    border-color: color-mix(in srgb, var(--melato-product-accent) 52%, transparent) !important;
-  }
-</style>
-
-<section id="MelatoPDP-{{ section.id }}" class="melato-pdp-rebuild" style="--pdp-bg: {{ current_variant.metafields.custom.theme_bg.value | default: section.settings.bg }}; --pdp-surface: {{ current_variant.metafields.custom.theme_surface.value | default: section.settings.surface }}; --pdp-surface-2: {{ section.settings.surface_2 }}; --pdp-text: {{ current_variant.metafields.custom.theme_text.value | default: section.settings.text }}; --pdp-muted: {{ section.settings.muted }}; --pdp-accent: {{ product_button_accent }}; --pdp-accent-2: {{ product_accent }}; --pdp-title-accent: {{ product_accent }};">
+<section
+  id="MelatoPDP-{{ section.id }}"
+  class="melato-pdp-rebuild"
+  style="--pdp-bg:{{ current_variant.metafields.custom.theme_bg.value | default: section.settings.bg }};--pdp-surface:{{ current_variant.metafields.custom.theme_surface.value | default: section.settings.surface }};--pdp-text:{{ current_variant.metafields.custom.theme_text.value | default: section.settings.text }};--pdp-muted:{{ section.settings.muted }};--pdp-accent:{{ product_button_accent }};--pdp-title-accent:{{ product_accent }}"
+  data-product-section
+>
   <div class="pdp-shell">
     <div class="pdp-hero">
-      <div class="pdp-gallery" aria-label="{{ product.title | escape }} photos">
-        {% if featured_media %}<div class="pdp-main-media">{{ featured_media | image_url: width: 1800 | image_tag: class: 'pdp-main-image', loading: 'eager', fetchpriority: 'high', widths: '600,900,1200,1500,1800', alt: featured_media.alt | default: product.title }}</div>{% endif %}
-        {% if product.media.size > 1 %}<div class="pdp-thumbs" role="list" aria-label="Product image thumbnails">{% for media in product.media limit: 8 %}<button class="pdp-thumb{% if forloop.first %} is-active{% endif %}" type="button" data-pdp-thumb data-media-src="{{ media | image_url: width: 1800 }}" aria-label="Show product image {{ forloop.index }}">{{ media | image_url: width: 220 | image_tag: class: 'pdp-thumb-image', loading: 'lazy', widths: '110,160,220', alt: media.alt | default: product.title }}</button>{% endfor %}</div>{% endif %}
+      <div class="pdp-gallery" aria-label="{{ product.title | escape }} product gallery">
+        {%- if featured_media -%}
+          {%- assign featured_alt = featured_media.alt | strip -%}
+          {%- assign featured_alt_down = featured_alt | downcase -%}
+          {%- if featured_alt == blank or featured_alt_down == product_title_down or featured_alt_down contains 'image:' -%}
+            {%- assign featured_alt = product.title | append: ', featured product view' -%}
+          {%- endif -%}
+          <div class="pdp-main-media">
+            {{ featured_media | image_url: width: 1800 | image_tag:
+              class: 'pdp-main-image',
+              loading: 'eager',
+              fetchpriority: 'high',
+              widths: '600, 900, 1200, 1500, 1800',
+              sizes: '(min-width: 1000px) 55vw, 100vw',
+              alt: featured_alt
+            }}
+          </div>
+        {%- endif -%}
+
+        {%- if product.media.size > 1 -%}
+          <div class="pdp-thumbs" role="list" aria-label="Product image views">
+            {%- for media in product.media limit: 8 -%}
+              {%- liquid
+                case forloop.index
+                  when 1
+                    assign view_label = 'front view'
+                  when 2
+                    assign view_label = 'alternate angle'
+                  when 3
+                    assign view_label = 'rear view'
+                  when 4
+                    assign view_label = 'construction detail'
+                  when 5
+                    assign view_label = 'texture detail'
+                  else
+                    assign view_label = 'editorial view ' | append: forloop.index
+                endcase
+                assign media_alt = media.alt | strip
+                assign media_alt_down = media_alt | downcase
+                if media_alt == blank or media_alt_down == product_title_down or media_alt_down contains 'image:'
+                  assign media_alt = product.title | append: ', ' | append: view_label
+                endif
+              -%}
+              <button
+                class="pdp-thumb{% if media.id == featured_media.id %} is-active{% endif %}"
+                type="button"
+                data-pdp-thumb
+                data-media-src="{{ media | image_url: width: 1800 }}"
+                data-media-alt="{{ media_alt | escape }}"
+                aria-label="Show {{ media_alt | escape }}"
+                role="listitem"
+              >
+                {{ media | image_url: width: 220 | image_tag: class: 'pdp-thumb-image', loading: 'lazy', widths: '110, 160, 220', sizes: '110px', alt: '' }}
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
       </div>
 
       <div class="pdp-buybox">
-        {% if section.settings.eyebrow != blank %}<p class="pdp-eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
+        {%- if section.settings.eyebrow != blank -%}<p class="pdp-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
         <h1 class="pdp-title">{{ product.title }}</h1>
-        <p class="pdp-thesis">{{ pdp_hook }}</p>
-        <div class="pdp-price-row" id="PDPPrice-{{ section.id }}"><span class="pdp-price">{{ current_variant.price | money }}</span>{% if current_variant.compare_at_price > current_variant.price %}<span class="pdp-compare">{{ current_variant.compare_at_price | money }}</span>{% endif %}</div>
-        <div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>
+        {%- if pdp_hook != blank -%}<p class="pdp-thesis">{{ pdp_hook }}</p>{%- endif -%}
 
-        {% form 'product', product, class: 'pdp-form' %}
-          {% if product.has_only_default_variant %}<input type="hidden" name="id" value="{{ current_variant.id }}">{% else %}
-            {% for option in product.options_with_values %}<fieldset class="pdp-option"><legend>{{ option.name }}</legend><div class="pdp-option-grid">{% for value in option.values %}<label class="pdp-choice{% if option.selected_value == value %} is-selected{% endif %}{% unless product.available %} pdp-choice--disabled{% endunless %}"><input type="radio" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} {% unless product.available %}disabled{% endunless %} data-option-position="{{ option.position }}"><span>{{ value }}</span></label>{% endfor %}</div></fieldset>{% endfor %}
+        <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="Price">
+          <span class="pdp-price">{{ current_variant.price | money }}</span>
+          {%- if current_variant.compare_at_price > current_variant.price -%}<s class="pdp-compare">{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
+        </div>
+
+        {% form 'product', product, id: product_form_id, class: 'pdp-form' %}
+          {%- if product.has_only_default_variant -%}
             <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
-          {% endif %}
-          <div class="pdp-atc-row"><input class="pdp-qty" type="number" name="quantity" min="1" value="1" aria-label="Quantity"><button class="pdp-atc{% unless current_variant.available %} pdp-atc--oos{% endunless %}" type="submit" name="add" data-pdp-atc {% unless current_variant.available %}disabled{% endunless %}>{% if current_variant.available %}Add to cart{% else %}Out of Stock{% endif %}</button></div>
-          {% if additional_checkout_buttons and current_variant.available %}<div class="pdp-dynamic-checkout">{{ content_for_additional_checkout_buttons }}</div>{% endif %}
+          {%- else -%}
+            {%- for option in product.options_with_values -%}
+              <fieldset class="pdp-option">
+                <div class="pdp-option__header">
+                  <legend>{{ option.name }}</legend>
+                  {%- assign option_name_down = option.name | downcase -%}
+                  {%- if has_specific_size_guide and option_name_down == 'size' or has_specific_size_guide and option_name_down == 'taille' -%}
+                    <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>
+                  {%- endif -%}
+                </div>
+                <div class="pdp-option-grid">
+                  {%- for value in option.values -%}
+                    <label class="pdp-choice{% if option.selected_value == value %} is-selected{% endif %}">
+                      <input type="radio" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-position="{{ option.position }}">
+                      <span>{{ value }}</span>
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </fieldset>
+            {%- endfor -%}
+            <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+          {%- endif -%}
+
+          <div class="pdp-atc-row">
+            <label class="visually-hidden" for="PDPQty-{{ section.id }}">Quantity</label>
+            <input id="PDPQty-{{ section.id }}" class="pdp-qty" type="number" name="quantity" min="1" value="1">
+            <button class="pdp-atc{% unless current_variant.available %} pdp-atc--oos{% endunless %}" type="submit" name="add" data-pdp-atc {% unless current_variant.available %}disabled{% endunless %}>
+              {% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}
+            </button>
+          </div>
+
         {% endform %}
 
-        <div class="pdp-proof-mini" aria-label="Product trust highlights"><div><strong>Limited production</strong><span>{{ drop_note }}</span></div><div><strong>{{ trust_material }}</strong><span>{{ material_label }}</span></div><div><strong>Easy returns</strong><span>Eligible unworn items follow posted policy.</span></div></div>
+        {% render 'back-in-stock-form', product: product %}
+
+        <div class="pdp-proof-mini" aria-label="Product information summary">
+          <div><strong>Limited production</strong><span>{{ drop_note }}</span></div>
+          {%- if material_copy != blank or material_details != blank -%}<div><strong>Verified material information</strong><span>See Material below.</span></div>{%- endif -%}
+          <div><strong>Returns</strong><span>{% if is_fragrance %}Unopened fragrance products follow the posted Melato return policy.{% else %}Eligible unused products follow the posted Melato return policy.{% endif %}</span></div>
+        </div>
       </div>
     </div>
 
     <div class="pdp-content-stack">
-      <section class="pdp-panel pdp-story-tech" aria-labelledby="PDPStory-{{ section.id }}">
-        <div class="pdp-story-tech__grid">
-          <div class="pdp-story-tech__story"><p class="pdp-kicker">Product story</p><h2 id="PDPStory-{{ section.id }}">Cut with intent.</h2><div class="pdp-rte pdp-rte--story">{{ story_copy | newline_to_br }}</div></div>
-          <div class="pdp-story-tech__details"><p class="pdp-kicker">Technical details</p><h2 id="PDPTech-{{ section.id }}">The construction read.</h2>{% if design_features != blank %}<ul class="pdp-detail-list">{% for detail in design_features %}<li>{{ detail }}</li>{% endfor %}</ul>{% elsif legacy_details != blank %}<ul class="pdp-detail-list">{% for detail in legacy_details %}<li>{{ detail }}</li>{% endfor %}</ul>{% else %}<ul class="pdp-detail-list"><li>{{ type_label }} with Melato’s current-season product language.</li><li>{{ material_label }} selected for feel, structure, and everyday wearability.</li><li>Built to sit clean on body without stealing movement.</li></ul>{% endif %}</div>
-        </div>
+      {%- if story_copy != blank or construction_details != blank or construction_paragraph != blank -%}
+        <section class="pdp-panel pdp-story-tech" aria-label="Product story and construction">
+          <div class="pdp-story-tech__grid">
+            {%- if story_copy != blank -%}<details class="pdp-mini-detail"><summary>Story</summary><div class="pdp-mini-detail__content rte">{{ story_copy }}</div></details>{%- endif -%}
+            {%- if construction_details != blank or construction_paragraph != blank -%}
+              <details class="pdp-mini-detail">
+                <summary>Construction</summary>
+                <div class="pdp-mini-detail__content">
+                  {%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail }}</li>{%- endfor -%}</ul>{%- endif -%}
+                  {%- if construction_paragraph != blank -%}<p>{{ construction_paragraph }}</p>{%- endif -%}
+                </div>
+              </details>
+            {%- endif -%}
+          </div>
+        </section>
+      {%- endif -%}
+
+      <section class="pdp-spec-grid" aria-label="Product specifications">
+        {%- if is_fragrance -%}
+          {%- if application_copy != blank -%}<details class="pdp-spec"><summary>Application</summary><div class="pdp-rte">{{ application_copy }}</div></details>{%- endif -%}
+          {%- if scent_profile != blank -%}<details class="pdp-spec"><summary>Scent profile</summary><div class="pdp-rte">{{ scent_profile }}</div></details>{%- endif -%}
+        {%- elsif fit_details != blank or fit_copy != blank -%}
+          <details class="pdp-spec"><summary>Fit</summary><div class="pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}</div></details>
+        {%- endif -%}
+
+        {%- if material_details != blank or material_copy != blank -%}
+          <details class="pdp-spec"><summary>Material</summary><div class="pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div></details>
+        {%- endif -%}
+
+        {%- if care_details != blank or care_copy != blank -%}
+          <details class="pdp-spec"><summary>Care</summary><div class="pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div></details>
+        {%- endif -%}
+
+        <details class="pdp-spec">
+          <summary>Shipping &amp; returns</summary>
+          <div class="pdp-rte">
+            {%- if shipping_returns_details != blank -%}
+              <ul>{%- for item in shipping_returns_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>
+            {%- elsif is_fragrance -%}
+              <p>Orders usually prepare within 1 to 3 business days. Delivery timing is confirmed at checkout.</p>
+              <p>Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening the product if you may need return assistance.</p>
+            {%- else -%}
+              <p>Orders usually prepare within 1 to 3 business days. Delivery timing is confirmed at checkout.</p>
+              <p>Eligible unused products follow the posted Melato return policy.</p>
+            {%- endif -%}
+          </div>
+        </details>
       </section>
 
-      <section class="pdp-spec-grid" aria-label="Fit, material, care, shipping and returns"><details class="pdp-spec"><summary>Fit</summary><div class="pdp-rte">{{ fit_copy }}</div></details><details class="pdp-spec"><summary>Material</summary><div class="pdp-rte">{{ material_copy }}</div></details><details class="pdp-spec"><summary>Care</summary><div class="pdp-rte">{{ care_copy }}</div></details><details class="pdp-spec"><summary>Shipping & returns</summary><div class="pdp-rte">Orders usually prepare within 1 to 3 business days. Complimentary delivery available on all orders. Returns are eligible when items are unworn, unwashed, tagged, and returned within the posted policy window.</div></details></section>
+      {%- if matching_product != blank -%}
+        <section class="pdp-panel pdp-set" aria-labelledby="PDPSet-{{ section.id }}">
+          <header class="pdp-section-head">
+            <p class="pdp-kicker">Complete the set</p>
+            <h2 id="PDPSet-{{ section.id }}">{% if colorway_display != blank %}Full {{ colorway_display }} uniform{% else %}Style it with{% endif %}</h2>
+          </header>
+          <div class="pdp-set-grid" role="list">
+            <article class="pdp-set-card" role="listitem">
+              <p class="pdp-set-label">Selected piece</p>
+              {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: product.title | append: ', selected piece' }}{%- endif -%}
+              <h3 class="purchase-summary__title">{{ product.title }}</h3>
+              <p class="purchase-summary__price"><span class="visually-hidden">Price: </span>{{ product.price | money }}</p>
+            </article>
 
-      {% if matching_product != blank %}<section class="pdp-panel pdp-set" aria-labelledby="PDPSet-{{ section.id }}"><div class="pdp-section-head"><p class="pdp-kicker">Complete the set</p><h2 id="PDPSet-{{ section.id }}">{% if colorway_display != blank %}Full {{ colorway_display }} uniform{% else %}Style it with{% endif %}</h2></div><div class="pdp-set-grid"><article class="pdp-set-card"><span class="pdp-set-label">You have</span>{% if product.featured_image %}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300,500,800', alt: product.title }}{% endif %}<h3>{{ product.title }}</h3><p>{{ product.price | money }}</p></article><a class="pdp-set-card pdp-set-card--link" href="{{ matching_product.url }}" aria-label="Shop {{ matching_product.title | escape }}"><span class="pdp-set-label">Add {{ complement_label | default: 'matching piece' }}</span>{% if matching_product.featured_image %}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300,500,800', alt: matching_product.title }}{% endif %}<h3>{{ matching_product.title }}</h3><p>{{ matching_product.price | money }}</p><strong>Add full set</strong></a></div><div class="pdp-set-total"><span>Full set price</span><strong>{{ product.price | plus: matching_product.price | money_with_currency }}</strong></div></section>{% endif %}
+            <article class="pdp-set-card" role="listitem">
+              <p class="pdp-set-label">{{ complement_label | default: 'Matching piece' }}</p>
+              <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
+                {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: matching_product.title | append: ', matching piece' }}{%- endif -%}
+              </a>
+              <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
+              <p class="purchase-summary__price"><span class="visually-hidden">Price: </span>{{ matching_product.price | money }}</p>
+              <a class="pdp-set-cta" href="{{ matching_product.url }}">Add matching piece</a>
+            </article>
+          </div>
+          <p class="pdp-set-total"><span>Full set price</span><strong>{{ product.price | plus: matching_product.price | money_with_currency }}</strong></p>
+        </section>
+      {%- endif -%}
 
-      {% if product.media.size > 1 %}<section class="pdp-panel pdp-editorial" aria-labelledby="PDPEditorial-{{ section.id }}"><div class="pdp-section-head"><p class="pdp-kicker">Editorial photos</p><h2 id="PDPEditorial-{{ section.id }}">Extra angles, texture, and close-ups.</h2></div><div class="pdp-editorial-grid">{% for media in product.media offset: 1 limit: 6 %}<div class="pdp-editorial-card">{{ media | image_url: width: 1200 | image_tag: class: 'pdp-editorial-image', loading: 'lazy', widths: '400,700,900,1200', alt: media.alt | default: product.title }}</div>{% endfor %}</div></section>{% endif %}
-
-      {% if review_count > 0 %}<section class="pdp-panel pdp-reviews" aria-labelledby="PDPReviews-{{ section.id }}"><div class="pdp-section-head"><p class="pdp-kicker">Reviews</p><h2 id="PDPReviews-{{ section.id }}">What buyers say.</h2></div><div id="judgeme_product_reviews" class="jdgm-widget jdgm-review-widget" data-product-title="{{ product.title | escape }}" data-id="{{ product.id }}" data-product-id="{{ product.id }}" data-widget="review" data-auto-install="false"></div></section>{% endif %}
+      {%- if product.media.size > 1 -%}
+        <section class="pdp-panel pdp-editorial" aria-labelledby="PDPEditorial-{{ section.id }}">
+          <header class="pdp-section-head"><p class="pdp-kicker">Editorial photos</p><h2 id="PDPEditorial-{{ section.id }}">Extra angles, texture, and close-ups.</h2></header>
+          <div class="pdp-editorial-grid">
+            {%- for media in product.media offset: 1 limit: 6 -%}
+              {%- liquid
+                assign editorial_alt = media.alt | strip
+                assign editorial_alt_down = editorial_alt | downcase
+                if editorial_alt == blank or editorial_alt_down == product_title_down or editorial_alt_down contains 'image:'
+                  assign editorial_alt = product.title | append: ', editorial detail ' | append: forloop.index
+                endif
+              -%}
+              <figure class="pdp-editorial-card">{{ media | image_url: width: 1200 | image_tag: class: 'pdp-editorial-image', loading: 'lazy', widths: '400, 700, 900, 1200', sizes: '(min-width: 900px) 33vw, 100vw', alt: editorial_alt }}</figure>
+            {%- endfor -%}
+          </div>
+        </section>
+      {%- endif -%}
     </div>
   </div>
 
-  <div class="pdp-sticky-atc" data-pdp-sticky aria-hidden="true"><div><strong>{{ product.title }}</strong><span id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money }}</span></div><button type="button" data-pdp-sticky-button class="{% unless current_variant.available %}pdp-atc--oos{% endunless %}" {% unless current_variant.available %}disabled{% endunless %}>{% if current_variant.available %}Add to cart{% else %}Out of Stock{% endif %}</button></div>
+  <div class="pdp-sticky-atc" data-pdp-sticky aria-hidden="true">
+    <div class="purchase-summary"><strong class="purchase-summary__title">{{ product.title }}</strong><span class="purchase-summary__price" id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money }}</span></div>
+    <button type="button" data-pdp-sticky-button class="{% unless current_variant.available %}pdp-atc--oos{% endunless %}" {% unless current_variant.available %}disabled{% endunless %}>{% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}</button>
+  </div>
+
+  <script type="application/json" id="PDPVariants-{{ section.id }}">{{ product.variants | json }}</script>
 </section>
 
-<script type="application/json" id="PDPVariants-{{ section.id }}">{{ product.variants | json }}</script>
+{%- if has_specific_size_guide -%}{% render 'size-guide-drawer', product: product %}{%- endif -%}
+
 <script>
-(function(){var section=document.getElementById('MelatoPDP-{{ section.id }}');if(!section)return;var mainImage=section.querySelector('.pdp-main-image');section.querySelectorAll('[data-pdp-thumb]').forEach(function(button){button.addEventListener('click',function(){section.querySelectorAll('[data-pdp-thumb]').forEach(function(item){item.classList.remove('is-active')});button.classList.add('is-active');if(mainImage){mainImage.src=button.getAttribute('data-media-src');mainImage.removeAttribute('srcset')}})});var form=section.querySelector('.pdp-form');var variantsEl=document.getElementById('PDPVariants-{{ section.id }}');var variants=[];try{variants=JSON.parse(variantsEl.textContent||'[]')}catch(e){}function formatMoney(cents){if(window.Shopify&&Shopify.formatMoney){return Shopify.formatMoney(cents,{{ shop.money_format | json }})}return '$'+(cents/100).toFixed(2)}function getSelections(){var selections=[];section.querySelectorAll('.pdp-option').forEach(function(fieldset){var selected=fieldset.querySelector('input:checked');selections.push(selected?selected.value:null)});return selections}function findVariant(){var selections=getSelections();return variants.find(function(variant){return variant.options.every(function(option,index){return selections[index]===option})})}function updateVariant(variant){if(!variant||!form)return;var idInput=form.querySelector('[data-variant-id]');var atc=section.querySelector('[data-pdp-atc]');var stickyBtn=section.querySelector('[data-pdp-sticky-button]');var price=section.querySelector('#PDPPrice-{{ section.id }}');var stickyPrice=section.querySelector('#PDPStickyPrice-{{ section.id }}');if(idInput)idInput.value=variant.id;if(price){var html='<span class="pdp-price">'+formatMoney(variant.price)+'</span>';if(variant.compare_at_price&&variant.compare_at_price>variant.price){html+='<span class="pdp-compare">'+formatMoney(variant.compare_at_price)+'</span>'}price.innerHTML=html}if(stickyPrice)stickyPrice.textContent=formatMoney(variant.price);[atc,stickyBtn].forEach(function(btn){if(!btn)return;btn.disabled=!variant.available;btn.textContent=variant.available?'Add to cart':'Out of Stock';btn.classList.toggle('pdp-atc--oos',!variant.available)});if(variant.featured_image&&mainImage){mainImage.src=variant.featured_image.src;mainImage.removeAttribute('srcset')}var url=new URL(window.location.href);url.searchParams.set('variant',variant.id);window.history.replaceState({},'',url.toString())}section.querySelectorAll('.pdp-choice input').forEach(function(input){input.addEventListener('change',function(){var wrap=input.closest('.pdp-option-grid');if(wrap){wrap.querySelectorAll('.pdp-choice').forEach(function(label){label.classList.remove('is-selected')})}input.closest('.pdp-choice').classList.add('is-selected');updateVariant(findVariant())})});var stickyButton=section.querySelector('[data-pdp-sticky-button]');if(stickyButton&&form){stickyButton.addEventListener('click',function(){var submitButton=form.querySelector('[data-pdp-atc]');if(submitButton)submitButton.click()})}var sticky=section.querySelector('[data-pdp-sticky]');var atc=section.querySelector('[data-pdp-atc]');if(sticky&&atc&&'IntersectionObserver'in window){var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(window.innerWidth>749)return;sticky.classList.toggle('is-visible',!entry.isIntersecting);sticky.setAttribute('aria-hidden',entry.isIntersecting?'true':'false')})},{threshold:0});observer.observe(atc)}})();
+(function(){
+  var section=document.getElementById('MelatoPDP-{{ section.id }}');
+  if(!section)return;
+  var mainImage=section.querySelector('.pdp-main-image');
+  var form=section.querySelector('.pdp-form');
+  var variants=[];
+  try{variants=JSON.parse(document.getElementById('PDPVariants-{{ section.id }}').textContent||'[]')}catch(error){}
+
+  section.querySelectorAll('[data-pdp-thumb]').forEach(function(button){
+    button.addEventListener('click',function(){
+      section.querySelectorAll('[data-pdp-thumb]').forEach(function(item){item.classList.remove('is-active')});
+      button.classList.add('is-active');
+      if(mainImage){mainImage.src=button.getAttribute('data-media-src');mainImage.alt=button.getAttribute('data-media-alt')||mainImage.alt;mainImage.removeAttribute('srcset')}
+    });
+  });
+
+  function formatMoney(cents){if(window.Shopify&&Shopify.formatMoney)return Shopify.formatMoney(cents,{{ shop.money_format | json }});return '$'+(cents/100).toFixed(2)}
+  function selections(){return Array.prototype.map.call(section.querySelectorAll('.pdp-option'),function(fieldset){var selected=fieldset.querySelector('input:checked');return selected?selected.value:null})}
+  function selectedVariant(){var values=selections();return variants.find(function(variant){return variant.options.every(function(value,index){return values[index]===value})})}
+  function updateVariant(variant){
+    if(!variant||!form)return;
+    var idInput=form.querySelector('[data-variant-id]');if(idInput)idInput.value=variant.id;
+    var price=section.querySelector('#PDPPrice-{{ section.id }}');if(price)price.innerHTML='<span class="pdp-price">'+formatMoney(variant.price)+'</span>'+(variant.compare_at_price&&variant.compare_at_price>variant.price?'<s class="pdp-compare">'+formatMoney(variant.compare_at_price)+'</s>':'');
+    var stickyPrice=section.querySelector('#PDPStickyPrice-{{ section.id }}');if(stickyPrice)stickyPrice.textContent=formatMoney(variant.price);
+    [section.querySelector('[data-pdp-atc]'),section.querySelector('[data-pdp-sticky-button]')].forEach(function(button){if(!button)return;button.disabled=!variant.available;button.textContent=variant.available?'Add to cart':'Out of stock';button.classList.toggle('pdp-atc--oos',!variant.available)});
+    if(variant.featured_image&&mainImage){mainImage.src=variant.featured_image.src;mainImage.removeAttribute('srcset')}
+    var url=new URL(window.location.href);url.searchParams.set('variant',variant.id);window.history.replaceState({},'',url.toString());
+    document.dispatchEvent(new CustomEvent('variant:change',{detail:{variant:variant}}));
+  }
+
+  section.querySelectorAll('.pdp-choice input').forEach(function(input){input.addEventListener('change',function(){var grid=input.closest('.pdp-option-grid');if(grid)grid.querySelectorAll('.pdp-choice').forEach(function(label){label.classList.remove('is-selected')});input.closest('.pdp-choice').classList.add('is-selected');updateVariant(selectedVariant())})});
+  var stickyButton=section.querySelector('[data-pdp-sticky-button]');if(stickyButton&&form)stickyButton.addEventListener('click',function(){var submit=form.querySelector('[data-pdp-atc]');if(submit)submit.click()});
+  var sticky=section.querySelector('[data-pdp-sticky]');var atc=section.querySelector('[data-pdp-atc]');if(sticky&&atc&&'IntersectionObserver'in window){new IntersectionObserver(function(entries){entries.forEach(function(entry){if(window.innerWidth>749)return;sticky.classList.toggle('is-visible',!entry.isIntersecting);sticky.setAttribute('aria-hidden',entry.isIntersecting?'true':'false')})},{threshold:0}).observe(atc)}
+})();
 </script>
 
 <style>
-#MelatoPDP-{{ section.id }}{background:var(--pdp-bg);color:var(--pdp-text);padding:34px 0 76px}#MelatoPDP-{{ section.id }} *{box-sizing:border-box}#MelatoPDP-{{ section.id }} .pdp-shell{width:min(1440px,calc(100% - 32px));margin:0 auto}#MelatoPDP-{{ section.id }} .pdp-hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:28px;align-items:start}#MelatoPDP-{{ section.id }} .pdp-main-media,#MelatoPDP-{{ section.id }} .pdp-buybox,#MelatoPDP-{{ section.id }} .pdp-panel,#MelatoPDP-{{ section.id }} .pdp-spec,#MelatoPDP-{{ section.id }} .pdp-set-card{background:var(--pdp-surface);border:1px solid rgba(255,255,255,.095);border-radius:26px;box-shadow:0 18px 50px rgba(0,0,0,.24)}#MelatoPDP-{{ section.id }} .pdp-main-media{overflow:hidden;padding:12px}#MelatoPDP-{{ section.id }} .pdp-main-image{display:block;width:100%;height:auto;border-radius:18px}#MelatoPDP-{{ section.id }} .pdp-thumbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}#MelatoPDP-{{ section.id }} .pdp-thumb{background:var(--pdp-surface);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:7px;cursor:pointer}#MelatoPDP-{{ section.id }} .pdp-thumb.is-active{border-color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-thumb-image{display:block;width:100%;height:auto;border-radius:12px}#MelatoPDP-{{ section.id }} .pdp-buybox{position:sticky;top:22px;padding:28px}#MelatoPDP-{{ section.id }} .pdp-eyebrow,#MelatoPDP-{{ section.id }} .pdp-kicker{margin:0 0 12px;color:var(--pdp-title-accent);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:900}#MelatoPDP-{{ section.id }} .pdp-title{margin:0 0 14px;font-size:clamp(34px,5vw,66px);line-height:.92;letter-spacing:-.045em;text-transform:uppercase}#MelatoPDP-{{ section.id }} .pdp-panel h2{color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-thesis{margin:0 0 20px;max-width:58ch;font-size:17px;line-height:1.5;color:rgba(255,255,255,.82)}#MelatoPDP-{{ section.id }} .pdp-price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}#MelatoPDP-{{ section.id }} .pdp-price{font-size:28px;font-weight:900}#MelatoPDP-{{ section.id }} .pdp-compare{color:var(--pdp-muted);text-decoration:line-through}#MelatoPDP-{{ section.id }} .pdp-trust-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}#MelatoPDP-{{ section.id }} .pdp-trust-row span,#MelatoPDP-{{ section.id }} .pdp-proof-mini div{border:1px solid rgba(255,255,255,.095);background:rgba(255,255,255,.045)}#MelatoPDP-{{ section.id }} .pdp-trust-row span{border-radius:999px;padding:8px 10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.76)}#MelatoPDP-{{ section.id }} .pdp-option{margin:0 0 18px;padding:0;border:0}#MelatoPDP-{{ section.id }} .pdp-option legend{margin-bottom:9px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-option-grid{display:flex;gap:8px;flex-wrap:wrap}#MelatoPDP-{{ section.id }} .pdp-choice input{position:absolute;opacity:0;pointer-events:none}#MelatoPDP-{{ section.id }} .pdp-choice span{display:block;min-width:54px;padding:13px 15px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);text-align:center;cursor:pointer;font-weight:800}#MelatoPDP-{{ section.id }} .pdp-choice.is-selected span{border-color:var(--pdp-title-accent);box-shadow:0 0 0 1px var(--pdp-title-accent);background:rgba(255,255,255,.11)}#MelatoPDP-{{ section.id }} .pdp-choice--disabled{pointer-events:none}#MelatoPDP-{{ section.id }} .pdp-choice--disabled span{opacity:.35;text-decoration:line-through;cursor:not-allowed;background:rgba(255,255,255,.02)!important;border-color:rgba(255,255,255,.06)!important}#MelatoPDP-{{ section.id }} .pdp-atc-row{display:grid;grid-template-columns:86px 1fr;gap:10px;margin-top:22px}#MelatoPDP-{{ section.id }} .pdp-qty,#MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{min-height:56px;border-radius:16px;border:0}#MelatoPDP-{{ section.id }} .pdp-qty{background:rgba(255,255,255,.05);color:var(--pdp-text);border:1px solid rgba(255,255,255,.13);text-align:center}#MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{background:var(--pdp-accent);color:#fff;font-weight:900;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}#MelatoPDP-{{ section.id }} .pdp-atc:disabled,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button:disabled{opacity:.5;cursor:not-allowed}#MelatoPDP-{{ section.id }} .pdp-atc--oos,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button.pdp-atc--oos{background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.45)!important;border:1px solid rgba(255,255,255,.12);opacity:1!important}#MelatoPDP-{{ section.id }} .pdp-dynamic-checkout{margin-top:12px}#MelatoPDP-{{ section.id }} .pdp-proof-mini{display:grid;grid-template-columns:1fr;gap:10px;margin-top:20px}#MelatoPDP-{{ section.id }} .pdp-proof-mini div{padding:14px;border-radius:16px}#MelatoPDP-{{ section.id }} .pdp-proof-mini strong{display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-proof-mini span{color:rgba(255,255,255,.68);font-size:13px}#MelatoPDP-{{ section.id }} .pdp-content-stack{display:grid;gap:18px;margin-top:28px}#MelatoPDP-{{ section.id }} .pdp-panel{padding:30px}#MelatoPDP-{{ section.id }} .pdp-panel h2{margin:0 0 14px;font-size:clamp(25px,3vw,42px);line-height:1;letter-spacing:-.035em;text-transform:uppercase}#MelatoPDP-{{ section.id }} .pdp-story-tech__grid{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);gap:42px;align-items:start}#MelatoPDP-{{ section.id }} .pdp-rte{color:rgba(255,255,255,.78);line-height:1.72;max-width:76ch}#MelatoPDP-{{ section.id }} .pdp-rte--story{max-width:60ch}#MelatoPDP-{{ section.id }} .pdp-detail-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 18px;margin:0;padding:0;list-style:none;color:rgba(255,255,255,.8);line-height:1.55;max-width:760px}#MelatoPDP-{{ section.id }} .pdp-detail-list li{position:relative;padding-left:18px}#MelatoPDP-{{ section.id }} .pdp-detail-list li:before{content:'•';position:absolute;left:0;color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-spec-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}#MelatoPDP-{{ section.id }} .pdp-spec{padding:18px}#MelatoPDP-{{ section.id }} .pdp-spec summary{cursor:pointer;font-weight:900;letter-spacing:.12em;text-transform:uppercase;font-size:12px;color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-spec .pdp-rte{margin-top:12px;font-size:14px}#MelatoPDP-{{ section.id }} .pdp-set-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}#MelatoPDP-{{ section.id }} .pdp-set-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:18px;color:var(--pdp-text);text-decoration:none}#MelatoPDP-{{ section.id }} .pdp-set-label{color:var(--pdp-title-accent);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:900}#MelatoPDP-{{ section.id }} .pdp-set-image{display:block;width:min(250px,100%);height:auto;border-radius:18px}#MelatoPDP-{{ section.id }} .pdp-set-card h3{margin:0;font-size:18px;text-transform:uppercase;line-height:1.1}#MelatoPDP-{{ section.id }} .pdp-set-card p{margin:0;color:rgba(255,255,255,.72)}#MelatoPDP-{{ section.id }} .pdp-set-card strong{color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-set-total{display:flex;justify-content:space-between;gap:14px;margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,.095)}#MelatoPDP-{{ section.id }} .pdp-editorial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}#MelatoPDP-{{ section.id }} .pdp-editorial-card{overflow:hidden;border-radius:20px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035)}#MelatoPDP-{{ section.id }} .pdp-editorial-image{display:block;width:100%;height:auto}#MelatoPDP-{{ section.id }} .pdp-sticky-atc{position:fixed;left:12px;right:12px;bottom:12px;z-index:40;display:none;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:20px;background:rgba(8,8,8,.92);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(0,0,0,.34)}#MelatoPDP-{{ section.id }} .pdp-sticky-atc strong{display:block;max-width:54vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px;text-transform:uppercase}#MelatoPDP-{{ section.id }} .pdp-sticky-atc span{display:block;color:var(--pdp-title-accent);font-weight:900;font-size:13px}#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{min-height:46px;padding:0 18px}@media(max-width:1000px){#MelatoPDP-{{ section.id }} .pdp-hero,#MelatoPDP-{{ section.id }} .pdp-story-tech__grid{grid-template-columns:1fr}#MelatoPDP-{{ section.id }} .pdp-buybox{position:static}#MelatoPDP-{{ section.id }} .pdp-spec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:749px){#MelatoPDP-{{ section.id }}{padding-top:18px;padding-bottom:84px}#MelatoPDP-{{ section.id }} .pdp-shell{width:min(100% - 24px,1440px)}#MelatoPDP-{{ section.id }} .pdp-buybox,#MelatoPDP-{{ section.id }} .pdp-panel{padding:20px;border-radius:22px}#MelatoPDP-{{ section.id }} .pdp-title{font-size:38px}#MelatoPDP-{{ section.id }} .pdp-thesis{font-size:15px}#MelatoPDP-{{ section.id }} .pdp-trust-row span{font-size:10px}#MelatoPDP-{{ section.id }} .pdp-spec-grid,#MelatoPDP-{{ section.id }} .pdp-set-grid,#MelatoPDP-{{ section.id }} .pdp-editorial-grid,#MelatoPDP-{{ section.id }} .pdp-detail-list{grid-template-columns:1fr}#MelatoPDP-{{ section.id }} .pdp-sticky-atc.is-visible{display:flex}}
+#MelatoPDP-{{ section.id }}{background:var(--pdp-bg);color:var(--pdp-text);padding:34px 0 76px}#MelatoPDP-{{ section.id }} *{box-sizing:border-box}#MelatoPDP-{{ section.id }} .pdp-shell{width:min(1440px,calc(100% - 32px));margin:auto}#MelatoPDP-{{ section.id }} .pdp-hero{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:28px;align-items:start}#MelatoPDP-{{ section.id }} .pdp-main-media,#MelatoPDP-{{ section.id }} .pdp-buybox,#MelatoPDP-{{ section.id }} .pdp-panel,#MelatoPDP-{{ section.id }} .pdp-spec,#MelatoPDP-{{ section.id }} .pdp-set-card{background:var(--pdp-surface);border:1px solid rgba(255,255,255,.095);border-radius:26px;box-shadow:0 18px 50px rgba(0,0,0,.24)}#MelatoPDP-{{ section.id }} .pdp-main-media{overflow:hidden;padding:12px}#MelatoPDP-{{ section.id }} .pdp-main-image{display:block;width:100%;height:auto;border-radius:18px}#MelatoPDP-{{ section.id }} .pdp-thumbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}#MelatoPDP-{{ section.id }} .pdp-thumb{background:var(--pdp-surface);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:7px;cursor:pointer}#MelatoPDP-{{ section.id }} .pdp-thumb.is-active{border-color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-thumb-image{display:block;width:100%;height:auto;border-radius:12px}#MelatoPDP-{{ section.id }} .pdp-buybox{position:sticky;top:22px;padding:28px}#MelatoPDP-{{ section.id }} .pdp-eyebrow,#MelatoPDP-{{ section.id }} .pdp-kicker{margin:0 0 12px;color:var(--pdp-title-accent);font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:900}#MelatoPDP-{{ section.id }} .pdp-title{margin:0 0 14px;font-size:clamp(34px,5vw,66px);line-height:.92;letter-spacing:-.045em;text-transform:uppercase}#MelatoPDP-{{ section.id }} .pdp-thesis{margin:0 0 20px;max-width:58ch;font-size:17px;line-height:1.5;color:rgba(255,255,255,.82)}#MelatoPDP-{{ section.id }} .pdp-price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}#MelatoPDP-{{ section.id }} .pdp-price{font-size:28px;font-weight:900}#MelatoPDP-{{ section.id }} .pdp-compare{color:var(--pdp-muted)}#MelatoPDP-{{ section.id }} .product-assurances{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px;padding:0;list-style:none}#MelatoPDP-{{ section.id }} .product-assurances li{padding:8px 10px;border:1px solid rgba(255,255,255,.095);border-radius:999px;background:rgba(255,255,255,.045);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.76)}#MelatoPDP-{{ section.id }} .pdp-option{margin:0 0 18px;padding:0;border:0}#MelatoPDP-{{ section.id }} .pdp-option__header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:9px}#MelatoPDP-{{ section.id }} .pdp-option legend{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .size-guide-trigger{background:none;border:0;border-bottom:1px solid currentColor;color:var(--pdp-title-accent);font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}#MelatoPDP-{{ section.id }} .pdp-option-grid{display:flex;gap:8px;flex-wrap:wrap}#MelatoPDP-{{ section.id }} .pdp-choice input{position:absolute;opacity:0}#MelatoPDP-{{ section.id }} .pdp-choice span{display:block;min-width:54px;padding:13px 15px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);text-align:center;cursor:pointer;font-weight:800}#MelatoPDP-{{ section.id }} .pdp-choice.is-selected span{border-color:var(--pdp-title-accent);box-shadow:0 0 0 1px var(--pdp-title-accent);background:rgba(255,255,255,.11)}#MelatoPDP-{{ section.id }} .pdp-choice input:focus-visible+span{outline:2px solid var(--pdp-title-accent);outline-offset:2px}#MelatoPDP-{{ section.id }} .pdp-atc-row{display:grid;grid-template-columns:86px 1fr;gap:10px;margin-top:22px}#MelatoPDP-{{ section.id }} .pdp-qty,#MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{min-height:56px;border-radius:16px;border:0}#MelatoPDP-{{ section.id }} .pdp-qty{background:rgba(255,255,255,.05);color:var(--pdp-text);border:1px solid rgba(255,255,255,.13);text-align:center}#MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{background:var(--pdp-accent);color:#fff;font-weight:900;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}#MelatoPDP-{{ section.id }} .pdp-atc--oos{background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.45)!important;border:1px solid rgba(255,255,255,.12)}#MelatoPDP-{{ section.id }} .pdp-dynamic-checkout{margin-top:12px}#MelatoPDP-{{ section.id }} .pdp-proof-mini{display:grid;gap:10px;margin-top:20px}#MelatoPDP-{{ section.id }} .pdp-proof-mini>div{padding:14px;border:1px solid rgba(255,255,255,.095);border-radius:16px;background:rgba(255,255,255,.045)}#MelatoPDP-{{ section.id }} .pdp-proof-mini strong{display:block;margin-bottom:4px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-proof-mini span{color:rgba(255,255,255,.68);font-size:13px}#MelatoPDP-{{ section.id }} .pdp-content-stack{display:grid;gap:18px;margin-top:28px}#MelatoPDP-{{ section.id }} .pdp-panel{padding:30px}#MelatoPDP-{{ section.id }} .pdp-story-tech__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}#MelatoPDP-{{ section.id }} .pdp-mini-detail{border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(255,255,255,.025)}#MelatoPDP-{{ section.id }} .pdp-mini-detail summary,#MelatoPDP-{{ section.id }} .pdp-spec summary{padding:17px;cursor:pointer;color:var(--pdp-title-accent);font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}#MelatoPDP-{{ section.id }} .pdp-mini-detail__content,#MelatoPDP-{{ section.id }} .pdp-spec .pdp-rte{padding:0 17px 17px;color:rgba(255,255,255,.78);line-height:1.72}#MelatoPDP-{{ section.id }} .pdp-spec-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}#MelatoPDP-{{ section.id }} .pdp-spec ul{margin:0;padding-left:18px}#MelatoPDP-{{ section.id }} .pdp-set-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}#MelatoPDP-{{ section.id }} .pdp-set-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:18px;color:var(--pdp-text)}#MelatoPDP-{{ section.id }} .pdp-set-label{margin:0;color:var(--pdp-title-accent);font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:900}#MelatoPDP-{{ section.id }} .pdp-set-image{display:block;width:min(250px,100%);height:auto;border-radius:18px}#MelatoPDP-{{ section.id }} .pdp-set-media-link,#MelatoPDP-{{ section.id }} .purchase-summary__title a{color:inherit;text-decoration:none}#MelatoPDP-{{ section.id }} .purchase-summary__title,#MelatoPDP-{{ section.id }} .purchase-summary__price{margin:0}#MelatoPDP-{{ section.id }} .purchase-summary__title{font-size:18px;text-transform:uppercase}#MelatoPDP-{{ section.id }} .purchase-summary__price{color:rgba(255,255,255,.72)}#MelatoPDP-{{ section.id }} .pdp-set-cta{display:inline-flex;padding:11px 15px;border-radius:12px;background:var(--pdp-title-accent);color:#080808;font-size:11px;font-weight:900;letter-spacing:.1em;text-decoration:none;text-transform:uppercase}#MelatoPDP-{{ section.id }} .pdp-set-total{display:flex;justify-content:space-between;gap:14px;margin:18px 0 0;padding-top:18px;border-top:1px solid rgba(255,255,255,.095)}#MelatoPDP-{{ section.id }} .pdp-section-head h2{margin:0 0 18px;font-size:clamp(25px,3vw,42px);text-transform:uppercase;color:var(--pdp-title-accent)}#MelatoPDP-{{ section.id }} .pdp-editorial-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}#MelatoPDP-{{ section.id }} .pdp-editorial-card{margin:0;overflow:hidden;border-radius:20px;border:1px solid rgba(255,255,255,.08)}#MelatoPDP-{{ section.id }} .pdp-editorial-image{display:block;width:100%;height:auto}#MelatoPDP-{{ section.id }} .pdp-sticky-atc{position:fixed;left:12px;right:12px;bottom:12px;z-index:40;display:none;align-items:center;justify-content:space-between;gap:12px;padding:12px;border-radius:20px;background:rgba(8,8,8,.92);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px)}#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{min-height:46px;padding:0 18px}@media(max-width:1000px){#MelatoPDP-{{ section.id }} .pdp-hero{grid-template-columns:1fr}#MelatoPDP-{{ section.id }} .pdp-buybox{position:static}#MelatoPDP-{{ section.id }} .pdp-spec-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:749px){#MelatoPDP-{{ section.id }}{padding-top:18px;padding-bottom:84px}#MelatoPDP-{{ section.id }} .pdp-shell{width:min(100% - 24px,1440px)}#MelatoPDP-{{ section.id }} .pdp-buybox,#MelatoPDP-{{ section.id }} .pdp-panel{padding:20px;border-radius:22px}#MelatoPDP-{{ section.id }} .pdp-title{font-size:38px}#MelatoPDP-{{ section.id }} .pdp-story-tech__grid,#MelatoPDP-{{ section.id }} .pdp-spec-grid,#MelatoPDP-{{ section.id }} .pdp-set-grid,#MelatoPDP-{{ section.id }} .pdp-editorial-grid{grid-template-columns:1fr}#MelatoPDP-{{ section.id }} .pdp-sticky-atc.is-visible{display:flex}}
 </style>
 
 {% render 'melato-product-jsonld', product: product %}
 
 {% schema %}
 {
-  "name": "Melato PDP rebuild",
-  "tag": "section",
-  "class": "section-melato-pdp-rebuild",
-  "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Product focus" },
-    { "type": "color", "id": "bg", "label": "Background", "default": "#080808" },
-    { "type": "color", "id": "surface", "label": "Surface", "default": "#111214" },
-    { "type": "color", "id": "surface_2", "label": "Secondary surface", "default": "#171717" },
-    { "type": "color", "id": "text", "label": "Text", "default": "#f5f1e8" },
-    { "type": "color", "id": "muted", "label": "Muted text", "default": "#9b968d" },
-    { "type": "color", "id": "accent", "label": "Accent", "default": "#9e1824" },
-    { "type": "color", "id": "accent_2", "label": "Accent 2", "default": "#d3a74a" }
+  "name":"Melato PDP rebuild",
+  "tag":"section",
+  "class":"section-melato-pdp-rebuild",
+  "settings":[
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Product focus"},
+    {"type":"color","id":"bg","label":"Background","default":"#080808"},
+    {"type":"color","id":"surface","label":"Surface","default":"#111214"},
+    {"type":"color","id":"surface_2","label":"Secondary surface","default":"#171717"},
+    {"type":"color","id":"text","label":"Text","default":"#f5f1e8"},
+    {"type":"color","id":"muted","label":"Muted text","default":"#9b968d"},
+    {"type":"color","id":"accent","label":"Accent","default":"#9e1824"},
+    {"type":"color","id":"accent_2","label":"Accent 2","default":"#d3a74a"}
   ],
-  "presets": [ { "name": "Melato PDP rebuild" } ]
+  "presets":[{"name":"Melato PDP rebuild"}]
 }
 {% endschema %}
+{% comment %} Melato policy sync marker 2026-08-07 {% endcomment %}

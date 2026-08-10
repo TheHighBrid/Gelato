@@ -1,43 +1,5 @@
 {% comment %}
-  snippets/size-guide-modal.liquid
+  Legacy global size-guide output intentionally disabled.
+  Product-specific sizing is rendered only from the active PDP when the exact
+  product has an approved custom.size_guide reference.
 {% endcomment %}
-
-<div
-  class="size-guide-modal"
-  role="dialog"
-  aria-modal="true"
-  aria-label="{{ 'products.size_guide' | t }}"
-  aria-hidden="true"
->
-  <div class="drip-overlay" style="z-index:inherit;" aria-hidden="true" data-size-guide-close></div>
-  <div class="size-guide-modal__inner">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
-      <h2 class="heading-sm">{{ 'products.size_guide' | t }}</h2>
-      <button class="header__icon-btn" aria-label="{{ 'accessibility.close' | t }}" data-size-guide-close>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-          <path d="M18 6 6 18M6 6l12 12"/>
-        </svg>
-      </button>
-    </div>
-    <p class="text-label" style="margin-bottom:8px;">All measurements in centimeters</p>
-    <table class="size-table">
-      <thead>
-        <tr>
-          <th scope="col">Size</th>
-          <th scope="col">Chest</th>
-          <th scope="col">Waist</th>
-          <th scope="col">Hip</th>
-          <th scope="col">Inseam</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>XS</td><td>84–88</td><td>70–74</td><td>88–92</td><td>76</td></tr>
-        <tr><td>S</td><td>88–92</td><td>74–78</td><td>92–96</td><td>77</td></tr>
-        <tr><td>M</td><td>92–96</td><td>78–82</td><td>96–100</td><td>78</td></tr>
-        <tr><td>L</td><td>96–100</td><td>82–86</td><td>100–104</td><td>79</td></tr>
-        <tr><td>XL</td><td>100–106</td><td>86–92</td><td>104–110</td><td>80</td></tr>
-        <tr><td>XXL</td><td>106–114</td><td>92–100</td><td>110–118</td><td>81</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>

@@ -1,98 +1,218 @@
 {% comment %}
-  Melato Luxury Product Page - Metafield Lockdown
-  Renders premium PDP copy from:
-  - custom.pdp_hook
-  - custom.pdp_proof_context
-  - custom.pdp_technical_details
+  Melato luxury PDP.
+  Customer-facing product claims come only from product data and metafields.
 {% endcomment %}
 
-{% liquid
+{%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign featured_media = current_variant.featured_media | default: product.featured_media
-  assign pdp_hook = product.metafields.custom.pdp_hook.value | default: section.settings.subtitle
-  assign pdp_context = product.metafields.custom.pdp_proof_context.value | default: product.description
-  assign pdp_details = product.metafields.custom.pdp_technical_details.value
-%}
+  assign product_title_down = product.title | downcase
+  assign product_type_down = product.product_type | downcase
+  assign pdp_hook = product.metafields.custom.pdp_hook.value
+  assign pdp_context = product.metafields.custom.pdp_proof_context.value | default: product.metafields.custom.story.value | default: product.metafields.custom.product_story.value
+  assign pdp_details = product.metafields.custom.pdp_technical_details.value | default: product.metafields.custom.design_features.value
+  assign material_copy = product.metafields.custom.fabric_composition.value | default: product.metafields.custom.composition.value | default: product.metafields.custom.material.value
+  assign fit_copy = product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit.value
+  assign care_copy = product.metafields.custom.care_short.value | default: product.metafields.custom.care.value
+  assign application_copy = product.metafields.custom.application.value
+  assign size_guide_page = product.metafields.custom.size_guide.value
+
+  assign is_fragrance = false
+  if product_type_down contains 'fragrance' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum' or product_title_down contains 'perfume'
+    assign is_fragrance = true
+  endif
+
+  if pdp_context == blank and product.description != blank
+    assign pdp_context = product.description
+  endif
+
+  if is_fragrance
+    assign fit_copy = blank
+    if application_copy == blank
+      assign application_copy = 'Apply to pulse points. Avoid rubbing the fragrance into the skin.'
+    endif
+    if care_copy == blank
+      assign care_copy = 'Store upright away from heat and direct sunlight.'
+    endif
+  endif
+-%}
 
 <section
   id="MelatoLuxury-{{ section.id }}"
-  class="melato-luxury melato-pdp-lockdown"
-  style="--ml-bg: {{ current_variant.metafields.custom.theme_bg.value | default: '#080808' }}; --ml-surface: {{ current_variant.metafields.custom.theme_surface.value | default: '#111214' }}; --ml-text: {{ current_variant.metafields.custom.theme_text.value | default: '#f5f1e8' }}; --ml-accent: {{ current_variant.metafields.custom.theme_accent.value | default: '#9e1824' }}; --ml-accent-2: {{ current_variant.metafields.custom.theme_accent_2.value | default: '#d3a74a' }};"
+  class="melato-luxury"
+  style="--ml-bg:{{ current_variant.metafields.custom.theme_bg.value | default: '#080808' }};--ml-surface:{{ current_variant.metafields.custom.theme_surface.value | default: '#111214' }};--ml-text:{{ current_variant.metafields.custom.theme_text.value | default: '#f5f1e8' }};--ml-accent:{{ current_variant.metafields.custom.theme_accent.value | default: '#9e1824' }};--ml-accent-2:{{ current_variant.metafields.custom.theme_accent_2.value | default: '#d3a74a' }}"
 >
-  <div class="ml-shell page-width">
+  <div class="ml-shell">
     <div class="ml-hero-grid">
       <div class="ml-gallery-wrap">
-        {% if featured_media %}
+        {%- if featured_media -%}
+          {%- assign featured_alt = featured_media.alt -%}
+          {%- if featured_alt == blank -%}{%- assign featured_alt = product.title | append: ', featured product image' -%}{%- endif -%}
           <div class="ml-main-card">
-            {{ featured_media | image_url: width: 1800 | image_tag: class: 'ml-main-image', loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200, 1500, 1800', alt: featured_media.alt | default: product.title }}
+            {{ featured_media | image_url: width: 1800 | image_tag: class: 'ml-main-image', loading: 'eager', fetchpriority: 'high', widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 1000px) 55vw, 100vw', alt: featured_alt }}
           </div>
-        {% endif %}
-        {% if product.media.size > 1 %}
+        {%- endif -%}
+
+        {%- if product.media.size > 1 -%}
           <div class="ml-thumbs" role="list" aria-label="Product images">
-            {% for media in product.media limit: 8 %}
-              <button class="ml-thumb{% if forloop.first %} is-active{% endif %}" type="button" data-media-src="{{ media | image_url: width: 1800 }}" aria-label="Show image {{ forloop.index }}">
-                {{ media | image_url: width: 220 | image_tag: class: 'ml-thumb-image', loading: 'lazy', widths: '110, 160, 220', alt: media.alt | default: product.title }}
+            {%- for media in product.media limit: 8 -%}
+              {%- assign media_alt = media.alt -%}
+              {%- if media_alt == blank -%}{%- assign media_alt = product.title | append: ', product image ' | append: forloop.index -%}{%- endif -%}
+              <button class="ml-thumb{% if media.id == featured_media.id %} is-active{% endif %}" type="button" data-media-src="{{ media | image_url: width: 1800 }}" data-media-alt="{{ media_alt | escape }}" aria-label="Show {{ media_alt | escape }}" role="listitem">
+                {{ media | image_url: width: 220 | image_tag: class: 'ml-thumb-image', loading: 'lazy', widths: '110, 160, 220', sizes: '110px', alt: '' }}
               </button>
-            {% endfor %}
+            {%- endfor -%}
           </div>
-        {% endif %}
+        {%- endif -%}
       </div>
+
       <div class="ml-buybox">
-        <div class="ml-eyebrow">{{ section.settings.eyebrow }}</div>
+        {%- if section.settings.eyebrow != blank -%}<p class="ml-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
         <h1 class="ml-title">{{ product.title }}</h1>
-        {% if pdp_hook != blank %}<p class="ml-subtitle ml-pdp-hook">{{ pdp_hook }}</p>{% endif %}
+        {%- if pdp_hook != blank -%}<p class="ml-subtitle">{{ pdp_hook }}</p>{%- endif -%}
+
         <div class="ml-price-row" id="ml-price-{{ section.id }}">
           <span class="ml-price">{{ current_variant.price | money }}</span>
-          {% if current_variant.compare_at_price > current_variant.price %}<span class="ml-compare">{{ current_variant.compare_at_price | money }}</span>{% endif %}
+          {%- if current_variant.compare_at_price > current_variant.price -%}<s class="ml-compare">{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
         </div>
+
+        <ul class="ml-assurances" role="list" aria-label="Purchase assurances">
+          <li>Fast dispatch</li>
+          <li>Complimentary delivery on all orders</li>
+          <li>Secure checkout</li>
+        </ul>
+
         <div class="ml-badges">
-          {% for block in section.blocks %}{% if block.type == 'badge' %}<span class="ml-badge" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>{% endif %}{% endfor %}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'badge' and block.settings.text != blank -%}<span class="ml-badge" {{ block.shopify_attributes }}>{{ block.settings.text }}</span>{%- endif -%}
+          {%- endfor -%}
         </div>
+
         {% form 'product', product, class: 'ml-form' %}
-          {% if product.variants.size > 1 %}
-            <label class="ml-option-label" for="VariantSelect-{{ section.id }}">Size / Variant</label>
+          {%- if product.variants.size > 1 -%}
+            <div class="ml-option-header">
+              <label class="ml-option-label" for="VariantSelect-{{ section.id }}">Size / Variant</label>
+              {%- if size_guide_page != blank -%}<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Size guide &amp; silhouette fit</button>{%- endif -%}
+            </div>
             <select id="VariantSelect-{{ section.id }}" name="id" class="ml-variant-select">
-              {% for variant in product.variants %}
-                <option value="{{ variant.id }}" {% if variant == current_variant %}selected{% endif %} {% unless variant.available %}disabled{% endunless %} data-price="{{ variant.price | money }}" data-compare="{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money }}{% endif %}">{{ variant.title }}{% unless variant.available %} - Sold out{% endunless %}</option>
-              {% endfor %}
+              {%- for variant in product.variants -%}
+                <option value="{{ variant.id }}" {% if variant == current_variant %}selected{% endif %} data-available="{{ variant.available }}" data-price="{{ variant.price | money }}" data-compare="{% if variant.compare_at_price > variant.price %}{{ variant.compare_at_price | money }}{% endif %}">
+                  {{ variant.title }}{% unless variant.available %} — Sold out{% endunless %}
+                </option>
+              {%- endfor -%}
             </select>
-          {% else %}
+          {%- else -%}
             <input type="hidden" name="id" value="{{ current_variant.id }}">
-          {% endif %}
+          {%- endif -%}
+
           <div class="ml-cta-row">
+            <label class="visually-hidden" for="Quantity-{{ section.id }}">Quantity</label>
             <input id="Quantity-{{ section.id }}" class="ml-qty" type="number" name="quantity" min="1" value="1">
             <button type="submit" class="ml-add-to-cart" {% unless current_variant.available %}disabled{% endunless %}>{% if current_variant.available %}Add to cart{% else %}Sold out{% endif %}</button>
           </div>
         {% endform %}
-        <div class="ml-pdp-summary" aria-label="Product proof context">
-          <div class="ml-section-kicker">Description</div>
-          <div class="rte">{{ pdp_context | newline_to_br }}</div>
-        </div>
-        {% if pdp_details != blank %}
-          <details class="ml-pdp-accordion" open>
-            <summary>Technical details</summary>
-            <ul class="ml-pdp-detail-list">{% for detail in pdp_details %}<li>{{ detail }}</li>{% endfor %}</ul>
+
+        {% render 'back-in-stock-form', product: product %}
+
+        {%- if pdp_context != blank -%}
+          <section class="ml-pdp-summary" aria-labelledby="LuxuryDescription-{{ section.id }}">
+            <p class="ml-section-kicker">Description</p>
+            <h2 id="LuxuryDescription-{{ section.id }}" class="visually-hidden">Product description</h2>
+            <div class="rte">{{ pdp_context }}</div>
+          </section>
+        {%- endif -%}
+
+        {%- if pdp_details != blank -%}
+          <details class="ml-pdp-accordion">
+            <summary>Construction</summary>
+            <ul class="ml-pdp-detail-list">{%- for detail in pdp_details -%}<li>{{ detail }}</li>{%- endfor -%}</ul>
           </details>
-        {% endif %}
+        {%- endif -%}
+
         <div class="ml-meta-grid">
-          <div class="ml-meta-card"><h3>Shipping</h3><p>Complimentary delivery on all orders.</p></div>
-          <div class="ml-meta-card"><h3>Returns</h3><p>30 Day return policy.</p></div>
+          {%- if is_fragrance -%}
+            {%- if application_copy != blank -%}<details class="ml-meta-card"><summary>Application</summary><p>{{ application_copy }}</p></details>{%- endif -%}
+          {%- elsif fit_copy != blank -%}
+            <details class="ml-meta-card"><summary>Fit</summary><p>{{ fit_copy }}</p></details>
+          {%- endif -%}
+          {%- if material_copy != blank -%}<details class="ml-meta-card"><summary>Material</summary><p>{{ material_copy }}</p></details>{%- endif -%}
+          {%- if care_copy != blank -%}<details class="ml-meta-card"><summary>Care</summary><p>{{ care_copy }}</p></details>{%- endif -%}
+          <details class="ml-meta-card">
+            <summary>Shipping &amp; returns</summary>
+            <p>Orders usually prepare within 1 to 3 business days. Complimentary delivery is available on all orders.</p>
+            {%- if is_fragrance -%}
+              <p>Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening the product if you may need return assistance.</p>
+            {%- else -%}
+              <p>Eligible unused products follow the posted Melato return policy.</p>
+            {%- endif -%}
+          </details>
         </div>
       </div>
     </div>
-    <div class="ml-story-grid">
-      <div class="ml-story-card"><div class="ml-section-kicker">Product architecture</div><h2>{{ section.settings.story_heading }}</h2><div class="rte">{{ pdp_context | newline_to_br }}</div></div>
-      <div class="ml-story-card"><div class="ml-section-kicker">Technical read</div><h2>Built for the full uniform</h2>{% if pdp_details != blank %}<ul class="ml-pdp-detail-list">{% for detail in pdp_details %}<li>{{ detail }}</li>{% endfor %}</ul>{% else %}<div class="rte">{{ section.settings.default_materials | newline_to_br }}</div>{% endif %}</div>
-    </div>
-    <div class="ml-extra-gallery"><div class="ml-section-kicker">Extra Frames</div><h2>{{ section.settings.extra_gallery_heading }}</h2><div class="ml-editorial-grid">{% for media in product.media offset: 1 limit: 4 %}<div class="ml-editorial-card">{{ media | image_url: width: 1200 | image_tag: class: 'ml-editorial-image', loading: 'lazy', widths: '400, 700, 900, 1200', alt: media.alt | default: product.title }}</div>{% endfor %}</div></div>
+
+    {%- if product.media.size > 1 -%}
+      <section class="ml-extra-gallery" aria-labelledby="LuxuryGalleryTitle-{{ section.id }}">
+        <p class="ml-section-kicker">Extra frames</p>
+        <h2 id="LuxuryGalleryTitle-{{ section.id }}">{{ section.settings.extra_gallery_heading | default: 'Editorial close-ups and extra angles' }}</h2>
+        <div class="ml-editorial-grid">
+          {%- for media in product.media offset: 1 limit: 4 -%}
+            {%- assign editorial_alt = media.alt -%}
+            {%- if editorial_alt == blank -%}{%- assign editorial_alt = product.title | append: ', editorial product image ' | append: forloop.index -%}{%- endif -%}
+            <figure class="ml-editorial-card">{{ media | image_url: width: 1200 | image_tag: class: 'ml-editorial-image', loading: 'lazy', widths: '400, 700, 900, 1200', sizes: '(min-width: 900px) 25vw, 100vw', alt: editorial_alt }}</figure>
+          {%- endfor -%}
+        </div>
+      </section>
+    {%- endif -%}
   </div>
 </section>
 
+{%- if size_guide_page != blank -%}{% render 'size-guide-drawer', product: product %}{%- endif -%}
 {% render 'melato-product-jsonld', product: product %}
+
 <style>
-#MelatoLuxury-{{ section.id }}{background:linear-gradient(180deg,var(--ml-bg) 0%,var(--ml-surface) 100%);color:var(--ml-text);padding:48px 0 72px;transition:background .35s ease,color .35s ease}#MelatoLuxury-{{ section.id }} *{box-sizing:border-box}#MelatoLuxury-{{ section.id }} .page-width{max-width:1440px;margin:0 auto;padding:0 24px}#MelatoLuxury-{{ section.id }} .ml-hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:start}#MelatoLuxury-{{ section.id }} .ml-gallery-wrap,#MelatoLuxury-{{ section.id }} .ml-buybox,#MelatoLuxury-{{ section.id }} .ml-story-card,#MelatoLuxury-{{ section.id }} .ml-editorial-card,#MelatoLuxury-{{ section.id }} .ml-meta-card,#MelatoLuxury-{{ section.id }} .ml-main-card{background:var(--ml-surface);border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:0 18px 50px rgba(0,0,0,.28)}#MelatoLuxury-{{ section.id }} .ml-main-card{overflow:hidden;padding:14px}#MelatoLuxury-{{ section.id }} .ml-main-image,#MelatoLuxury-{{ section.id }} .ml-editorial-image,#MelatoLuxury-{{ section.id }} .ml-thumb-image{display:block;width:100%;height:auto;border-radius:20px}#MelatoLuxury-{{ section.id }} .ml-thumbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}#MelatoLuxury-{{ section.id }} .ml-thumb{padding:8px;border-radius:18px;border:1px solid transparent;background:var(--ml-surface);cursor:pointer}#MelatoLuxury-{{ section.id }} .ml-thumb.is-active{border-color:var(--ml-accent-2)}#MelatoLuxury-{{ section.id }} .ml-buybox{position:sticky;top:24px;padding:28px}#MelatoLuxury-{{ section.id }} .ml-eyebrow,#MelatoLuxury-{{ section.id }} .ml-section-kicker{display:inline-block;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--ml-accent-2);margin-bottom:14px}#MelatoLuxury-{{ section.id }} .ml-title{font-size:clamp(34px,5vw,64px);line-height:.95;letter-spacing:-.03em;margin:0 0 14px}#MelatoLuxury-{{ section.id }} .ml-subtitle{font-size:18px;line-height:1.5;max-width:58ch;opacity:.9;margin:0 0 18px}#MelatoLuxury-{{ section.id }} .ml-price-row{display:flex;align-items:center;gap:12px;margin-bottom:18px}#MelatoLuxury-{{ section.id }} .ml-price{font-size:28px;font-weight:700}#MelatoLuxury-{{ section.id }} .ml-compare{opacity:.56;text-decoration:line-through}#MelatoLuxury-{{ section.id }} .ml-badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}#MelatoLuxury-{{ section.id }} .ml-badge{padding:10px 14px;border-radius:999px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}#MelatoLuxury-{{ section.id }} .ml-variant-select{width:100%;min-height:52px;margin:8px 0 18px;border-radius:16px;padding:0 14px;background:rgba(255,255,255,.04);color:var(--ml-text);border:1px solid rgba(255,255,255,.14)}#MelatoLuxury-{{ section.id }} .ml-option-label{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.14em;margin-bottom:8px;opacity:.82}#MelatoLuxury-{{ section.id }} .ml-cta-row{display:grid;grid-template-columns:90px 1fr;gap:12px;margin-bottom:24px}#MelatoLuxury-{{ section.id }} .ml-qty,#MelatoLuxury-{{ section.id }} .ml-add-to-cart{min-height:56px;border-radius:18px;border:0}#MelatoLuxury-{{ section.id }} .ml-qty{width:100%;background:rgba(255,255,255,.04);color:var(--ml-text);border:1px solid rgba(255,255,255,.10);text-align:center}#MelatoLuxury-{{ section.id }} .ml-add-to-cart{background:var(--ml-accent);color:white;font-weight:700;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}#MelatoLuxury-{{ section.id }} .ml-pdp-summary{padding:22px 0;border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:18px}#MelatoLuxury-{{ section.id }} .ml-pdp-accordion{border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:18px 20px;margin-bottom:18px;background:rgba(255,255,255,.035)}#MelatoLuxury-{{ section.id }} .ml-pdp-accordion summary{cursor:pointer;font-size:13px;text-transform:uppercase;letter-spacing:.14em;color:var(--ml-accent-2)}#MelatoLuxury-{{ section.id }} .ml-pdp-detail-list{margin:16px 0 0;padding-left:20px;line-height:1.7;opacity:.9}#MelatoLuxury-{{ section.id }} .ml-meta-grid,#MelatoLuxury-{{ section.id }} .ml-story-grid,#MelatoLuxury-{{ section.id }} .ml-editorial-grid{display:grid;gap:20px}#MelatoLuxury-{{ section.id }} .ml-meta-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:12px}#MelatoLuxury-{{ section.id }} .ml-meta-card{padding:20px}#MelatoLuxury-{{ section.id }} .ml-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:34px}#MelatoLuxury-{{ section.id }} .ml-story-card{padding:30px}#MelatoLuxury-{{ section.id }} .ml-story-card h2,#MelatoLuxury-{{ section.id }} .ml-extra-gallery h2{font-size:clamp(26px,3vw,42px);margin:0 0 14px;letter-spacing:-.03em}#MelatoLuxury-{{ section.id }} .ml-extra-gallery{margin-top:42px}#MelatoLuxury-{{ section.id }} .ml-editorial-grid{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:18px}#MelatoLuxury-{{ section.id }} .ml-editorial-card{overflow:hidden;padding:10px}@media(max-width:1100px){#MelatoLuxury-{{ section.id }} .ml-hero-grid,#MelatoLuxury-{{ section.id }} .ml-story-grid,#MelatoLuxury-{{ section.id }} .ml-editorial-grid{grid-template-columns:1fr 1fr}#MelatoLuxury-{{ section.id }} .ml-buybox{position:static}}@media(max-width:749px){#MelatoLuxury-{{ section.id }}{padding:24px 0 44px}#MelatoLuxury-{{ section.id }} .page-width{padding:0 16px}#MelatoLuxury-{{ section.id }} .ml-hero-grid,#MelatoLuxury-{{ section.id }} .ml-meta-grid,#MelatoLuxury-{{ section.id }} .ml-story-grid,#MelatoLuxury-{{ section.id }} .ml-editorial-grid,#MelatoLuxury-{{ section.id }} .ml-cta-row{grid-template-columns:1fr}#MelatoLuxury-{{ section.id }} .ml-buybox,#MelatoLuxury-{{ section.id }} .ml-story-card{padding:20px}#MelatoLuxury-{{ section.id }} .ml-title{font-size:40px}}
+#MelatoLuxury-{{ section.id }}{background:linear-gradient(180deg,var(--ml-bg),var(--ml-surface));color:var(--ml-text);padding:48px 0 72px}#MelatoLuxury-{{ section.id }} *{box-sizing:border-box}#MelatoLuxury-{{ section.id }} .ml-shell{max-width:1440px;margin:auto;padding:0 24px}#MelatoLuxury-{{ section.id }} .ml-hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:start}#MelatoLuxury-{{ section.id }} .ml-gallery-wrap,#MelatoLuxury-{{ section.id }} .ml-buybox,#MelatoLuxury-{{ section.id }} .ml-main-card,#MelatoLuxury-{{ section.id }} .ml-meta-card,#MelatoLuxury-{{ section.id }} .ml-editorial-card{background:var(--ml-surface);border:1px solid rgba(255,255,255,.08);border-radius:28px;box-shadow:0 18px 50px rgba(0,0,0,.28)}#MelatoLuxury-{{ section.id }} .ml-main-card{overflow:hidden;padding:14px}#MelatoLuxury-{{ section.id }} .ml-main-image,#MelatoLuxury-{{ section.id }} .ml-thumb-image,#MelatoLuxury-{{ section.id }} .ml-editorial-image{display:block;width:100%;height:auto;border-radius:20px}#MelatoLuxury-{{ section.id }} .ml-thumbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}#MelatoLuxury-{{ section.id }} .ml-thumb{padding:8px;border-radius:18px;border:1px solid transparent;background:var(--ml-surface);cursor:pointer}#MelatoLuxury-{{ section.id }} .ml-thumb.is-active{border-color:var(--ml-accent-2)}#MelatoLuxury-{{ section.id }} .ml-buybox{position:sticky;top:24px;padding:28px}#MelatoLuxury-{{ section.id }} .ml-eyebrow,#MelatoLuxury-{{ section.id }} .ml-section-kicker{margin:0 0 14px;color:var(--ml-accent-2);font-size:11px;letter-spacing:.22em;text-transform:uppercase}#MelatoLuxury-{{ section.id }} .ml-title{margin:0 0 14px;font-size:clamp(34px,5vw,64px);line-height:.95;letter-spacing:-.03em;text-transform:uppercase}#MelatoLuxury-{{ section.id }} .ml-subtitle{margin:0 0 18px;font-size:18px;line-height:1.5}#MelatoLuxury-{{ section.id }} .ml-price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}#MelatoLuxury-{{ section.id }} .ml-price{font-size:28px;font-weight:800}#MelatoLuxury-{{ section.id }} .ml-compare{opacity:.56}#MelatoLuxury-{{ section.id }} .ml-assurances{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px;padding:0;list-style:none}#MelatoLuxury-{{ section.id }} .ml-assurances li,#MelatoLuxury-{{ section.id }} .ml-badge{padding:8px 10px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.05);font-size:10px;letter-spacing:.09em;text-transform:uppercase}#MelatoLuxury-{{ section.id }} .ml-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}#MelatoLuxury-{{ section.id }} .ml-option-header{display:flex;align-items:center;justify-content:space-between;gap:12px}#MelatoLuxury-{{ section.id }} .ml-option-label{font-size:12px;letter-spacing:.12em;text-transform:uppercase}#MelatoLuxury-{{ section.id }} .size-guide-trigger{background:none;border:0;border-bottom:1px solid currentColor;color:var(--ml-accent-2);font-size:10px;letter-spacing:.1em;text-transform:uppercase}#MelatoLuxury-{{ section.id }} .ml-variant-select{width:100%;min-height:52px;margin:8px 0 18px;border-radius:16px;padding:0 14px;background:rgba(255,255,255,.04);color:var(--ml-text);border:1px solid rgba(255,255,255,.14)}#MelatoLuxury-{{ section.id }} .ml-cta-row{display:grid;grid-template-columns:90px 1fr;gap:12px;margin-bottom:18px}#MelatoLuxury-{{ section.id }} .ml-qty,#MelatoLuxury-{{ section.id }} .ml-add-to-cart{min-height:56px;border-radius:18px}#MelatoLuxury-{{ section.id }} .ml-qty{background:rgba(255,255,255,.04);color:var(--ml-text);border:1px solid rgba(255,255,255,.1);text-align:center}#MelatoLuxury-{{ section.id }} .ml-add-to-cart{border:0;background:var(--ml-accent);color:#fff;font-weight:800;text-transform:uppercase}#MelatoLuxury-{{ section.id }} .ml-pdp-summary{padding:22px 0;border-block:1px solid rgba(255,255,255,.08);margin:18px 0}#MelatoLuxury-{{ section.id }} .ml-pdp-accordion,#MelatoLuxury-{{ section.id }} .ml-meta-card{padding:18px;margin:0;border-radius:20px;background:rgba(255,255,255,.035)}#MelatoLuxury-{{ section.id }} summary{cursor:pointer;color:var(--ml-accent-2);font-size:12px;letter-spacing:.12em;text-transform:uppercase}#MelatoLuxury-{{ section.id }} .ml-pdp-detail-list{line-height:1.7}#MelatoLuxury-{{ section.id }} .ml-meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}#MelatoLuxury-{{ section.id }} .ml-meta-card p{line-height:1.6;color:rgba(255,255,255,.76)}#MelatoLuxury-{{ section.id }} .ml-extra-gallery{margin-top:42px}#MelatoLuxury-{{ section.id }} .ml-extra-gallery h2{margin:0 0 18px;font-size:clamp(26px,3vw,42px);text-transform:uppercase}#MelatoLuxury-{{ section.id }} .ml-editorial-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}#MelatoLuxury-{{ section.id }} .ml-editorial-card{margin:0;padding:10px;overflow:hidden}@media(max-width:1000px){#MelatoLuxury-{{ section.id }} .ml-hero-grid{grid-template-columns:1fr}#MelatoLuxury-{{ section.id }} .ml-buybox{position:static}}@media(max-width:749px){#MelatoLuxury-{{ section.id }}{padding:24px 0 44px}#MelatoLuxury-{{ section.id }} .ml-shell{padding:0 16px}#MelatoLuxury-{{ section.id }} .ml-meta-grid,#MelatoLuxury-{{ section.id }} .ml-editorial-grid,#MelatoLuxury-{{ section.id }} .ml-cta-row{grid-template-columns:1fr}#MelatoLuxury-{{ section.id }} .ml-buybox{padding:20px}#MelatoLuxury-{{ section.id }} .ml-title{font-size:40px}}
 </style>
-<script>(function(){var section=document.getElementById('MelatoLuxury-{{ section.id }}');if(!section)return;var mainImage=section.querySelector('.ml-main-image');section.querySelectorAll('.ml-thumb').forEach(function(btn){btn.addEventListener('click',function(){section.querySelectorAll('.ml-thumb').forEach(function(item){item.classList.remove('is-active')});btn.classList.add('is-active');if(mainImage){mainImage.src=btn.getAttribute('data-media-src');mainImage.removeAttribute('srcset')}})});var select=section.querySelector('.ml-variant-select');var priceWrap=section.querySelector('#ml-price-{{ section.id }}');if(select&&priceWrap){select.addEventListener('change',function(){var opt=select.options[select.selectedIndex];var compare=opt.dataset.compare?'<span class="ml-compare">'+opt.dataset.compare+'</span>':'';priceWrap.innerHTML='<span class="ml-price">'+opt.dataset.price+'</span>'+compare})}})();</script>
+
+<script>
+(function(){
+  var section=document.getElementById('MelatoLuxury-{{ section.id }}');
+  if(!section)return;
+  var mainImage=section.querySelector('.ml-main-image');
+  section.querySelectorAll('.ml-thumb').forEach(function(button){
+    button.addEventListener('click',function(){
+      section.querySelectorAll('.ml-thumb').forEach(function(item){item.classList.remove('is-active')});
+      button.classList.add('is-active');
+      if(mainImage){mainImage.src=button.dataset.mediaSrc;mainImage.alt=button.dataset.mediaAlt||mainImage.alt;mainImage.removeAttribute('srcset')}
+    });
+  });
+  var select=section.querySelector('.ml-variant-select');
+  var priceWrap=section.querySelector('#ml-price-{{ section.id }}');
+  var button=section.querySelector('.ml-add-to-cart');
+  if(select){select.addEventListener('change',function(){
+    var option=select.options[select.selectedIndex];
+    if(priceWrap)priceWrap.innerHTML='<span class="ml-price">'+option.dataset.price+'</span>'+(option.dataset.compare?'<s class="ml-compare">'+option.dataset.compare+'</s>':'');
+    var available=option.dataset.available==='true';
+    if(button){button.disabled=!available;button.textContent=available?'Add to cart':'Sold out'}
+    document.dispatchEvent(new CustomEvent('variant:change',{detail:{variant:{id:option.value,title:option.textContent.replace(/\s+— Sold out$/,''),available:available}}}));
+  })}
+})();
+</script>
+
 {% schema %}
-{"name":"Melato Luxury Product","settings":[{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Luxury Sportswear"},{"type":"text","id":"subtitle","label":"Fallback PDP hook","default":"A premium retro piece built for full-outfit presence."},{"type":"text","id":"story_heading","label":"Story heading","default":"Built through product language."},{"type":"textarea","id":"default_materials","label":"Fallback materials","default":"Premium construction\nRelaxed athletic fit\nLimited-drop design language"},{"type":"text","id":"extra_gallery_heading","label":"Extra gallery heading","default":"Editorial close-ups and extra angles"}],"blocks":[{"type":"badge","name":"Badge","settings":[{"type":"text","id":"text","label":"Text","default":"Limited production"}]},{"type":"detail","name":"Detail card","settings":[{"type":"text","id":"heading","label":"Heading","default":"Premium finish"},{"type":"textarea","id":"text","label":"Text","default":"Clean construction, elevated fabric feel, and a confident silhouette."}]}],"presets":[{"name":"Melato Luxury Product"}]}
+{
+  "name":"Melato Luxury Product",
+  "settings":[
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Product focus"},
+    {"type":"text","id":"subtitle","label":"Legacy fallback hook","default":""},
+    {"type":"text","id":"story_heading","label":"Legacy story heading","default":""},
+    {"type":"textarea","id":"default_materials","label":"Legacy materials fallback","default":""},
+    {"type":"text","id":"extra_gallery_heading","label":"Extra gallery heading","default":"Editorial close-ups and extra angles"}
+  ],
+  "blocks":[{
+    "type":"badge",
+    "name":"Badge",
+    "settings":[{"type":"text","id":"text","label":"Text","default":"Limited production"}]
+  }],
+  "presets":[{"name":"Melato Luxury Product"}]
+}
 {% endschema %}

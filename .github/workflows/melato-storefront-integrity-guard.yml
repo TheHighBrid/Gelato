@@ -1,0 +1,170 @@
+name: Melato storefront integrity guard
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  storefront-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check PDP JavaScript syntax
+        run: node --check assets/melato-pdp-polish.js
+
+      - name: Validate Melato storefront contracts
+        shell: python
+        run: |
+          import json
+          import re
+          from pathlib import Path
+
+          failures = []
+
+          def text(path):
+              p = Path(path)
+              if not p.exists():
+                  failures.append(f'{path}: required file is missing')
+                  return ''
+              return p.read_text()
+
+          def require(path, needle, label=None):
+              data = text(path)
+              if needle not in data:
+                  failures.append(f'{path}: missing {label or needle!r}')
+
+          def ban(path, needle, label=None):
+              p = Path(path)
+              if p.exists() and needle in p.read_text():
+                  failures.append(f'{path}: forbidden {label or needle!r} returned')
+
+          # 1. Concierge stays offline until explicit redesign.
+          removed_concierge_files = [
+              'sections/melato-concierge-strip.liquid',
+              'sections/melato-fit-concierge.liquid',
+              'sections/melato-delivery-concierge.liquid',
+              'sections/melato-order-companion.liquid',
+              'sections/melato-preview-gate.liquid',
+              'templates/page.melato-fit-concierge.json',
+              'templates/page.melato-delivery-concierge.json',
+              'templates/page.melato-order-companion.json',
+              'templates/page.melato-preview-room.json',
+              'snippets/melato-utility-layer.liquid',
+          ]
+          for filename in removed_concierge_files:
+              if Path(filename).exists():
+                  failures.append(f'{filename}: retired implementation returned')
+
+          ban('layout/theme.liquid', "section 'melato-concierge-strip'", 'global concierge injection')
+          ban('layout/theme.liquid', "render 'melato-utility-layer'", 'duplicate utility layer')
+          ban('templates/index.json', 'melato-concierge-strip', 'homepage concierge')
+          ban('templates/index.melato-ovum-redesign.json', 'melato-concierge-strip', 'alternate homepage concierge')
+          ban('templates/cart.json', 'melato-concierge-strip', 'cart concierge')
+          ban('sections/main-collection.liquid', 'melato-collection-service-strip', 'collection concierge strip')
+
+          # 2 + 6. PDP canvas is fixed black and desktop details occupy the right rail.
+          layout = text('assets/melato-pdp-layout-2026.css')
+          require('assets/melato-pdp-layout-2026.css', 'body.template-product .melato-pdp-rebuild', 'PDP canvas contract')
+          require('assets/melato-pdp-layout-2026.css', '--pdp-bg: #080808 !important;', 'fixed black PDP background')
+          require('assets/melato-pdp-layout-2026.css', '"gallery buybox"', 'desktop PDP gallery/buybox grid')
+          require('assets/melato-pdp-layout-2026.css', '"gallery story"', 'desktop PDP story right rail')
+          require('assets/melato-pdp-layout-2026.css', '"gallery specs"', 'desktop PDP specs right rail')
+          require('assets/melato-pdp-layout-2026.css', '"gallery set"', 'Complete the Set right rail row')
+          require('assets/melato-pdp-layout-2026.css', '"gallery editorial"', 'Editorial right rail row')
+          require('assets/melato-pdp-layout-2026.css', 'display: contents !important;', 'PDP wrapper specificity recovery')
+          require('assets/melato-pdp-layout-2026.css', 'grid-area: gallery !important;', 'hero gallery placement')
+          require('assets/melato-pdp-layout-2026.css', 'grid-area: specs !important;', 'specification placement')
+          require('assets/melato-pdp-layout-2026.css', 'grid-area: set !important;', 'Complete the Set placement')
+          require('assets/melato-pdp-layout-2026.css', 'grid-area: editorial !important;', 'Editorial placement')
+          require('assets/melato-pdp-layout-2026.css', 'grid-column: 2 !important;', 'downstream PDP right-column lock')
+          require('assets/melato-pdp-layout-2026.css', 'cursor: zoom-in;', 'interactive hero image affordance')
+          ban('assets/melato-pdp-layout-2026.css', '"set set"', 'full-width Complete the Set row beneath sticky gallery')
+          ban('assets/melato-pdp-layout-2026.css', '"editorial editorial"', 'full-width Editorial row beneath sticky gallery')
+          require('layout/theme.liquid', "'melato-pdp-layout-2026.css'", 'PDP layout stylesheet load')
+
+          # Main PDP must keep the image, factual capsules, and set architecture.
+          pdp = text('sections/melato-product-page-rebuild.liquid')
+          for needle, label in (
+              ('class="pdp-gallery"', 'primary product gallery'),
+              ("class: 'pdp-main-image'", 'primary product image'),
+              ('<summary>Construction</summary>', 'Construction capsule'),
+              ('<summary>Fit</summary>', 'Fit capsule'),
+              ('<summary>Material</summary>', 'Material capsule'),
+              ('<summary>Care</summary>', 'Care capsule'),
+              ('<summary>Shipping &amp; returns</summary>', 'Shipping & returns capsule'),
+              ('product.metafields.custom.matching_product.value', 'matching product source'),
+              ('product.metafields.custom.set_partner.value', 'set partner fallback'),
+              ('class="pdp-panel pdp-set"', 'Complete the Set module'),
+          ):
+              if needle not in pdp:
+                  failures.append(f'sections/melato-product-page-rebuild.liquid: missing {label}')
+
+          # Hero gallery receives a second client-side recovery path and accessible zoom.
+          require('assets/melato-pdp-polish.js', 'ensureProductGallery(root);', 'gallery repair')
+          require('assets/melato-pdp-polish.js', 'bindMainImageZoom(root);', 'hero image zoom binding')
+          require('assets/melato-pdp-polish.js', "setAttribute('aria-label', `Open large view of", 'zoom accessible name')
+
+          # Standalone products use a product-aware extra module, while paired products
+          # rely on Complete the Set and must not also receive a generic recommendation rail.
+          extra = text('sections/tag-recommendations.liquid')
+          for needle, label in (
+              ('product.metafields.custom.matching_product.value', 'extra matching-product check'),
+              ('product.metafields.custom.set_partner.value', 'extra set-partner check'),
+              ('matching_product == blank and found_count > 0', 'standalone-only extra render'),
+              ('data-pdp-extra="most-wanted"', 'Most Wanted extra marker'),
+              ("collections['fragrance']", 'fragrance recommendation source'),
+              ("collections['accessories']", 'accessory recommendation source'),
+              ('p_type == current_type', 'same product-type recommendation priority'),
+          ):
+              if needle not in extra:
+                  failures.append(f'sections/tag-recommendations.liquid: missing {label}')
+          require('templates/product.json', '"eyebrow": "FOR YOU"', 'For You extra label')
+          require('templates/product.json', '"heading": "MOST WANTED"', 'Most Wanted extra heading')
+          ban('templates/product.json', 'MORE FROM THE COLLECTION', 'legacy generic PDP recommendation heading')
+
+          # 3 + 4. Footer remains readable and contains exactly one copyright source.
+          polish = text('snippets/melato-global-polish.liquid')
+          if 'melato-footer-copyright-line' in polish:
+              failures.append('snippets/melato-global-polish.liquid: duplicate injected copyright returned')
+          require('snippets/melato-global-polish.liquid', "el.closest('footer, .footer, .shopify-section-footer')", 'footer CTA exclusion')
+          footer = text('sections/melato-footer.liquid')
+          if footer.count('melato-footer__copyright') != 2:
+              failures.append('sections/melato-footer.liquid: unexpected copyright implementation count')
+          require('sections/melato-footer.liquid', 'Culture-forward premium apparel', 'footer brand microcopy')
+
+          # 5. One canonical default PDP purchase architecture.
+          product_template = text('templates/product.json')
+          if product_template.count('melato-product-page-rebuild') != 1:
+              failures.append('templates/product.json: default PDP must contain exactly one primary product renderer')
+          for duplicated in ('melato-complete-the-set', 'complete-the-set'):
+              if duplicated in product_template:
+                  failures.append(f'templates/product.json: duplicate set-builder renderer returned: {duplicated}')
+
+          # 7. Audit contracts.
+          require('snippets/melato-rendered-output-filters.liquid', 'Complimentary standard delivery. Taxes and applicable duties are calculated at checkout.', 'cart delivery reassurance')
+          require('sections/main-collection.liquid', 'collection.products_count', 'Shopify collection count source')
+          ban('sections/main-collection.liquid', 'Filter 0', 'hardcoded zero filter badge')
+          require('sections/melato-product-page-rebuild.liquid', 'aria-label="Show {{ media_alt | escape }}"', 'descriptive gallery control name')
+
+          # Parse JSON templates after removing Shopify's generated leading comment block.
+          for filename in ('templates/index.json', 'templates/index.melato-ovum-redesign.json', 'templates/cart.json', 'templates/product.json'):
+              raw = text(filename)
+              raw = re.sub(r'^\s*/\*.*?\*/\s*', '', raw, count=1, flags=re.S)
+              try:
+                  json.loads(raw)
+              except Exception as exc:
+                  failures.append(f'{filename}: invalid JSON after Shopify comment removal: {exc}')
+
+          if failures:
+              print('Melato storefront integrity failures:')
+              for failure in failures:
+                  print(' -', failure)
+              raise SystemExit(1)
+
+          print('Melato storefront integrity guard passed.')

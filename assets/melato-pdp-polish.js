@@ -16,21 +16,27 @@
     dynamicCompleteSet();
     bindGalleryThumbs(root);
     ensureProductGallery(root);
+    bindMainImageZoom(root);
 
-    window.setTimeout(() => ensureProductGallery(root), 900);
-// Debounced + LOCK_KEY-aware — defers while guard/nav scripts are mid-patch
-const LOCK_KEY = '__MELATO_AUDIT_PATCHING__';
-let _polishTimer;
-new MutationObserver(() => {
-  if (window[LOCK_KEY]) return;
-  clearTimeout(_polishTimer);
-  _polishTimer = setTimeout(() => {
-    if (window[LOCK_KEY]) return;
-    cleanCopy();
-    polishSet();
-    bindGalleryThumbs(root);
-  }, 300);
-}).observe(root, { childList: true, subtree: true });
+    window.setTimeout(() => {
+      ensureProductGallery(root);
+      bindMainImageZoom(root);
+    }, 900);
+
+    // Debounced + LOCK_KEY-aware: defers while guard/nav scripts are mid-patch.
+    const LOCK_KEY = '__MELATO_AUDIT_PATCHING__';
+    let polishTimer;
+    new MutationObserver(() => {
+      if (window[LOCK_KEY]) return;
+      clearTimeout(polishTimer);
+      polishTimer = setTimeout(() => {
+        if (window[LOCK_KEY]) return;
+        cleanCopy();
+        polishSet();
+        bindGalleryThumbs(root);
+        bindMainImageZoom(root);
+      }, 300);
+    }).observe(root, { childList: true, subtree: true });
   });
 
   function cleanCopy() {
@@ -133,6 +139,7 @@ new MutationObserver(() => {
         if (!mainImage || !nextSrc) return;
 
         mainImage.src = nextSrc;
+        mainImage.alt = button.dataset.mediaAlt || mainImage.alt;
         if (button.dataset.mediaSrcset) mainImage.srcset = button.dataset.mediaSrcset;
         else mainImage.removeAttribute('srcset');
         mainImage.style.display = 'block';
@@ -156,6 +163,8 @@ new MutationObserver(() => {
         img.style.opacity = '1';
         img.style.visibility = 'visible';
       });
+      gallery.dataset.melatoGalleryRepaired = 'native';
+      bindMainImageZoom(gallery);
       return;
     }
 
@@ -181,15 +190,74 @@ new MutationObserver(() => {
               const thumbSrc = sizedImage(src, 220);
               const fullSrc = sizedImage(src, 1800);
               const srcset = `${sizedImage(src, 600)} 600w, ${sizedImage(src, 900)} 900w, ${sizedImage(src, 1200)} 1200w, ${sizedImage(src, 1800)} 1800w`;
-              return `<button class="pdp-thumb${index === 0 ? ' is-active' : ''}" type="button" data-pdp-thumb data-media-src="${fullSrc}" data-media-srcset="${srcset}" aria-label="Show product image ${index + 1}"><img class="pdp-thumb-image" src="${thumbSrc}" alt="${title}" loading="lazy"></button>`;
+              return `<button class="pdp-thumb${index === 0 ? ' is-active' : ''}" type="button" data-pdp-thumb data-media-src="${fullSrc}" data-media-srcset="${srcset}" data-media-alt="${title}, product view ${index + 1}" aria-label="Show ${title}, product view ${index + 1}"><img class="pdp-thumb-image" src="${thumbSrc}" alt="" loading="lazy"></button>`;
             }).join('')}
           </div>` : ''}
         `;
 
-        gallery.dataset.melatoGalleryRepaired = 'true';
+        gallery.dataset.melatoGalleryRepaired = 'fallback';
         bindGalleryThumbs(gallery);
+        bindMainImageZoom(gallery);
       })
       .catch((error) => console.warn('Melato gallery repair failed:', error));
+  }
+
+  function getZoomLayer() {
+    let layer = document.querySelector('.melato-pdp-zoom');
+    if (layer) return layer;
+
+    layer = document.createElement('div');
+    layer.className = 'melato-pdp-zoom';
+    layer.setAttribute('role', 'dialog');
+    layer.setAttribute('aria-modal', 'true');
+    layer.setAttribute('aria-label', 'Expanded product image');
+    layer.setAttribute('aria-hidden', 'true');
+    layer.innerHTML = '<button class="melato-pdp-zoom__close" type="button" aria-label="Close expanded image">×</button><img class="melato-pdp-zoom__image" alt="">';
+    document.body.appendChild(layer);
+
+    const close = () => {
+      layer.classList.remove('is-open');
+      layer.setAttribute('aria-hidden', 'true');
+      document.documentElement.style.overflow = '';
+    };
+
+    layer.querySelector('.melato-pdp-zoom__close').addEventListener('click', close);
+    layer.addEventListener('click', (event) => { if (event.target === layer) close(); });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && layer.classList.contains('is-open')) close();
+    });
+
+    return layer;
+  }
+
+  function bindMainImageZoom(scope) {
+    scope.querySelectorAll('.pdp-main-image').forEach((img) => {
+      if (img.dataset.melatoZoomBound === 'true') return;
+      img.dataset.melatoZoomBound = 'true';
+      img.setAttribute('tabindex', '0');
+      img.setAttribute('role', 'button');
+      img.setAttribute('aria-label', `Open large view of ${img.alt || 'product image'}`);
+
+      const open = () => {
+        if (imageIsBroken(img)) return;
+        const layer = getZoomLayer();
+        const zoomImage = layer.querySelector('.melato-pdp-zoom__image');
+        zoomImage.src = img.currentSrc || img.src;
+        zoomImage.alt = img.alt || 'Expanded product image';
+        layer.classList.add('is-open');
+        layer.setAttribute('aria-hidden', 'false');
+        document.documentElement.style.overflow = 'hidden';
+        layer.querySelector('.melato-pdp-zoom__close').focus();
+      };
+
+      img.addEventListener('click', open);
+      img.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          open();
+        }
+      });
+    });
   }
 
   function escapeHtml(value) {

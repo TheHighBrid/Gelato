@@ -1,1 +1,87 @@
-{"sections":{"melato_luxury_product_page_ACbGGK":{"type":"melato-luxury-product-page","blocks":{"badge_mVerhf":{"type":"badge","settings":{"text":"Limited production"}},"badge_zRwkdz":{"type":"badge","settings":{"text":"Material-led"}},"badge_tGViHg":{"type":"badge","settings":{"text":"Statement piece"}}},"block_order":["badge_mVerhf","badge_zRwkdz","badge_tGViHg"],"name":"Melato Luxury Product","settings":{"eyebrow":"Product focus","subtitle":"A premium Melato piece built with clean construction, controlled proportion, and everyday wearability.","story_heading":"Built through product language","default_materials":"Premium construction selected for clean movement, everyday wearability, and a composed finish.","extra_gallery_heading":"Editorial close-ups and extra angles"}},"melato_complete_the_set":{"type":"melato-complete-the-set","settings":{}},"main":{"type":"main-product","disabled":true,"settings":{"show_vendor":false}},"tabs":{"type":"product-tabs","disabled":true,"settings":{}},"related":{"type":"related-products","settings":{"heading":"You might also like","products_to_show":4}},"recently_viewed":{"type":"recently-viewed","disabled":true,"settings":{"heading":"Recently viewed"}}},"order":["melato_luxury_product_page_ACbGGK","melato_complete_the_set","main","tabs","related","recently_viewed"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "melato_luxury_product_page_ACbGGK": {
+      "type": "melato-luxury-product-page",
+      "blocks": {
+        "badge_mVerhf": {
+          "type": "badge",
+          "settings": {
+            "text": "Limited production"
+          }
+        },
+        "badge_zRwkdz": {
+          "type": "badge",
+          "settings": {
+            "text": "Material-led"
+          }
+        },
+        "badge_tGViHg": {
+          "type": "badge",
+          "settings": {
+            "text": "Statement piece"
+          }
+        }
+      },
+      "block_order": [
+        "badge_mVerhf",
+        "badge_zRwkdz",
+        "badge_tGViHg"
+      ],
+      "name": "Melato Luxury Product",
+      "settings": {
+        "eyebrow": "Product focus",
+        "subtitle": "",
+        "story_heading": "",
+        "default_materials": "",
+        "extra_gallery_heading": "Editorial close-ups and extra angles"
+      }
+    },
+    "melato_complete_the_set": {
+      "type": "melato-complete-the-set",
+      "settings": {}
+    },
+    "main": {
+      "type": "main-product",
+      "disabled": true,
+      "settings": {
+        "show_vendor": false
+      }
+    },
+    "tabs": {
+      "type": "product-tabs",
+      "disabled": true,
+      "settings": {}
+    },
+    "related": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You might also like",
+        "products_to_show": 4
+      }
+    },
+    "recently_viewed": {
+      "type": "recently-viewed",
+      "disabled": true,
+      "settings": {
+        "heading": "Recently viewed"
+      }
+    }
+  },
+  "order": [
+    "melato_luxury_product_page_ACbGGK",
+    "melato_complete_the_set",
+    "main",
+    "tabs",
+    "related",
+    "recently_viewed"
+  ]
+}

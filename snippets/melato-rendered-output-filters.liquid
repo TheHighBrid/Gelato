@@ -1,18 +1,11 @@
 {% comment %}
-  Server-side exact-output safeguards for the August 4, 2026 commerce audit.
-  This removes stale or category-inappropriate text from parsed HTML before it
-  reaches crawlers, assistive technology, or browsers. It does not invent
-  unverified product specifications.
-
-  Inputs:
-    html: rendered HTML string
-    context: announcement | main | cart
+  Server-rendered safeguards for legacy Shopify content.
+  Primary templates emit correct markup directly. This layer handles older
+  templates, app output, and Shopify-managed policy HTML without inventing facts.
 {% endcomment %}
 
 {%- liquid
   assign output = html
-
-  # Public returns contact is standardized in every captured surface.
   assign output = output | replace: 'orders@melato.ca', 'support@melato.ca'
 
   if context == 'announcement'
@@ -31,8 +24,10 @@
     assign output = output | replace: 'Explore the latest uniform pieces.', 'Explore the current Melato rotation.'
     assign output = output | replace: 'Shop the Uniform', 'Shop New Arrivals'
     assign output = output | replace: '/collections/drop-001-texture-form', '/collections/new-arrivals'
-    assign output = output | replace: 'Taxes &amp; shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.'
-    assign output = output | replace: 'Taxes & shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties calculated at checkout.'
+    assign output = output | replace: 'Taxes &amp; shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties are calculated at checkout.'
+    assign output = output | replace: 'Taxes & shipping calculated at checkout', 'Complimentary standard delivery. Taxes and applicable duties are calculated at checkout.'
+    assign output = output | replace: 'Taxes and applicable duties are calculated at checkout.', 'Complimentary standard delivery. Taxes and applicable duties are calculated at checkout.'
+    assign output = output | replace: 'class="cart-drawer__tax-note"', 'class="cart-drawer__policy-note"'
   endif
 
   if context == 'main'
@@ -45,55 +40,175 @@
     assign output = output | replace: 'Toiletry Bags', 'Travel Cases'
     assign output = output | replace: 'Eaux De Toilette', 'Eaux de Toilette'
     assign output = output | replace: 'Eaux De Parfum', 'Eaux de Parfum'
+    assign output = output | replace: 'Track jackets', 'Track Jackets'
+    assign output = output | replace: 'Track pants', 'Track Pants'
     assign output = output | replace: 'Filter 0', 'Filter'
     assign output = output | replace: 'Fit Fit Concierge', 'Fit Concierge'
     assign output = output | replace: 'Delivery Delivery Concierge', 'Delivery Concierge'
     assign output = output | replace: 'CareOrder Companion', 'Order Companion'
     assign output = output | replace: 'AccessThe Preview Room', 'The Preview Room'
-    assign output = output | replace: '01 Personal fit consultationSend us your measurements', '01 Personal fit consultation. Send us your measurements'
-    assign output = output | replace: 'coordinate matching sets.Advice from a real client care specialist', 'coordinate matching sets. Advice from a real client care specialist'
-    assign output = output | replace: 'issue after delivery—without searching for the right department.One point of contact', 'issue after delivery, without searching for the right department. One point of contact'
-    assign output = output | replace: 'Wash cold on a gentle cycle, wash inside out', 'Care varies by product and material. Always follow the product page and sewn-in care label'
-    assign output = output | replace: '<span>Full set price</span><strong>', '<span>Full set price</span> <strong>'
+    assign output = output | replace: 'Client care is availableReplies are typically sent within one business day.', 'Client care is available. Replies are typically sent within one business day.'
     assign output = output | replace: 'You may request, correction of, or deletion of your personal information', 'You may request access to, correction of, or deletion of your personal information'
 
-    if template.name == 'collection' and collection.handle == 'all'
-      assign output = output | replace: '<p class="melato-collection-eyebrow">Collection</p>', '<p class="melato-collection-eyebrow">Catalogue</p>'
-      assign output = output | replace: '<h1 class="melato-collection-title">Products</h1>', '<h1 class="melato-collection-title">All Products</h1><p class="melato-collection-desc melato-index-intro">The complete catalogue across the current rotation and archive.</p>'
-      assign output = output | replace: '<h1 class="melato-collection-title">THE MELATO INDEX</h1>', '<h1 class="melato-collection-title">All Products</h1>'
+    if template.name == 'collection'
+      if output contains '<aside class="melato-collection-service-strip"'
+        assign service_parts = output | split: '<aside class="melato-collection-service-strip"'
+        assign service_tail_parts = service_parts[1] | split: '</aside>'
+        assign service_after = blank
+        for service_segment in service_tail_parts offset: 1
+          if forloop.first
+            assign service_after = service_segment
+          else
+            assign service_after = service_after | append: '</aside>' | append: service_segment
+          endif
+        endfor
+        assign output = service_parts[0] | append: service_after
+      endif
+
+      assign count_chunks = output | split: '<span class="melato-filter-option__count">'
+      if count_chunks.size > 1
+        assign output_without_counts = count_chunks | first
+        for count_chunk in count_chunks offset: 1
+          assign count_value = count_chunk | split: '</span>' | first
+          assign count_tail = count_chunk | remove_first: count_value | remove_first: '</span>'
+          assign output_without_counts = output_without_counts | append: count_tail
+        endfor
+        assign output = output_without_counts
+      endif
     endif
 
     if request.path contains '/policies/'
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Refund policy</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Refund policy</p></div>'
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Terms of service</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Terms of service</p></div>'
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Privacy policy</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Privacy policy</p></div>'
+
+      if request.path contains '/policies/refund-policy'
+        assign old_shipping_paragraph = '<p>Unless the item arrived damaged, defective, or incorrect, customers may be responsible for return shipping costs. Original shipping fees may be non-refundable unless otherwise required by law or stated during a promotion.</p>'
+        capture new_shipping_paragraphs
+          echo '<p>Unless the item arrived damaged, defective, or incorrect, customers may be responsible for return shipping costs.</p>'
+          echo '<p>Standard delivery is complimentary and has no original standard-delivery fee to refund. If a paid expedited, special-service, or international carrier option is selected at checkout, that service fee may be non-refundable unless required by law.</p>'
+        endcapture
+        assign output = output | replace: old_shipping_paragraph, new_shipping_paragraphs
+
+        unless output contains '<h2>Fragrance</h2>'
+          capture fragrance_policy
+            echo '<h2>Fragrance</h2>'
+            echo '<p>Unopened fragrance products may be eligible for return under the standard return conditions.</p>'
+            echo '<p>Opened, sprayed, used, or otherwise scented fragrance products are not eligible for return, except where required by law or when the product arrived damaged, defective, or incorrect.</p>'
+            echo '<p>Contact <a href="mailto:support@melato.ca">support@melato.ca</a> before opening the product if you may need return assistance.</p>'
+          endcapture
+          assign exchanges_heading = '<h2>Exchanges</h2>'
+          assign exchanges_with_fragrance = fragrance_policy | append: exchanges_heading
+          assign output = output | replace_first: exchanges_heading, exchanges_with_fragrance
+        endunless
+      endif
     endif
-
-    # Explicit list semantics prevent assurance copy from collapsing into one phrase.
-    assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
-    assign new_assurances = '<ul class="pdp-trust-row" aria-label="Payment and shipping trust"><li>Fast dispatch</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
-    assign output = output | replace: old_assurances, new_assurances
-
-    assign output = output | replace: 'Customers rate us 5.0/5 based on 3 reviews.', 'MELATO STORE RATING 5.0/5 from 3 verified customer reviews.'
 
     if template.name == 'product' and product
       assign product_title_down = product.title | downcase
       assign product_type_down = product.product_type | downcase
+      assign size_guide_page = product.metafields.custom.size_guide.value
+      assign size_guide_handle = size_guide_page.handle | default: '' | downcase
+      assign has_specific_size_guide = false
+      if size_guide_page != blank and size_guide_handle != blank and size_guide_handle != 'size-guide' and size_guide_handle != 'melato-size-guide' and size_guide_handle != 'sizing-guide' and size_guide_handle != 'fit-guide'
+        assign has_specific_size_guide = true
+      endif
 
-      if product.handle == 'petal-veil-eau-de-toilette' or product_type_down contains 'fragrance' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum'
+      unless output contains 'data-bis-root'
+        capture bis_markup
+          render 'back-in-stock-form', product: product
+        endcapture
+        assign product_form_end_with_waitlist = '</form>' | append: bis_markup
+        assign output = output | replace_first: '</form>', product_form_end_with_waitlist
+      endunless
+
+      if has_specific_size_guide
+        assign product_has_size_option = false
+        for product_option_name in product.options
+          assign product_option_name_down = product_option_name | downcase
+          if product_option_name_down == 'size' or product_option_name_down == 'taille'
+            assign product_has_size_option = true
+            break
+          endif
+        endfor
+        if product_has_size_option
+          assign output = output | replace: 'class="melato-size-guide-trigger"', 'class="size-guide-trigger" data-open-size-drawer'
+          unless output contains 'data-size-drawer'
+            capture size_drawer_markup
+              render 'size-guide-drawer', product: product
+            endcapture
+            assign output = output | append: size_drawer_markup
+          endunless
+        endif
+      else
+        assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Size guide &amp; silhouette fit</button>', ''
+        assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>', ''
+      endif
+
+      assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
+      assign new_assurances = '<ul class="product-assurances" role="list" aria-label="Purchase assurances"><li>Fast dispatch</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
+      assign output = output | replace: old_assurances, new_assurances
+      assign output = output | replace: 'Customers rate us 5.0/5 based on 3 reviews.', 'MELATO STORE RATING 5.0/5 from 3 verified customer reviews.'
+      assign output = output | replace: '</strong><span', '</strong> <span'
+      assign output = output | replace: '</span><strong', '</span> <strong'
+      assign output = output | replace: '</h3><p>', '</h3> <p>'
+
+      assign escaped_product_title = product.title | escape
+      assign generic_product_alt = 'alt="' | append: escaped_product_title | append: '"'
+      for image_number in (1..18)
+        capture numbered_product_alt
+          echo 'alt="' | append: escaped_product_title | append: ', product image ' | append: image_number | append: '"'
+        endcapture
+        assign numbered_product_alt = numbered_product_alt | strip
+        assign output = output | replace_first: generic_product_alt, numbered_product_alt
+      endfor
+
+      if product.handle == 'protective-custody'
+        assign output = output | replace: 'A premium Melato piece built with clean construction, controlled proportion, and everyday presence.', ''
+        assign output = output | replace: 'A premium Melato piece built with clean construction, controlled proportion, and everyday wearability.', ''
+        assign output = output | replace: 'A focused Melato piece designed around proportion, texture, and styling range. Built to feel intentional without overexplaining itself.', ''
+        assign output = output | replace: 'A focused Melato piece designed around proportion, texture, and styling range.', ''
+        assign output = output | replace: 'Melato piece with Melato’s current-season product language.', ''
+        assign output = output | replace: 'Premium construction selected for feel, structure, and everyday wearability.', ''
+        assign output = output | replace: 'Premium construction selected for clean movement and everyday wearability.', ''
+        assign output = output | replace: 'Suggested production composition: shell 60% polyurethane, 25% polyester, 15% nylon. Lining 100% polyester. Padding 100% polyester. Hardware: zinc alloy.', ''
+        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', ''
+      endif
+
+      # Hargneux previously repeated fit, material, and care inside a long Story
+      # field and again in structured specification cards. Keep the structured set.
+      if product.handle == 'hargneux-velour-track-pant'
+        assign story_marker = '<details class="pdp-mini-detail"><summary>Story</summary>'
+        if output contains story_marker
+          assign story_parts = output | split: story_marker
+          assign story_tail = story_parts[1]
+          assign story_end_parts = story_tail | split: '</details>'
+          assign rebuilt_tail = blank
+          for story_segment in story_end_parts offset: 1
+            if forloop.first
+              assign rebuilt_tail = story_segment
+            else
+              assign rebuilt_tail = rebuilt_tail | append: '</details>' | append: story_segment
+            endif
+          endfor
+          assign output = story_parts[0] | append: rebuilt_tail
+        endif
+      endif
+
+      if product_type_down contains 'fragrance' or product_type_down contains 'eau de' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum'
+        assign output = output | replace: 'Silhouette currently unavailable', 'Size currently unavailable'
         assign output = output | replace: 'Premium everyday fit. Choose your usual size for the intended silhouette.', ''
-        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Apply to pulse points. Avoid rubbing the fragrance into the skin. Store upright away from heat and direct sunlight.'
+        assign output = output | replace: '<details class="pdp-spec"><summary>Fit</summary><div class="pdp-rte"></div></details>', ''
         assign output = output | replace: 'Eligible unworn items follow posted policy.', 'Unopened fragrance products follow the posted Melato return policy.'
-        assign output = output | replace: 'Returns follow the posted Melato policy. Contact support@melato.ca before use if you may need return assistance.', 'Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening if you need return assistance.'
-        assign output = output | replace: 'Contact support@melato.ca before use if you may need return assistance., and returned within the posted policy window.', 'Contact support@melato.ca before opening if you need return assistance.'
-        assign output = output | replace: 'Contact support@melato.ca before use if you may need return assistance.', 'Contact support@melato.ca before opening if you need return assistance.'
-      elsif product.handle == 'rex-x-fur-jacket-copy' or product_title_down contains 'fur'
-        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Professional fur cleaning only. Do not machine wash or hand wash. Store in a cool, ventilated space. Avoid moisture, direct heat and prolonged sunlight. Use a broad-shouldered hanger.'
-      elsif product.handle == 'blush-ledger-satin-shirt'
-        assign output = output | replace: 'Melato piece with Melato’s current-season product language.', 'Silk satin shirt from the current Melato rotation.'
-        assign output = output | replace: 'Premium construction selected for feel, structure, and everyday wearability.', 'Material currently published: silk. Additional construction specifications must come from verified product records.'
-        assign output = output | replace: 'Built to sit clean on body without stealing movement.', 'Designed for a relaxed drape. Refer to verified garment measurements when published.'
-        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Follow the sewn-in care label. Contact support@melato.ca before cleaning if the label is unclear.'
+        assign output = output | replace: 'Returns are eligible when items are unworn, unwashed, tagged, and returned within the posted policy window.', 'Unopened fragrance products follow the posted Melato return policy. Contact support@melato.ca before opening the product if you may need return assistance.'
+      elsif product.has_only_default_variant
+        assign output = output | replace: 'Silhouette currently unavailable', 'Currently unavailable'
+      else
+        assign output = output | replace: 'Silhouette currently unavailable', 'Selected size currently unavailable'
+      endif
+
+      if product.handle == 'rex-x-fur-jacket' or product.handle == 'rex-x-fur-jacket-copy' or product_title_down contains 'fur'
+        assign output = output | replace: 'Wash cold inside out where applicable. Hang dry or lay flat. Avoid direct heat over embroidery, patches, prints, trims, or branded details.', 'Professional fur cleaning only. Do not machine wash or hand wash. Store in a cool, ventilated space away from moisture, direct heat, and prolonged sunlight. Use a broad-shouldered hanger.'
       endif
     endif
   endif

@@ -47,16 +47,61 @@
   <meta name="twitter:title" content="{{ melato_meta_title | escape }}">
   {%- if melato_meta_description != blank -%}<meta name="twitter:description" content="{{ melato_meta_description | strip_html | escape }}">{%- endif -%}
 
-  {%- assign heading_font = settings.font_heading -%}{%- assign body_font = settings.font_body -%}
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  {%- style -%}:root{--color-bg:{{ settings.color_background }};--color-text:{{ settings.color_text }};--color-accent:{{ settings.color_accent }};--color-accent-hover:{{ settings.color_accent_hover }};--color-surface:{{ settings.color_surface }};--color-border:{{ settings.color_border }};--color-muted:{{ settings.color_muted }};--color-error:{{ settings.color_error }};--font-heading-family:{% if heading_font.family %}{{ heading_font.family }},{{ heading_font.fallback_families }}{% else %}'Bebas Neue',sans-serif{% endif %};--font-heading-style:{% if heading_font.family %}{{ heading_font.style }}{% else %}normal{% endif %};--font-heading-weight:{% if heading_font.family %}{{ heading_font.weight }}{% else %}400{% endif %};--font-body-family:{% if body_font.family %}{{ body_font.family }},{{ body_font.fallback_families }}{% else %}'Barlow',sans-serif{% endif %};--font-body-style:{% if body_font.family %}{{ body_font.style }}{% else %}normal{% endif %};--font-body-weight:{% if body_font.family %}{{ body_font.weight }}{% else %}300{% endif %};--font-mono-family:'DM Mono','Courier New',monospace;--font-size-base:{{ settings.font_size_base }}px;--letter-spacing-heading:{{ settings.letter_spacing_heading }}em;--line-height-body:{{ settings.line_height_body }};--container-width:{{ settings.container_width }}px;--container-padding:{{ settings.container_padding }}px;--grid-gap:{{ settings.grid_gap }}px;--border-radius:{{ settings.border_radius }}px;--header-height:60px;--header-bg:{{ settings.header_bg }};--header-text:{{ settings.header_text_color }}}{%- endstyle -%}
+  {%- assign heading_font = settings.font_heading -%}
+  {%- assign body_font = settings.font_body -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  {%- style -%}
+    :root{
+      --color-bg:{{ settings.color_background }};
+      --color-text:{{ settings.color_text }};
+      --color-accent:{{ settings.color_accent }};
+      --color-accent-hover:{{ settings.color_accent_hover }};
+      --color-surface:{{ settings.color_surface }};
+      --color-border:{{ settings.color_border }};
+      --color-muted:{{ settings.color_muted }};
+      --color-error:{{ settings.color_error }};
+      --font-heading-family:{% if heading_font.family %}{{ heading_font.family }},{{ heading_font.fallback_families }}{% else %}'Bebas Neue',sans-serif{% endif %};
+      --font-heading-style:{% if heading_font.family %}{{ heading_font.style }}{% else %}normal{% endif %};
+      --font-heading-weight:{% if heading_font.family %}{{ heading_font.weight }}{% else %}400{% endif %};
+      --font-body-family:{% if body_font.family %}{{ body_font.family }},{{ body_font.fallback_families }}{% else %}'Barlow',sans-serif{% endif %};
+      --font-body-style:{% if body_font.family %}{{ body_font.style }}{% else %}normal{% endif %};
+      --font-body-weight:{% if body_font.family %}{{ body_font.weight }}{% else %}300{% endif %};
+      --font-mono-family:'DM Mono','Courier New',monospace;
+      --font-size-base:{{ settings.font_size_base }}px;
+      --letter-spacing-heading:{{ settings.letter_spacing_heading }}em;
+      --line-height-body:{{ settings.line_height_body }};
+      --container-width:{{ settings.container_width }}px;
+      --container-padding:{{ settings.container_padding }}px;
+      --grid-gap:{{ settings.grid_gap }}px;
+      --border-radius:{{ settings.border_radius }}px;
+      --header-height:60px;
+      --header-bg:{{ settings.header_bg }};
+      --header-text:{{ settings.header_text_color }}
+    }
+  {%- endstyle -%}
+
   {{ content_for_header }}
   <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
-  {{ 'theme.css' | asset_url | stylesheet_tag }}{{ 'melato-enhancements.css' | asset_url | stylesheet_tag }}{{ 'melato-palette-logo-updated.css' | asset_url | stylesheet_tag }}{{ 'melato-info-legal-pages.css' | asset_url | stylesheet_tag }}{{ 'melato-header-logo-bigger.css' | asset_url | stylesheet_tag }}{{ 'melato-palette-v3.css' | asset_url | stylesheet_tag }}{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}{{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}{{ 'melato-header-footer-fix.css' | asset_url | stylesheet_tag }}{{ 'melato-optimization-2026.css' | asset_url | stylesheet_tag }}{{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}{{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-enhancements.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-palette-logo-updated.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-info-legal-pages.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-header-logo-bigger.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-palette-v3.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+  {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-header-footer-fix.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-optimization-2026.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}
   {% render 'melato-global-polish' %}
 </head>
+
 <body
   class="template-{{ template.name }}{%- if template.suffix %} template-{{ template.name }}--{{ template.suffix }}{% endif %}{%- if settings.animations_enabled %} animations-enabled{% endif %}{%- if settings.high_contrast %} high-contrast{% endif %}"
   data-theme="{{ settings.color_scheme }}"
@@ -69,11 +114,6 @@
   {% render 'melato-rendered-output-filters', html: melato_announcement_output, context: 'announcement' %}
 
   {%- section 'melato-header' -%}
-  {%- comment -%} Melato Concierge Strip: sticky sub-header nav. Skipped on the homepage because its concierge is intentionally placed near the bottom, on the four dedicated service pages, and on product/cart where it is already placed inline. {%- endcomment -%}
-  {%- unless template.name == 'index' or template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room' or template.name == 'product' or template.name == 'cart' -%}
-    {%- capture melato_concierge_output -%}{%- section 'melato-concierge-strip' -%}{%- endcapture -%}
-    {% render 'melato-rendered-output-filters', html: melato_concierge_output, context: 'main' %}
-  {%- endunless -%}
 
   {%- liquid
     assign melato_filter_main_output = false
@@ -81,12 +121,8 @@
       assign melato_filter_main_output = true
     elsif request.path == '/pages/faq' or request.path == '/pages/contact' or request.path contains '/policies/refund-policy'
       assign melato_filter_main_output = true
-    elsif template.suffix == 'melato-fit-concierge' or template.suffix == 'melato-delivery-concierge' or template.suffix == 'melato-order-companion' or template.suffix == 'melato-preview-room'
-      assign melato_filter_main_output = true
     elsif template.name == 'product' and product
-      if product.handle == 'petal-veil-eau-de-toilette' or product.handle == 'rex-x-fur-jacket-copy' or product.handle == 'blush-ledger-satin-shirt'
-        assign melato_filter_main_output = true
-      endif
+      assign melato_filter_main_output = true
     endif
   -%}
 
@@ -111,8 +147,19 @@
   -%}
 
   {%- capture melato_cart_output -%}{%- render 'cart-drawer' -%}{%- endcapture -%}
-  <div class="melato-utility-layer" aria-label="Store utilities"><div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>{% render 'melato-rendered-output-filters', html: melato_cart_output, context: 'cart' %}{%- render 'search-drawer' -%}{%- render 'mobile-menu' -%}{%- render 'quick-view-modal' -%}{%- if melato_show_size_guide -%}{%- render 'size-guide-modal' -%}{%- endif -%}<div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div></div>
-  <script>window.DRIP={shop:{currency:{{ shop.currency | json }},moneyFormat:{{ shop.money_format | json }},locale:{{ request.locale.iso_code | json }},freeShippingThreshold:0,routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},search:{{ routes.search_url | json }},collections:{{ routes.collections_url | json }}}},cart:{{ cart | json }},customer:{{ customer | json }},strings:{addedToCart:{{ 'cart.added' | t | json }},cartEmpty:{{ 'cart.empty' | t | json }},soldOut:{{ 'products.sold_out' | t | json }},unavailable:{{ 'products.unavailable' | t | json }},addToCart:{{ 'products.add_to_cart' | t | json }},outOfStock:{{ 'products.out_of_stock' | t | json }}}};</script>
+  <div class="melato-utility-layer" aria-label="Store utilities">
+    <div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>
+    {% render 'melato-rendered-output-filters', html: melato_cart_output, context: 'cart' %}
+    {%- render 'search-drawer' -%}
+    {%- render 'mobile-menu' -%}
+    {%- render 'quick-view-modal' -%}
+    {%- if melato_show_size_guide -%}{%- render 'size-guide-modal' -%}{%- endif -%}
+    <div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <script>
+    window.DRIP={shop:{currency:{{ shop.currency | json }},moneyFormat:{{ shop.money_format | json }},locale:{{ request.locale.iso_code | json }},freeShippingThreshold:0,routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},search:{{ routes.search_url | json }},collections:{{ routes.collections_url | json }}}},cart:{{ cart | json }},customer:{{ customer | json }},strings:{addedToCart:{{ 'cart.added' | t | json }},cartEmpty:{{ 'cart.empty' | t | json }},soldOut:{{ 'products.sold_out' | t | json }},unavailable:{{ 'products.unavailable' | t | json }},addToCart:{{ 'products.add_to_cart' | t | json }},outOfStock:{{ 'products.out_of_stock' | t | json }}}};
+  </script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-hero-video.js' | asset_url }}" defer></script>
   <script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script>
@@ -125,6 +172,5 @@
   {% render 'melato-living-lookbook-loader' %}
   {% render 'melato-back-in-stock-loader' %}
   {% render 'melato-product-color-engine' %}
-  {% render 'melato-utility-layer' %}
 </body>
 </html>

@@ -1,103 +1,142 @@
 {% comment %}
-  MELATO - COMPLETE THE SET
-  Finds matching jacket/pants by colorway/type tags and adapts heading language by material family.
+  Complete the Set
+  Matches jacket/pants by colorway tags and keeps titles, prices, and totals
+  in explicit semantic nodes.
 {% endcomment %}
 
-{% assign current_colorway = blank %}
-{% assign current_type = blank %}
-{% assign colorway_key = blank %}
-{% assign colorway_display = blank %}
-{% assign product_title_down = product.title | downcase %}
+{%- liquid
+  assign current_colorway = blank
+  assign current_type = blank
+  assign colorway_key = blank
+  assign product_title_down = product.title | downcase
 
-{% for tag in product.tags %}
-  {% assign tag_clean = tag | downcase | strip %}
-  {% if tag_clean contains 'colorway_' %}
-    {% assign current_colorway = tag_clean %}
-    {% assign colorway_key = tag_clean | remove: 'colorway_' | handleize %}
-  {% endif %}
-  {% if tag_clean == 'type_jacket' or tag_clean == 'type_pants' %}
-    {% assign current_type = tag_clean %}
-  {% endif %}
-{% endfor %}
+  for tag in product.tags
+    assign tag_clean = tag | downcase | strip
+    if tag_clean contains 'colorway_'
+      assign current_colorway = tag_clean
+      assign colorway_key = tag_clean | remove: 'colorway_' | handleize
+    endif
+    if tag_clean == 'type_jacket' or tag_clean == 'type_pants'
+      assign current_type = tag_clean
+    endif
+  endfor
 
-{% case colorway_key %}
-  {% when 'chu' %}{% assign colorway_display = 'CHŪ' %}
-  {% when 'divididos' %}{% assign colorway_display = 'DIVIDIDOS' %}
-  {% when 'passionfruit' %}{% assign colorway_display = 'PASSION FRUIT' %}
-  {% when 'reliance' %}{% assign colorway_display = 'RELIANCE' %}
-  {% else %}{% assign colorway_display = colorway_key | replace: '-', ' ' | upcase %}
-{% endcase %}
+  case colorway_key
+    when 'chu'
+      assign colorway_display = 'CHŪ'
+    when 'divididos'
+      assign colorway_display = 'DIVIDIDOS'
+    when 'passionfruit'
+      assign colorway_display = 'PASSION FRUIT'
+    when 'reliance'
+      assign colorway_display = 'RELIANCE'
+    else
+      assign colorway_display = colorway_key | replace: '-', ' ' | upcase
+  endcase
 
-{% assign complement_type = blank %}
-{% assign complement_label = blank %}
-{% assign current_label = blank %}
-{% if current_type == 'type_jacket' %}
-  {% assign complement_type = 'type_pants' %}
-  {% assign complement_label = 'MATCHING PANTS' %}
-  {% assign current_label = 'JACKET' %}
-{% elsif current_type == 'type_pants' %}
-  {% assign complement_type = 'type_jacket' %}
-  {% assign complement_label = 'MATCHING JACKET' %}
-  {% assign current_label = 'PANTS' %}
-{% endif %}
+  assign complement_type = blank
+  assign complement_label = blank
+  assign current_label = blank
+  if current_type == 'type_jacket'
+    assign complement_type = 'type_pants'
+    assign complement_label = 'matching pants'
+    assign current_label = 'jacket'
+  elsif current_type == 'type_pants'
+    assign complement_type = 'type_jacket'
+    assign complement_label = 'matching jacket'
+    assign current_label = 'pants'
+  endif
 
-{% assign heading_suffix_safe = section.settings.heading_suffix | default: 'SET' %}
-{% if product_title_down contains 'bamboo' %}
-  {% assign heading_suffix_safe = 'BAMBOO SET' %}
-{% elsif product_title_down contains 'velour' %}
-  {% assign heading_suffix_safe = 'VELOUR SET' %}
-{% endif %}
+  assign heading_suffix_safe = section.settings.heading_suffix | default: 'set'
+  if product_title_down contains 'bamboo'
+    assign heading_suffix_safe = 'bamboo set'
+  elsif product_title_down contains 'velour'
+    assign heading_suffix_safe = 'velour set'
+  endif
 
-{% assign complement_product = blank %}
-{% if current_colorway != blank and complement_type != blank %}
-  {% for candidate in collections.all.products %}
-    {% if candidate.id != product.id and complement_product == blank %}
-      {% assign candidate_has_colorway = false %}
-      {% assign candidate_has_type = false %}
-      {% for candidate_tag in candidate.tags %}
-        {% assign candidate_tag_clean = candidate_tag | downcase | strip %}
-        {% if candidate_tag_clean == current_colorway %}{% assign candidate_has_colorway = true %}{% endif %}
-        {% if candidate_tag_clean == complement_type %}{% assign candidate_has_type = true %}{% endif %}
-      {% endfor %}
-      {% if candidate_has_colorway and candidate_has_type %}{% assign complement_product = candidate %}{% endif %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
+  assign complement_product = blank
+  if current_colorway != blank and complement_type != blank
+    for candidate in collections.all.products
+      if candidate.id != product.id and complement_product == blank
+        assign candidate_has_colorway = false
+        assign candidate_has_type = false
+        for candidate_tag in candidate.tags
+          assign candidate_tag_clean = candidate_tag | downcase | strip
+          if candidate_tag_clean == current_colorway
+            assign candidate_has_colorway = true
+          endif
+          if candidate_tag_clean == complement_type
+            assign candidate_has_type = true
+          endif
+        endfor
+        if candidate_has_colorway and candidate_has_type
+          assign complement_product = candidate
+        endif
+      endif
+    endfor
+  endif
+-%}
 
-{% if complement_product != blank %}
-  {% assign combined_price = product.price | plus: complement_product.price %}
-  <section class="m-cts m-cts--{{ colorway_key }}" id="complete-the-set-{{ section.id }}" data-current-colorway="{{ colorway_key }}">
+{%- if complement_product != blank -%}
+  {%- assign combined_price = product.price | plus: complement_product.price -%}
+  <section class="m-cts m-cts--{{ colorway_key }}" id="complete-the-set-{{ section.id }}" aria-labelledby="CompleteSetTitle-{{ section.id }}">
     <div class="m-cts__inner">
-      <div class="m-cts__header">
-        <p class="m-cts__eyebrow">{{ section.settings.eyebrow | default: 'COMPLETE THE SET' }}</p>
-        <h2 class="m-cts__heading">{{ section.settings.heading_prefix | default: 'GET THE FULL' }} <span class="m-cts__heading-accent">{{ colorway_display }}</span> {{ heading_suffix_safe }}</h2>
-      </div>
-      <div class="m-cts__pair">
-        <div class="m-cts__card m-cts__card--current">
+      <header class="m-cts__header">
+        <p class="m-cts__eyebrow">{{ section.settings.eyebrow | default: 'Complete the set' }}</p>
+        <h2 class="m-cts__heading" id="CompleteSetTitle-{{ section.id }}">
+          {{ section.settings.heading_prefix | default: 'Get the full' }}
+          <span>{{ colorway_display }}</span>
+          {{ heading_suffix_safe }}
+        </h2>
+      </header>
+
+      <div class="m-cts__pair" role="list">
+        <article class="m-cts__card" role="listitem">
           <div class="m-cts__card-image-wrap">
-            {% if product.featured_image %}<img class="m-cts__card-img" src="{{ product.featured_image | image_url: width: 700 }}" alt="{{ product.title | escape }}" loading="lazy" width="700" height="700">{% endif %}
-            <span class="m-cts__card-label">YOU HAVE - {{ current_label }}</span>
+            {%- if product.featured_image -%}
+              {{ product.featured_image | image_url: width: 700 | image_tag: class: 'm-cts__card-img', loading: 'lazy', widths: '350, 500, 700', sizes: '(min-width: 700px) 360px, 100vw', alt: product.title | append: ', selected ' | append: current_label }}
+            {%- endif -%}
+            <span class="m-cts__card-label">Selected {{ current_label }}</span>
           </div>
-          <div class="m-cts__card-meta"><p class="m-cts__card-title">{{ product.title | upcase }}</p><p class="m-cts__card-price">{{ product.price | money }}</p></div>
-        </div>
-        <div class="m-cts__plus" aria-hidden="true">+</div>
-        <div class="m-cts__card m-cts__card--complement">
+          <div class="purchase-summary m-cts__card-meta" aria-label="{{ product.title | escape }}, {{ product.price | money_with_currency | escape }}">
+            <h3 class="purchase-summary__title">{{ product.title }}</h3>
+            <span class="purchase-summary__separator" aria-hidden="true"> · </span>
+            <strong class="purchase-summary__price">{{ product.price | money }}</strong>
+          </div>
+        </article>
+
+        <span class="m-cts__plus" aria-hidden="true">+</span>
+
+        <article class="m-cts__card" role="listitem">
           <a class="m-cts__card-link" href="{{ complement_product.url }}" aria-label="Shop {{ complement_product.title | escape }}">
             <div class="m-cts__card-image-wrap">
-              {% if complement_product.featured_image %}<img class="m-cts__card-img" src="{{ complement_product.featured_image | image_url: width: 700 }}" alt="{{ complement_product.title | escape }}" loading="lazy" width="700" height="700">{% endif %}
-              <span class="m-cts__card-label m-cts__card-label--add">ADD - {{ complement_label }}</span>
+              {%- if complement_product.featured_image -%}
+                {{ complement_product.featured_image | image_url: width: 700 | image_tag: class: 'm-cts__card-img', loading: 'lazy', widths: '350, 500, 700', sizes: '(min-width: 700px) 360px, 100vw', alt: complement_product.title | append: ', ' | append: complement_label }}
+              {%- endif -%}
+              <span class="m-cts__card-label m-cts__card-label--add">Add {{ complement_label }}</span>
             </div>
-            <div class="m-cts__card-meta"><p class="m-cts__card-title">{{ complement_product.title | upcase }}</p><p class="m-cts__card-price">{{ complement_product.price | money }}</p></div>
+            <div class="purchase-summary m-cts__card-meta" aria-label="{{ complement_product.title | escape }}, {{ complement_product.price | money_with_currency | escape }}">
+              <h3 class="purchase-summary__title">{{ complement_product.title }}</h3>
+              <span class="purchase-summary__separator" aria-hidden="true"> · </span>
+              <strong class="purchase-summary__price">{{ complement_product.price | money }}</strong>
+            </div>
           </a>
-        </div>
+        </article>
       </div>
-      <div class="m-cts__footer"><div class="m-cts__pricing"><p class="m-cts__pricing-label">FULL SET PRICE</p><p class="m-cts__pricing-total">{{ combined_price | money }} <span>CAD</span></p></div><a href="{{ complement_product.url }}" class="m-cts__cta" aria-label="Shop {{ complement_product.title | escape }}">{{ section.settings.cta_text | default: 'SHOP THE' }} {{ complement_label }} →</a></div>
+
+      <footer class="m-cts__footer">
+        <div class="m-cts__pricing" aria-label="Full set price, {{ combined_price | money_with_currency | escape }}">
+          <span class="m-cts__pricing-label">Full set price:</span>
+          <strong class="m-cts__pricing-total">{{ combined_price | money_with_currency }}</strong>
+        </div>
+        <a href="{{ complement_product.url }}" class="m-cts__cta">{{ section.settings.cta_text | default: 'Shop the' }} {{ complement_label }} <span aria-hidden="true">→</span></a>
+      </footer>
     </div>
   </section>
-{% endif %}
+{%- endif -%}
 
 <style>
-  #complete-the-set-{{ section.id }}{--cts-bg:#0e0e0e;--cts-surface:#141414;--cts-border:#242424;--cts-text:#f0f0f0;--cts-muted:#888;--cts-soft:#d8d8d8;--cts-accent-1:#c04a10;--cts-accent-2:#3d1a06;--cts-accent-3:#e8c9a0;--cts-button-text:#fff;background:var(--cts-bg);border-top:1px solid var(--cts-border);border-bottom:1px solid var(--cts-border);padding:64px 24px}#complete-the-set-{{ section.id }}.m-cts--reliance{--cts-accent-1:#d39aa1;--cts-accent-2:#1b1b1b;--cts-accent-3:#f5f1ec}#complete-the-set-{{ section.id }} .m-cts__inner{max-width:960px;margin:0 auto}#complete-the-set-{{ section.id }} .m-cts__header{text-align:center;margin-bottom:48px}#complete-the-set-{{ section.id }} .m-cts__eyebrow{font-size:10px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--cts-accent-1)!important;margin:0 0 12px}#complete-the-set-{{ section.id }} .m-cts__heading{font-size:clamp(22px,4vw,36px);font-weight:900;text-transform:uppercase;color:var(--cts-text);line-height:1.1;margin:0}#complete-the-set-{{ section.id }} .m-cts__heading-accent{color:var(--cts-accent-1)!important}#complete-the-set-{{ section.id }} .m-cts__pair{display:flex;align-items:flex-start;justify-content:center;gap:24px;margin-bottom:40px}#complete-the-set-{{ section.id }} .m-cts__card{flex:1;max-width:360px;background:var(--cts-surface);border:1px solid var(--cts-border);border-radius:4px;overflow:hidden}#complete-the-set-{{ section.id }} .m-cts__card-link{display:block;color:inherit;text-decoration:none}#complete-the-set-{{ section.id }} .m-cts__card-image-wrap{position:relative;aspect-ratio:1/1;overflow:hidden;background:#1a1a1a}#complete-the-set-{{ section.id }} .m-cts__card-img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}#complete-the-set-{{ section.id }} .m-cts__card-label{position:absolute;bottom:10px;left:10px;font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;padding:4px 10px;border-radius:2px;background:rgba(8,8,8,.85);color:var(--cts-soft)}#complete-the-set-{{ section.id }} .m-cts__card-label--add{background:var(--cts-accent-1)!important;color:var(--cts-button-text)!important}#complete-the-set-{{ section.id }} .m-cts__card-meta{padding:16px}#complete-the-set-{{ section.id }} .m-cts__card-title{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--cts-text);margin:0 0 4px;line-height:1.3}#complete-the-set-{{ section.id }} .m-cts__card-price{font-size:12px;color:var(--cts-muted);letter-spacing:.05em;margin:0}#complete-the-set-{{ section.id }} .m-cts__plus{flex-shrink:0;color:var(--cts-accent-2)!important;margin-top:120px;font-size:36px;line-height:1}#complete-the-set-{{ section.id }} .m-cts__footer{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px;background:var(--cts-surface);border:1px solid var(--cts-border);border-radius:4px;flex-wrap:wrap}#complete-the-set-{{ section.id }} .m-cts__pricing-label{font-size:9px;font-weight:700;letter-spacing:.25em;text-transform:uppercase;color:#666;margin:0 0 4px}#complete-the-set-{{ section.id }} .m-cts__pricing-total{font-size:22px;font-weight:900;color:var(--cts-accent-3)!important;margin:0}#complete-the-set-{{ section.id }} .m-cts__cta{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;background:var(--cts-accent-1)!important;color:var(--cts-button-text)!important;text-decoration:none;padding:14px 28px;border-radius:3px}@media(max-width:600px){#complete-the-set-{{ section.id }}{padding:48px 16px}#complete-the-set-{{ section.id }} .m-cts__pair{flex-direction:column;align-items:center;gap:18px}#complete-the-set-{{ section.id }} .m-cts__card{max-width:100%;width:100%}#complete-the-set-{{ section.id }} .m-cts__plus{margin:0}#complete-the-set-{{ section.id }} .m-cts__footer{flex-direction:column;text-align:center}#complete-the-set-{{ section.id }} .m-cts__cta{width:100%;text-align:center}}
+#complete-the-set-{{ section.id }}{--cts-bg:#0e0e0e;--cts-surface:#141414;--cts-border:#242424;--cts-text:#f0f0f0;--cts-muted:#888;--cts-accent:#c04a10;background:var(--cts-bg);color:var(--cts-text);border-block:1px solid var(--cts-border);padding:64px 24px}#complete-the-set-{{ section.id }}.m-cts--reliance{--cts-accent:#d39aa1}#complete-the-set-{{ section.id }} *{box-sizing:border-box}#complete-the-set-{{ section.id }} .m-cts__inner{max-width:960px;margin:auto}#complete-the-set-{{ section.id }} .m-cts__header{text-align:center;margin-bottom:42px}#complete-the-set-{{ section.id }} .m-cts__eyebrow{margin:0 0 12px;color:var(--cts-accent);font-size:10px;font-weight:700;letter-spacing:.3em;text-transform:uppercase}#complete-the-set-{{ section.id }} .m-cts__heading{margin:0;font-size:clamp(24px,4vw,38px);line-height:1.1;text-transform:uppercase}#complete-the-set-{{ section.id }} .m-cts__heading span{color:var(--cts-accent)}#complete-the-set-{{ section.id }} .m-cts__pair{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:34px}#complete-the-set-{{ section.id }} .m-cts__card{flex:1;max-width:360px;overflow:hidden;background:var(--cts-surface);border:1px solid var(--cts-border);border-radius:6px}#complete-the-set-{{ section.id }} .m-cts__card-link{display:block;color:inherit;text-decoration:none}#complete-the-set-{{ section.id }} .m-cts__card-image-wrap{position:relative;aspect-ratio:1;overflow:hidden;background:#1a1a1a}#complete-the-set-{{ section.id }} .m-cts__card-img{display:block;width:100%;height:100%;object-fit:cover}#complete-the-set-{{ section.id }} .m-cts__card-label{position:absolute;left:10px;bottom:10px;padding:5px 9px;background:rgba(8,8,8,.86);font-size:9px;letter-spacing:.16em;text-transform:uppercase}#complete-the-set-{{ section.id }} .m-cts__card-label--add{background:var(--cts-accent);color:#fff}#complete-the-set-{{ section.id }} .m-cts__card-meta{padding:16px}#complete-the-set-{{ section.id }} .purchase-summary__title{display:inline;margin:0;font-size:12px;line-height:1.4;text-transform:uppercase}#complete-the-set-{{ section.id }} .purchase-summary__separator{color:var(--cts-muted)}#complete-the-set-{{ section.id }} .purchase-summary__price{font-size:12px;color:var(--cts-muted)}#complete-the-set-{{ section.id }} .m-cts__plus{font-size:34px;color:var(--cts-accent)}#complete-the-set-{{ section.id }} .m-cts__footer{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px;background:var(--cts-surface);border:1px solid var(--cts-border);border-radius:6px}#complete-the-set-{{ section.id }} .m-cts__pricing-label{margin-right:8px;color:var(--cts-muted);font-size:10px;letter-spacing:.18em;text-transform:uppercase}#complete-the-set-{{ section.id }} .m-cts__pricing-total{font-size:21px}#complete-the-set-{{ section.id }} .m-cts__cta{padding:14px 24px;background:var(--cts-accent);color:#fff;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}@media(max-width:600px){#complete-the-set-{{ section.id }}{padding:46px 16px}#complete-the-set-{{ section.id }} .m-cts__pair{flex-direction:column}#complete-the-set-{{ section.id }} .m-cts__card{width:100%;max-width:none}#complete-the-set-{{ section.id }} .m-cts__footer{align-items:stretch;flex-direction:column;text-align:center}#complete-the-set-{{ section.id }} .m-cts__cta{text-align:center}}
 </style>
 
 {% schema %}
