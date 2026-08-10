@@ -1,6 +1,8 @@
 {% comment %}
   sections/main-page.liquid
   Generic page renderer with duplicate-H1 protection.
+  Our Story receives the World of Melato editorial shell while all other
+  standard pages retain the existing narrow utility layout.
 {% endcomment %}
 
 {%- liquid
@@ -12,19 +14,32 @@
   endif
 -%}
 
-<section class="section-spacing melato-page-main" aria-labelledby="MainPageHeading-{{ section.id }}">
-  <div class="container--narrow">
-    {%- unless content_has_h1 -%}
-      <h1 id="MainPageHeading-{{ section.id }}" class="heading-md drip-reveal" style="margin-bottom:40px;">
-        {{ page.title }}
-      </h1>
-    {%- endunless -%}
-
-    <div class="page-content drip-reveal drip-reveal--delay-1" style="color:var(--color-muted);line-height:1.9;font-size:0.95rem;">
+{%- if page.handle == 'our-story' -%}
+  <section class="melato-world-story" aria-label="The House / Our Story">
+    {% render 'melato-world-rail' %}
+    <header class="melato-world-story__masthead">
+      <p class="melato-world-kicker">The House / Melato</p>
+      <h1>Our Story</h1>
+    </header>
+    <div class="melato-world-story__content">
       {{ page.content }}
     </div>
-  </div>
-</section>
+  </section>
+{%- else -%}
+  <section class="section-spacing melato-page-main" aria-labelledby="MainPageHeading-{{ section.id }}">
+    <div class="container--narrow">
+      {%- unless content_has_h1 -%}
+        <h1 id="MainPageHeading-{{ section.id }}" class="heading-md drip-reveal" style="margin-bottom:40px;">
+          {{ page.title }}
+        </h1>
+      {%- endunless -%}
+
+      <div class="page-content drip-reveal drip-reveal--delay-1" style="color:var(--color-muted);line-height:1.9;font-size:0.95rem;">
+        {{ page.content }}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
 
 {% schema %}
 {
