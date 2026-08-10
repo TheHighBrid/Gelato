@@ -49,7 +49,8 @@
       },
       "block_order": ["item1", "item3", "item4", "item5", "item_g67bjG", "item6", "item7"],
       "settings": {
-        "speed": 80,
+        "accessible_label": "Melato announcements",
+        "speed": 45,
         "separator": "MELATO",
         "direction": "left",
         "padding": 8,
@@ -159,6 +160,6 @@
     "177543262208e0278d",
     "brand_story",
     "testimonials",
-    "1781310906e62d22b0"
+    "newsletter_capture"
   ]
 }
