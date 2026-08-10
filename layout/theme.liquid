@@ -171,6 +171,7 @@
     window.DRIP={shop:{currency:{{ shop.currency | json }},moneyFormat:{{ shop.money_format | json }},locale:{{ request.locale.iso_code | json }},freeShippingThreshold:0,routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},search:{{ routes.search_url | json }},collections:{{ routes.collections_url | json }}}},cart:{{ cart | json }},customer:{{ customer | json }},strings:{addedToCart:{{ 'cart.added' | t | json }},cartEmpty:{{ 'cart.empty' | t | json }},soldOut:{{ 'products.sold_out' | t | json }},unavailable:{{ 'products.unavailable' | t | json }},addToCart:{{ 'products.add_to_cart' | t | json }},outOfStock:{{ 'products.out_of_stock' | t | json }}}};
   </script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-house-legacy-bridge.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-hero-video.js' | asset_url }}" defer></script>
   <script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script>
