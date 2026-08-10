@@ -1,0 +1,271 @@
+/* Melato House / Client Services content normalization */
+
+.melato-client-services__body > .melato-page,
+.melato-client-services__body > .melato-size-guide {
+  margin: 0;
+  padding: 0;
+  max-width: none;
+  background: transparent !important;
+  color: inherit !important;
+}
+
+.melato-client-services__body .melato-page__kicker,
+.melato-client-services__body .melato-page > .lead,
+.melato-client-services__body .melato-size-guide > .msg-header {
+  display: none;
+}
+
+.melato-client-services__body .melato-note {
+  margin: 42px 0;
+  padding: 20px 0;
+  border: 0;
+  border-block: 1px solid rgba(9,9,9,.2);
+  border-radius: 0;
+  background: transparent;
+  color: rgba(9,9,9,.62) !important;
+  font-family: var(--melato-mono, monospace);
+  font-size: 9px;
+  line-height: 1.65;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+/* Contact directory */
+.melato-client-services__body .melato-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 40px 0 70px;
+  border-top: 1px solid rgba(9,9,9,.2);
+  border-left: 1px solid rgba(9,9,9,.2);
+}
+
+.melato-client-services__body .melato-card {
+  min-height: 190px;
+  margin: 0;
+  padding: 22px;
+  border: 0;
+  border-right: 1px solid rgba(9,9,9,.2);
+  border-bottom: 1px solid rgba(9,9,9,.2);
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none;
+}
+
+.melato-client-services__body .melato-card__label {
+  display: block;
+  margin-bottom: 34px;
+  color: rgba(9,9,9,.52) !important;
+  font-family: var(--melato-mono, monospace);
+  font-size: 8px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.melato-client-services__body .melato-card strong {
+  display: block;
+  max-width: 330px;
+  font-family: var(--melato-editorial, Georgia, serif);
+  font-size: clamp(20px, 2vw, 29px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.melato-client-services__body .melato-card p {
+  margin: 22px 0 0;
+  font-size: 12px;
+}
+
+/* FAQ */
+.melato-client-services__body .melato-faq {
+  margin: 24px 0 68px;
+  border-top: 1px solid rgba(9,9,9,.22);
+}
+
+.melato-client-services__body .melato-faq details {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(9,9,9,.22);
+  border-radius: 0;
+  background: transparent;
+}
+
+.melato-client-services__body .melato-faq summary {
+  position: relative;
+  min-height: 68px;
+  padding: 22px 44px 22px 0;
+  list-style: none;
+  color: var(--melato-ink, #090909);
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.melato-client-services__body .melato-faq summary::-webkit-details-marker { display: none; }
+.melato-client-services__body .melato-faq summary::after {
+  content: '+';
+  position: absolute;
+  top: 50%;
+  right: 3px;
+  translate: 0 -50%;
+  font-size: 20px;
+  font-weight: 300;
+}
+.melato-client-services__body .melato-faq details[open] summary::after { content: '−'; }
+.melato-client-services__body .melato-faq details > div { padding: 0 0 24px; }
+.melato-client-services__body .melato-faq details p { margin: 0; max-width: 700px; color: rgba(9,9,9,.62) !important; }
+
+/* Size guide */
+.melato-client-services__body .msg-section {
+  margin: 0;
+  padding: 0 0 clamp(58px, 8vw, 100px);
+}
+
+.melato-client-services__body .msg-note,
+.melato-client-services__body .msg-fit-note {
+  max-width: 760px;
+  color: rgba(9,9,9,.6) !important;
+}
+
+.melato-client-services__body .msg-table {
+  width: 100%;
+  margin: 28px 0 24px;
+  border: 0;
+  border-collapse: collapse;
+  background: transparent;
+}
+
+.melato-client-services__body .msg-table th,
+.melato-client-services__body .msg-table td {
+  min-width: 88px;
+  padding: 13px 10px;
+  border: 0;
+  border-bottom: 1px solid rgba(9,9,9,.18);
+  background: transparent !important;
+  color: inherit !important;
+  text-align: left;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.melato-client-services__body .msg-table th {
+  color: rgba(9,9,9,.5) !important;
+  font-family: var(--melato-mono, monospace);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.melato-client-services__body .msg-measure-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 28px;
+  border-top: 1px solid rgba(9,9,9,.2);
+  border-left: 1px solid rgba(9,9,9,.2);
+}
+
+.melato-client-services__body .msg-measure-grid > div {
+  min-height: 190px;
+  padding: 22px;
+  border-right: 1px solid rgba(9,9,9,.2);
+  border-bottom: 1px solid rgba(9,9,9,.2);
+}
+
+.melato-client-services__body .msg-measure-grid strong {
+  font-family: var(--melato-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.melato-client-services__body .msg-measure-grid p { font-size: 13px; color: rgba(9,9,9,.6) !important; }
+.melato-client-services__body .msg-contact { padding-top: 44px; border-top: 1px solid rgba(9,9,9,.2); }
+
+/* Shopify policy surface, used for Returns without replacing policy content. */
+.template-policy .main-content,
+body:has(.shopify-policy__container) .main-content {
+  background: var(--melato-cream, #f0e8d9);
+  color: var(--melato-ink, #090909);
+}
+
+.shopify-policy__container {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: clamp(54px, 8vw, 110px) var(--melato-utility-side, 32px) clamp(80px, 10vw, 150px) !important;
+}
+
+.shopify-policy__title {
+  display: grid;
+  grid-template-columns: .5fr 1.5fr;
+  gap: 26px;
+  align-items: end;
+  padding-bottom: clamp(44px, 6vw, 82px);
+  border-bottom: 1px solid rgba(9,9,9,.2);
+  text-align: left !important;
+}
+
+.shopify-policy__title::before {
+  content: 'Client Services / Policy';
+  align-self: start;
+  color: rgba(9,9,9,.55);
+  font-family: var(--melato-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.shopify-policy__title h1 {
+  margin: 0;
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: clamp(52px, 9vw, 132px);
+  font-weight: 500;
+  line-height: .84;
+  letter-spacing: -.07em;
+  text-transform: uppercase;
+}
+
+.shopify-policy__body {
+  width: min(100%, 900px);
+  margin: clamp(50px, 8vw, 110px) 0 0 auto !important;
+  color: var(--melato-ink, #090909) !important;
+  font-size: clamp(15px, 1.1vw, 18px);
+  line-height: 1.72;
+}
+
+.shopify-policy__body h2,
+.shopify-policy__body h3 {
+  margin: 52px 0 16px;
+  color: inherit;
+}
+
+.shopify-policy__body h2 {
+  font-family: var(--melato-editorial, Georgia, serif);
+  font-size: clamp(28px, 3.4vw, 48px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.05;
+}
+
+.shopify-policy__body h3 {
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 13px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.shopify-policy__body a { color: inherit; text-underline-offset: .18em; }
+
+@media (max-width: 749px) {
+  .melato-client-services__body .melato-card-grid,
+  .melato-client-services__body .msg-measure-grid { grid-template-columns: 1fr; }
+  .melato-client-services__body .msg-table { display: block; overflow-x: auto; scrollbar-width: thin; }
+  .shopify-policy__container { padding-inline: 16px !important; }
+  .shopify-policy__title { grid-template-columns: 1fr; }
+  .shopify-policy__body { margin-left: 0 !important; }
+}
