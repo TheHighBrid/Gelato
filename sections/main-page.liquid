@@ -8,21 +8,26 @@
 {%- liquid
   assign page_content_down = page.content | downcase
   assign content_has_h1 = false
+  assign world_story_content = page.content
 
   if page_content_down contains '<h1'
     assign content_has_h1 = true
   endif
+
+  if page.handle == 'our-story'
+    assign world_story_content = world_story_content | replace: '<h1>Our Story</h1>', ''
+  endif
 -%}
 
 {%- if page.handle == 'our-story' -%}
-  <section class="melato-world-story" aria-label="The House / Our Story">
+  <section class="melato-world-story" aria-labelledby="WorldStoryTitle-{{ section.id }}">
     {% render 'melato-world-rail' %}
     <header class="melato-world-story__masthead">
       <p class="melato-world-kicker">The House / Melato</p>
-      <h1>Our Story</h1>
+      <h1 id="WorldStoryTitle-{{ section.id }}">Our Story</h1>
     </header>
     <div class="melato-world-story__content">
-      {{ page.content }}
+      {{ world_story_content }}
     </div>
   </section>
 {%- else -%}
