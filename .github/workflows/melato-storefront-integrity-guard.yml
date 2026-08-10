@@ -15,8 +15,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check PDP JavaScript syntax
-        run: node --check assets/melato-pdp-polish.js
+      - name: Check storefront JavaScript syntax
+        run: |
+          node --check assets/melato-pdp-polish.js
+          node --check assets/melato-house.js
+          node --check assets/melato-house-collection.js
+          node --check assets/melato-house-home.js
+          node --check assets/melato-house-world.js
 
       - name: Validate Melato storefront contracts
         shell: python
@@ -129,10 +134,12 @@ jobs:
           ban('templates/product.json', 'MORE FROM THE COLLECTION', 'legacy generic PDP recommendation heading')
 
           # 3 + 4. Footer remains readable and contains exactly one copyright source.
+          # Phase 7 retires the old global CTA mutation entirely, which is stronger than
+          # maintaining a footer-only exclusion inside that legacy script.
           polish = text('snippets/melato-global-polish.liquid')
           if 'melato-footer-copyright-line' in polish:
               failures.append('snippets/melato-global-polish.liquid: duplicate injected copyright returned')
-          require('snippets/melato-global-polish.liquid', "el.closest('footer, .footer, .shopify-section-footer')", 'footer CTA exclusion')
+          ban('snippets/melato-global-polish.liquid', 'melato-global-pill', 'legacy global CTA pill mutation')
           footer = text('sections/melato-footer.liquid')
           if footer.count('melato-footer__copyright') != 2:
               failures.append('sections/melato-footer.liquid: unexpected copyright implementation count')
@@ -152,8 +159,17 @@ jobs:
           ban('sections/main-collection.liquid', 'Filter 0', 'hardcoded zero filter badge')
           require('sections/melato-product-page-rebuild.liquid', 'aria-label="Show {{ media_alt | escape }}"', 'descriptive gallery control name')
 
+          # Phase 7 release-hardening contracts.
+          require('templates/index.json', '"type": "newsletter"', 'native homepage newsletter')
+          ban('templates/index.json', '"formId": ""', 'empty homepage app form')
+          require('sections/newsletter.liquid', 'data-house-newsletter-form', 'House native newsletter marker')
+          ban('sections/newsletter.liquid', 'data-newsletter-form:', 'legacy newsletter interception marker')
+          require('assets/melato-house.js', "currentDrop: '/collections/drop-001-texture-form'", 'verified current-drop route guard')
+          require('assets/melato-house.js', 'trapPanelTab', 'House menu/search focus containment')
+          require('assets/melato-house.js', 'stopImmediatePropagation', 'cart legacy-handler isolation')
+
           # Parse JSON templates after removing Shopify's generated leading comment block.
-          for filename in ('templates/index.json', 'templates/index.melato-ovum-redesign.json', 'templates/cart.json', 'templates/product.json'):
+          for filename in ('templates/index.json', 'templates/index.melato-ovum-redesign.json', 'templates/404.json', 'templates/cart.json', 'templates/product.json'):
               raw = text(filename)
               raw = re.sub(r'^\s*/\*.*?\*/\s*', '', raw, count=1, flags=re.S)
               try:
