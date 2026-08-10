@@ -102,6 +102,8 @@
   {%- if template.name == 'collection' -%}{{ 'melato-house-collection.css' | asset_url | stylesheet_tag }}{%- endif -%}
   {%- if template.name == 'index' -%}{{ 'melato-house-home.css' | asset_url | stylesheet_tag }}{%- endif -%}
   {{ 'melato-house-world.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-house-utility.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-house-service.css' | asset_url | stylesheet_tag }}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}
   {% render 'melato-global-polish' %}
@@ -133,7 +135,10 @@
 
   {%- if melato_filter_main_output -%}
     {%- capture melato_main_output -%}{{ content_for_layout }}{%- endcapture -%}
-    <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_main_output, context: 'main' %}</main>
+    <main id="main-content" class="main-content" role="main" tabindex="-1">
+      {%- if request.path contains '/policies/refund-policy' -%}{% render 'melato-services-rail' %}{%- endif -%}
+      {% render 'melato-rendered-output-filters', html: melato_main_output, context: 'main' %}
+    </main>
   {%- else -%}
     <main id="main-content" class="main-content" role="main" tabindex="-1">{{ content_for_layout }}</main>
   {%- endif -%}
