@@ -11,6 +11,14 @@
     assign house_menu = linklists['main-menu']
   endif
   assign logo_alt = section.settings.logo.alt | default: shop.name | escape
+  assign configured_logo_url = ''
+  assign use_transparent_house_logo = false
+  if section.settings.logo != blank
+    assign configured_logo_url = section.settings.logo | image_url: width: 64
+    if configured_logo_url contains 'melato_logo_32eb50cd-b029-4c60-ab92-78b657f9f493'
+      assign use_transparent_house_logo = true
+    endif
+  endif
 %}
 
 <header
@@ -33,7 +41,19 @@
     </div>
 
     <a class="melato-house-header__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
-      {% if section.settings.logo != blank %}
+      {% if use_transparent_house_logo %}
+        <img
+          class="melato-house-header__logo-image melato-house-header__logo-image--house-transparent"
+          src="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/melato_silver_logo_transparent_HD_cropped.png?v=1782626616&width=480"
+          srcset="https://cdn.shopify.com/s/files/1/0809/3358/5151/files/melato_silver_logo_transparent_HD_cropped.png?v=1782626616&width=220 220w, https://cdn.shopify.com/s/files/1/0809/3358/5151/files/melato_silver_logo_transparent_HD_cropped.png?v=1782626616&width=320 320w, https://cdn.shopify.com/s/files/1/0809/3358/5151/files/melato_silver_logo_transparent_HD_cropped.png?v=1782626616&width=480 480w"
+          sizes="(max-width: 1024px) 132px, 220px"
+          width="5930"
+          height="1436"
+          alt="{{ logo_alt }}"
+          loading="eager"
+          fetchpriority="high"
+        >
+      {% elsif section.settings.logo != blank %}
         {{ section.settings.logo
           | image_url: width: 900
           | image_tag:
