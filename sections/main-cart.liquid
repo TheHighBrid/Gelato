@@ -1,83 +1,101 @@
 {% comment %}
   sections/main-cart.liquid
+  Full cart page. Shopify cart/form behavior remains authoritative.
 {% endcomment %}
 
-<section class="section-spacing">
-  <div class="container--narrow">
-    <h1 class="heading-md drip-reveal" style="margin-bottom:48px;">{{ 'cart.title' | t }}</h1>
+<section class="melato-cart-page" aria-labelledby="MelatoCartTitle-{{ section.id }}">
+  <header class="melato-cart-page__header">
+    <div>
+      <p class="melato-cart-page__eyebrow">Bag / Melato</p>
+      <h1 id="MelatoCartTitle-{{ section.id }}" class="melato-cart-page__title">Your Bag</h1>
+    </div>
+    <p class="melato-cart-page__meta">{{ cart.item_count }} {{ cart.item_count | pluralize: 'piece', 'pieces' }}</p>
+  </header>
 
-    {%- if cart.item_count > 0 -%}
-      {%- form 'cart', cart -%}
-        <div style="display:grid;grid-template-columns:1fr 360px;gap:48px;align-items:start;" class="cart-page-grid">
+  {%- if cart.item_count > 0 -%}
+    {%- form 'cart', cart -%}
+      <div class="melato-cart-page__grid">
+        <div class="melato-cart-page__lines">
+          {%- for item in cart.items -%}
+            <article class="melato-cart-line">
+              <a href="{{ item.url }}" aria-label="View {{ item.product.title | escape }}">
+                {%- if item.image != blank -%}
+                  <img
+                    class="melato-cart-line__image"
+                    src="{{ item.image | image_url: width: 240 }}"
+                    srcset="{{ item.image | image_url: width: 120 }} 120w, {{ item.image | image_url: width: 240 }} 240w, {{ item.image | image_url: width: 360 }} 360w"
+                    sizes="120px"
+                    alt="{{ item.title | escape }}"
+                    width="120"
+                    height="{{ 120 | divided_by: item.image.aspect_ratio | ceil }}"
+                    loading="lazy"
+                  >
+                {%- endif -%}
+              </a>
 
-          <div>
-            {%- for item in cart.items -%}
-              <div class="cart-item drip-reveal" style="grid-template-columns:100px 1fr;padding:24px 0;">
-                <a href="{{ item.url }}">
- <img
-  class="cart-item_img"
-  src="{{ item.image | image_url: width: 100 }}"
-  srcset="{{ item.image | image_url: width: 100 }} 1x, {{ item.image | image_url: width: 200 }} 2x"
-  alt="{{ item.title | escape }}"
-  width="100"
-  height="{{ 100 | divided_by: item.image.aspect_ratio | ceil }}"
-  loading="lazy"
->
-                                                                                                                                                        </a>
-
-                  <div class="cart-item__info">
-                  <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+              <div class="melato-cart-line__body">
+                <div>
+                  <a href="{{ item.url }}" class="melato-cart-line__title">{{ item.product.title }}</a>
                   {%- if item.variant.title != 'Default Title' -%}
-                    <span class="cart-item__variant">{{ item.variant.title }}</span>
+                    <div class="melato-cart-line__variant">{{ item.variant.title }}</div>
                   {%- endif -%}
-                  <div class="cart-item__footer">
-                    <div class="qty-stepper">
-                      <button type="button" class="qty-stepper__btn" data-qty-change="-1" data-line="{{ item.key }}">−</button>
-                      <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" data-line="{{ item.key }}" name="updates[]">
-                      <button type="button" class="qty-stepper__btn" data-qty-change="+1" data-line="{{ item.key }}">+</button>
-                    </div>
-                    <span class="price">{{ item.final_line_price | money }}</span>
+                </div>
+
+                <div class="melato-cart-line__bottom">
+                  <div class="qty-stepper" aria-label="Quantity for {{ item.product.title | escape }}">
+                    <button type="button" class="qty-stepper__btn" data-qty-change="-1" data-line="{{ item.key }}" aria-label="Decrease quantity">−</button>
+                    <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" data-line="{{ item.key }}" name="updates[]" aria-label="Quantity">
+                    <button type="button" class="qty-stepper__btn" data-qty-change="+1" data-line="{{ item.key }}" aria-label="Increase quantity">+</button>
                   </div>
+                  <span class="price">{{ item.final_line_price | money }}</span>
                 </div>
               </div>
-            {%- endfor -%}
-          </div>
-
-          <div style="background:var(--color-surface);padding:32px;position:sticky;top:80px;" class="drip-reveal drip-reveal--delay-2">
-            <h2 class="heading-xs" style="margin-bottom:24px;">ORDER SUMMARY</h2>
-            <div class="cart-subtotal" style="margin-bottom:12px;">
-              <span class="text-label">{{ 'cart.subtotal' | t }}</span>
-              <span class="price">{{ cart.total_price | money }}</span>
-            </div>
-            <p class="text-label" style="color:var(--color-muted);text-align:center;margin-bottom:20px;">{{ 'general.secure_checkout' | t }}</p>
-            <button type="submit" name="checkout" class="btn btn--primary btn--full btn--lg">
-              {{ 'cart.checkout' | t }}
-            </button>
-            {%- if additional_checkout_buttons -%}
-              <div class="additional-checkout-buttons" style="margin-top:12px;">
-                {{ content_for_additional_checkout_buttons }}
-              </div>
-            {%- endif -%}
-          </div>
-
+            </article>
+          {%- endfor -%}
         </div>
-      {%- endform -%}
 
-    {%- else -%}
-      <div style="text-align:center;padding:80px 0;">
-        <h2 class="heading-sm" style="margin-bottom:20px;color:var(--color-muted);">{{ 'cart.empty' | t }}</h2>
-        <a href="/collections/all" class="btn btn--primary">{{ 'cart.empty_cta' | t }}</a>
+        <aside class="melato-cart-page__summary" aria-labelledby="MelatoCartSummary-{{ section.id }}">
+          <p class="melato-cart-page__eyebrow">Order / Summary</p>
+          <h2 id="MelatoCartSummary-{{ section.id }}" class="melato-cart-page__summary-title">Ready when you are.</h2>
+          <div class="melato-cart-page__summary-row">
+            <span class="melato-cart-page__summary-label">Subtotal</span>
+            <span class="price">{{ cart.total_price | money }}</span>
+          </div>
+          <p class="melato-cart-page__meta">Taxes and applicable duties are calculated at checkout.</p>
+
+          {%- if section.settings.show_order_note -%}
+            <div class="melato-field" style="margin-top:28px;">
+              <label for="MelatoCartNote-{{ section.id }}">Order note</label>
+              <textarea id="MelatoCartNote-{{ section.id }}" name="note" rows="3" placeholder="Optional instructions">{{ cart.note }}</textarea>
+            </div>
+          {%- endif -%}
+
+          <button type="submit" name="checkout" class="melato-house-button" style="width:100%;margin-top:18px;">
+            Continue to checkout
+          </button>
+
+          {%- if additional_checkout_buttons -%}
+            <div class="additional-checkout-buttons">
+              {{ content_for_additional_checkout_buttons }}
+            </div>
+          {%- endif -%}
+        </aside>
       </div>
-    {%- endif -%}
-
-  </div>
+    {%- endform -%}
+  {%- else -%}
+    <section class="melato-empty-state" aria-labelledby="MelatoEmptyBag-{{ section.id }}">
+      <p class="melato-empty-state__eyebrow">Bag / Empty</p>
+      <div>
+        <h2 id="MelatoEmptyBag-{{ section.id }}" class="melato-empty-state__title">Nothing selected yet.</h2>
+        <p class="melato-empty-state__copy">The bag is clear. Continue with the current release or browse the complete Melato catalogue.</p>
+        <div class="melato-empty-state__actions">
+          <a class="melato-utility-link" href="/collections/new-arrivals">New arrivals</a>
+          <a class="melato-utility-link" href="/collections/all-products">All products</a>
+        </div>
+      </div>
+    </section>
+  {%- endif -%}
 </section>
-
-<style>
-  @media (max-width: 768px) {
-    .cart-page-grid { grid-template-columns: 1fr !important; }
-  }
-</style>
 
 {% schema %}
 {

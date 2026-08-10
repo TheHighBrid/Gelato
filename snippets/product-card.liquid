@@ -12,6 +12,11 @@
   assign card_variant = product.selected_or_first_available_variant
   assign card_price = card_variant.price | default: product.price
   assign card_compare_at_price = card_variant.compare_at_price | default: product.compare_at_price
+  assign color_option = product.options_by_name['Color'] | default: product.options_by_name['Colour'] | default: product.options_by_name['Couleur']
+  assign card_color_count = 0
+  if color_option
+    assign card_color_count = color_option.values.size
+  endif
   assign on_sale = false
   assign sold_out = false
 
@@ -23,7 +28,7 @@
   endunless
 -%}
 
-<article class="product-card product-card--{{ card_image_ratio }}{% if sold_out %} product-card--sold-out{% endif %}" data-product-card data-product-handle="{{ product.handle }}" data-product-price="{{ card_price }}">
+<article class="product-card product-card--{{ card_image_ratio }}{% if sold_out %} product-card--sold-out{% endif %}" data-product-card data-product-handle="{{ product.handle }}" data-product-price="{{ card_price }}" data-product-colour-count="{{ card_color_count }}">
   <div class="product-card__media">
     <a href="{{ product.url }}" aria-label="View {{ product.title | escape }}" tabindex="-1">
       {%- if product.featured_image != blank -%}
@@ -101,14 +106,11 @@
       {%- endif -%}
     </div>
 
-    {%- if swatch_style != 'none' -%}
-      {%- assign color_option = product.options_by_name['Color'] | default: product.options_by_name['Colour'] | default: product.options_by_name['Couleur'] -%}
-      {%- if color_option -%}
-        <div class="product-card__swatches" aria-label="Available colors">
-          {%- for value in color_option.values limit: 6 -%}<span class="swatch swatch--{{ swatch_style }}" style="background-color:{{ value | handle }}" title="{{ value }}" aria-label="{{ value }}"></span>{%- endfor -%}
-          {%- if color_option.values.size > 6 -%}<span class="text-label" style="line-height:18px">+{{ color_option.values.size | minus: 6 }}</span>{%- endif -%}
-        </div>
-      {%- endif -%}
+    {%- if swatch_style != 'none' and color_option -%}
+      <div class="product-card__swatches" aria-label="Available colors">
+        {%- for value in color_option.values limit: 6 -%}<span class="swatch swatch--{{ swatch_style }}" style="background-color:{{ value | handle }}" title="{{ value }}" aria-label="{{ value }}"></span>{%- endfor -%}
+        {%- if color_option.values.size > 6 -%}<span class="text-label" style="line-height:18px">+{{ color_option.values.size | minus: 6 }}</span>{%- endif -%}
+      </div>
     {%- endif -%}
 
     {%- if show_rating and product.metafields.reviews.rating.value != blank -%}

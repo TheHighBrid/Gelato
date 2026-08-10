@@ -1,57 +1,151 @@
 {% comment %}
   sections/main-addresses.liquid
+  Native Shopify address forms presented as an accessible House ledger.
 {% endcomment %}
 
-<section class="section-spacing">
-  <div class="container--narrow">
-    <div class="drip-reveal" style="margin-bottom:40px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-      <h1 class="heading-md">{{ 'account.addresses' | t }}</h1>
-      <button class="btn btn--primary btn--sm" onclick="document.getElementById('new-address').style.display='block'">+ Add Address</button>
+<section class="melato-addresses" aria-labelledby="MelatoAddressesTitle-{{ section.id }}">
+  <header class="melato-addresses__header">
+    <div>
+      <p class="melato-addresses__eyebrow">Account / Delivery details</p>
+      <h1 id="MelatoAddressesTitle-{{ section.id }}" class="melato-addresses__title">Addresses</h1>
     </div>
+    <a href="{{ routes.account_url }}" class="melato-utility-link">Back to account</a>
+  </header>
 
-    <div id="new-address" style="display:none;background:var(--color-surface);padding:32px;margin-bottom:40px;" class="drip-reveal">
-      <h2 class="heading-xs" style="margin-bottom:24px;">New Address</h2>
-      {%- form 'customer_address', customer.new_address -%}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="field"><label class="field__label">First Name</label><input class="field__input" type="text" name="address[first_name]" autocomplete="given-name"></div>
-          <div class="field"><label class="field__label">Last Name</label><input class="field__input" type="text" name="address[last_name]" autocomplete="family-name"></div>
-          <div class="field" style="grid-column:span 2;"><label class="field__label">Address</label><input class="field__input" type="text" name="address[address1]" autocomplete="address-line1"></div>
-          <div class="field"><label class="field__label">City</label><input class="field__input" type="text" name="address[city]" autocomplete="address-level2"></div>
-          <div class="field"><label class="field__label">Country</label>{{ country_option_tags | prepend: '<select class="field__select" name="address[country]" autocomplete="country-name">' | append: '</select>' }}</div>
-          <div class="field"><label class="field__label">ZIP / Postal Code</label><input class="field__input" type="text" name="address[zip]" autocomplete="postal-code"></div>
-          <div class="field"><label class="field__label">Phone</label><input class="field__input" type="tel" name="address[phone]" autocomplete="tel"></div>
-        </div>
-        <div style="margin-top:24px;display:flex;gap:12px;">
-          <button type="submit" class="btn btn--primary">Save Address</button>
-          <button type="button" class="btn btn--secondary" onclick="document.getElementById('new-address').style.display='none'">Cancel</button>
-        </div>
-      {%- endform -%}
-    </div>
-
-    {%- if customer.addresses.size > 0 -%}
-      <div class="grid grid--2 drip-reveal drip-reveal--delay-1">
-        {%- for address in customer.addresses -%}
-          <div style="background:var(--color-surface);padding:24px;border:1px solid var(--color-border);">
-            {%- if address == customer.default_address -%}
-              <span class="badge badge--new" style="margin-bottom:12px;display:inline-block;">Default</span>
-            {%- endif -%}
-            <p style="font-family:var(--font-mono-family);font-size:0.75rem;color:var(--color-muted);line-height:1.8;">
-              {{ address.name }}<br>
-              {{ address.address1 }}<br>
-              {%- if address.address2 != blank -%}{{ address.address2 }}<br>{%- endif -%}
-              {{ address.city }}, {{ address.province }} {{ address.zip }}<br>
-              {{ address.country }}
-            </p>
-            <div style="display:flex;gap:8px;margin-top:16px;">
-              <a href="{{ routes.account_addresses_url }}/{{ address.id }}" class="btn btn--secondary btn--sm">Edit</a>
-              {%- form 'customer_address', address -%}
-                <input type="hidden" name="_method" value="delete">
-                <button type="submit" class="btn btn--ghost btn--sm" style="color:var(--color-error);">Remove</button>
-              {%- endform -%}
+  <div class="melato-addresses__body">
+    <details class="melato-addresses__new">
+      <summary>Add a new address</summary>
+      <div class="melato-addresses__form">
+        {%- form 'customer_address', customer.new_address -%}
+          <div class="melato-addresses__form-grid">
+            <div class="melato-field">
+              <label for="NewAddressFirst-{{ section.id }}">First name</label>
+              <input id="NewAddressFirst-{{ section.id }}" type="text" name="address[first_name]" autocomplete="given-name">
+            </div>
+            <div class="melato-field">
+              <label for="NewAddressLast-{{ section.id }}">Last name</label>
+              <input id="NewAddressLast-{{ section.id }}" type="text" name="address[last_name]" autocomplete="family-name">
+            </div>
+            <div class="melato-field melato-field--wide">
+              <label for="NewAddress1-{{ section.id }}">Address</label>
+              <input id="NewAddress1-{{ section.id }}" type="text" name="address[address1]" autocomplete="address-line1" required>
+            </div>
+            <div class="melato-field melato-field--wide">
+              <label for="NewAddress2-{{ section.id }}">Apartment, suite, etc.</label>
+              <input id="NewAddress2-{{ section.id }}" type="text" name="address[address2]" autocomplete="address-line2">
+            </div>
+            <div class="melato-field">
+              <label for="NewAddressCity-{{ section.id }}">City</label>
+              <input id="NewAddressCity-{{ section.id }}" type="text" name="address[city]" autocomplete="address-level2" required>
+            </div>
+            <div class="melato-field">
+              <label for="NewAddressProvince-{{ section.id }}">Province / State</label>
+              <input id="NewAddressProvince-{{ section.id }}" type="text" name="address[province]" autocomplete="address-level1">
+            </div>
+            <div class="melato-field">
+              <label for="NewAddressCountry-{{ section.id }}">Country</label>
+              <select id="NewAddressCountry-{{ section.id }}" name="address[country]" autocomplete="country-name">{{ all_country_option_tags }}</select>
+            </div>
+            <div class="melato-field">
+              <label for="NewAddressZip-{{ section.id }}">ZIP / Postal code</label>
+              <input id="NewAddressZip-{{ section.id }}" type="text" name="address[zip]" autocomplete="postal-code" required>
+            </div>
+            <div class="melato-field melato-field--wide">
+              <label for="NewAddressPhone-{{ section.id }}">Phone</label>
+              <input id="NewAddressPhone-{{ section.id }}" type="tel" name="address[phone]" autocomplete="tel">
             </div>
           </div>
+          <div class="melato-addresses__actions">
+            <button type="submit" class="melato-house-button">Save address</button>
+          </div>
+        {%- endform -%}
+      </div>
+    </details>
+
+    {%- if customer.addresses.size > 0 -%}
+      <h2 class="melato-addresses__section-title">Saved addresses</h2>
+      <div class="melato-addresses__grid">
+        {%- for address in customer.addresses -%}
+          <article class="melato-address-card">
+            {%- if address == customer.default_address -%}
+              <span class="melato-address-card__default">Default address</span>
+            {%- endif -%}
+
+            <p>
+              <strong>{{ address.name }}</strong><br>
+              {{ address.address1 }}<br>
+              {%- if address.address2 != blank -%}{{ address.address2 }}<br>{%- endif -%}
+              {{ address.city }}{% if address.province != blank %}, {{ address.province }}{% endif %} {{ address.zip }}<br>
+              {{ address.country }}
+              {%- if address.phone != blank -%}<br>{{ address.phone }}{%- endif -%}
+            </p>
+
+            <details class="melato-addresses__new" style="margin:24px 0 0;">
+              <summary>Edit address</summary>
+              <div class="melato-addresses__form">
+                {%- form 'customer_address', address -%}
+                  <div class="melato-addresses__form-grid">
+                    <div class="melato-field">
+                      <label for="AddressFirst-{{ address.id }}">First name</label>
+                      <input id="AddressFirst-{{ address.id }}" type="text" name="address[first_name]" value="{{ address.first_name | escape }}" autocomplete="given-name">
+                    </div>
+                    <div class="melato-field">
+                      <label for="AddressLast-{{ address.id }}">Last name</label>
+                      <input id="AddressLast-{{ address.id }}" type="text" name="address[last_name]" value="{{ address.last_name | escape }}" autocomplete="family-name">
+                    </div>
+                    <div class="melato-field melato-field--wide">
+                      <label for="Address1-{{ address.id }}">Address</label>
+                      <input id="Address1-{{ address.id }}" type="text" name="address[address1]" value="{{ address.address1 | escape }}" autocomplete="address-line1" required>
+                    </div>
+                    <div class="melato-field melato-field--wide">
+                      <label for="Address2-{{ address.id }}">Apartment, suite, etc.</label>
+                      <input id="Address2-{{ address.id }}" type="text" name="address[address2]" value="{{ address.address2 | escape }}" autocomplete="address-line2">
+                    </div>
+                    <div class="melato-field">
+                      <label for="AddressCity-{{ address.id }}">City</label>
+                      <input id="AddressCity-{{ address.id }}" type="text" name="address[city]" value="{{ address.city | escape }}" autocomplete="address-level2" required>
+                    </div>
+                    <div class="melato-field">
+                      <label for="AddressProvince-{{ address.id }}">Province / State</label>
+                      <input id="AddressProvince-{{ address.id }}" type="text" name="address[province]" value="{{ address.province | escape }}" autocomplete="address-level1">
+                    </div>
+                    <div class="melato-field">
+                      <label for="AddressCountry-{{ address.id }}">Country</label>
+                      <select id="AddressCountry-{{ address.id }}" name="address[country]" data-default="{{ address.country | escape }}" autocomplete="country-name">{{ all_country_option_tags }}</select>
+                    </div>
+                    <div class="melato-field">
+                      <label for="AddressZip-{{ address.id }}">ZIP / Postal code</label>
+                      <input id="AddressZip-{{ address.id }}" type="text" name="address[zip]" value="{{ address.zip | escape }}" autocomplete="postal-code" required>
+                    </div>
+                    <div class="melato-field melato-field--wide">
+                      <label for="AddressPhone-{{ address.id }}">Phone</label>
+                      <input id="AddressPhone-{{ address.id }}" type="tel" name="address[phone]" value="{{ address.phone | escape }}" autocomplete="tel">
+                    </div>
+                  </div>
+                  <div class="melato-addresses__actions">
+                    <button type="submit" class="melato-house-button">Update address</button>
+                  </div>
+                {%- endform -%}
+              </div>
+            </details>
+
+            <div class="melato-address-card__actions">
+              {%- form 'customer_address', address -%}
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" aria-label="Remove address for {{ address.name | escape }}">Remove</button>
+              {%- endform -%}
+            </div>
+          </article>
         {%- endfor -%}
       </div>
+    {%- else -%}
+      <section class="melato-empty-state" aria-labelledby="MelatoNoAddresses-{{ section.id }}">
+        <p class="melato-empty-state__eyebrow">Addresses / 00</p>
+        <div>
+          <h2 id="MelatoNoAddresses-{{ section.id }}" class="melato-empty-state__title">No saved address.</h2>
+          <p class="melato-empty-state__copy">Add one when you want it available for future Melato orders.</p>
+        </div>
+      </section>
     {%- endif -%}
   </div>
 </section>
