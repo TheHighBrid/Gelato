@@ -110,6 +110,101 @@
 .melato-gate__icon { width: 48px; height: 48px; border-radius: 50%; background: var(--melato-gray-100); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--melato-space-md); }
 .melato-gate__icon svg { width: 20px; height: 20px; color: var(--melato-gray-500); }
 
+/* ============================================================
+   Client Services contrast isolation
+   The storefront theme uses a cream global text color. Rich page
+   content sits on white/light cards, so that inherited color must
+   not leak into this subsystem.
+   ============================================================ */
+
+.melato-page .rte {
+  color: #262626 !important;
+  opacity: 1 !important;
+}
+
+.melato-page .rte :where(
+  div,
+  section,
+  article,
+  header,
+  footer,
+  p,
+  li,
+  span,
+  small,
+  strong,
+  b,
+  em,
+  i,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  label
+) {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+.melato-page .rte :where(h1, h2, h3, h4, h5, h6, strong, b) {
+  color: #171717 !important;
+}
+
+.melato-page .rte :where(p, li, span, small, em, i, label) {
+  color: #363636 !important;
+}
+
+.melato-page .rte a:not(.melato-btn) {
+  color: #5a3b18 !important;
+  opacity: 1 !important;
+  text-decoration-color: currentColor !important;
+}
+
+.melato-page .rte :where([style*="color"], [style*="opacity"]) {
+  color: inherit !important;
+  opacity: 1 !important;
+}
+
+.melato-page .rte :where(.button, a.button, button) {
+  color: #171717 !important;
+  opacity: 1 !important;
+}
+
+/* The shared navigation can render inside a dark theme section. */
+.melato-strip__eyebrow {
+  color: #d8d0c4 !important;
+}
+
+.melato-strip-link:not(.melato-strip-link--active) {
+  color: #f5f1e8 !important;
+  border-color: rgba(245, 241, 232, 0.52) !important;
+}
+
+.melato-strip-link:not(.melato-strip-link--active):hover {
+  color: #0a0a0a !important;
+  background: #f5f1e8 !important;
+  border-color: #f5f1e8 !important;
+}
+
+.melato-strip__contextual {
+  background: #f5f5f5 !important;
+  border-color: #cfcfcf !important;
+}
+
+.melato-strip__contextual-text,
+.melato-strip__contextual-text :where(p, span, strong, em, small) {
+  color: #262626 !important;
+  opacity: 1 !important;
+}
+
+.melato-strip__contextual-text a {
+  color: #5a3b18 !important;
+  opacity: 1 !important;
+  text-decoration-color: currentColor !important;
+}
+
 @media (max-width: 767px) {
   .melato-card, .melato-card-muted { padding: var(--melato-space-md); }
   .melato-page-header { padding: var(--melato-space-xl) var(--melato-space-sm) var(--melato-space-lg); }
