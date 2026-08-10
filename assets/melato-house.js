@@ -1,6 +1,12 @@
 (() => {
   'use strict';
 
+  const HOUSE_ROUTES = {
+    currentDrop: '/collections/drop-001-texture-form',
+    livingBook: '/collections/the-living-lookbook',
+    newArrivals: '/collections/new-arrivals'
+  };
+
   const moneyFormat = (cents) => {
     const currency = (window.DRIP && window.DRIP.shop && window.DRIP.shop.currency) || 'CAD';
     try {
@@ -20,6 +26,66 @@
       window.clearTimeout(timer);
       timer = window.setTimeout(() => fn(...args), wait);
     };
+  };
+
+  const normalizeText = (value) => String(value || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+  const pathnameFor = (href) => {
+    if (!href) return '';
+    try {
+      const url = new URL(href, window.location.origin);
+      if (url.origin !== window.location.origin) return '';
+      return url.pathname.replace(/\/+$/, '') || '/';
+    } catch (error) {
+      return '';
+    }
+  };
+
+  const repairHouseRoute = (link) => {
+    if (!link || !link.getAttribute) return;
+    const path = pathnameFor(link.getAttribute('href'));
+    const text = normalizeText(link.textContent);
+    const routeHint = link.dataset.houseRoute || '';
+
+    if (routeHint === 'living-book' || path === '/pages/living-lookbook') {
+      link.setAttribute('href', HOUSE_ROUTES.livingBook);
+      return;
+    }
+
+    const currentDropContext = routeHint === 'current-drop'
+      || !!link.closest('.melato-house-menu__feature')
+      || /drop 001|texture & form|current drop|explore current drop/.test(text);
+
+    if (currentDropContext && path !== HOUSE_ROUTES.currentDrop) {
+      link.setAttribute('href', HOUSE_ROUTES.currentDrop);
+      return;
+    }
+
+    if (link.closest('.cart-drawer__empty') && path === '/collections/all') {
+      link.setAttribute('href', HOUSE_ROUTES.newArrivals);
+    }
+  };
+
+  const repairHouseRoutes = (root = document) => {
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll('a[href]').forEach(repairHouseRoute);
+  };
+
+  const normalizeCartEmptyState = (root = document) => {
+    if (!root || !root.querySelector) return;
+    const drawer = root.matches && root.matches('.cart-drawer') ? root : root.querySelector('.cart-drawer');
+    if (!drawer) return;
+    const empty = drawer.querySelector('.cart-drawer__empty');
+    if (!empty) return;
+
+    const sub = empty.querySelector('.cart-drawer__empty-sub');
+    if (sub) sub.textContent = 'Explore the current Melato rotation.';
+
+    const cta = empty.querySelector('.melato-cart-cta, a[data-cart-close]');
+    if (cta) {
+      cta.textContent = 'Shop New Arrivals';
+      cta.setAttribute('href', HOUSE_ROUTES.newArrivals);
+    }
   };
 
   const createSearchCard = (product) => {
@@ -122,6 +188,22 @@
       window.setTimeout(() => searchInput && searchInput.focus(), 60);
     };
 
+    const trapPanelTab = (panel, event) => {
+      if (!panel || !panel.classList.contains('is-open')) return;
+      const focusables = Array.from(panel.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+        .filter((element) => !element.hidden && element.getClientRects().length > 0);
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
     const runSearch = debounce(async () => {
       if (!searchInput || !searchResults) return;
       const term = searchInput.value.trim();
@@ -189,6 +271,11 @@
     }
 
     document.addEventListener('keydown', (event) => {
+      if (event.key === 'Tab') {
+        if (search && search.classList.contains('is-open')) trapPanelTab(search, event);
+        else if (menu && menu.classList.contains('is-open')) trapPanelTab(menu, event);
+        return;
+      }
       if (event.key !== 'Escape') return;
       if (search && search.classList.contains('is-open')) closeSearch(true);
       else if (menu && menu.classList.contains('is-open')) closeMenu(true);
@@ -226,9 +313,78 @@
     });
   };
 
+  const installReleaseGuards = () => {
+    if (document.documentElement.dataset.houseReleaseGuards === 'true') return;
+    document.documentElement.dataset.houseReleaseGuards = 'true';
+
+    // The dedicated Melato cart listener is registered before this file. Stop the
+    // later legacy theme.js cart listener after the dedicated handler has run.
+    document.addEventListener('click', (event) => {
+      const control = event.target.closest('.cart-drawer [data-qty-change], .cart-drawer [data-remove-line]');
+      if (control) event.stopImmediatePropagation();
+    });
+
+    document.addEventListener('change', (event) => {
+      if (event.target.closest('.cart-drawer .qty-stepper__value')) event.stopImmediatePropagation();
+    });
+
+    // melato-optimization-2026.js can rewrite the verified current-drop route.
+    // Its capture listener is registered earlier, so repair the anchor afterward
+    // and before the browser follows it.
+    document.addEventListener('click', (event) => {
+      const link = event.target.closest('a[href]');
+      if (link) repairHouseRoute(link);
+    }, true);
+
+    const releaseReady = () => {
+      repairHouseRoutes(document);
+      normalizeCartEmptyState(document);
+
+      // Retire pre-House cursor/parallax behavior without deleting legacy assets.
+      document.querySelectorAll('.custom-cursor').forEach((cursor) => cursor.remove());
+      document.querySelectorAll('.parallax[data-speed]').forEach((element) => {
+        element.removeAttribute('data-speed');
+        element.style.removeProperty('transform');
+      });
+
+      const header = document.querySelector('[data-house-header]');
+      if (header) {
+        const scrubLegacyHeaderState = () => header.classList.remove('hidden', 'site-header--hidden');
+        scrubLegacyHeaderState();
+        const headerObserver = new MutationObserver(scrubLegacyHeaderState);
+        headerObserver.observe(header, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      const drawer = document.querySelector('.cart-drawer');
+      if (drawer) {
+        let frame = 0;
+        const cartObserver = new MutationObserver(() => {
+          window.cancelAnimationFrame(frame);
+          frame = window.requestAnimationFrame(() => {
+            normalizeCartEmptyState(document);
+            repairHouseRoutes(drawer);
+          });
+        });
+        cartObserver.observe(drawer, { childList: true, subtree: true });
+      }
+    };
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', releaseReady, { once: true });
+    else releaseReady();
+
+    document.addEventListener('shopify:section:load', (event) => {
+      repairHouseRoutes(event.target);
+      normalizeCartEmptyState(document);
+    });
+  };
+
+  installReleaseGuards();
+
   const boot = () => {
     document.querySelectorAll('[data-house-header]').forEach(initHouseHeader);
     document.querySelectorAll('.melato-pdp-rebuild').forEach(initHousePdp);
+    repairHouseRoutes(document);
+    normalizeCartEmptyState(document);
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
