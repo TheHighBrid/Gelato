@@ -1,7 +1,6 @@
 /*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
- * Melato policy sync marker 2026-08-08.
  *
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
@@ -16,10 +15,6 @@
         "eyebrow": "Identity-led uniform pieces",
         "heading": "THE CULTURE WEARS US",
         "copy": "Tailored for movement, cut with intent.",
-        "primary_cta_label": "Shop the Uniform",
-        "primary_cta_url": "/collections/drop-001-texture-form",
-        "secondary_cta_label": "Shop the Tracksuits",
-        "secondary_cta_url": "shopify://collections/tracksuits",
         "featured_collection": "new-arrivals"
       }
     },
@@ -39,18 +34,61 @@
     "ticker": {
       "type": "ticker",
       "blocks": {
-        "item1": {"type": "item", "settings": {"text": "THE CULTURE WEARS US"}},
-        "item3": {"type": "item", "settings": {"text": "1980s retro UNIFORMS"}},
-        "item4": {"type": "item", "settings": {"text": "CUT WITH INTENT"}},
-        "item5": {"type": "item", "settings": {"text": "BUILT FOR MOVEMENT"}},
-        "item_g67bjG": {"type": "item", "settings": {"text": "HIGH-END GARMENTS"}},
-        "item6": {"type": "item", "settings": {"text": "PREMIUM BAMBOO fabrics"}},
-        "item7": {"type": "item", "settings": {"text": "PREMIUM VELOUR material"}}
+        "item_dmLUW3": {
+          "type": "item",
+          "settings": {
+            "text": "WORLDWIDE DISPATCH"
+          }
+        },
+        "item_D8dHyc": {
+          "type": "item",
+          "settings": {
+            "text": "EXPEDITED SHIPPING"
+          }
+        },
+        "item_n9Bk4a": {
+          "type": "item",
+          "settings": {
+            "text": "50 days return on eligible orders"
+          }
+        },
+        "item1": {
+          "type": "item",
+          "settings": {
+            "text": "THE CULTURE WEARS US"
+          }
+        },
+        "item4": {
+          "type": "item",
+          "settings": {
+            "text": "CUT WITH INTENT"
+          }
+        },
+        "item_XML4ph": {
+          "type": "item",
+          "settings": {
+            "text": "comme never change"
+          }
+        },
+        "item_nAzWHc": {
+          "type": "item",
+          "settings": {
+            "text": "complimentary delivery on all orders"
+          }
+        }
       },
-      "block_order": ["item1", "item3", "item4", "item5", "item_g67bjG", "item6", "item7"],
+      "block_order": [
+        "item_dmLUW3",
+        "item_D8dHyc",
+        "item_n9Bk4a",
+        "item1",
+        "item4",
+        "item_XML4ph",
+        "item_nAzWHc"
+      ],
       "settings": {
         "accessible_label": "Melato announcements",
-        "speed": 45,
+        "speed": 80,
         "separator": "MELATO",
         "direction": "left",
         "padding": 8,
@@ -87,7 +125,9 @@
           "blocks": {}
         }
       },
-      "block_order": ["ai_gen_block_264325d_kWF34h"],
+      "block_order": [
+        "ai_gen_block_264325d_kWF34h"
+      ],
       "settings": {}
     },
     "brand_story": {
@@ -137,18 +177,29 @@
           }
         }
       },
-      "block_order": ["t1", "t2", "testimonial_GwnGA6", "t3"],
-      "settings": {"heading": "THEY SPEAK\nFOR US"}
+      "block_order": [
+        "t1",
+        "t2",
+        "testimonial_GwnGA6",
+        "t3"
+      ],
+      "settings": {
+        "heading": "THEY SPEAK\nFOR US"
+      }
     },
     "1781310906e62d22b0": {
       "type": "apps",
       "blocks": {
         "klaviyo_email_marketing_sms_form_embed_block_CYb8J4": {
           "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507",
-          "settings": {"formId": ""}
+          "settings": {
+            "formId": ""
+          }
         }
       },
-      "block_order": ["klaviyo_email_marketing_sms_form_embed_block_CYb8J4"],
+      "block_order": [
+        "klaviyo_email_marketing_sms_form_embed_block_CYb8J4"
+      ],
       "settings": {}
     }
   },
@@ -160,6 +211,6 @@
     "177543262208e0278d",
     "brand_story",
     "testimonials",
-    "newsletter_capture"
+    "1781310906e62d22b0"
   ]
 }
