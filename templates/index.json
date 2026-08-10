@@ -34,15 +34,58 @@
     "ticker": {
       "type": "ticker",
       "blocks": {
-        "item_dmLUW3": {"type": "item", "settings": {"text": "WORLDWIDE DISPATCH"}},
-        "item_D8dHyc": {"type": "item", "settings": {"text": "EXPEDITED SHIPPING"}},
-        "item_n9Bk4a": {"type": "item", "settings": {"text": "50 days return on eligible orders"}},
-        "item1": {"type": "item", "settings": {"text": "THE CULTURE WEARS US"}},
-        "item4": {"type": "item", "settings": {"text": "CUT WITH INTENT"}},
-        "item_XML4ph": {"type": "item", "settings": {"text": "comme never change"}},
-        "item_nAzWHc": {"type": "item", "settings": {"text": "complimentary delivery on all orders"}}
+        "item_dmLUW3": {
+          "type": "item",
+          "settings": {
+            "text": "WORLDWIDE DISPATCH"
+          }
+        },
+        "item_D8dHyc": {
+          "type": "item",
+          "settings": {
+            "text": "EXPEDITED SHIPPING"
+          }
+        },
+        "item_n9Bk4a": {
+          "type": "item",
+          "settings": {
+            "text": "50 days return on eligible orders"
+          }
+        },
+        "item1": {
+          "type": "item",
+          "settings": {
+            "text": "THE CULTURE WEARS US"
+          }
+        },
+        "item4": {
+          "type": "item",
+          "settings": {
+            "text": "CUT WITH INTENT"
+          }
+        },
+        "item_XML4ph": {
+          "type": "item",
+          "settings": {
+            "text": "comme never change"
+          }
+        },
+        "item_nAzWHc": {
+          "type": "item",
+          "settings": {
+            "text": "complimentary delivery on all orders"
+          }
+        }
       },
-      "block_order": ["item_dmLUW3", "item_D8dHyc", "item_n9Bk4a", "item1", "item4", "item_XML4ph", "item_nAzWHc"],
+      "block_order": [
+        "item_dmLUW3",
+        "item_D8dHyc",
+        "item_n9Bk4a",
+        "item1",
+        "item4",
+        "item_XML4ph",
+        "item_nAzWHc"
+      ],
       "settings": {
         "accessible_label": "Melato announcements",
         "speed": 80,
@@ -82,7 +125,9 @@
           "blocks": {}
         }
       },
-      "block_order": ["ai_gen_block_264325d_kWF34h"],
+      "block_order": [
+        "ai_gen_block_264325d_kWF34h"
+      ],
       "settings": {}
     },
     "concierge_strip_m79PqN": {
@@ -108,27 +153,71 @@
     "testimonials": {
       "type": "testimonials",
       "blocks": {
-        "t1": {"type": "testimonial", "settings": {"rating": 5, "text": "Best quality tracksuit I've worn in a long time. The fabric, the fit, the colourway... Everything is perfect.", "author": "Roxy C."}},
-        "t2": {"type": "testimonial", "settings": {"rating": 5, "text": "The tracksuit is A1, premium quality. love the products and the people behind them. I was here on DAY 1 and DROP 000 and I will always be here 🧡", "author": "KENZA A."}},
-        "testimonial_GwnGA6": {"type": "testimonial", "settings": {"rating": 4, "text": "Last time it sold out quick. I couldn’t cop more.", "author": "DIJA S."}},
-        "t3": {"type": "testimonial", "settings": {"rating": 5, "text": "Top tier threads for the yutes. Backed by the mandem. YN Fully certi and heavy stamped.", "author": "NAGA"}}
+        "t1": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "text": "Best quality tracksuit I've worn in a long time. The fabric, the fit, the colourway... Everything is perfect.",
+            "author": "Roxy C."
+          }
+        },
+        "t2": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "text": "The tracksuit is A1, premium quality. love the products and the people behind them. I was here on DAY 1 and DROP 000 and I will always be here 🧡",
+            "author": "KENZA A."
+          }
+        },
+        "testimonial_GwnGA6": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 4,
+            "text": "Last time it sold out quick. I couldn’t cop more.",
+            "author": "DIJA S."
+          }
+        },
+        "t3": {
+          "type": "testimonial",
+          "settings": {
+            "rating": 5,
+            "text": "Top tier threads for the yutes. Backed by the mandem. YN Fully certi and heavy stamped.",
+            "author": "NAGA"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "testimonial_GwnGA6", "t3"],
+      "block_order": [
+        "t1",
+        "t2",
+        "testimonial_GwnGA6",
+        "t3"
+      ],
       "disabled": true,
-      "settings": {"heading": "THEY SPEAK\nFOR US"}
+      "settings": {
+        "heading": "THEY SPEAK\nFOR US"
+      }
     },
     "1781310906e62d22b0": {
       "type": "apps",
       "blocks": {
         "klaviyo_email_marketing_sms_form_embed_block_CYb8J4": {
           "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507",
-          "settings": {"formId": ""}
+          "settings": {
+            "formId": ""
+          }
         }
       },
-      "block_order": ["klaviyo_email_marketing_sms_form_embed_block_CYb8J4"],
+      "block_order": [
+        "klaviyo_email_marketing_sms_form_embed_block_CYb8J4"
+      ],
       "settings": {}
     },
-    "mll_Hmz47d": {"type": "mll", "disabled": true, "name": "Melato Living Lookbook", "settings": {}},
+    "mll_Hmz47d": {
+      "type": "mll",
+      "disabled": true,
+      "name": "Melato Living Lookbook",
+      "settings": {}
+    },
     "drop_signup_FMehUL": {
       "type": "drop-signup",
       "name": "Drop List Signup",
@@ -146,5 +235,17 @@
       }
     }
   },
-  "order": ["melato_conversion_2026", "video_cYyTzg", "ticker", "featured_collection", "177543262208e0278d", "concierge_strip_m79PqN", "brand_story", "testimonials", "1781310906e62d22b0", "mll_Hmz47d", "drop_signup_FMehUL"]
+  "order": [
+    "melato_conversion_2026",
+    "video_cYyTzg",
+    "ticker",
+    "featured_collection",
+    "177543262208e0278d",
+    "concierge_strip_m79PqN",
+    "brand_story",
+    "testimonials",
+    "1781310906e62d22b0",
+    "mll_Hmz47d",
+    "drop_signup_FMehUL"
+  ]
 }
