@@ -1,6 +1,7 @@
 {% comment %}
   Melato Client Services navigation
   Connects the four canonical service pages.
+  House integration keeps service content authoritative while removing legacy pill UI.
 {% endcomment %}
 
 {{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
@@ -27,87 +28,156 @@
 -%}
 
 <style>
+  /* Canonical service pages inherit the House visual language without changing content. */
+  .melato-page {
+    background: var(--melato-cream, #f0e8d9);
+    color: var(--melato-ink, #090909);
+    font-family: var(--melato-ui, "Helvetica Neue", Helvetica, Arial, sans-serif);
+  }
+  .melato-page-header {
+    width: min(1440px, 100%);
+    margin: 0 auto;
+    padding: clamp(54px, 8vw, 112px) var(--melato-side, 24px) clamp(34px, 5vw, 64px);
+    text-align: left;
+  }
+  .melato-page-header .melato-eyebrow {
+    margin: 0 0 16px;
+    color: var(--melato-muted-ink, rgba(9,9,9,.58));
+    font-family: var(--melato-mono, "DM Mono", monospace);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: .18em;
+  }
+  .melato-page-header__title {
+    max-width: 12ch;
+    margin: 0;
+    font-family: var(--melato-editorial, "Iowan Old Style", Baskerville, "Times New Roman", serif);
+    font-size: clamp(48px, 8vw, 112px);
+    font-weight: 400;
+    line-height: .9;
+    letter-spacing: -.055em;
+  }
+  .melato-page-header__subtitle {
+    max-width: 620px;
+    margin: 24px 0 0;
+    color: var(--melato-muted-ink, rgba(9,9,9,.58));
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .melato-page > .melato-container {
+    max-width: 1440px;
+    padding-inline: var(--melato-side, 24px);
+  }
+  .melato-page :is(.melato-card, .melato-card-muted, .melato-drop-card, .melato-connector, .melato-gate__icon, .melato-icon, .melato-tag, .melato-btn, .melato-input) {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  .melato-page .melato-card,
+  .melato-page .melato-card-muted {
+    background: var(--melato-cream-soft, #f7f2e9);
+    border-color: rgba(9,9,9,.16);
+  }
+  .melato-page .melato-btn--primary {
+    background: var(--melato-ink, #090909);
+    color: var(--melato-cream, #f0e8d9);
+    border-color: var(--melato-ink, #090909);
+  }
+
   .melato-strip {
-    border-top: 1px solid var(--melato-gray-200);
-    padding: 32px 0;
-    margin-top: 48px;
+    margin-top: clamp(64px, 9vw, 128px);
+    padding: 0 0 clamp(48px, 7vw, 88px);
+    border-top: 0;
   }
   .melato-strip__inner {
-    max-width: 1200px;
+    width: min(1440px, 100%);
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 0 var(--melato-side, 24px);
   }
   .melato-strip__eyebrow {
+    margin: 0 0 16px;
+    color: var(--melato-muted-ink, rgba(9,9,9,.58)) !important;
+    font-family: var(--melato-mono, "DM Mono", monospace);
     font-size: 10px;
-    letter-spacing: 3px;
+    font-weight: 400;
+    letter-spacing: .18em;
+    text-align: left;
     text-transform: uppercase;
-    color: var(--melato-gray-400);
-    text-align: center;
-    margin-bottom: 20px;
   }
   .melato-strip__nav {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    border-top: 1px solid rgba(9,9,9,.2);
+    border-bottom: 1px solid rgba(9,9,9,.2);
   }
   .melato-strip-link {
-    display: inline-flex;
+    min-height: 58px;
+    display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 10px 18px;
-    border-radius: 10px;
-    border: 1px solid var(--melato-gray-200);
+    justify-content: flex-start;
+    padding: 14px 16px;
+    border: 0;
+    border-right: 1px solid rgba(9,9,9,.2);
+    border-radius: 0;
     background: transparent;
-    color: var(--melato-gray-500);
-    font-size: 12px;
+    color: var(--melato-ink, #090909) !important;
+    font-size: 10px;
     font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: .12em;
     text-decoration: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    transition: background-color 180ms ease, color 180ms ease;
   }
-  .melato-strip-link:hover {
-    border-color: var(--melato-gray-300);
-    color: var(--melato-black);
-    background: var(--melato-gray-100);
+  .melato-strip-link:last-child { border-right: 0; }
+  .melato-strip-link:hover,
+  .melato-strip-link:focus-visible {
+    background: rgba(9,9,9,.05);
+    color: var(--melato-ink, #090909) !important;
   }
-  .melato-strip-link--active {
-    background: var(--melato-black) !important;
-    color: var(--melato-white) !important;
-    border-color: var(--melato-black) !important;
-  }
+  .melato-strip-link--active,
   .melato-strip-link--active:hover {
-    background: var(--melato-gray-800) !important;
-    border-color: var(--melato-gray-800) !important;
-  }
-  .melato-strip-link__icon {
-    width: 16px;
-    height: 16px;
+    background: var(--melato-ink, #090909) !important;
+    color: var(--melato-cream, #f0e8d9) !important;
+    border-color: rgba(240,232,217,.18) !important;
   }
   .melato-strip__contextual {
-    text-align: center;
-    margin-top: 20px;
-    padding: 14px;
-    border: 1px dashed var(--melato-gray-300);
-    border-radius: 10px;
-    background: var(--melato-gray-100);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: none;
+    margin: 18px 0 0;
+    padding: 16px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent !important;
+    text-align: left;
   }
-  .melato-strip__contextual-text {
-    font-size: 13px;
-    color: var(--melato-gray-600);
-    line-height: 1.6;
+  .melato-strip__contextual-text,
+  .melato-strip__contextual-text :where(p, span, strong, em, small) {
+    margin: 0;
+    color: var(--melato-muted-ink, rgba(9,9,9,.58)) !important;
+    font-size: 12px;
+    line-height: 1.55;
   }
   .melato-strip__contextual-text a {
-    color: var(--melato-black);
-    font-weight: 500;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    color: var(--melato-ink, #090909) !important;
+    text-underline-offset: 3px;
   }
-  @media (max-width: 600px) {
-    .melato-strip__nav { gap: 6px; }
-    .melato-strip-link { padding: 8px 12px; font-size: 11px; }
+
+  @media (max-width: 720px) {
+    .melato-page-header {
+      padding-top: 42px;
+    }
+    .melato-page-header__title {
+      font-size: clamp(42px, 15vw, 72px);
+    }
+    .melato-strip__nav {
+      grid-template-columns: 1fr 1fr;
+    }
+    .melato-strip-link {
+      min-height: 54px;
+      border-bottom: 1px solid rgba(9,9,9,.2);
+    }
+    .melato-strip-link:nth-child(2n) { border-right: 0; }
+    .melato-strip-link:nth-last-child(-n+2) { border-bottom: 0; }
   }
 </style>
 
@@ -130,18 +200,7 @@
           data-pillar-link
           data-pillar="{{ pillar }}"
           {% if is_active %}aria-current="page"{% endif %}
-        >
-          {%- if pillar == 'post-purchase' -%}
-            <svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          {%- elsif pillar == 'private-preview' -%}
-            <svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          {%- elsif pillar == 'fit-guidance' -%}
-            <svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          {%- elsif pillar == 'delivery-policy' -%}
-            <svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          {%- endif -%}
-          {{ label }}
-        </a>
+        >{{ label }}</a>
       {%- endfor -%}
     </nav>
 
