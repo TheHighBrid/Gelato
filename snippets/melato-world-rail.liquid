@@ -1,0 +1,14 @@
+{% comment %}
+  Shared World of Melato navigation.
+  Links only to verified, currently published storefront destinations.
+{% endcomment %}
+
+<nav class="melato-world-rail" aria-label="World of Melato">
+  <span class="melato-world-rail__mark">World of Melato</span>
+  <div class="melato-world-rail__links">
+    <a href="/collections/the-living-lookbook"{% if request.path contains '/collections/the-living-lookbook' %} aria-current="page"{% endif %}>Living Book</a>
+    <a href="/collections/ovum-before-the-world"{% if request.path contains '/collections/ovum-before-the-world' %} aria-current="page"{% endif %}>Collections</a>
+    <a href="/pages/our-story"{% if request.path contains '/pages/our-story' %} aria-current="page"{% endif %}>The House</a>
+    <a href="/collections/new-arrivals"{% if request.path contains '/collections/new-arrivals' %} aria-current="page"{% endif %}>New Work</a>
+  </div>
+</nav>
