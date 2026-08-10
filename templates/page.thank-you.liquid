@@ -1,0 +1,136 @@
+{% comment %}
+  Melato — Post-Purchase Page Template
+  Template: page.thank-you
+  URL: /pages/thank-you
+  Purpose: Order confirmation, garment care, support bridge
+{% endcomment %}
+
+{{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'melato-concierge.js' | asset_url }}" defer></script>
+
+<div class="melato-page">
+
+  <header class="melato-page-header">
+    <div class="melato-eyebrow">Melato Client Services</div>
+    <h1 class="melato-page-header__title">Your Selection Has Been Secured</h1>
+    <p class="melato-page-header__subtitle">
+      Order <code style="font-family: monospace; font-size: 0.9em; background: var(--melato-gray-100); padding: 2px 6px; border-radius: 4px;">{{ order.name | default: '#ML-2408-7842' }}</code>
+      is now in our hands. We have begun preparing your pieces with the same care they were designed with.
+    </p>
+  </header>
+
+  <div class="melato-container">
+    <div class="melato-grid-sidebar">
+
+      <div>
+
+        <div class="melato-card melato-mb-lg">
+          <div class="melato-section-header">
+            <div class="melato-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h2 class="melato-h3">01 — Order Confirmed</h2>
+          </div>
+
+          <div class="melato-card-muted">
+            <p class="melato-body" style="color: var(--melato-black); font-weight: 500; font-size: 15px; margin-bottom: 8px;">Your selection has been secured.</p>
+            <p class="melato-body-sm">We have begun preparing your pieces with the same care they were designed with. You will receive tracking the moment your parcel enters transit.</p>
+          </div>
+
+          <div class="melato-mt-md" style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <span class="melato-tag melato-tag--green">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Confirmation email sent
+            </span>
+            <span class="melato-tag melato-tag--blue">WhatsApp/SMS opt-in</span>
+            <span class="melato-tag melato-tag--purple">Add to calendar</span>
+          </div>
+        </div>
+
+        <div class="melato-card melato-mb-lg">
+          <div class="melato-section-header">
+            <div class="melato-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <h2 class="melato-h3">02 — Garment Care Rituals</h2>
+          </div>
+
+          <div class="melato-grid-2">
+            <div class="melato-card-muted">
+              <h3 class="melato-h3">Velour & Structured Panels</h3>
+              <p class="melato-body-sm">Turn inside out. Cold wash, gentle cycle. Lay flat to dry. Never tumble — the pile deserves patience. Steam, never iron directly.</p>
+            </div>
+            <div class="melato-card-muted">
+              <h3 class="melato-h3">Embroidery & Graphics</h3>
+              <p class="melato-body-sm">Wash cold, inside out. Avoid fabric softener on printed areas. Dry flat in shade to preserve colour saturation and thread integrity.</p>
+            </div>
+            <div class="melato-card-muted">
+              <h3 class="melato-h3">Retro Silhouettes</h3>
+              <p class="melato-body-sm">These cuts hold their shape best when stored hung or folded with tissue. Avoid over-washing — spot clean when possible.</p>
+            </div>
+            <div class="melato-card-muted">
+              <h3 class="melato-h3">Fragrance Layering</h3>
+              <p class="melato-body-sm">Apply scent before dressing. Allow 60 seconds for alcohol to evaporate. This preserves both fabric and olfactory profile.</p>
+            </div>
+          </div>
+
+          <p class="melato-caption melato-mt-md">Inspired by: Gucci's "Equilibrium" care language + Miu Miu's intimate product storytelling</p>
+        </div>
+
+        <div class="melato-card melato-mb-lg">
+          <div class="melato-section-header">
+            <div class="melato-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9 2 2 2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <h2 class="melato-h3">03 — Support Bridge</h2>
+          </div>
+
+          <div class="melato-card-muted">
+            <p class="melato-body" style="color: var(--melato-black); font-weight: 500; font-size: 15px; margin-bottom: 8px;">Questions? We are here before you need us.</p>
+            <p class="melato-body-sm" style="margin-bottom: 16px;">Every Melato piece carries our commitment. If something feels off — fit, finish, or feeling — reach out within 14 days. We will make it right, no friction.</p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="mailto:concierge@melato.ca" class="melato-btn">Email Concierge</a>
+              <a href="https://wa.me/1234567890" class="melato-btn" target="_blank" rel="noopener">Live Chat</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <aside>
+        <div class="melato-card melato-mb-md">
+          <h3 class="melato-h3 melato-mb-sm">Page Specs</h3>
+          <div style="font-size: 12px; color: var(--melato-gray-500); line-height: 1.8;">
+            <div style="display: flex; justify-content: space-between;"><span>URL</span><code style="font-family: monospace; font-size: 11px; color: var(--melato-gray-400);">/pages/thank-you</code></div>
+            <div style="display: flex; justify-content: space-between;"><span>Template</span><span>Custom Liquid</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>Strip position</span><span>Below hero</span></div>
+            <div style="display: flex; justify-content: space-between;"><span>Tracking</span><span>Klaviyo + Meta CAPI</span></div>
+          </div>
+        </div>
+
+        <div class="melato-card melato-mb-md">
+          <h3 class="melato-h3 melato-mb-sm">Luxury References</h3>
+          <div style="font-size: 12px; color: var(--melato-gray-500); line-height: 1.6;">
+            <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--melato-gray-100);"><div style="font-weight: 500; color: var(--melato-black);">Gucci</div><div>"Equilibrium" — ritualistic care language, editorial photography, poetic descriptions.</div></div>
+            <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--melato-gray-100);"><div style="font-weight: 500; color: var(--melato-black);">Louis Vuitton</div><div>Order confirmation as "Savoir-Faire" moment — atelier imagery, heritage anchoring.</div></div>
+            <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--melato-gray-100);"><div style="font-weight: 500; color: var(--melato-black);">YSL</div><div>Minimal post-purchase — black-on-white, single CTA, no clutter. The product speaks.</div></div>
+            <div><div style="font-weight: 500; color: var(--melato-black);">Casablanca</div><div>Warm resort tone — "Your piece is on its journey to you." Travel narrative in logistics.</div></div>
+          </div>
+        </div>
+
+        <div class="melato-card">
+          <h3 class="melato-h3 melato-mb-sm">Tone & Voice</h3>
+          <div style="font-size: 12px; color: var(--melato-gray-500); line-height: 1.6;">
+            <div style="margin-top: 4px;"><strong>Confident but never cold.</strong> We are premium, not pretentious.</div>
+            <div style="margin-top: 4px;"><strong>Poetic but precise.</strong> Every word earns its place.</div>
+            <div style="margin-top: 4px;"><strong>Anticipatory.</strong> Answer the question before it is asked.</div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  {% section 'concierge-strip' %}
+
+</div>
