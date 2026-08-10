@@ -192,6 +192,7 @@
         "testimonial_GwnGA6",
         "t3"
       ],
+      "disabled": true,
       "settings": {
         "heading": "THEY SPEAK\nFOR US"
       }
@@ -229,7 +230,7 @@
         "disclaimer": "No spam. Unsubscribe anytime.",
         "show_divider_lines": true,
         "bg_color": "#0a0a0a",
-        "text_color": "#FFFFFF",
+        "text_color": "#ffffff",
         "accent_color": "#8fff00"
       }
     }
