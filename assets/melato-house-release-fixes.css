@@ -46,6 +46,20 @@
   box-shadow: none !important;
 }
 
+/* The QA theme inherited a raster logo with a baked black rectangle. The
+   replacement PNG is genuinely transparent, then recoloured for shell state. */
+.melato-house-header__logo-image--house-transparent {
+  filter: brightness(0) !important;
+}
+
+body.template-index .melato-house-header:not(.is-home-solid) .melato-house-header__logo-image--house-transparent {
+  filter: brightness(0) invert(1) !important;
+}
+
+body.template-index .melato-house-header.is-home-solid .melato-house-header__logo-image--house-transparent {
+  filter: brightness(0) !important;
+}
+
 .melato-house-header__word,
 .melato-house-header__utility,
 .melato-house-header .mxh__bag {
