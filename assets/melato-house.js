@@ -317,20 +317,8 @@
     if (document.documentElement.dataset.houseReleaseGuards === 'true') return;
     document.documentElement.dataset.houseReleaseGuards = 'true';
 
-    // The dedicated Melato cart listener is registered before this file. Stop the
-    // later legacy theme.js cart listener after the dedicated handler has run.
-    document.addEventListener('click', (event) => {
-      const control = event.target.closest('.cart-drawer [data-qty-change], .cart-drawer [data-remove-line]');
-      if (control) event.stopImmediatePropagation();
-    });
-
-    document.addEventListener('change', (event) => {
-      if (event.target.closest('.cart-drawer .qty-stepper__value')) event.stopImmediatePropagation();
-    });
-
     // melato-optimization-2026.js can rewrite the verified current-drop route.
-    // Its capture listener is registered earlier, so repair the anchor afterward
-    // and before the browser follows it.
+    // Repair the clicked anchor in capture phase before browser navigation.
     document.addEventListener('click', (event) => {
       const link = event.target.closest('a[href]');
       if (link) repairHouseRoute(link);
