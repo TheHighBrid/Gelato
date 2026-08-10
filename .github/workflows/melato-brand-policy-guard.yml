@@ -35,11 +35,18 @@ jobs:
               '.github/CODEOWNERS',
           }
 
-          base = '${{ github.event.pull_request.base.sha }}'
-          head = '${{ github.event.pull_request.head.sha }}'
+          parents = subprocess.check_output(
+              ['git', 'rev-list', '--parents', '-n', '1', 'HEAD'],
+              text=True,
+          ).split()
+          if len(parents) < 3:
+              print('Expected GitHub pull-request merge checkout with two parents.')
+              raise SystemExit(1)
+
+          base_parent = parents[1]
           changed = set(
               subprocess.check_output(
-                  ['git', 'diff', '--name-only', base, head],
+                  ['git', 'diff', '--name-only', base_parent, 'HEAD'],
                   text=True,
               ).splitlines()
           )
