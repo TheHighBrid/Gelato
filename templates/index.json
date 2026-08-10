@@ -1,7 +1,7 @@
 /*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
- * Melato House homepage Phase 4 / 2026-08-09.
+ * Melato House homepage Phase 7 / 2026-08-09.
  *
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
@@ -34,20 +34,25 @@
         "newsletter_copy": "New work, private releases and stories from the world around the clothes."
       }
     },
-    "1781310906e62d22b0": {
-      "type": "apps",
-      "blocks": {
-        "klaviyo_email_marketing_sms_form_embed_block_CYb8J4": {
-          "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507",
-          "settings": {"formId": ""}
-        }
-      },
-      "block_order": ["klaviyo_email_marketing_sms_form_embed_block_CYb8J4"],
-      "settings": {}
+    "melato_house_newsletter_2026": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Private access",
+        "heading": "Letters from Melato",
+        "subheading": "New work, private releases, restock notes and stories from the world around the clothes.",
+        "placeholder": "Email address",
+        "button_label": "Join the list",
+        "note": "Sent with restraint. Unsubscribe whenever you choose.",
+        "success_message": "You are on the list. Watch your inbox for the next chapter.",
+        "background_color": "#080808",
+        "text_color": "#f5f1e8",
+        "muted_color": "#9b968d",
+        "accent_color": "#9d4918"
+      }
     }
   },
   "order": [
     "melato_house_home_2026",
-    "1781310906e62d22b0"
+    "melato_house_newsletter_2026"
   ]
 }
