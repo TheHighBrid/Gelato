@@ -1,0 +1,682 @@
+/*
+ * MELATO HOUSE PDP / PHASE 2
+ * Visual redesign layer only. The existing consolidated PDP remains the
+ * source of truth for variants, metafields, sizing, matching products,
+ * zoom, cart behavior and storefront integrity contracts.
+ */
+
+body.template-product {
+  --house-pdp-canvas: #080808;
+  --house-pdp-surface: #0d0d0d;
+  --house-pdp-surface-soft: #111111;
+  --house-pdp-ink: #f2ebdf;
+  --house-pdp-muted: rgba(242, 235, 223, .58);
+  --house-pdp-faint: rgba(242, 235, 223, .38);
+  --house-pdp-line: rgba(242, 235, 223, .13);
+  --house-pdp-line-strong: rgba(242, 235, 223, .24);
+  --house-pdp-gap: clamp(18px, 2vw, 32px);
+  background: var(--house-pdp-canvas) !important;
+  color: var(--house-pdp-ink);
+}
+
+body.template-product .melato-pdp-rebuild {
+  background: var(--house-pdp-canvas) !important;
+  color: var(--house-pdp-ink) !important;
+  padding: clamp(18px, 2vw, 32px) 0 clamp(72px, 10vw, 150px) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-shell {
+  width: min(1720px, calc(100% - clamp(24px, 3vw, 56px))) !important;
+  margin: 0 auto !important;
+}
+
+/* Strip the legacy card language. */
+body.template-product .melato-pdp-rebuild .pdp-main-media,
+body.template-product .melato-pdp-rebuild .pdp-buybox,
+body.template-product .melato-pdp-rebuild .pdp-panel,
+body.template-product .melato-pdp-rebuild .pdp-spec,
+body.template-product .melato-pdp-rebuild .pdp-set-card {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-main-media,
+body.template-product .melato-pdp-rebuild .pdp-buybox,
+body.template-product .melato-pdp-rebuild .pdp-panel,
+body.template-product .melato-pdp-rebuild .pdp-spec {
+  border-color: var(--house-pdp-line) !important;
+}
+
+/* PRIMARY PRODUCT IMAGE */
+body.template-product .melato-pdp-rebuild .pdp-main-media {
+  background: var(--house-pdp-surface) !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-main-image {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  background: var(--house-pdp-surface) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-thumbs {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 1px !important;
+  margin-top: 1px !important;
+  background: var(--house-pdp-line) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-thumb {
+  position: relative !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--house-pdp-surface) !important;
+  overflow: hidden !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-thumb::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid transparent;
+  pointer-events: none;
+  transition: border-color 180ms ease;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-thumb.is-active::after,
+body.template-product .melato-pdp-rebuild .pdp-thumb:hover::after {
+  border-color: var(--pdp-title-accent, #f2ebdf);
+}
+
+body.template-product .melato-pdp-rebuild .pdp-thumb-image {
+  width: 100% !important;
+  aspect-ratio: 4 / 5 !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+  transition: transform 420ms cubic-bezier(.2,.7,.2,1), opacity 180ms ease;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-thumb:hover .pdp-thumb-image {
+  transform: scale(1.018);
+}
+
+/* PURCHASE RAIL */
+body.template-product .melato-pdp-rebuild .pdp-buybox {
+  background: transparent !important;
+  border: 0 !important;
+  border-top: 1px solid var(--house-pdp-line) !important;
+  border-bottom: 1px solid var(--house-pdp-line) !important;
+  padding: clamp(28px, 3.2vw, 54px) 0 !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-eyebrow,
+body.template-product .melato-pdp-rebuild .pdp-kicker {
+  margin: 0 0 17px !important;
+  color: var(--house-pdp-muted) !important;
+  font-family: var(--house-font-ui, var(--font-body-family)) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+  letter-spacing: .18em !important;
+  text-transform: uppercase !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-title {
+  max-width: 15ch !important;
+  margin: 0 0 17px !important;
+  color: var(--house-pdp-ink) !important;
+  font-family: var(--house-font-ui, var(--font-body-family)) !important;
+  font-size: clamp(28px, 2.55vw, 44px) !important;
+  font-weight: 450 !important;
+  line-height: .98 !important;
+  letter-spacing: -.035em !important;
+  text-transform: uppercase !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-thesis {
+  max-width: 42ch !important;
+  margin: 0 0 25px !important;
+  color: var(--house-pdp-muted) !important;
+  font-size: 13px !important;
+  line-height: 1.58 !important;
+  letter-spacing: .01em !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-price-row {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+  margin: 0 0 34px !important;
+  padding-bottom: 25px !important;
+  border-bottom: 1px solid var(--house-pdp-line) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-price,
+body.template-product .melato-pdp-rebuild .pdp-compare {
+  font-family: var(--house-font-ui, var(--font-body-family)) !important;
+  font-size: 13px !important;
+  font-weight: 450 !important;
+  line-height: 1 !important;
+  letter-spacing: .04em !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-compare {
+  color: var(--house-pdp-faint) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-option {
+  margin: 0 0 27px !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-option__header {
+  margin-bottom: 12px !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-option legend,
+body.template-product .melato-pdp-rebuild .size-guide-trigger {
+  color: var(--house-pdp-muted) !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+}
+
+body.template-product .melato-pdp-rebuild .size-guide-trigger {
+  padding: 0 0 3px !important;
+  border: 0 !important;
+  border-bottom: 1px solid currentColor !important;
+  background: transparent !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-option-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-choice {
+  min-width: 54px !important;
+  min-height: 42px !important;
+  padding: 0 14px !important;
+  border: 1px solid var(--house-pdp-line-strong) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--house-pdp-ink) !important;
+  font-size: 11px !important;
+  line-height: 40px !important;
+  text-align: center !important;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-choice:hover,
+body.template-product .melato-pdp-rebuild .pdp-choice.is-selected {
+  border-color: var(--house-pdp-ink) !important;
+  background: var(--house-pdp-ink) !important;
+  color: #080808 !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-atc-row {
+  display: grid !important;
+  grid-template-columns: 62px minmax(0, 1fr) !important;
+  gap: 6px !important;
+  margin-top: 6px !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-qty,
+body.template-product .melato-pdp-rebuild .pdp-atc {
+  min-height: 54px !important;
+  border-radius: 0 !important;
+  font-family: var(--house-font-ui, var(--font-body-family)) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-qty {
+  width: 62px !important;
+  border: 1px solid var(--house-pdp-line-strong) !important;
+  background: transparent !important;
+  color: var(--house-pdp-ink) !important;
+  text-align: center !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-atc {
+  border: 1px solid var(--pdp-accent, var(--house-pdp-ink)) !important;
+  background: var(--pdp-accent, var(--house-pdp-ink)) !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+  transition: filter 180ms ease, transform 180ms ease !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-atc:hover:not(:disabled) {
+  filter: brightness(1.08) !important;
+  transform: translateY(-1px) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-proof-mini {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+  margin-top: 28px !important;
+  padding: 0 !important;
+  border-top: 1px solid var(--house-pdp-line) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-proof-mini > div {
+  display: grid !important;
+  grid-template-columns: minmax(100px, .42fr) 1fr !important;
+  gap: 16px !important;
+  padding: 13px 0 !important;
+  border-bottom: 1px solid var(--house-pdp-line) !important;
+  background: transparent !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-proof-mini strong,
+body.template-product .melato-pdp-rebuild .pdp-proof-mini span {
+  font-size: 11px !important;
+  line-height: 1.45 !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-proof-mini strong {
+  color: var(--house-pdp-ink) !important;
+  font-weight: 500 !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-proof-mini span {
+  color: var(--house-pdp-muted) !important;
+}
+
+/* STORY + PRODUCT INFORMATION */
+body.template-product .melato-pdp-rebuild .pdp-story-tech,
+body.template-product .melato-pdp-rebuild .pdp-set,
+body.template-product .melato-pdp-rebuild .pdp-editorial {
+  background: transparent !important;
+  border: 0 !important;
+  border-top: 1px solid var(--house-pdp-line) !important;
+  padding: 0 !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-story-tech__grid,
+body.template-product .melato-pdp-rebuild .pdp-spec-grid {
+  gap: 0 !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-mini-detail,
+body.template-product .melato-pdp-rebuild .pdp-spec {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--house-pdp-line) !important;
+  background: transparent !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-mini-detail summary,
+body.template-product .melato-pdp-rebuild .pdp-spec summary {
+  position: relative !important;
+  padding: 17px 28px 17px 0 !important;
+  color: var(--house-pdp-ink) !important;
+  font-family: var(--house-font-ui, var(--font-body-family)) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  list-style: none !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-mini-detail summary::-webkit-details-marker,
+body.template-product .melato-pdp-rebuild .pdp-spec summary::-webkit-details-marker {
+  display: none !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-mini-detail summary::after,
+body.template-product .melato-pdp-rebuild .pdp-spec summary::after {
+  content: "+" !important;
+  position: absolute !important;
+  top: 50% !important;
+  right: 0 !important;
+  transform: translateY(-50%) !important;
+  color: var(--house-pdp-muted) !important;
+  font-size: 16px !important;
+  font-weight: 300 !important;
+}
+
+body.template-product .melato-pdp-rebuild details[open] > summary::after {
+  content: "−" !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-mini-detail__content,
+body.template-product .melato-pdp-rebuild .pdp-rte {
+  padding: 0 0 22px !important;
+  color: var(--house-pdp-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.65 !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-mini-detail__content ul,
+body.template-product .melato-pdp-rebuild .pdp-rte ul {
+  margin: 0 !important;
+  padding-left: 18px !important;
+}
+
+/* COMPLETE THE SET, treated as an editorial commerce module. */
+body.template-product .melato-pdp-rebuild .pdp-set {
+  padding-top: 25px !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-section-head {
+  margin: 0 0 20px !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-section-head h2 {
+  max-width: 18ch !important;
+  margin: 0 !important;
+  color: var(--house-pdp-ink) !important;
+  font-family: var(--house-font-ui, var(--font-body-family)) !important;
+  font-size: clamp(19px, 1.7vw, 28px) !important;
+  font-weight: 450 !important;
+  line-height: 1.02 !important;
+  letter-spacing: -.025em !important;
+  text-transform: uppercase !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-grid {
+  gap: 1px !important;
+  background: var(--house-pdp-line) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-card {
+  padding: 0 0 17px !important;
+  border: 0 !important;
+  background: var(--house-pdp-surface) !important;
+  overflow: hidden !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-label,
+body.template-product .melato-pdp-rebuild .purchase-summary__title,
+body.template-product .melato-pdp-rebuild .purchase-summary__price,
+body.template-product .melato-pdp-rebuild .pdp-set-cta {
+  margin-left: 14px !important;
+  margin-right: 14px !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-label {
+  margin-top: 14px !important;
+  color: var(--house-pdp-faint) !important;
+  font-size: 9px !important;
+  letter-spacing: .14em !important;
+  text-transform: uppercase !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-image {
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 4 / 5 !important;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+}
+
+body.template-product .melato-pdp-rebuild .purchase-summary__title {
+  margin-top: 13px !important;
+  margin-bottom: 5px !important;
+  color: var(--house-pdp-ink) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  line-height: 1.25 !important;
+  letter-spacing: .04em !important;
+  text-transform: uppercase !important;
+}
+
+body.template-product .melato-pdp-rebuild .purchase-summary__price {
+  margin-top: 0 !important;
+  margin-bottom: 12px !important;
+  color: var(--house-pdp-muted) !important;
+  font-size: 11px !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-cta {
+  display: inline-block !important;
+  padding: 0 0 3px !important;
+  border: 0 !important;
+  border-bottom: 1px solid currentColor !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--house-pdp-ink) !important;
+  font-size: 9px !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-total {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 18px !important;
+  margin: 0 !important;
+  padding: 15px 0 !important;
+  border-bottom: 1px solid var(--house-pdp-line) !important;
+  color: var(--house-pdp-muted) !important;
+  font-size: 10px !important;
+  letter-spacing: .1em !important;
+  text-transform: uppercase !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-total strong {
+  color: var(--house-pdp-ink) !important;
+  font-weight: 500 !important;
+}
+
+/* CLOSE-UPS / EDITORIAL */
+body.template-product .melato-pdp-rebuild .pdp-editorial {
+  padding-top: 25px !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-editorial-grid {
+  gap: 1px !important;
+  background: var(--house-pdp-line) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-editorial-card {
+  margin: 0 !important;
+  overflow: hidden !important;
+  background: var(--house-pdp-surface) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-editorial-image {
+  display: block !important;
+  width: 100% !important;
+  aspect-ratio: 4 / 5 !important;
+  object-fit: cover !important;
+  transition: transform 520ms cubic-bezier(.2,.7,.2,1) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-editorial-card:hover .pdp-editorial-image {
+  transform: scale(1.012) !important;
+}
+
+/* Desktop fashion-house proportion. Keep every downstream module in the right rail
+   so the protected sticky gallery can never cover Complete the Set or close-ups. */
+@media (min-width: 1001px) {
+  body.template-product .melato-pdp-rebuild .pdp-shell {
+    grid-template-columns: minmax(0, 1.78fr) minmax(360px, 1fr) !important;
+    column-gap: clamp(28px, 3.5vw, 64px) !important;
+    row-gap: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-gallery {
+    top: calc(var(--house-header-height, 68px) + 18px) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-media {
+    min-height: min(790px, calc(100vh - 120px)) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-image {
+    max-height: calc(100vh - 112px) !important;
+    object-fit: contain !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid {
+    grid-template-columns: 1fr !important;
+    margin: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-story-tech {
+    padding: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-grid,
+  body.template-product .melato-pdp-rebuild .pdp-editorial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 1001px) and (max-width: 1240px) {
+  body.template-product .melato-pdp-rebuild .pdp-shell {
+    grid-template-columns: minmax(0, 1.52fr) minmax(340px, 1fr) !important;
+    column-gap: 26px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-grid,
+  body.template-product .melato-pdp-rebuild .pdp-editorial-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Tablet and mobile become image-first, with the purchase rail immediately below. */
+@media (max-width: 1000px) {
+  body.template-product .melato-pdp-rebuild {
+    padding-top: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-shell {
+    width: 100% !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-gallery {
+    width: 100% !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-buybox,
+  body.template-product .melato-pdp-rebuild .pdp-story-tech,
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid,
+  body.template-product .melato-pdp-rebuild .pdp-set,
+  body.template-product .melato-pdp-rebuild .pdp-editorial {
+    width: min(100% - 32px, 720px) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-buybox {
+    margin-top: 0 !important;
+    padding-top: 32px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-content-stack {
+    margin-top: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-story-tech,
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid,
+  body.template-product .melato-pdp-rebuild .pdp-set,
+  body.template-product .melato-pdp-rebuild .pdp-editorial {
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 749px) {
+  body.template-product .melato-pdp-rebuild .pdp-main-media {
+    min-height: 72svh !important;
+    display: grid !important;
+    place-items: center !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-image {
+    max-height: 78svh !important;
+    object-fit: contain !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-thumbs {
+    display: flex !important;
+    gap: 1px !important;
+    overflow-x: auto !important;
+    overscroll-behavior-inline: contain !important;
+    scrollbar-width: none !important;
+    scroll-snap-type: x proximity !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-thumbs::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-thumb {
+    flex: 0 0 25vw !important;
+    scroll-snap-align: start !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-buybox,
+  body.template-product .melato-pdp-rebuild .pdp-story-tech,
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid,
+  body.template-product .melato-pdp-rebuild .pdp-set,
+  body.template-product .melato-pdp-rebuild .pdp-editorial {
+    width: calc(100% - 28px) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-title {
+    font-size: clamp(27px, 9vw, 38px) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-thesis {
+    font-size: 13px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-atc-row {
+    grid-template-columns: 56px minmax(0, 1fr) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-qty {
+    width: 56px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-proof-mini > div {
+    grid-template-columns: 1fr !important;
+    gap: 5px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-grid,
+  body.template-product .melato-pdp-rebuild .pdp-editorial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  body.template-product .pdp-sticky-atc {
+    border-radius: 0 !important;
+    border-color: rgba(8,8,8,.18) !important;
+    background: rgba(242,235,223,.97) !important;
+    color: #080808 !important;
+    backdrop-filter: blur(18px) saturate(120%) !important;
+  }
+
+  body.template-product .pdp-sticky-atc button {
+    border-radius: 0 !important;
+    background: #080808 !important;
+    color: #f2ebdf !important;
+    font-size: 10px !important;
+    letter-spacing: .12em !important;
+    text-transform: uppercase !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.template-product .melato-pdp-rebuild .pdp-thumb-image,
+  body.template-product .melato-pdp-rebuild .pdp-editorial-image,
+  body.template-product .melato-pdp-rebuild .pdp-atc {
+    transition: none !important;
+  }
+}

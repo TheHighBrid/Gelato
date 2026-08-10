@@ -1,0 +1,248 @@
+{% comment %}
+  MELATO HOME / PHASE 4
+  One editorial homepage system backed by existing Shopify collections and products.
+  Media settings are optional. When blank, verified Melato collection/product imagery
+  becomes the fallback so the section remains useful immediately after deployment.
+{% endcomment %}
+
+{%- liquid
+  assign new_collection = section.settings.new_collection | default: collections['new-arrivals']
+  assign current_collection = section.settings.current_collection | default: collections['ovum-before-the-world']
+  if current_collection == blank
+    assign current_collection = collections['drop-001-texture-form']
+  endif
+  assign men_collection = section.settings.men_collection | default: collections['men']
+  assign women_collection = section.settings.women_collection | default: collections['womens-zellige-capsule']
+  assign uniform_collection = section.settings.uniform_collection | default: collections['tracksuits']
+  assign living_collection = section.settings.living_collection | default: collections['the-living-lookbook']
+  assign objects_collection = section.settings.objects_collection | default: collections['accessories']
+
+  assign featured_object = section.settings.featured_object
+  if featured_object == blank and objects_collection != blank
+    assign featured_object = objects_collection.products.first
+  endif
+
+  assign hero_image = section.settings.hero_image
+  if hero_image == blank and current_collection != blank
+    assign hero_image = current_collection.image
+  endif
+  if hero_image == blank and new_collection != blank
+    assign hero_image = new_collection.image
+  endif
+  if hero_image == blank and new_collection != blank and new_collection.products.first != blank
+    assign hero_image = new_collection.products.first.featured_image
+  endif
+
+  assign current_image = section.settings.current_image
+  if current_image == blank and current_collection != blank
+    assign current_image = current_collection.image
+  endif
+  if current_image == blank and current_collection != blank and current_collection.products.first != blank
+    assign current_image = current_collection.products.first.featured_image
+  endif
+
+  assign men_image = section.settings.men_image
+  if men_image == blank and men_collection != blank
+    assign men_image = men_collection.image
+  endif
+  if men_image == blank and men_collection != blank and men_collection.products.first != blank
+    assign men_image = men_collection.products.first.featured_image
+  endif
+
+  assign women_image = section.settings.women_image
+  if women_image == blank and women_collection != blank
+    assign women_image = women_collection.image
+  endif
+  if women_image == blank and women_collection != blank and women_collection.products.first != blank
+    assign women_image = women_collection.products.first.featured_image
+  endif
+
+  assign living_image = section.settings.living_image
+  if living_image == blank and living_collection != blank
+    assign living_image = living_collection.image
+  endif
+  if living_image == blank and living_collection != blank and living_collection.products.first != blank
+    assign living_image = living_collection.products.first.featured_image
+  endif
+
+  assign object_image = section.settings.object_image
+  if object_image == blank and featured_object != blank
+    assign object_image = featured_object.featured_image
+  endif
+-%}
+
+<section id="MelatoHouseHome-{{ section.id }}" class="melato-house-home" data-house-home>
+  <section class="melato-home-hero" data-house-home-hero aria-labelledby="MelatoHomeHeroTitle-{{ section.id }}">
+    <div class="melato-home-hero__media" aria-hidden="true">
+      {%- if section.settings.hero_video != blank -%}
+        {{ section.settings.hero_video | video_tag: class: 'melato-home-hero__video', autoplay: true, loop: true, muted: true, controls: false, playsinline: true, image_size: '1800x' }}
+      {%- elsif hero_image != blank -%}
+        {%- if section.settings.hero_mobile_image != blank -%}<picture><source media="(max-width: 749px)" srcset="{{ section.settings.hero_mobile_image | image_url: width: 1000 }}">{%- endif -%}
+        {{ hero_image | image_url: width: 2400 | image_tag: class: 'melato-home-hero__image', loading: 'eager', fetchpriority: 'high', widths: '750, 1100, 1500, 1900, 2400', sizes: '100vw', alt: '' }}
+        {%- if section.settings.hero_mobile_image != blank -%}</picture>{%- endif -%}
+      {%- endif -%}
+    </div>
+    <div class="melato-home-hero__veil"></div>
+    <div class="melato-home-hero__content">
+      <p class="melato-home-kicker">{{ section.settings.hero_eyebrow }}</p>
+      <h1 id="MelatoHomeHeroTitle-{{ section.id }}">{{ section.settings.hero_title }}</h1>
+      {%- if section.settings.hero_copy != blank -%}<p class="melato-home-hero__copy">{{ section.settings.hero_copy }}</p>{%- endif -%}
+      <a class="melato-home-arrow-link" href="{% if current_collection != blank %}{{ current_collection.url }}{% else %}/collections/new-arrivals{% endif %}">{{ section.settings.hero_cta }}</a>
+    </div>
+    <p class="melato-home-hero__index">MELATO / {{ 'now' | date: '%Y' }}</p>
+  </section>
+
+  <section class="melato-home-current melato-home-section" aria-labelledby="MelatoCurrentTitle-{{ section.id }}">
+    <div class="melato-home-current__media">
+      {%- if current_image != blank -%}{{ current_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 900px) 62vw, 100vw', alt: current_collection.title | default: section.settings.current_title }}{%- endif -%}
+    </div>
+    <div class="melato-home-current__copy">
+      <p class="melato-home-kicker">Current collection</p>
+      <h2 id="MelatoCurrentTitle-{{ section.id }}">{% if section.settings.current_title != blank %}{{ section.settings.current_title }}{% elsif current_collection != blank %}{{ current_collection.title }}{% endif %}</h2>
+      <p>{{ section.settings.current_copy }}</p>
+      {%- if current_collection != blank -%}<a class="melato-home-text-link" href="{{ current_collection.url }}">Explore the collection</a>{%- endif -%}
+    </div>
+  </section>
+
+  {%- if new_collection != blank and new_collection.products_count > 0 -%}
+    <section class="melato-home-edit melato-home-section" aria-labelledby="MelatoNewTitle-{{ section.id }}">
+      <header class="melato-home-section-head">
+        <div><p class="melato-home-kicker">New arrivals</p><h2 id="MelatoNewTitle-{{ section.id }}">The latest edit</h2></div>
+        <a class="melato-home-text-link" href="{{ new_collection.url }}">View all</a>
+      </header>
+      <div class="melato-home-edit__grid" role="list">
+        {%- for product in new_collection.products limit: 4 -%}
+          <article class="melato-home-product" role="listitem">
+            <a class="melato-home-product__media" href="{{ product.url }}" aria-label="View {{ product.title | escape }}">
+              {%- if product.featured_image != blank -%}
+                {{ product.featured_image | image_url: width: 1100 | image_tag: class: 'melato-home-product__image melato-home-product__image--primary', loading: 'lazy', widths: '360, 540, 760, 1100', sizes: '(min-width: 900px) 25vw, 50vw', alt: product.featured_image.alt | default: product.title }}
+              {%- endif -%}
+              {%- if product.images.size > 1 -%}
+                {{ product.images[1] | image_url: width: 1100 | image_tag: class: 'melato-home-product__image melato-home-product__image--secondary', loading: 'lazy', widths: '360, 540, 760, 1100', sizes: '(min-width: 900px) 25vw, 50vw', alt: '' }}
+              {%- endif -%}
+            </a>
+            <div class="melato-home-product__meta"><h3><a href="{{ product.url }}">{{ product.title }}</a></h3><p>{{ product.price | money }}</p></div>
+          </article>
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
+
+  <section class="melato-home-diptych" aria-label="Shop by wardrobe">
+    <a class="melato-home-diptych__panel" href="{% if men_collection != blank %}{{ men_collection.url }}{% else %}/collections/men{% endif %}">
+      {%- if men_image != blank -%}{{ men_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 750px) 50vw, 100vw', alt: 'Melato menswear' }}{%- endif -%}
+      <span class="melato-home-diptych__veil"></span><span class="melato-home-diptych__label"><small>01</small> Men</span>
+    </a>
+    <a class="melato-home-diptych__panel" href="{% if women_collection != blank %}{{ women_collection.url }}{% else %}/collections/womens-zellige-capsule{% endif %}">
+      {%- if women_image != blank -%}{{ women_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 750px) 50vw, 100vw', alt: 'Melato womenswear' }}{%- endif -%}
+      <span class="melato-home-diptych__veil"></span><span class="melato-home-diptych__label"><small>02</small> Women</span>
+    </a>
+  </section>
+
+  {%- if uniform_collection != blank and uniform_collection.products_count > 0 -%}
+    <section class="melato-home-uniform melato-home-section" aria-labelledby="MelatoUniformTitle-{{ section.id }}">
+      <header class="melato-home-section-head melato-home-section-head--large">
+        <div><p class="melato-home-kicker">Core collection</p><h2 id="MelatoUniformTitle-{{ section.id }}">The Uniform</h2></div>
+        <a class="melato-home-text-link" href="{{ uniform_collection.url }}">Enter the Uniform</a>
+      </header>
+      <div class="melato-home-uniform__rail" role="list">
+        {%- for product in uniform_collection.products limit: 6 -%}
+          <article class="melato-home-uniform__item" role="listitem">
+            <a href="{{ product.url }}">
+              {%- if product.featured_image != blank -%}{{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '320, 500, 700, 1000', sizes: '(min-width: 1100px) 22vw, (min-width: 750px) 32vw, 72vw', alt: product.featured_image.alt | default: product.title }}{%- endif -%}
+              <span><strong>{{ product.title }}</strong><small>{{ product.price | money }}</small></span>
+            </a>
+          </article>
+        {%- endfor -%}
+      </div>
+    </section>
+  {%- endif -%}
+
+  <section class="melato-home-living" aria-labelledby="MelatoLivingTitle-{{ section.id }}">
+    <div class="melato-home-living__media">
+      {%- if living_image != blank -%}{{ living_image | image_url: width: 2200 | image_tag: loading: 'lazy', widths: '750, 1100, 1500, 1800, 2200', sizes: '100vw', alt: 'The Living Book by Melato' }}{%- endif -%}
+    </div>
+    <div class="melato-home-living__veil"></div>
+    <div class="melato-home-living__copy">
+      <p class="melato-home-kicker">World of Melato / Season 02</p>
+      <h2 id="MelatoLivingTitle-{{ section.id }}">Living Book</h2>
+      <p>{{ section.settings.living_copy }}</p>
+      <a class="melato-home-arrow-link" href="{% if living_collection != blank %}{{ living_collection.url }}{% else %}/collections/the-living-lookbook{% endif %}">Enter the story</a>
+    </div>
+  </section>
+
+  {%- if featured_object != blank -%}
+    <section class="melato-home-object melato-home-section" aria-labelledby="MelatoObjectTitle-{{ section.id }}">
+      <div class="melato-home-object__copy">
+        <p class="melato-home-kicker">Featured object</p>
+        <h2 id="MelatoObjectTitle-{{ section.id }}">{{ featured_object.title }}</h2>
+        <p>{{ section.settings.object_copy }}</p>
+        <p class="melato-home-object__price">{{ featured_object.price | money }}</p>
+        <a class="melato-home-text-link" href="{{ featured_object.url }}">Discover the object</a>
+      </div>
+      <a class="melato-home-object__media" href="{{ featured_object.url }}" aria-label="View {{ featured_object.title | escape }}">
+        {%- if object_image != blank -%}{{ object_image | image_url: width: 1800 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1500, 1800', sizes: '(min-width: 900px) 60vw, 100vw', alt: object_image.alt | default: featured_object.title }}{%- endif -%}
+      </a>
+    </section>
+  {%- endif -%}
+
+  <section class="melato-home-statement" aria-labelledby="MelatoStatementTitle-{{ section.id }}">
+    <p class="melato-home-kicker">Melato / Ottawa</p>
+    <h2 id="MelatoStatementTitle-{{ section.id }}">{{ section.settings.statement }}</h2>
+    <p>{{ section.settings.statement_copy }}</p>
+    <a class="melato-home-text-link" href="/pages/our-story">Our story</a>
+  </section>
+
+  <section class="melato-home-newsletter-intro" aria-label="Newsletter introduction">
+    <p class="melato-home-kicker">Private list</p>
+    <h2>{{ section.settings.newsletter_heading }}</h2>
+    <p>{{ section.settings.newsletter_copy }}</p>
+  </section>
+</section>
+
+{% schema %}
+{
+  "name": "Melato House homepage",
+  "tag": "section",
+  "settings": [
+    {"type":"header","content":"Campaign takeover"},
+    {"type":"video","id":"hero_video","label":"Campaign video"},
+    {"type":"image_picker","id":"hero_image","label":"Campaign image fallback"},
+    {"type":"image_picker","id":"hero_mobile_image","label":"Mobile campaign image"},
+    {"type":"text","id":"hero_eyebrow","label":"Campaign eyebrow","default":"MELATO / CURRENT"},
+    {"type":"textarea","id":"hero_title","label":"Campaign title","default":"THE CULTURE WEARS US"},
+    {"type":"text","id":"hero_copy","label":"Campaign copy","default":"Tailored for movement, cut with intent."},
+    {"type":"text","id":"hero_cta","label":"Campaign CTA","default":"Discover"},
+
+    {"type":"header","content":"Collections"},
+    {"type":"collection","id":"current_collection","label":"Current collection"},
+    {"type":"image_picker","id":"current_image","label":"Current collection editorial image"},
+    {"type":"text","id":"current_title","label":"Current collection display title"},
+    {"type":"textarea","id":"current_copy","label":"Current collection copy","default":"A focused study in silhouette, material and identity. Built as a chapter, not a trend cycle."},
+    {"type":"collection","id":"new_collection","label":"New arrivals collection"},
+    {"type":"collection","id":"men_collection","label":"Menswear collection"},
+    {"type":"image_picker","id":"men_image","label":"Menswear image"},
+    {"type":"collection","id":"women_collection","label":"Womenswear collection"},
+    {"type":"image_picker","id":"women_image","label":"Womenswear image"},
+    {"type":"collection","id":"uniform_collection","label":"The Uniform collection"},
+    {"type":"collection","id":"living_collection","label":"Living Book collection"},
+    {"type":"image_picker","id":"living_image","label":"Living Book image"},
+    {"type":"textarea","id":"living_copy","label":"Living Book copy","default":"Campaigns, people, movement and the world surrounding the clothes."},
+
+    {"type":"header","content":"Featured object"},
+    {"type":"collection","id":"objects_collection","label":"Objects fallback collection"},
+    {"type":"product","id":"featured_object","label":"Featured object product"},
+    {"type":"image_picker","id":"object_image","label":"Featured object image"},
+    {"type":"textarea","id":"object_copy","label":"Featured object copy","default":"One object pulled forward from the current rotation."},
+
+    {"type":"header","content":"House statement"},
+    {"type":"textarea","id":"statement","label":"Statement","default":"THE CULTURE WEARS US"},
+    {"type":"textarea","id":"statement_copy","label":"Statement copy","default":"Melato is built around presence, identity, movement and cultural self-definition."},
+
+    {"type":"header","content":"Newsletter"},
+    {"type":"text","id":"newsletter_heading","label":"Newsletter heading","default":"Letters from Melato"},
+    {"type":"textarea","id":"newsletter_copy","label":"Newsletter copy","default":"New work, private releases and stories from the world around the clothes."}
+  ],
+  "presets":[{"name":"Melato House homepage"}]
+}
+{% endschema %}

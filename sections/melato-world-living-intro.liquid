@@ -1,0 +1,79 @@
+{% comment %}
+  World of Melato / Living Book introduction.
+  Replaces the old hardcoded collage intro while leaving the evidence archive
+  sections below as the source of truth for filed imagery and shoppable frames.
+{% endcomment %}
+
+{%- liquid
+  assign living_collection = collections['the-living-lookbook']
+  assign shop_collection = collections['living-lookbook-shop-the-looks']
+  assign hero_image = section.settings.hero_image
+  if hero_image == blank and living_collection != blank
+    assign hero_image = living_collection.image | default: living_collection.products.first.featured_image
+  endif
+  if hero_image == blank and shop_collection != blank
+    assign hero_image = shop_collection.image | default: shop_collection.products.first.featured_image
+  endif
+-%}
+
+<section class="melato-world-living" aria-labelledby="LivingBookTitle-{{ section.id }}">
+  {% render 'melato-world-rail' %}
+
+  <div class="melato-world-living__hero">
+    <div class="melato-world-living__media" aria-hidden="true">
+      {%- if hero_image != blank -%}
+        {{ hero_image | image_url: width: 2400 | image_tag:
+          class: 'melato-world-living__image',
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '750, 1100, 1500, 1900, 2400',
+          sizes: '100vw',
+          alt: ''
+        }}
+      {%- else -%}
+        <div class="melato-world-living__image melato-world-living__image--fallback"></div>
+      {%- endif -%}
+    </div>
+    <div class="melato-world-living__veil" aria-hidden="true"></div>
+
+    <div class="melato-world-living__copy">
+      <p class="melato-world-kicker">{{ section.settings.eyebrow }}</p>
+      <h1 id="LivingBookTitle-{{ section.id }}">{{ section.settings.title }}</h1>
+      <p class="melato-world-living__deck">{{ section.settings.deck }}</p>
+      <div class="melato-world-living__meta" aria-label="Living Book edition information">
+        <span>{{ section.settings.season }}</span>
+        <span>{{ section.settings.location }}</span>
+        <span>Visual archive</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="melato-world-living__manifesto">
+    <p class="melato-world-kicker">Living Studies / 2026</p>
+    <p class="melato-world-living__statement">{{ section.settings.statement }}</p>
+    <p class="melato-world-living__note">The archive below remains a working record: sightings, movement, texture and garments caught in context. Product links appear only where a frame is mapped to a live piece.</p>
+  </div>
+
+  <div class="melato-world-case-index" aria-label="Living Book archive index">
+    <div><span>01</span><strong>Living Studies</strong><small>Origin record</small></div>
+    <div><span>02</span><strong>New Evidence</strong><small>Expanded case file</small></div>
+    <div><span>03</span><strong>Afterimage Record</strong><small>Peripheral sightings</small></div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Living Book house intro",
+  "tag": "section",
+  "settings": [
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"World of Melato / Living Book"},
+    {"type":"text","id":"title","label":"Title","default":"LIVING BOOK"},
+    {"type":"text","id":"season","label":"Season","default":"Season 02"},
+    {"type":"text","id":"location","label":"Location","default":"Montreal / Ottawa"},
+    {"type":"textarea","id":"deck","label":"Deck","default":"A living record of the uniform outside the studio."},
+    {"type":"textarea","id":"statement","label":"Statement","default":"Flash, movement, afterimages. Clothes are documented where they acquire a life of their own."},
+    {"type":"image_picker","id":"hero_image","label":"Hero image"}
+  ],
+  "presets": [{"name":"Living Book house intro"}]
+}
+{% endschema %}

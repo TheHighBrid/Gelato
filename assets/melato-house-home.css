@@ -1,0 +1,630 @@
+/*
+ * MELATO HOUSE HOME / PHASE 4
+ * Editorial homepage layer. Existing Shopify collections/products stay authoritative.
+ */
+
+body.template-index {
+  --home-ink: var(--melato-ink, #090909);
+  --home-black: var(--melato-black, #050505);
+  --home-cream: var(--melato-cream, #f0e8d9);
+  --home-soft: var(--melato-cream-soft, #f7f2e9);
+  --home-orange: var(--melato-burnt-orange, #9d4918);
+  --home-line: rgba(9, 9, 9, .16);
+  --home-light-line: rgba(240, 232, 217, .22);
+  background: var(--home-cream) !important;
+  color: var(--home-ink);
+}
+
+body.template-index .main-content,
+body.template-index .melato-house-home {
+  background: var(--home-cream) !important;
+  color: var(--home-ink);
+}
+
+body.template-index .melato-house-header {
+  margin-bottom: calc(-1 * var(--melato-header-height));
+  background: transparent !important;
+  color: var(--home-cream) !important;
+  border-bottom-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.template-index .melato-house-header.is-home-solid {
+  background: color-mix(in srgb, var(--home-cream) 96%, transparent) !important;
+  color: var(--home-ink) !important;
+  border-bottom-color: var(--home-line) !important;
+  backdrop-filter: blur(12px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(110%) !important;
+}
+
+body.template-index .melato-house-home *,
+body.template-index .melato-house-home *::before,
+body.template-index .melato-house-home *::after { box-sizing: border-box; }
+
+body.template-index .melato-house-home a { color: inherit; }
+
+.melato-home-kicker {
+  margin: 0 0 12px;
+  font-family: var(--melato-mono, monospace);
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.melato-home-section {
+  padding: clamp(72px, 9vw, 150px) var(--melato-side, 32px);
+}
+
+.melato-home-text-link,
+.melato-home-arrow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  color: inherit;
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.melato-home-text-link {
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 4px;
+}
+
+.melato-home-arrow-link::after {
+  content: "↗";
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 180ms ease;
+}
+
+.melato-home-arrow-link:hover::after { transform: translate(3px, -3px); }
+
+/* Campaign takeover */
+.melato-home-hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--home-black);
+  color: var(--home-cream);
+}
+
+.melato-home-hero__media,
+.melato-home-hero__veil {
+  position: absolute;
+  inset: 0;
+}
+
+.melato-home-hero__media { z-index: -2; }
+.melato-home-hero__veil {
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(5,5,5,.18) 0%, rgba(5,5,5,.03) 38%, rgba(5,5,5,.66) 100%),
+    linear-gradient(90deg, rgba(5,5,5,.24) 0%, transparent 58%);
+}
+
+.melato-home-hero__image,
+.melato-home-hero__video,
+.melato-home-hero__media picture {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.melato-home-hero__image,
+.melato-home-hero__video {
+  object-fit: cover;
+  object-position: center;
+}
+
+.melato-home-hero__content {
+  width: min(1320px, calc(100% - (var(--melato-side, 32px) * 2)));
+  margin: 0 auto;
+  padding: calc(var(--melato-header-height) + 100px) 0 clamp(48px, 7vw, 96px);
+}
+
+.melato-home-hero__content h1 {
+  max-width: 1100px;
+  margin: 0;
+  color: var(--home-cream);
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: clamp(58px, 10.5vw, 168px);
+  font-weight: 500;
+  line-height: .83;
+  letter-spacing: -.065em;
+  text-transform: uppercase;
+}
+
+.melato-home-hero__copy {
+  max-width: 500px;
+  margin: 24px 0 28px;
+  color: rgba(240,232,217,.82);
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: clamp(13px, 1.4vw, 18px);
+  line-height: 1.45;
+}
+
+.melato-home-hero__index {
+  position: absolute;
+  right: var(--melato-side, 32px);
+  bottom: clamp(48px, 7vw, 96px);
+  margin: 0;
+  font-family: var(--melato-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .16em;
+}
+
+/* Current collection */
+.melato-home-current {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, .55fr);
+  gap: clamp(28px, 6vw, 96px);
+  align-items: center;
+  min-height: 85svh;
+}
+
+.melato-home-current__media {
+  min-height: 68svh;
+  overflow: hidden;
+  background: var(--home-soft);
+}
+
+.melato-home-current__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 68svh;
+  object-fit: cover;
+}
+
+.melato-home-current__copy { max-width: 470px; }
+.melato-home-current__copy h2,
+.melato-home-object__copy h2 {
+  margin: 0;
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: clamp(40px, 5vw, 78px);
+  font-weight: 500;
+  line-height: .92;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+}
+
+.melato-home-current__copy > p:not(.melato-home-kicker),
+.melato-home-object__copy > p:not(.melato-home-kicker):not(.melato-home-object__price) {
+  max-width: 42ch;
+  margin: 28px 0;
+  color: rgba(9,9,9,.66);
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* Product edit */
+.melato-home-edit { border-top: 1px solid var(--home-line); }
+
+.melato-home-section-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: clamp(28px, 4vw, 56px);
+}
+
+.melato-home-section-head h2 {
+  margin: 0;
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: clamp(34px, 5vw, 68px);
+  font-weight: 500;
+  line-height: .94;
+  letter-spacing: -.045em;
+  text-transform: uppercase;
+}
+
+.melato-home-section-head--large h2 { font-size: clamp(62px, 10vw, 148px); }
+
+.melato-home-edit__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 1vw, 15px);
+}
+
+.melato-home-product { min-width: 0; }
+.melato-home-product__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--home-soft);
+}
+
+.melato-home-product__image {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 360ms var(--melato-ease, ease);
+}
+
+.melato-home-product__image--secondary { opacity: 0; }
+.melato-home-product:hover .melato-home-product__image--secondary { opacity: 1; }
+
+.melato-home-product__meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+.melato-home-product__meta h3,
+.melato-home-product__meta p {
+  margin: 0;
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.melato-home-product__meta a { text-decoration: none; }
+.melato-home-product__meta p { color: rgba(9,9,9,.58); white-space: nowrap; }
+
+/* Men / women */
+.melato-home-diptych {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  background: var(--home-black);
+}
+
+.melato-home-diptych__panel {
+  position: relative;
+  min-height: 78svh;
+  overflow: hidden;
+  color: var(--home-cream) !important;
+  text-decoration: none;
+}
+
+.melato-home-diptych__panel + .melato-home-diptych__panel { border-left: 1px solid rgba(240,232,217,.24); }
+
+.melato-home-diptych__panel img,
+.melato-home-diptych__veil {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.melato-home-diptych__panel img {
+  object-fit: cover;
+  transition: transform 900ms var(--melato-ease, ease);
+}
+
+.melato-home-diptych__panel:hover img { transform: scale(1.015); }
+.melato-home-diptych__veil { background: linear-gradient(180deg, transparent 44%, rgba(5,5,5,.62) 100%); }
+
+.melato-home-diptych__label {
+  position: absolute;
+  left: clamp(20px, 4vw, 60px);
+  right: clamp(20px, 4vw, 60px);
+  bottom: clamp(28px, 5vw, 68px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: clamp(52px, 8vw, 124px);
+  font-weight: 500;
+  line-height: .86;
+  letter-spacing: -.055em;
+  text-transform: uppercase;
+}
+
+.melato-home-diptych__label small {
+  order: 2;
+  font-family: var(--melato-mono, monospace);
+  font-size: 9px;
+  letter-spacing: .12em;
+}
+
+/* The Uniform */
+.melato-home-uniform {
+  overflow: hidden;
+  border-bottom: 1px solid var(--home-line);
+}
+
+.melato-home-uniform__rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, 22vw);
+  gap: clamp(8px, 1vw, 14px);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: none;
+  padding-bottom: 8px;
+}
+
+.melato-home-uniform__rail::-webkit-scrollbar { display: none; }
+
+.melato-home-uniform__item a { color: inherit; text-decoration: none; }
+.melato-home-uniform__item img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: var(--home-soft);
+}
+
+.melato-home-uniform__item span {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 12px;
+  padding: 10px 1px 0;
+}
+
+.melato-home-uniform__item strong,
+.melato-home-uniform__item small {
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.35;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.melato-home-uniform__item small { color: rgba(9,9,9,.56); }
+
+/* Living Book */
+.melato-home-living {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  color: var(--home-cream);
+  background: var(--home-black);
+  isolation: isolate;
+}
+
+.melato-home-living__media,
+.melato-home-living__veil {
+  position: absolute;
+  inset: 0;
+}
+
+.melato-home-living__media { z-index: -2; }
+.melato-home-living__veil {
+  z-index: -1;
+  background: linear-gradient(180deg, rgba(5,5,5,.10) 28%, rgba(5,5,5,.72) 100%);
+}
+
+.melato-home-living__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.melato-home-living__copy {
+  width: 100%;
+  padding: clamp(48px, 7vw, 96px) var(--melato-side, 32px);
+}
+
+.melato-home-living__copy h2 {
+  margin: 0;
+  color: var(--home-cream);
+  font-family: var(--melato-editorial, serif);
+  font-size: clamp(74px, 14vw, 220px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: .82;
+  letter-spacing: -.07em;
+}
+
+.melato-home-living__copy > p:not(.melato-home-kicker) {
+  max-width: 460px;
+  margin: 26px 0;
+  color: rgba(240,232,217,.76);
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Featured object */
+.melato-home-object {
+  display: grid;
+  grid-template-columns: minmax(320px, .6fr) minmax(0, 1.4fr);
+  gap: clamp(30px, 7vw, 120px);
+  align-items: center;
+  min-height: 86svh;
+}
+
+.melato-home-object__copy { max-width: 450px; }
+.melato-home-object__price {
+  margin: 0 0 24px !important;
+  color: var(--home-ink) !important;
+  font-family: var(--melato-mono, monospace) !important;
+  font-size: 10px !important;
+  letter-spacing: .1em !important;
+}
+
+.melato-home-object__media {
+  display: block;
+  min-height: 66svh;
+  background: var(--home-soft);
+  overflow: hidden;
+}
+
+.melato-home-object__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 66svh;
+  object-fit: cover;
+  transition: transform 800ms var(--melato-ease, ease);
+}
+
+.melato-home-object__media:hover img { transform: scale(1.012); }
+
+/* Brand statement */
+.melato-home-statement {
+  min-height: 80svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(90px, 12vw, 190px) var(--melato-side, 32px);
+  border-top: 1px solid var(--home-line);
+  border-bottom: 1px solid var(--home-line);
+}
+
+.melato-home-statement h2 {
+  max-width: 1400px;
+  margin: 0;
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: clamp(68px, 13vw, 205px);
+  font-weight: 500;
+  line-height: .79;
+  letter-spacing: -.072em;
+  text-transform: uppercase;
+}
+
+.melato-home-statement > p:not(.melato-home-kicker) {
+  max-width: 460px;
+  margin: 34px 0 28px auto;
+  color: rgba(9,9,9,.64);
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.melato-home-statement .melato-home-text-link { margin-left: auto; }
+
+/* Newsletter handoff */
+.melato-home-newsletter-intro {
+  display: grid;
+  grid-template-columns: .55fr 1fr;
+  align-items: end;
+  gap: 24px 60px;
+  padding: clamp(70px, 9vw, 130px) var(--melato-side, 32px) 28px;
+  background: var(--home-black);
+  color: var(--home-cream);
+}
+
+.melato-home-newsletter-intro .melato-home-kicker { grid-column: 1 / -1; }
+.melato-home-newsletter-intro h2 {
+  margin: 0;
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: clamp(42px, 6vw, 88px);
+  font-weight: 500;
+  line-height: .9;
+  letter-spacing: -.05em;
+  text-transform: uppercase;
+}
+
+.melato-home-newsletter-intro > p:last-child {
+  max-width: 480px;
+  margin: 0 0 5px auto;
+  color: rgba(240,232,217,.64);
+  font-family: var(--melato-ui, Arial, sans-serif);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+body.template-index .melato-home-newsletter-intro + .shopify-section,
+body.template-index .melato-home-house-newsletter-app {
+  background: var(--home-black) !important;
+  color: var(--home-cream) !important;
+}
+
+/* Keep old homepage merchandising blocks out if stale template content survives an editor merge. */
+body.template-index .melato-home-conversion,
+body.template-index .ticker,
+body.template-index .testimonials { display: none !important; }
+
+@media (max-width: 900px) {
+  body.template-index .melato-house-header { margin-bottom: calc(-1 * var(--melato-header-height)); }
+
+  .melato-home-current,
+  .melato-home-object {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .melato-home-current { gap: 30px; }
+  .melato-home-current__media,
+  .melato-home-current__media img,
+  .melato-home-object__media,
+  .melato-home-object__media img { min-height: 58svh; }
+
+  .melato-home-object__copy { order: 2; }
+  .melato-home-object__media { order: 1; }
+
+  .melato-home-edit__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .melato-home-diptych__panel { min-height: 68svh; }
+  .melato-home-uniform__rail { grid-auto-columns: minmax(240px, 45vw); }
+}
+
+@media (max-width: 749px) {
+  .melato-home-section { padding: 64px 16px; }
+
+  .melato-home-hero__content {
+    width: calc(100% - 32px);
+    padding-bottom: 34px;
+  }
+
+  .melato-home-hero__content h1 { font-size: clamp(52px, 18vw, 88px); line-height: .86; }
+  .melato-home-hero__copy { max-width: 75vw; margin: 18px 0 22px; font-size: 13px; }
+  .melato-home-hero__index { display: none; }
+
+  .melato-home-current__copy h2,
+  .melato-home-object__copy h2 { font-size: clamp(42px, 13vw, 62px); }
+
+  .melato-home-section-head { align-items: flex-start; flex-direction: column; margin-bottom: 24px; }
+  .melato-home-section-head--large h2 { font-size: clamp(64px, 20vw, 104px); }
+
+  .melato-home-product__meta { grid-template-columns: 1fr; gap: 3px; padding-top: 8px; }
+  .melato-home-product__meta h3,
+  .melato-home-product__meta p { font-size: 9px; }
+
+  .melato-home-diptych { grid-template-columns: 1fr; }
+  .melato-home-diptych__panel { min-height: 72svh; }
+  .melato-home-diptych__panel + .melato-home-diptych__panel { border-left: 0; border-top: 1px solid rgba(240,232,217,.24); }
+  .melato-home-diptych__label { font-size: clamp(58px, 20vw, 96px); }
+
+  .melato-home-uniform__rail { grid-auto-columns: 72vw; }
+
+  .melato-home-living { min-height: 88svh; }
+  .melato-home-living__copy { padding: 46px 16px; }
+  .melato-home-living__copy h2 { font-size: clamp(78px, 24vw, 130px); }
+
+  .melato-home-statement { min-height: 72svh; padding: 88px 16px; }
+  .melato-home-statement h2 { font-size: clamp(66px, 21vw, 118px); }
+  .melato-home-statement > p:not(.melato-home-kicker),
+  .melato-home-statement .melato-home-text-link { margin-left: 0; }
+
+  .melato-home-newsletter-intro {
+    grid-template-columns: 1fr;
+    padding: 72px 16px 20px;
+  }
+
+  .melato-home-newsletter-intro > p:last-child { margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .melato-home-product__image,
+  .melato-home-diptych__panel img,
+  .melato-home-object__media img,
+  .melato-home-arrow-link::after { transition: none !important; }
+}

@@ -1,0 +1,18 @@
+/*
+ * ------------------------------------------------------------
+ * World of Melato editorial page template.
+ * Assignable to future campaign, pop-up and collection-story pages.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "melato-world-page",
+      "settings": {
+        "eyebrow": "World of Melato",
+        "deck": "Notes, images and records from the Melato world."
+      }
+    }
+  },
+  "order": ["main"]
+}
