@@ -1,0 +1,29 @@
+{% comment %}
+  Melato — Fit Guidance Page Template
+  Template: page.size-guide
+  URL: /pages/size-guide
+{% endcomment %}
+
+{{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'melato-concierge.js' | asset_url }}" defer></script>
+
+<div class="melato-page">
+  <header class="melato-page-header">
+    <div class="melato-eyebrow">Melato Client Services</div>
+    <h1 class="melato-page-header__title">{{ page.title | default: 'Fit Guidance' }}</h1>
+    <p class="melato-page-header__subtitle">Product-specific fit details stay authoritative. This page supports the measurements and guidance maintained in Shopify.</p>
+  </header>
+
+  <div class="melato-container">
+    <div class="melato-card">
+      {% if page.content != blank %}
+        <div class="rte melato-body">{{ page.content }}</div>
+      {% else %}
+        <p class="melato-body" style="color: var(--melato-black); font-weight: 500; margin-bottom: 8px;">Fit is product-specific.</p>
+        <p class="melato-body-sm">Use the fit and measurement details on each product page as the primary reference. For additional help, contact Melato support before ordering.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% section 'concierge-strip' %}
+</div>

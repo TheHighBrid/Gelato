@@ -1,0 +1,196 @@
+{% comment %}
+  Melato Concierge Strip
+  A persistent navigation component that connects all 4 client service pillars.
+  Add this section to the bottom of each pillar page template.
+{% endcomment %}
+
+{{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign current = section.settings.current_pillar | default: 'post-purchase'
+
+  case page.handle
+    when 'thank-you'
+      assign current = 'post-purchase'
+    when 'preview'
+      assign current = 'private-preview'
+    when 'size-guide'
+      assign current = 'fit-guidance'
+    when 'size-guide-1'
+      assign current = 'fit-guidance'
+    when 'shipping-returns'
+      assign current = 'delivery-policy'
+  endcase
+  assign pillars = 'post-purchase,private-preview,fit-guidance,delivery-policy' | split: ','
+  assign pillar_labels = 'Post-Purchase,Private Preview,Fit Guidance,Delivery' | split: ','
+  assign pillar_urls = '/pages/thank-you,/pages/preview,/pages/size-guide,/pages/shipping-returns' | split: ','
+-%}
+
+<style>
+  .melato-strip {
+    border-top: 1px solid var(--melato-gray-200);
+    padding: 32px 0;
+    margin-top: 48px;
+  }
+  .melato-strip__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+  .melato-strip__eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--melato-gray-400);
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .melato-strip__nav {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .melato-strip-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: 1px solid var(--melato-gray-200);
+    background: transparent;
+    color: var(--melato-gray-500);
+    font-size: 12px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .melato-strip-link:hover {
+    border-color: var(--melato-gray-300);
+    color: var(--melato-black);
+    background: var(--melato-gray-100);
+  }
+  .melato-strip-link--active {
+    background: var(--melato-black) !important;
+    color: var(--melato-white) !important;
+    border-color: var(--melato-black) !important;
+  }
+  .melato-strip-link--active:hover {
+    background: var(--melato-gray-800) !important;
+    border-color: var(--melato-gray-800) !important;
+  }
+  .melato-strip-link__icon {
+    width: 16px;
+    height: 16px;
+  }
+  .melato-strip__contextual {
+    text-align: center;
+    margin-top: 20px;
+    padding: 14px;
+    border: 1px dashed var(--melato-gray-300);
+    border-radius: 10px;
+    background: var(--melato-gray-100);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .melato-strip__contextual-text {
+    font-size: 13px;
+    color: var(--melato-gray-600);
+    line-height: 1.6;
+  }
+  .melato-strip__contextual-text a {
+    color: var(--melato-black);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  @media (max-width: 600px) {
+    .melato-strip__nav { gap: 6px; }
+    .melato-strip-link { padding: 8px 12px; font-size: 11px; }
+  }
+</style>
+
+<div class="melato-strip" data-concierge-strip data-current-pillar="{{ current }}">
+  <div class="melato-strip__inner">
+    <div class="melato-strip__eyebrow">The Concierge Strip</div>
+
+    <nav class="melato-strip__nav" aria-label="Client services">
+      {%- for pillar in pillars -%}
+        {%- assign label = pillar_labels[forloop.index0] -%}
+        {%- assign url = pillar_urls[forloop.index0] -%}
+        {%- assign is_active = false -%}
+        {%- if pillar == current -%}
+          {%- assign is_active = true -%}
+        {%- endif -%}
+
+        <a
+          href="{{ url }}"
+          class="melato-strip-link{% if is_active %} melato-strip-link--active{% endif %}"
+          data-pillar-link
+          data-pillar="{{ pillar }}"
+          {% if is_active %}aria-current="page"{% endif %}
+        >
+          {%- if pillar == 'post-purchase' -%}
+            <svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          {%- elsif pillar == 'private-preview' -%}
+            <svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          {%- elsif pillar == 'fit-guidance' -%}
+            <svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          {%- elsif pillar == 'delivery-policy' -%}
+            <svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          {%- endif -%}
+          {{ label }}
+        </a>
+      {%- endfor -%}
+    </nav>
+
+    {%- if section.settings.show_contextual and section.settings.contextual_copy != blank -%}
+      <div class="melato-strip__contextual">
+        <div class="melato-strip__contextual-text">
+          {{ section.settings.contextual_copy }}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Concierge Strip",
+  "settings": [
+    {
+      "type": "select",
+      "id": "current_pillar",
+      "label": "Current Pillar",
+      "options": [
+        { "value": "post-purchase", "label": "Post-Purchase" },
+        { "value": "private-preview", "label": "Private Preview" },
+        { "value": "fit-guidance", "label": "Fit Guidance" },
+        { "value": "delivery-policy", "label": "Delivery Policy" }
+      ],
+      "default": "post-purchase",
+      "info": "Select which pillar page this section appears on. The matching nav item will be highlighted."
+    },
+    {
+      "type": "richtext",
+      "id": "contextual_copy",
+      "label": "Contextual Copy",
+      "default": "<p>Fit, delivery and post-purchase guidance are available through Client Services.</p>",
+      "info": "Bridge text that helps customers navigate between pillars. Supports links."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contextual",
+      "label": "Show Contextual Copy",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Concierge Strip",
+      "category": "Melato"
+    }
+  ]
+}
+{% endschema %}

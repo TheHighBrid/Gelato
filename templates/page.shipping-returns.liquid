@@ -1,0 +1,31 @@
+{% comment %}
+  Melato — Delivery & Returns Page Template
+  Template: page.shipping-returns
+  URL: /pages/shipping-returns
+{% endcomment %}
+
+{{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'melato-concierge.js' | asset_url }}" defer></script>
+
+<div class="melato-page">
+  <header class="melato-page-header">
+    <div class="melato-eyebrow">Melato Client Services</div>
+    <h1 class="melato-page-header__title">{{ page.title | default: 'Shipping & Returns' }}</h1>
+    <p class="melato-page-header__subtitle">Current delivery and return information, without hard-coded thresholds or stale service promises.</p>
+  </header>
+
+  <div class="melato-container">
+    <div class="melato-card">
+      {% if page.content != blank %}
+        <div class="rte melato-body">{{ page.content }}</div>
+      {% else %}
+        <p class="melato-body" style="color: var(--melato-black); font-weight: 500; margin-bottom: 8px;">Delivery</p>
+        <p class="melato-body-sm" style="margin-bottom: 16px;">Available delivery methods, timing estimates, taxes and any applicable duties are confirmed during checkout.</p>
+        <p class="melato-body" style="color: var(--melato-black); font-weight: 500; margin-bottom: 8px;">Returns</p>
+        <p class="melato-body-sm">Return eligibility follows Melato's current posted refund policy. Review that policy before sending an item back.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% section 'concierge-strip' %}
+</div>
