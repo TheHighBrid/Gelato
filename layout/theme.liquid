@@ -101,6 +101,7 @@
   {{ 'melato-house-pdp.css' | asset_url | stylesheet_tag }}
   {%- if template.name == 'collection' -%}{{ 'melato-house-collection.css' | asset_url | stylesheet_tag }}{%- endif -%}
   {%- if template.name == 'index' -%}{{ 'melato-house-home.css' | asset_url | stylesheet_tag }}{%- endif -%}
+  {{ 'melato-house-world.css' | asset_url | stylesheet_tag }}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}
   {% render 'melato-global-polish' %}
@@ -173,6 +174,7 @@
   <script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-house.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-house-world.js' | asset_url }}" defer></script>
   {%- if template.name == 'index' -%}<script src="{{ 'melato-house-home.js' | asset_url }}" defer></script>{%- endif -%}
   {%- if template.name == 'collection' -%}
     <script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>
