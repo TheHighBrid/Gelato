@@ -130,6 +130,15 @@
       ],
       "settings": {}
     },
+    "concierge_strip_m79PqN": {
+      "type": "concierge-strip",
+      "name": "Concierge Strip",
+      "settings": {
+        "current_pillar": "post-purchase",
+        "contextual_copy": "<p>Fit, delivery and post-purchase guidance are available through Client Services.</p>",
+        "show_contextual": true
+      }
+    },
     "brand_story": {
       "type": "brand-story",
       "settings": {
@@ -201,6 +210,28 @@
         "klaviyo_email_marketing_sms_form_embed_block_CYb8J4"
       ],
       "settings": {}
+    },
+    "mll_Hmz47d": {
+      "type": "mll",
+      "disabled": true,
+      "name": "Melato Living Lookbook",
+      "settings": {}
+    },
+    "drop_signup_FMehUL": {
+      "type": "drop-signup",
+      "name": "Drop List Signup",
+      "settings": {
+        "eyebrow": "MELATO - EXCLUSIVE ACCESS",
+        "heading": "BE FIRST.JOIN THE DROP LIST.",
+        "subtext": "Early access. No spam. Drop notifications only.",
+        "placeholder": "YOUR EMAIL",
+        "btn_label": "NOTIFY ME",
+        "disclaimer": "No spam. Unsubscribe anytime.",
+        "show_divider_lines": true,
+        "bg_color": "#0a0a0a",
+        "text_color": "#FFFFFF",
+        "accent_color": "#8fff00"
+      }
     }
   },
   "order": [
@@ -209,8 +240,11 @@
     "ticker",
     "featured_collection",
     "177543262208e0278d",
+    "concierge_strip_m79PqN",
     "brand_story",
     "testimonials",
-    "1781310906e62d22b0"
+    "1781310906e62d22b0",
+    "mll_Hmz47d",
+    "drop_signup_FMehUL"
   ]
 }
