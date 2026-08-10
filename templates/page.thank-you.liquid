@@ -1,0 +1,29 @@
+{% comment %}
+  Melato — Post-Purchase Page Template
+  Template: page.thank-you
+  URL: /pages/thank-you
+{% endcomment %}
+
+{{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'melato-concierge.js' | asset_url }}" defer></script>
+
+<div class="melato-page">
+  <header class="melato-page-header">
+    <div class="melato-eyebrow">Melato Client Services</div>
+    <h1 class="melato-page-header__title">{{ page.title | default: 'Thank You' }}</h1>
+    <p class="melato-page-header__subtitle">Order updates and tracking are sent through the contact details used at checkout.</p>
+  </header>
+
+  <div class="melato-container">
+    <div class="melato-card">
+      {% if page.content != blank %}
+        <div class="rte melato-body">{{ page.content }}</div>
+      {% else %}
+        <p class="melato-body" style="color: var(--melato-black); font-weight: 500; margin-bottom: 8px;">Your selection is secured.</p>
+        <p class="melato-body-sm">Keep your order confirmation email for the authoritative order number, status and tracking information. For assistance, contact Melato support.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% section 'concierge-strip' %}
+</div>

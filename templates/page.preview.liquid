@@ -1,0 +1,29 @@
+{% comment %}
+  Melato — Private Preview Page Template
+  Template: page.preview
+  URL: /pages/preview
+{% endcomment %}
+
+{{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'melato-concierge.js' | asset_url }}" defer></script>
+
+<div class="melato-page">
+  <header class="melato-page-header">
+    <div class="melato-eyebrow">Melato Client Services</div>
+    <h1 class="melato-page-header__title">{{ page.title | default: 'Private Preview' }}</h1>
+    <p class="melato-page-header__subtitle">Early access, presented without public drop dates or placeholder inventory.</p>
+  </header>
+
+  <div class="melato-container">
+    <div class="melato-card">
+      {% if page.content != blank %}
+        <div class="rte melato-body">{{ page.content }}</div>
+      {% else %}
+        <p class="melato-body" style="color: var(--melato-black); font-weight: 500; margin-bottom: 8px;">Private Preview</p>
+        <p class="melato-body-sm">Eligible subscribers receive access details directly from Melato when a private preview is active.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  {% section 'concierge-strip' %}
+</div>

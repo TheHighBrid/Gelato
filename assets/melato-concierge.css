@@ -1,0 +1,117 @@
+/* ============================================================
+   Melato Concierge Strip — Shared Styles
+   ============================================================ */
+
+:root {
+  --melato-black: #0a0a0a;
+  --melato-white: #ffffff;
+  --melato-gray-100: #f5f5f5;
+  --melato-gray-200: #e5e5e5;
+  --melato-gray-300: #d4d4d4;
+  --melato-gray-400: #a3a3a3;
+  --melato-gray-500: #737373;
+  --melato-gray-600: #525252;
+  --melato-gray-700: #404040;
+  --melato-gray-800: #262626;
+  --melato-gray-900: #171717;
+  --melato-radius-sm: 6px;
+  --melato-radius-md: 10px;
+  --melato-radius-lg: 14px;
+  --melato-space-xs: 4px;
+  --melato-space-sm: 8px;
+  --melato-space-md: 12px;
+  --melato-space-lg: 16px;
+  --melato-space-xl: 20px;
+  --melato-space-2xl: 24px;
+  --melato-space-3xl: 32px;
+  --melato-space-4xl: 48px;
+  --melato-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.melato-page {
+  font-family: var(--font-body-family), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: var(--melato-black);
+  background: var(--melato-white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.melato-page * { box-sizing: border-box; }
+.melato-container { max-width: 1200px; margin: 0 auto; padding: 0 var(--melato-space-lg); }
+@media (min-width: 768px) { .melato-container { padding: 0 var(--melato-space-2xl); } }
+
+.melato-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--melato-gray-400); font-weight: 500; margin-bottom: var(--melato-space-sm); }
+.melato-h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 600; letter-spacing: -0.5px; line-height: 1.15; margin: 0 0 var(--melato-space-sm); }
+.melato-h2 { font-size: clamp(18px, 3vw, 24px); font-weight: 600; letter-spacing: -0.3px; line-height: 1.2; margin: 0 0 var(--melato-space-sm); }
+.melato-h3 { font-size: 15px; font-weight: 600; line-height: 1.3; margin: 0 0 var(--melato-space-xs); }
+.melato-body { font-size: 14px; line-height: 1.65; color: var(--melato-gray-600); margin: 0; }
+.melato-body-sm { font-size: 13px; line-height: 1.6; color: var(--melato-gray-500); }
+.melato-caption { font-size: 11px; color: var(--melato-gray-400); line-height: 1.5; }
+
+.melato-card { border: 1px solid var(--melato-gray-200); border-radius: var(--melato-radius-md); padding: var(--melato-space-lg); background: var(--melato-white); transition: var(--melato-transition); }
+.melato-card:hover { border-color: var(--melato-gray-300); }
+.melato-card-muted { background: var(--melato-gray-100); border: 1px solid var(--melato-gray-100); border-radius: var(--melato-radius-md); padding: var(--melato-space-lg); }
+
+.melato-grid-2 { display: grid; grid-template-columns: 1fr; gap: var(--melato-space-md); }
+@media (min-width: 768px) { .melato-grid-2 { grid-template-columns: 1fr 1fr; } }
+.melato-grid-sidebar { display: grid; grid-template-columns: 1fr; gap: var(--melato-space-xl); }
+@media (min-width: 900px) { .melato-grid-sidebar { grid-template-columns: 1fr 300px; } }
+
+.melato-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 3px 10px; border-radius: var(--melato-radius-sm); font-weight: 500; white-space: nowrap; }
+.melato-tag--blue { background: rgba(59,130,246,0.1); color: #2563eb; }
+.melato-tag--green { background: rgba(34,197,94,0.1); color: #16a34a; }
+.melato-tag--red { background: rgba(239,68,68,0.1); color: #dc2626; }
+.melato-tag--purple { background: rgba(168,85,247,0.1); color: #9333ea; }
+.melato-tag--gray { background: var(--melato-gray-100); color: var(--melato-gray-600); }
+
+.melato-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: var(--melato-radius-sm); border: 1px solid var(--melato-gray-200); background: var(--melato-white); color: var(--melato-black); font-size: 12px; font-weight: 500; font-family: inherit; cursor: pointer; text-decoration: none; transition: var(--melato-transition); }
+.melato-btn:hover { background: var(--melato-gray-100); border-color: var(--melato-gray-300); }
+.melato-btn--primary { background: var(--melato-black); color: var(--melato-white); border-color: var(--melato-black); }
+.melato-btn--primary:hover { background: var(--melato-gray-800); border-color: var(--melato-gray-800); }
+.melato-btn--small { padding: 5px 10px; font-size: 11px; }
+
+.melato-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.melato-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.melato-table th { text-align: left; padding: 8px 10px; font-weight: 600; color: var(--melato-gray-400); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--melato-gray-200); }
+.melato-table td { padding: 10px; border-bottom: 1px solid var(--melato-gray-100); color: var(--melato-gray-600); }
+.melato-table tr:last-child td { border-bottom: none; }
+
+.melato-input { width: 100%; padding: 8px 12px; border-radius: var(--melato-radius-sm); border: 1px solid var(--melato-gray-200); background: var(--melato-white); font-size: 13px; font-family: inherit; outline: none; transition: var(--melato-transition); }
+.melato-input:focus { border-color: var(--melato-black); }
+.melato-input::placeholder { color: var(--melato-gray-400); }
+.melato-icon { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: var(--melato-gray-100); flex-shrink: 0; }
+.melato-icon svg { width: 14px; height: 14px; }
+.melato-connector { border: 1px dashed var(--melato-gray-300); border-radius: var(--melato-radius-md); padding: var(--melato-space-md); background: var(--melato-gray-100); }
+.melato-section-header { display: flex; align-items: center; gap: 8px; margin-bottom: var(--melato-space-md); }
+
+.melato-mt-sm { margin-top: var(--melato-space-sm); }
+.melato-mt-md { margin-top: var(--melato-space-md); }
+.melato-mt-lg { margin-top: var(--melato-space-lg); }
+.melato-mt-xl { margin-top: var(--melato-space-xl); }
+.melato-mb-sm { margin-bottom: var(--melato-space-sm); }
+.melato-mb-md { margin-bottom: var(--melato-space-md); }
+.melato-mb-lg { margin-bottom: var(--melato-space-lg); }
+.melato-mb-xl { margin-bottom: var(--melato-space-xl); }
+
+.melato-page-header { text-align: center; padding: var(--melato-space-3xl) var(--melato-space-md) var(--melato-space-xl); }
+.melato-page-header__title { font-size: clamp(22px, 4vw, 32px); font-weight: 600; letter-spacing: -0.5px; margin: 0 0 var(--melato-space-xs); }
+.melato-page-header__subtitle { font-size: 14px; color: var(--melato-gray-500); max-width: 520px; margin: 0 auto; line-height: 1.6; }
+
+.melato-drop-card { border: 1px solid var(--melato-gray-200); border-radius: var(--melato-radius-md); overflow: hidden; transition: var(--melato-transition); }
+.melato-drop-card:hover { border-color: var(--melato-gray-300); transform: translateY(-2px); }
+.melato-drop-card__image { height: 160px; background: var(--melato-gray-100); display: flex; align-items: center; justify-content: center; color: var(--melato-gray-400); font-size: 12px; }
+.melato-drop-card__content { padding: var(--melato-space-md); }
+.melato-countdown { display: flex; gap: var(--melato-space-sm); align-items: center; }
+.melato-countdown__unit { text-align: center; min-width: 48px; }
+.melato-countdown__number { font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; line-height: 1; }
+.melato-countdown__label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--melato-gray-400); margin-top: 2px; }
+.melato-countdown__separator { font-size: 20px; font-weight: 300; color: var(--melato-gray-300); line-height: 1; }
+
+.melato-gate { text-align: center; padding: var(--melato-space-4xl) var(--melato-space-lg); max-width: 480px; margin: 0 auto; }
+.melato-gate__icon { width: 48px; height: 48px; border-radius: 50%; background: var(--melato-gray-100); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--melato-space-md); }
+.melato-gate__icon svg { width: 20px; height: 20px; color: var(--melato-gray-500); }
+
+@media (max-width: 767px) {
+  .melato-card, .melato-card-muted { padding: var(--melato-space-md); }
+  .melato-page-header { padding: var(--melato-space-xl) var(--melato-space-sm) var(--melato-space-lg); }
+  .melato-countdown__number { font-size: 20px; }
+}
