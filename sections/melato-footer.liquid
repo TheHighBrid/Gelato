@@ -1,105 +1,27 @@
-{% comment %}
-  MELATO HOUSE FOOTER
-  Phase 1 global shell.
-  Retains essential commerce, information and legal links while changing the
-  presentation into a bold Casablanca-influenced Melato masthead.
-  Compatibility contract: melato-footer__copyright remains the single visible copyright source.
-{% endcomment %}
-
-<footer
-  class="melato-footer melato-house-footer"
-  role="contentinfo"
-  style="--house-footer-bg:{{ section.settings.house_bg_color | default: '#9d4918' }};--house-footer-fg:{{ section.settings.house_text_color | default: '#f0e8d9' }}"
->
-  <div class="melato-house-footer__inner">
-    <div class="melato-house-footer__masthead">
-      <p class="melato-house-footer__wordmark" aria-label="Melato">MELATO</p>
-    </div>
-
-    {%- comment -%}
-      Compatibility-only media source. The House footer intentionally exposes one
-      visual brand signature (the giant MELATO masthead). Keeping the configured
-      logo as hidden, lazy responsive media preserves existing theme settings and
-      the repository media contract without rendering a duplicate logo.
-    {%- endcomment -%}
-    {% if section.settings.logo != blank %}
-      <div class="melato-house-footer__legacy-logo-contract" hidden aria-hidden="true">
-        {{ section.settings.logo
-          | image_url: width: 900
-          | image_tag:
-            loading: 'lazy',
-            widths: '220, 320, 460, 640, 900',
-            sizes: '1px',
-            alt: ''
-        }}
+{% comment %} MELATO Global Footer, Gelato current shell. {% endcomment %}
+<footer class="melato-footer melato-footer--{{ section.id }}" role="contentinfo">
+  <div class="melato-footer__wrap">
+    <div class="melato-footer__top">
+      <div class="melato-footer__brand">
+        <a href="{{ routes.root_url }}" class="melato-footer__logo-link" aria-label="{{ shop.name }} home">
+          {% if section.settings.logo != blank %}{{ section.settings.logo | image_url: width: 520 | image_tag: class: 'melato-footer__logo', loading: 'lazy', widths: '160, 220, 300, 380, 460, 520', sizes: '(max-width: 749px) 170px, 240px', alt: shop.name }}{% else %}<span class="melato-footer__wordmark">{{ shop.name }}</span>{% endif %}
+        </a>
+        <p class="melato-footer__tagline">{{ section.settings.tagline | default: 'Premium garments. Cut with intent.' }}</p>
+        {% if section.settings.instagram_url != blank %}<a href="{{ section.settings.instagram_url }}" class="melato-footer__social" target="_blank" rel="noopener noreferrer" aria-label="Melato Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg><span>Instagram</span></a>{% endif %}
       </div>
-    {% endif %}
-
-    <div class="melato-house-footer__grid">
-      <div class="melato-house-footer__intro">
-        <p class="melato-house-footer__tagline">{{ section.settings.tagline | default: 'The culture wears us.' }}</p>
-        <p class="melato-house-footer__note">Designer apparel, objects and visual chapters built around identity, movement and presence.</p>
-      </div>
-
-      <nav aria-label="Shop Melato">
-        <h2 class="melato-house-footer__heading">Shop</h2>
-        <ul class="melato-house-footer__links">
-          <li><a href="/collections/new-arrivals">New Arrivals</a></li>
-          <li><a href="/collections/men">Men</a></li>
-          <li><a href="/collections/womens-zellige-capsule">Women</a></li>
-          <li><a href="/collections/tracksuits">The Uniform</a></li>
-          <li><a href="/collections/accessories">Objects</a></li>
-          <li><a href="/collections/fragrance">Fragrance</a></li>
-        </ul>
-      </nav>
-
-      <nav aria-label="World of Melato">
-        <h2 class="melato-house-footer__heading">World of Melato</h2>
-        <ul class="melato-house-footer__links">
-          <li><a href="/collections/the-living-lookbook">Living Book</a></li>
-          <li><a href="/collections/drop-001-texture-form">Current Drop</a></li>
-          <li><a href="/collections/ovum-before-the-world">OVUM</a></li>
-          <li><a href="/pages/our-story">Our Story</a></li>
-          {% if section.settings.instagram_url != blank %}<li><a href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener noreferrer">Instagram</a></li>{% endif %}
-        </ul>
-      </nav>
-
-      <nav aria-label="Client services">
-        <h2 class="melato-house-footer__heading">Client Services</h2>
-        <ul class="melato-house-footer__links">
-          <li><a href="/pages/contact">Contact</a></li>
-          <li><a href="/pages/faq">FAQ</a></li>
-          <li><a href="/pages/size-guide">Fit Guidance</a></li>
-          <li><a href="/pages/shipping-returns">Delivery &amp; Returns</a></li>
-          <li><a href="/pages/preview">Private Preview</a></li>
-          <li><a href="/policies/refund-policy">Return Policy</a></li>
-          <li><a href="/policies/privacy-policy">Privacy</a></li>
-          <li><a href="/policies/terms-of-service">Terms</a></li>
-        </ul>
-      </nav>
+      <nav class="melato-footer__column" aria-label="Shop links"><h2>Shop</h2><ul><li><a href="{{ routes.all_products_collection_url }}">All Products</a></li><li><a href="/collections/new-arrivals">New Arrivals</a></li><li><a href="/collections/tracksuits">Tracksuits</a></li><li><a href="/collections/denim">Denim</a></li><li><a href="/collections/accessories">Accessories</a></li></ul></nav>
+      <nav class="melato-footer__column" aria-label="Information links"><h2>Info</h2><ul><li><a href="/pages/our-story">Our Story</a></li><li><a href="/pages/living-lookbook">Living Lookbook</a></li><li><a href="/pages/newsletter">Newsletter</a></li><li><a href="/pages/faq">FAQ</a></li><li><a href="/pages/contact">Contact</a></li></ul></nav>
+      <nav class="melato-footer__column" aria-label="Legal links"><h2>Legal</h2><ul><li><a href="/policies/privacy-policy">Privacy Policy</a></li><li><a href="/policies/terms-of-service">Terms of Service</a></li><li><a href="/policies/refund-policy">Returns & Refunds</a></li></ul></nav>
     </div>
-
-    <div class="melato-house-footer__bottom">
-      <span class="melato-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name }}</span>
-      <span>{{ localization.country.name }} / {{ localization.country.currency.iso_code }}</span>
-      <span>Culture-forward premium apparel / Comme never change.</span>
-    </div>
+    <div class="melato-footer__bottom"><p class="melato-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name | default: 'Melato' }}.</p><p class="melato-footer__microcopy">Culture-forward premium apparel</p></div>
   </div>
 </footer>
-
+<style>
+.cart-free-shipping,.cart-drawer__tax-note,.shopify-payment-button,.shopify-payment-button__button,[data-shopify="payment-button"],[data-testid="ShopifyPay-button"],.additional-checkout-buttons,.additional-checkout-button,.dynamic-checkout__content,.pdp-dynamic-checkout{display:none!important;visibility:hidden!important;width:0!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;pointer-events:none!important}
+.melato-footer--{{ section.id }}{--footer-bg:{{ section.settings.bg_color | default:'#111111' }};--footer-text:{{ section.settings.text_color | default:'#F5F1E8' }};--footer-muted:rgba(245,241,232,.68);--footer-soft:rgba(245,241,232,.48);--footer-line:rgba(245,241,232,.08);background:var(--footer-bg)!important;color:var(--footer-text)!important;border-top:1px solid var(--footer-line)}
+.melato-footer--{{ section.id }} *{box-sizing:border-box}.melato-footer--{{ section.id }} .melato-footer__wrap{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:clamp(56px,7vw,96px) 0 28px}.melato-footer--{{ section.id }} .melato-footer__top{display:grid!important;grid-template-columns:minmax(260px,1.7fr) minmax(140px,.8fr) minmax(150px,.8fr) minmax(150px,.8fr);gap:clamp(34px,6vw,86px);align-items:start}.melato-footer--{{ section.id }} .melato-footer__brand{display:flex;flex-direction:column;align-items:flex-start}.melato-footer--{{ section.id }} .melato-footer__logo-link{display:inline-flex;align-items:center;color:var(--footer-text)!important;text-decoration:none}.melato-footer--{{ section.id }} .melato-footer__logo{width:{{ section.settings.logo_width | default:240 }}px!important;max-width:min({{ section.settings.logo_width | default:240 }}px,72vw)!important;height:auto!important;display:block!important}.melato-footer--{{ section.id }} .melato-footer__wordmark{color:var(--footer-text)!important;font-size:clamp(30px,4vw,52px);line-height:.9;letter-spacing:-.07em;text-transform:uppercase;font-weight:900}.melato-footer--{{ section.id }} .melato-footer__tagline{margin:42px 0 24px;max-width:260px;color:var(--footer-muted)!important;font-size:14px;line-height:1.65}.melato-footer--{{ section.id }} .melato-footer__social{display:inline-flex;align-items:center;gap:10px;color:var(--footer-soft)!important;text-decoration:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase}.melato-footer--{{ section.id }} .melato-footer__social svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}.melato-footer--{{ section.id }} .melato-footer__column h2{margin:0 0 24px;color:var(--footer-text)!important;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}.melato-footer--{{ section.id }} .melato-footer__column ul{display:grid!important;gap:16px;list-style:none!important;margin:0!important;padding:0!important}.melato-footer--{{ section.id }} .melato-footer__column a{color:var(--footer-muted)!important;text-decoration:none;font-size:14px;line-height:1.2}.melato-footer--{{ section.id }} .melato-footer__bottom{margin-top:clamp(56px,7vw,86px);padding-top:28px;border-top:1px solid var(--footer-line);display:grid!important;grid-template-columns:1fr auto;align-items:center;gap:24px}.melato-footer--{{ section.id }} .melato-footer__copyright,.melato-footer--{{ section.id }} .melato-footer__microcopy{margin:0;color:var(--footer-muted)!important;font-size:12px;line-height:1.5}.melato-footer--{{ section.id }} .melato-footer__microcopy{text-transform:uppercase;letter-spacing:.1em;color:var(--footer-soft)!important}
+@media(max-width:900px){.melato-footer--{{ section.id }} .melato-footer__top{grid-template-columns:1fr 1fr 1fr;gap:42px 28px}.melato-footer--{{ section.id }} .melato-footer__brand{grid-column:1/-1}}@media(max-width:640px){.melato-footer--{{ section.id }} .melato-footer__wrap{width:min(100% - 28px,1180px);padding-top:46px}.melato-footer--{{ section.id }} .melato-footer__top{grid-template-columns:1fr;gap:34px}.melato-footer--{{ section.id }} .melato-footer__bottom{grid-template-columns:1fr}.melato-footer--{{ section.id }} .melato-footer__logo{width:min({{ section.settings.logo_width | default:240 }}px,62vw)!important}}
+</style>
 {% schema %}
-{
-  "name": "Melato House Footer",
-  "limit": 1,
-  "settings": [
-    { "type": "image_picker", "id": "logo", "label": "Legacy footer logo (not displayed)" },
-    { "type": "range", "id": "logo_width", "label": "Legacy logo width", "min": 120, "max": 360, "step": 4, "unit": "px", "default": 240 },
-    { "type": "textarea", "id": "tagline", "label": "Tagline", "default": "The culture wears us." },
-    { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
-    { "type": "header", "content": "House colors" },
-    { "type": "color", "id": "house_bg_color", "label": "Footer background", "default": "#9d4918" },
-    { "type": "color", "id": "house_text_color", "label": "Footer text", "default": "#f0e8d9" }
-  ],
-  "presets": [{ "name": "Melato House Footer" }]
-}
+{"name":"Melato footer","limit":1,"settings":[{"type":"image_picker","id":"logo","label":"Footer logo"},{"type":"range","id":"logo_width","label":"Logo width","min":120,"max":320,"step":4,"unit":"px","default":240},{"type":"textarea","id":"tagline","label":"Tagline","default":"Premium garments. Cut with intent."},{"type":"url","id":"instagram_url","label":"Instagram URL"},{"type":"header","content":"Colors"},{"type":"color","id":"bg_color","label":"Footer background","default":"#111111"},{"type":"color","id":"text_color","label":"Footer text","default":"#F5F1E8"}],"presets":[{"name":"Melato footer"}]}
 {% endschema %}
