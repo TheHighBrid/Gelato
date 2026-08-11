@@ -1,0 +1,447 @@
+/*
+ * MELATO MOBILE PDP HOTFIX / 2026-08-11
+ * Screenshot-driven fixes for the post-redesign mobile product experience.
+ * Loaded after melato-house-release-fixes.css so it can neutralize the legacy
+ * inline PDP skin without changing product, variant, cart or metafield logic.
+ */
+
+@media (max-width: 749px), ((hover: none) and (pointer: coarse) and (max-width: 1100px)) {
+  /* ------------------------------------------------------------------------
+     Compact product header. On PDP mobile it scrolls with the page instead of
+     sitting over product imagery, and only MENU / logo / BAG remain visible.
+     ------------------------------------------------------------------------ */
+  body.template-product .melato-house-header {
+    position: relative !important;
+    top: auto !important;
+    min-height: 54px !important;
+    background: #f0e8d9 !important;
+    color: #090909 !important;
+    border-bottom: 1px solid rgba(9, 9, 9, .14) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body.template-product .melato-house-header__bar {
+    min-height: 54px !important;
+    grid-template-columns: 1fr auto 1fr !important;
+    gap: 8px !important;
+    padding: 0 14px !important;
+  }
+
+  body.template-product .melato-house-header__logo {
+    width: auto !important;
+    max-width: 118px !important;
+  }
+
+  body.template-product .melato-house-header__logo-image,
+  body.template-product .melato-house-header__logo-image--house-transparent {
+    width: 118px !important;
+    max-width: 118px !important;
+    max-height: 26px !important;
+    height: auto !important;
+    filter: brightness(0) !important;
+  }
+
+  body.template-product .melato-house-header__search-button,
+  body.template-product .melato-house-header__account {
+    display: none !important;
+  }
+
+  body.template-product .melato-house-header__left,
+  body.template-product .melato-house-header__right {
+    min-width: 0 !important;
+  }
+
+  body.template-product .melato-house-header__right {
+    gap: 0 !important;
+  }
+
+  body.template-product .melato-house-header__word,
+  body.template-product .melato-house-header .mxh__bag {
+    min-height: 44px !important;
+    padding: 0 !important;
+    font-size: 9.5px !important;
+    letter-spacing: .09em !important;
+    white-space: nowrap !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     White House PDP. The previous dark canvas made the product page feel like
+     a separate site and exposed black dead bands around product photography.
+     ------------------------------------------------------------------------ */
+  body.template-product {
+    --house-pdp-canvas: #ffffff !important;
+    --house-pdp-surface: #ffffff !important;
+    --house-pdp-surface-soft: #f7f4ed !important;
+    --house-pdp-ink: #090909 !important;
+    --house-pdp-muted: rgba(9, 9, 9, .62) !important;
+    --house-pdp-faint: rgba(9, 9, 9, .42) !important;
+    --house-pdp-line: rgba(9, 9, 9, .14) !important;
+    --house-pdp-line-strong: rgba(9, 9, 9, .30) !important;
+    background: #ffffff !important;
+    color: #090909 !important;
+  }
+
+  body.template-product .main-content,
+  body.template-product .melato-pdp-rebuild,
+  body.template-product .melato-pdp-rebuild .pdp-shell,
+  body.template-product .melato-pdp-rebuild .pdp-hero,
+  body.template-product .melato-pdp-rebuild .pdp-content-stack {
+    background: #ffffff !important;
+    color: #090909 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild {
+    padding: 0 0 56px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-media {
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    place-items: initial !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-main-image {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    background: #ffffff !important;
+    border-radius: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-thumbs {
+    margin-top: 0 !important;
+    gap: 1px !important;
+    background: rgba(9, 9, 9, .16) !important;
+    border-top: 1px solid rgba(9, 9, 9, .16) !important;
+    border-bottom: 1px solid rgba(9, 9, 9, .16) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-thumb {
+    padding: 0 !important;
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-thumb-image {
+    display: block !important;
+    width: 100% !important;
+    aspect-ratio: 1 / 1 !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     Purchase rail. Square, quiet and readable on white.
+     ------------------------------------------------------------------------ */
+  body.template-product .melato-pdp-rebuild .pdp-buybox,
+  body.template-product .melato-pdp-rebuild .pdp-story-tech,
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid,
+  body.template-product .melato-pdp-rebuild .pdp-set,
+  body.template-product .melato-pdp-rebuild .pdp-editorial {
+    width: calc(100% - 32px) !important;
+    background: #ffffff !important;
+    color: #090909 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-buybox {
+    padding: 30px 0 26px !important;
+    border-top: 0 !important;
+    border-bottom: 1px solid var(--house-pdp-line) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-title,
+  body.template-product .melato-pdp-rebuild .pdp-price,
+  body.template-product .melato-pdp-rebuild .pdp-compare,
+  body.template-product .melato-pdp-rebuild .pdp-section-head h2,
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail summary,
+  body.template-product .melato-pdp-rebuild .pdp-spec summary {
+    color: #090909 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-eyebrow,
+  body.template-product .melato-pdp-rebuild .pdp-kicker,
+  body.template-product .melato-pdp-rebuild .pdp-option legend,
+  body.template-product .melato-pdp-rebuild .size-guide-trigger {
+    color: rgba(9, 9, 9, .62) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-thesis,
+  body.template-product .melato-pdp-rebuild .pdp-rte,
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail__content {
+    color: rgba(9, 9, 9, .64) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-option {
+    margin-bottom: 18px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-option-grid {
+    gap: 6px !important;
+  }
+
+  /* The legacy inline PDP styles rounded the inner span, so overriding only the
+     label was insufficient. Neutralize both layers. */
+  body.template-product .melato-pdp-rebuild .pdp-choice,
+  body.template-product .melato-pdp-rebuild .pdp-choice.is-selected {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: #090909 !important;
+    line-height: normal !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-choice span {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 82px !important;
+    min-height: 48px !important;
+    padding: 0 15px !important;
+    border: 1px solid rgba(9, 9, 9, .28) !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    color: #090909 !important;
+    box-shadow: none !important;
+    font-family: var(--melato-ui) !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-choice.is-selected span {
+    border-color: #090909 !important;
+    background: #090909 !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-atc-row {
+    margin-top: 0 !important;
+    gap: 8px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-qty {
+    border: 1px solid rgba(9, 9, 9, .26) !important;
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    color: #090909 !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-atc {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* No floating purchase slab over editorial, recommendations or footer. */
+  body.template-product .pdp-sticky-atc {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     Product information accordions.
+     ------------------------------------------------------------------------ */
+  body.template-product .melato-pdp-rebuild .pdp-story-tech,
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail,
+  body.template-product .melato-pdp-rebuild .pdp-spec,
+  body.template-product .melato-pdp-rebuild .pdp-panel {
+    border-radius: 0 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail,
+  body.template-product .melato-pdp-rebuild .pdp-spec {
+    border: 0 !important;
+    border-bottom: 1px solid var(--house-pdp-line) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail summary,
+  body.template-product .melato-pdp-rebuild .pdp-spec summary {
+    padding: 17px 28px 17px 0 !important;
+    font-family: var(--melato-ui) !important;
+    font-size: 10.5px !important;
+    font-weight: 500 !important;
+    letter-spacing: .12em !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail summary::after,
+  body.template-product .melato-pdp-rebuild .pdp-spec summary::after {
+    color: rgba(9, 9, 9, .62) !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     Editorial detail board. Product thumbnails already show full catalogue
+     views, so this lower module deliberately crops the same high-resolution
+     media tighter to function as detail/close-up photography.
+     ------------------------------------------------------------------------ */
+  body.template-product .melato-pdp-rebuild .pdp-editorial {
+    padding-top: 28px !important;
+    border-top: 1px solid var(--house-pdp-line) !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 2px !important;
+    background: #ffffff !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-card {
+    position: relative !important;
+    aspect-ratio: 1 / 1 !important;
+    overflow: hidden !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #f7f4ed !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-image {
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: auto !important;
+    object-fit: cover !important;
+    border-radius: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-card:nth-child(1) .pdp-editorial-image {
+    transform: scale(1.28) !important;
+    object-position: 50% 34% !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-card:nth-child(2) .pdp-editorial-image {
+    transform: scale(1.34) !important;
+    object-position: 50% 24% !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-card:nth-child(3) .pdp-editorial-image {
+    transform: scale(1.18) !important;
+    object-position: 50% 48% !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-editorial-card:nth-child(4) .pdp-editorial-image {
+    transform: scale(1.22) !important;
+    object-position: 50% 40% !important;
+  }
+
+  /* ------------------------------------------------------------------------
+     Most Wanted: same House typography and white surface as the rest of PDP.
+     ------------------------------------------------------------------------ */
+  body.template-product .m-recs {
+    background: #ffffff !important;
+    padding: 34px 16px 64px !important;
+  }
+
+  body.template-product .m-recs .m-recs__inner {
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .m-recs .m-recs__header {
+    max-width: none !important;
+    margin-bottom: 20px !important;
+  }
+
+  body.template-product .m-recs .m-recs__eyebrow {
+    margin: 0 0 8px !important;
+    color: rgba(9, 9, 9, .56) !important;
+    font-family: var(--melato-mono) !important;
+    font-size: 9px !important;
+    font-weight: 500 !important;
+    letter-spacing: .18em !important;
+  }
+
+  body.template-product .m-recs .m-recs__heading {
+    margin: 0 0 8px !important;
+    color: #090909 !important;
+    font-family: var(--melato-ui) !important;
+    font-size: clamp(26px, 8vw, 36px) !important;
+    font-weight: 500 !important;
+    line-height: .98 !important;
+    letter-spacing: -.035em !important;
+    text-transform: uppercase !important;
+  }
+
+  body.template-product .m-recs .m-recs__intro {
+    color: rgba(9, 9, 9, .62) !important;
+    font-family: var(--melato-ui) !important;
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+  }
+
+  body.template-product .m-recs .m-recs__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 2px !important;
+  }
+
+  body.template-product .m-recs .m-recs__card {
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  body.template-product .m-recs .m-recs__card-image-wrap {
+    background: #f7f4ed !important;
+  }
+
+  body.template-product .m-recs .m-recs__type-badge {
+    display: none !important;
+  }
+
+  body.template-product .m-recs .m-recs__card-meta {
+    padding: 10px 2px 18px !important;
+  }
+
+  body.template-product .m-recs .m-recs__card-title,
+  body.template-product .m-recs .m-recs__card-price {
+    color: #090909 !important;
+    font-family: var(--melato-ui) !important;
+    font-weight: 500 !important;
+  }
+
+  body.template-product .m-recs .m-recs__card-title {
+    margin-bottom: 5px !important;
+    font-size: 10px !important;
+    letter-spacing: .02em !important;
+  }
+
+  body.template-product .m-recs .m-recs__card-price {
+    font-size: 10px !important;
+    color: rgba(9, 9, 9, .62) !important;
+  }
+
+  /* Footer gets one brand mark: the giant MELATO masthead. */
+  .melato-house-footer__logo {
+    display: none !important;
+  }
+
+  .melato-house-footer__masthead {
+    padding-bottom: 36px !important;
+  }
+}
