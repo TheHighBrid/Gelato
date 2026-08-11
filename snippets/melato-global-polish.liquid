@@ -10,5 +10,10 @@
   it runs after legacy theme CSS and merchant custom CSS. It only isolates
   House surfaces from those older selectors; it does not restore the retired
   global CTA mutation. Copyright remains owned by melato-footer.liquid.
+
+  The mobile PDP hotfix is loaded last because the consolidated PDP still
+  contains legacy inline visual CSS. This final layer neutralizes that visual
+  skin without changing product, variant, cart, metafield or gallery logic.
 {%- endcomment -%}
 {{ 'melato-house-release-fixes.css' | asset_url | stylesheet_tag }}
+{{ 'melato-mobile-pdp-hotfix.css' | asset_url | stylesheet_tag }}
