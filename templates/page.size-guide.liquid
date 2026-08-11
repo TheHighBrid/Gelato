@@ -4,6 +4,11 @@
   assign service_content = page.content
   assign service_content = service_content | replace: ' — include your measurements and we will confirm your size within 24 hours.', ' — include the product, your usual size, height, measurements, and preferred fit.'
 -%}
+<style>
+  /* The page content historically carried its own hero H1. The template now owns
+     the single readable page heading, so suppress the duplicate content heading. */
+  .melato-page .melato-container .rte h1:first-of-type{display:none!important}
+</style>
 <div class="melato-page">
   <header class="melato-page-header"><div class="melato-eyebrow">Melato Client Services</div><h1 class="melato-page-header__title">{{ page.title | default: 'Fit Guide' }}</h1><p class="melato-page-header__subtitle">Product-specific measurements, fit notes and personal sizing support.</p></header>
   <div class="melato-container">{% if service_content != blank %}<div class="rte">{{ service_content }}</div>{% else %}<div class="melato-card"><h2 class="melato-h3">Fit is product-specific.</h2><p class="melato-body-sm">Use the measurements and fit notes shown for the piece you are considering. For personal guidance, contact Melato Client Care.</p></div>{% endif %}</div>
