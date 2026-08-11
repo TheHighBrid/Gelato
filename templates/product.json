@@ -9,64 +9,11 @@
  */
 {
   "sections": {
-    "main_product": {
-      "type": "melato-product-page-rebuild",
-      "settings": {
-        "eyebrow": "Product focus",
-        "bg": "#080808",
-        "surface": "#111214",
-        "surface_2": "#171717",
-        "text": "#f5f1e8",
-        "muted": "#9b968d",
-        "accent": "#9e1824",
-        "accent_2": "#d3a74a"
-      }
-    },
-    "complete_uniform": {
-      "type": "melato-complete-uniform",
-      "settings": {}
-    },
-    "safe_accent": {
-      "type": "melato-product-safe-accent",
-      "settings": {}
-    },
-    "tag_recommendations": {
-      "type": "tag-recommendations",
-      "settings": {
-        "eyebrow": "FOR YOU",
-        "heading": "MOST WANTED",
-        "max_products": 4
-      }
-    },
-    "1781310708d3669657": {
-      "type": "apps",
-      "blocks": {
-        "judge_me_reviews_all_reviews_text_yYBqci": {
-          "type": "shopify://apps/judge-me-reviews/blocks/all_reviews_text/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "settings": {}
-        },
-        "judge_me_reviews_verified_badge_CjNGiH": {
-          "type": "shopify://apps/judge-me-reviews/blocks/verified_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "judge_me_reviews_all_reviews_text_yYBqci",
-        "judge_me_reviews_verified_badge_CjNGiH"
-      ],
-      "settings": {}
-    },
-    "178131075496c98f64": {
-      "type": "apps",
-      "settings": {}
-    }
+    "main_product":{"type":"melato-product-page-rebuild","settings":{"eyebrow":"Product focus","bg":"#080808","surface":"#111214","surface_2":"#171717","text":"#f5f1e8","muted":"#9b968d","accent":"#9e1824","accent_2":"#d3a74a"}},
+    "safe_accent":{"type":"melato-product-safe-accent","settings":{}},
+    "tag_recommendations":{"type":"tag-recommendations","settings":{"eyebrow":"FOR YOU","heading":"MOST WANTED","max_products":4}},
+    "1781310708d3669657":{"type":"apps","blocks":{"judge_me_reviews_all_reviews_text_yYBqci":{"type":"shopify://apps/judge-me-reviews/blocks/all_reviews_text/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{}},"judge_me_reviews_verified_badge_CjNGiH":{"type":"shopify://apps/judge-me-reviews/blocks/verified_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","settings":{}}},"block_order":["judge_me_reviews_all_reviews_text_yYBqci","judge_me_reviews_verified_badge_CjNGiH"],"settings":{}},
+    "178131075496c98f64":{"type":"apps","settings":{}}
   },
-  "order": [
-    "main_product",
-    "complete_uniform",
-    "safe_accent",
-    "tag_recommendations",
-    "1781310708d3669657",
-    "178131075496c98f64"
-  ]
+  "order":["main_product","safe_accent","tag_recommendations","1781310708d3669657","178131075496c98f64"]
 }

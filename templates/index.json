@@ -1,7 +1,6 @@
 /*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
- * Melato House homepage Phase 7 / 2026-08-09.
  *
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
@@ -10,49 +9,17 @@
  */
 {
   "sections": {
-    "melato_house_home_2026": {
-      "type": "melato-home-house",
-      "settings": {
-        "hero_eyebrow": "MELATO / CURRENT",
-        "hero_title": "THE CULTURE WEARS US",
-        "hero_copy": "Tailored for movement, cut with intent.",
-        "hero_cta": "Discover",
-        "current_collection": "ovum-before-the-world",
-        "current_title": "OVUM: BEFORE THE WORLD",
-        "current_copy": "A focused study in silhouette, material and identity. Built as a chapter, not a trend cycle.",
-        "new_collection": "new-arrivals",
-        "men_collection": "men",
-        "women_collection": "womens-zellige-capsule",
-        "uniform_collection": "tracksuits",
-        "living_collection": "the-living-lookbook",
-        "living_copy": "Campaigns, people, movement and the world surrounding the clothes.",
-        "objects_collection": "accessories",
-        "object_copy": "One object pulled forward from the current rotation.",
-        "statement": "THE CULTURE WEARS US",
-        "statement_copy": "Melato is built around presence, identity, movement and cultural self-definition.",
-        "newsletter_heading": "Letters from Melato",
-        "newsletter_copy": "New work, private releases and stories from the world around the clothes."
-      }
-    },
-    "melato_house_newsletter_2026": {
-      "type": "newsletter",
-      "settings": {
-        "eyebrow": "Private access",
-        "heading": "Letters from Melato",
-        "subheading": "New work, private releases, restock notes and stories from the world around the clothes.",
-        "placeholder": "Email address",
-        "button_label": "Join the list",
-        "note": "Sent with restraint. Unsubscribe whenever you choose.",
-        "success_message": "You are on the list. Watch your inbox for the next chapter.",
-        "background_color": "#080808",
-        "text_color": "#f5f1e8",
-        "muted_color": "#9b968d",
-        "accent_color": "#9d4918"
-      }
-    }
+    "melato_conversion_2026": {"type":"melato-home-conversion","settings":{"eyebrow":"Identity-led uniform pieces","heading":"THE CULTURE WEARS US","copy":"Tailored for movement, cut with intent.","featured_collection":"new-arrivals"}},
+    "video_cYyTzg":{"type":"video","disabled":true,"name":"Video","settings":{"heading":"","center_heading":true,"video_url":"","autoplay":false,"full_width":false,"aspect_ratio":"16/9"}},
+    "ticker":{"type":"ticker","blocks":{"item_dmLUW3":{"type":"item","settings":{"text":"WORLDWIDE DISPATCH"}},"item_D8dHyc":{"type":"item","settings":{"text":"EXPEDITED SHIPPING"}},"item_n9Bk4a":{"type":"item","settings":{"text":"50 days return on eligible orders"}},"item1":{"type":"item","settings":{"text":"THE CULTURE WEARS US"}},"item4":{"type":"item","settings":{"text":"CUT WITH INTENT"}},"item_XML4ph":{"type":"item","settings":{"text":"comme never change"}},"item_nAzWHc":{"type":"item","settings":{"text":"complimentary delivery on all orders"}}},"block_order":["item_dmLUW3","item_D8dHyc","item_n9Bk4a","item1","item4","item_XML4ph","item_nAzWHc"],"settings":{"accessible_label":"Melato announcements","speed":80,"separator":"MELATO","direction":"left","padding":8,"background_color":"#f5f1e8","text_color":"#ffc475","border_color":"#2a2a2a"}},
+    "featured_collection":{"type":"featured-collection","settings":{"eyebrow":"Core collection","title":"THE UNIFORM","collection":"frontpage","products_to_show":12,"columns_desktop":4,"columns_mobile":2,"show_view_all":true,"view_all_label":"View the Uniform"}},
+    "177543262208e0278d":{"type":"_blocks","blocks":{"ai_gen_block_264325d_kWF34h":{"type":"ai_gen_block_264325d","disabled":true,"settings":{"image":"shopify://shop_images/Whisk_1e59bd99feb93f1be6148ff4ae809332dr.png","aspect_ratio":"natural","image_fit":"cover","desktop_width_percent":100},"blocks":{}}},"block_order":["ai_gen_block_264325d_kWF34h"],"settings":{}},
+    "concierge_strip_m79PqN":{"type":"concierge-strip","name":"Concierge Strip","settings":{"current_pillar":"post-purchase","contextual_copy":"<p>Fit, delivery and post-purchase guidance are available through Client Services.</p>","show_contextual":true}},
+    "brand_story":{"type":"brand-story","settings":{"eyebrow":"The Melato Standard","heading":"THE\nCULTURE\nWEARS US","body":"Melato is built around presence, identity, movement, and cultural self-definition. Everyday pieces designed to carry taste, intent, and character.","cta_label":"Our Story","cta_url":"/pages/our-story","image_position":"left"}},
+    "testimonials":{"type":"testimonials","blocks":{"t1":{"type":"testimonial","settings":{"rating":5,"text":"Best quality tracksuit I've worn in a long time. The fabric, the fit, the colourway... Everything is perfect.","author":"Roxy C."}},"t2":{"type":"testimonial","settings":{"rating":5,"text":"The tracksuit is A1, premium quality. love the products and the people behind them. I was here on DAY 1 and DROP 000 and I will always be here 🧡","author":"KENZA A."}},"testimonial_GwnGA6":{"type":"testimonial","settings":{"rating":4,"text":"Last time it sold out quick. I couldn’t cop more.","author":"DIJA S."}},"t3":{"type":"testimonial","settings":{"rating":5,"text":"Top tier threads for the yutes. Backed by the mandem. YN Fully certi and heavy stamped.","author":"NAGA"}}},"block_order":["t1","t2","testimonial_GwnGA6","t3"],"disabled":true,"settings":{"heading":"THEY SPEAK\nFOR US"}},
+    "1781310906e62d22b0":{"type":"apps","blocks":{"klaviyo_email_marketing_sms_form_embed_block_CYb8J4":{"type":"shopify://apps/klaviyo-email-marketing-sms/blocks/form-embed-block/2632fe16-c075-4321-a88b-50b567f42507","settings":{"formId":""}}},"block_order":["klaviyo_email_marketing_sms_form_embed_block_CYb8J4"],"settings":{}},
+    "mll_Hmz47d":{"type":"mll","disabled":true,"name":"Melato Living Lookbook","settings":{}},
+    "drop_signup_FMehUL":{"type":"drop-signup","name":"Drop List Signup","settings":{"eyebrow":"MELATO - EXCLUSIVE ACCESS","heading":"BE FIRST.JOIN THE DROP LIST.","subtext":"Early access. No spam. Drop notifications only.","placeholder":"YOUR EMAIL","btn_label":"NOTIFY ME","disclaimer":"No spam. Unsubscribe anytime.","show_divider_lines":true,"bg_color":"#0a0a0a","text_color":"#ffffff","accent_color":"#8fff00"}}
   },
-  "order": [
-    "melato_house_home_2026",
-    "melato_house_newsletter_2026"
-  ]
+  "order":["melato_conversion_2026","video_cYyTzg","ticker","featured_collection","177543262208e0278d","concierge_strip_m79PqN","brand_story","testimonials","1781310906e62d22b0","mll_Hmz47d","drop_signup_FMehUL"]
 }

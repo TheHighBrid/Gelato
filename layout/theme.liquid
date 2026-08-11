@@ -97,13 +97,6 @@
   {{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}
   {{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}
   {{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}
-  {{ 'melato-house.css' | asset_url | stylesheet_tag }}
-  {{ 'melato-house-pdp.css' | asset_url | stylesheet_tag }}
-  {%- if template.name == 'collection' -%}{{ 'melato-house-collection.css' | asset_url | stylesheet_tag }}{%- endif -%}
-  {%- if template.name == 'index' -%}{{ 'melato-house-home.css' | asset_url | stylesheet_tag }}{%- endif -%}
-  {{ 'melato-house-world.css' | asset_url | stylesheet_tag }}
-  {{ 'melato-house-utility.css' | asset_url | stylesheet_tag }}
-  {{ 'melato-house-service.css' | asset_url | stylesheet_tag }}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}
   {% render 'melato-global-polish' %}
@@ -135,10 +128,7 @@
 
   {%- if melato_filter_main_output -%}
     {%- capture melato_main_output -%}{{ content_for_layout }}{%- endcapture -%}
-    <main id="main-content" class="main-content" role="main" tabindex="-1">
-      {%- if request.path contains '/policies/refund-policy' -%}{% render 'melato-services-rail' %}{%- endif -%}
-      {% render 'melato-rendered-output-filters', html: melato_main_output, context: 'main' %}
-    </main>
+    <main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html: melato_main_output, context: 'main' %}</main>
   {%- else -%}
     <main id="main-content" class="main-content" role="main" tabindex="-1">{{ content_for_layout }}</main>
   {%- endif -%}
@@ -171,7 +161,6 @@
     window.DRIP={shop:{currency:{{ shop.currency | json }},moneyFormat:{{ shop.money_format | json }},locale:{{ request.locale.iso_code | json }},freeShippingThreshold:0,routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},search:{{ routes.search_url | json }},collections:{{ routes.collections_url | json }}}},cart:{{ cart | json }},customer:{{ customer | json }},strings:{addedToCart:{{ 'cart.added' | t | json }},cartEmpty:{{ 'cart.empty' | t | json }},soldOut:{{ 'products.sold_out' | t | json }},unavailable:{{ 'products.unavailable' | t | json }},addToCart:{{ 'products.add_to_cart' | t | json }},outOfStock:{{ 'products.out_of_stock' | t | json }}}};
   </script>
   <script src="{{ 'theme.js' | asset_url }}" defer></script>
-  <script src="{{ 'melato-house-legacy-bridge.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-hero-video.js' | asset_url }}" defer></script>
   <script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script>
@@ -179,15 +168,10 @@
   <script src="{{ 'melato-pdp-polish.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>
-  <script src="{{ 'melato-house.js' | asset_url }}" defer></script>
-  <script src="{{ 'melato-house-world.js' | asset_url }}" defer></script>
-  {%- if template.name == 'index' -%}<script src="{{ 'melato-house-home.js' | asset_url }}" defer></script>{%- endif -%}
-  {%- if template.name == 'collection' -%}
-    <script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>
-    <script src="{{ 'melato-house-collection.js' | asset_url }}" defer></script>
-  {%- endif -%}
+  {%- if template.name == 'collection' -%}<script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>{%- endif -%}
   {% render 'melato-living-lookbook-loader' %}
   {% render 'melato-back-in-stock-loader' %}
   {% render 'melato-product-color-engine' %}
+  {% render 'melato-smart-cta' %}
 </body>
 </html>
