@@ -1,0 +1,250 @@
+{% comment %}
+  Native Complete the Uniform bundle action.
+  Keeps the existing PDP as the source of truth for variant selection and adds
+  the matching product in the same cart request when a compatible size exists.
+{% endcomment %}
+
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign matching_product = product.metafields.custom.matching_product.value | default: product.metafields.custom.set_partner.value
+  assign current_colorway = blank
+  assign current_type = blank
+  assign complement_type = blank
+  assign complement_label = blank
+
+  for tag in product.tags
+    assign tag_clean = tag | downcase | strip
+    if tag_clean contains 'colorway_'
+      assign current_colorway = tag_clean
+    endif
+    if tag_clean == 'type_jacket' or tag_clean == 'type_pants'
+      assign current_type = tag_clean
+    endif
+  endfor
+
+  if current_type == 'type_jacket'
+    assign complement_type = 'type_pants'
+    assign complement_label = 'Matching pants'
+  elsif current_type == 'type_pants'
+    assign complement_type = 'type_jacket'
+    assign complement_label = 'Matching jacket'
+  endif
+
+  if matching_product == blank and current_colorway != blank and complement_type != blank
+    for candidate in collections.all.products
+      if candidate.id != product.id and matching_product == blank
+        assign candidate_has_colorway = false
+        assign candidate_has_type = false
+        for candidate_tag in candidate.tags
+          assign candidate_tag_clean = candidate_tag | downcase | strip
+          if candidate_tag_clean == current_colorway
+            assign candidate_has_colorway = true
+          endif
+          if candidate_tag_clean == complement_type
+            assign candidate_has_type = true
+          endif
+        endfor
+        if candidate_has_colorway and candidate_has_type
+          assign matching_product = candidate
+        endif
+      endif
+    endfor
+  endif
+
+  assign current_size_position = -1
+  for option_name in product.options
+    assign option_name_down = option_name | downcase
+    if option_name_down == 'size' or option_name_down == 'taille'
+      assign current_size_position = forloop.index0
+    endif
+  endfor
+
+  assign matching_size_position = -1
+  if matching_product != blank
+    for option_name in matching_product.options
+      assign option_name_down = option_name | downcase
+      if option_name_down == 'size' or option_name_down == 'taille'
+        assign matching_size_position = forloop.index0
+      endif
+    endfor
+  endif
+-%}
+
+{%- if matching_product != blank -%}
+  {%- assign matching_variant = matching_product.selected_or_first_available_variant -%}
+  <section
+    id="MelatoCompleteUniform-{{ section.id }}"
+    class="melato-complete-uniform"
+    data-complete-uniform
+    data-current-size-position="{{ current_size_position }}"
+    data-matching-size-position="{{ matching_size_position }}"
+    aria-labelledby="CompleteUniformTitle-{{ section.id }}"
+  >
+    <div class="melato-complete-uniform__shell">
+      <header class="melato-complete-uniform__head">
+        <p class="melato-complete-uniform__eyebrow">Complete the Uniform</p>
+        <h2 id="CompleteUniformTitle-{{ section.id }}">Two pieces. One movement.</h2>
+        <p>We match the selected size automatically when the partner piece carries the same size system.</p>
+      </header>
+
+      <div class="melato-complete-uniform__grid">
+        <article class="melato-complete-uniform__piece">
+          <span class="melato-complete-uniform__label">Selected piece</span>
+          {%- if product.featured_image -%}
+            {{ product.featured_image | image_url: width: 900 | image_tag: class: 'melato-complete-uniform__image', loading: 'lazy', widths: '360, 600, 900', sizes: '(min-width: 900px) 40vw, 50vw', alt: product.title }}
+          {%- endif -%}
+          <h3>{{ product.title }}</h3>
+          <p>{{ current_variant.price | money }}</p>
+        </article>
+
+        <article class="melato-complete-uniform__piece">
+          <span class="melato-complete-uniform__label">{{ complement_label | default: 'Matching piece' }}</span>
+          <a href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
+            {%- if matching_product.featured_image -%}
+              {{ matching_product.featured_image | image_url: width: 900 | image_tag: class: 'melato-complete-uniform__image', loading: 'lazy', widths: '360, 600, 900', sizes: '(min-width: 900px) 40vw, 50vw', alt: matching_product.title }}
+            {%- endif -%}
+          </a>
+          <h3><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
+          <p>{{ matching_variant.price | money }}</p>
+        </article>
+      </div>
+
+      <div class="melato-complete-uniform__action">
+        <div>
+          <span>Full uniform</span>
+          <strong>{{ current_variant.price | plus: matching_variant.price | money_with_currency }}</strong>
+        </div>
+        <button type="button" data-add-uniform>Add Full Uniform</button>
+      </div>
+      <p class="melato-complete-uniform__status" data-uniform-status aria-live="polite"></p>
+    </div>
+  </section>
+
+  <script type="application/json" id="CurrentUniformVariants-{{ section.id }}">
+    [
+      {%- for variant in product.variants -%}
+        {"id":{{ variant.id | json }},"available":{{ variant.available | json }},"options":{{ variant.options | json }}}{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  </script>
+  <script type="application/json" id="MatchingUniformVariants-{{ section.id }}">
+    [
+      {%- for variant in matching_product.variants -%}
+        {"id":{{ variant.id | json }},"available":{{ variant.available | json }},"options":{{ variant.options | json }}}{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  </script>
+
+  <style>
+    .melato-pdp-rebuild .pdp-set{display:none!important}
+    .melato-complete-uniform{background:#080808;color:#f5f1e8;padding:0 24px 72px}
+    .melato-complete-uniform__shell{max-width:1440px;margin:0 auto;border-top:1px solid rgba(245,241,232,.16);padding-top:40px}
+    .melato-complete-uniform__head{max-width:720px;margin-bottom:28px}
+    .melato-complete-uniform__eyebrow,.melato-complete-uniform__label,.melato-complete-uniform__action span{font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;color:#9b968d}
+    .melato-complete-uniform__head h2{font-size:clamp(1.7rem,3.2vw,3.25rem);font-weight:500;letter-spacing:-.035em;margin:8px 0 10px}
+    .melato-complete-uniform__head>p:last-child{color:#aaa49b;max-width:620px;line-height:1.55;margin:0}
+    .melato-complete-uniform__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .melato-complete-uniform__piece{background:#111214;padding:14px;margin:0}
+    .melato-complete-uniform__piece a{color:inherit;text-decoration:none}
+    .melato-complete-uniform__image{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#171717;margin:10px 0 14px}
+    .melato-complete-uniform__piece h3{font-size:.95rem;font-weight:500;margin:0 0 5px}
+    .melato-complete-uniform__piece p{margin:0;color:#bbb5ac}
+    .melato-complete-uniform__action{display:flex;align-items:center;justify-content:space-between;gap:18px;border:1px solid rgba(245,241,232,.18);border-top:0;padding:18px}
+    .melato-complete-uniform__action div{display:flex;flex-direction:column;gap:5px}
+    .melato-complete-uniform__action strong{font-size:1rem;font-weight:500}
+    .melato-complete-uniform__action button{appearance:none;border:1px solid #f5f1e8;background:#f5f1e8;color:#080808;min-height:48px;padding:0 24px;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+    .melato-complete-uniform__action button:disabled{opacity:.45;cursor:not-allowed}
+    .melato-complete-uniform__status{min-height:1.3em;margin:10px 0 0;color:#aaa49b;font-size:.78rem}
+    @media(max-width:700px){.melato-complete-uniform{padding:0 14px 48px}.melato-complete-uniform__shell{padding-top:30px}.melato-complete-uniform__grid{gap:8px}.melato-complete-uniform__piece{padding:8px}.melato-complete-uniform__action{align-items:stretch;flex-direction:column}.melato-complete-uniform__action button{width:100%}}
+  </style>
+
+  <script>
+    (() => {
+      const root = document.getElementById('MelatoCompleteUniform-{{ section.id }}');
+      if (!root) return;
+
+      const currentVariants = JSON.parse(document.getElementById('CurrentUniformVariants-{{ section.id }}').textContent || '[]');
+      const matchingVariants = JSON.parse(document.getElementById('MatchingUniformVariants-{{ section.id }}').textContent || '[]');
+      const currentSizePosition = Number(root.dataset.currentSizePosition || -1);
+      const matchingSizePosition = Number(root.dataset.matchingSizePosition || -1);
+      const button = root.querySelector('[data-add-uniform]');
+      const status = root.querySelector('[data-uniform-status]');
+      const pdpForm = document.querySelector('.pdp-form');
+      let selectedCurrent = null;
+      let selectedMatching = null;
+
+      function currentVariantId() {
+        const field = pdpForm && pdpForm.querySelector('[name="id"]');
+        return field ? Number(field.value) : null;
+      }
+
+      function chooseMatchingVariant(current) {
+        if (!current) return null;
+        if (currentSizePosition >= 0 && matchingSizePosition >= 0) {
+          const desiredSize = current.options && current.options[currentSizePosition];
+          return matchingVariants.find((variant) => variant.available && variant.options && String(variant.options[matchingSizePosition]) === String(desiredSize)) || null;
+        }
+        return matchingVariants.find((variant) => variant.available) || null;
+      }
+
+      function sync() {
+        const id = currentVariantId();
+        selectedCurrent = currentVariants.find((variant) => Number(variant.id) === id) || null;
+        selectedMatching = chooseMatchingVariant(selectedCurrent);
+        const ready = Boolean(selectedCurrent && selectedCurrent.available && selectedMatching);
+        button.disabled = !ready;
+        if (!selectedCurrent || !selectedCurrent.available) status.textContent = 'Select an available option first.';
+        else if (!selectedMatching && currentSizePosition >= 0 && matchingSizePosition >= 0) status.textContent = 'The matching piece is not available in this size.';
+        else if (!selectedMatching) status.textContent = 'The matching piece is currently unavailable.';
+        else status.textContent = 'Compatible matching size ready.';
+      }
+
+      async function addUniform() {
+        sync();
+        if (button.disabled || !selectedCurrent || !selectedMatching) return;
+        const quantityField = pdpForm && pdpForm.querySelector('[name="quantity"]');
+        const quantity = Math.max(1, Number(quantityField && quantityField.value || 1));
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Adding';
+        status.textContent = 'Adding both pieces to your bag.';
+        try {
+          const response = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','Accept':'application/json'},
+            body: JSON.stringify({items:[
+              {id:selectedCurrent.id,quantity:quantity},
+              {id:selectedMatching.id,quantity:quantity}
+            ]})
+          });
+          const payload = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add the full uniform.');
+          status.textContent = 'Full uniform added.';
+          button.textContent = 'Added';
+          const cartTrigger = document.querySelector('[data-cart-open], [data-cart-toggle], .mxh__bag');
+          if (cartTrigger) cartTrigger.click();
+          window.setTimeout(() => { button.textContent = originalText; sync(); }, 1200);
+        } catch (error) {
+          status.textContent = error.message || 'Unable to add the full uniform.';
+          button.textContent = originalText;
+          sync();
+        }
+      }
+
+      if (pdpForm) {
+        pdpForm.addEventListener('change', () => window.setTimeout(sync, 0));
+        pdpForm.addEventListener('input', () => window.setTimeout(sync, 0));
+      }
+      button.addEventListener('click', addUniform);
+      sync();
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Complete the Uniform",
+  "settings": [],
+  "presets": [{"name":"Complete the Uniform"}]
+}
+{% endschema %}

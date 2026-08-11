@@ -1,0 +1,103 @@
+{% comment %}
+  Collection CRO layer.
+  1. Keeps the merchant's chosen collection sort while demoting unavailable
+     cards after available cards on the rendered result page.
+  2. Moves descriptive SEO/editorial copy below the product grid so products
+     remain the first shopping action on mobile.
+  Best Sellers is excluded from the reorder because main-collection already
+  has a dedicated Archive Icons treatment for unavailable products.
+{% endcomment %}
+
+{%- if collection != blank -%}
+  <section
+    id="MelatoCollectionCRO-{{ section.id }}"
+    class="melato-collection-cro"
+    data-collection-cro
+    data-collection-handle="{{ collection.handle | escape }}"
+  >
+    {%- if collection.handle != 'all' and collection.description != blank -%}
+      <div class="melato-collection-notes">
+        <p class="melato-collection-notes__eyebrow">Collection Notes</p>
+        <h2>About {{ collection.title }}</h2>
+        <div class="melato-collection-notes__copy rte" data-bottom-collection-description>{{ collection.description }}</div>
+      </div>
+    {%- endif -%}
+  </section>
+
+  <style>
+    .melato-collection-cro{background:#080808;color:#f5f1e8;padding:0 min(5vw,60px) 64px}
+    .melato-collection-notes{max-width:860px;border-top:1px solid rgba(245,241,232,.14);padding-top:30px}
+    .melato-collection-notes__eyebrow{margin:0 0 8px;color:#d3a74a;font-size:10px;letter-spacing:.22em;text-transform:uppercase}
+    .melato-collection-notes h2{margin:0 0 14px;font-size:clamp(28px,4vw,50px);font-weight:500;letter-spacing:-.025em;text-transform:uppercase}
+    .melato-collection-notes__copy{max-width:720px;color:#aaa49b;line-height:1.7}
+    .melato-collection-notes__copy>:first-child{margin-top:0}.melato-collection-notes__copy>:last-child{margin-bottom:0}
+    @media(max-width:700px){.melato-collection-cro{padding:0 16px 48px}.melato-collection-notes{padding-top:24px}}
+  </style>
+
+  <script>
+    (() => {
+      const layer = document.getElementById('MelatoCollectionCRO-{{ section.id }}');
+      if (!layer) return;
+      const collectionHandle = layer.dataset.collectionHandle || '';
+      const collectionRoot = document.querySelector('[data-collection-root]');
+      const hasBottomDescription = Boolean(layer.querySelector('[data-bottom-collection-description]'));
+      let scheduled = false;
+
+      function moveDescriptionBelowGrid() {
+        if (!hasBottomDescription || !collectionRoot) return;
+        const topDescription = collectionRoot.querySelector('.melato-collection-header .melato-collection-desc');
+        if (topDescription) topDescription.remove();
+      }
+
+      function demoteUnavailableCards() {
+        if (!collectionRoot || collectionHandle === 'best-sellers') return;
+        const grid = collectionRoot.querySelector('#melato-product-grid');
+        if (!grid) return;
+        const inner = grid.querySelector('.melato-product-grid__inner');
+        if (!inner) return;
+        const items = Array.from(inner.children).filter((item) => item.matches('.melato-product-grid__item'));
+        if (items.length < 2) return;
+
+        const available = [];
+        const unavailable = [];
+        items.forEach((item) => {
+          const card = item.querySelector('[data-product-card]');
+          if (card && card.classList.contains('product-card--sold-out')) unavailable.push(item);
+          else available.push(item);
+        });
+
+        const desired = available.concat(unavailable);
+        const alreadySorted = desired.every((item, index) => items[index] === item);
+        if (alreadySorted) return;
+        desired.forEach((item) => inner.appendChild(item));
+      }
+
+      function apply() {
+        scheduled = false;
+        moveDescriptionBelowGrid();
+        demoteUnavailableCards();
+      }
+
+      function scheduleApply() {
+        if (scheduled) return;
+        scheduled = true;
+        window.requestAnimationFrame(apply);
+      }
+
+      apply();
+      if (collectionRoot && 'MutationObserver' in window) {
+        const observer = new MutationObserver(scheduleApply);
+        observer.observe(collectionRoot, {childList:true, subtree:true});
+      }
+      document.addEventListener('shopify:section:load', scheduleApply);
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Collection CRO fixes",
+  "settings": [],
+  "presets": [{"name":"Collection CRO fixes"}]
+}
+{% endschema %}
