@@ -1,0 +1,31 @@
+{% comment %}
+  Melato smart CTA palette guard.
+  Product palette rule: an explicit theme_cta wins. If palette_1 is near-neutral
+  grey and palette_2 exists, the CTA uses palette_2 so an available product never
+  reads as visually disabled. Otherwise the existing palette system remains intact.
+{% endcomment %}
+{% if request.page_type == 'product' and product %}
+  {%- assign melato_cta_explicit = product.metafields.custom.theme_cta.value | default: '' -%}
+  {%- assign melato_palette_primary = product.metafields.custom.palette_1.value | default: '' -%}
+  {%- assign melato_palette_secondary = product.metafields.custom.palette_2.value | default: '' -%}
+  <script id="melato-smart-cta-palette">
+  (() => {
+    const explicit = {{ melato_cta_explicit | append: '' | json }};
+    const primary = {{ melato_palette_primary | append: '' | json }};
+    const secondary = {{ melato_palette_secondary | append: '' | json }};
+    const clean = value => /^#[0-9a-f]{6}$/i.test(String(value || '').trim()) ? String(value).trim() : '';
+    const rgb = hex => { const n=parseInt(hex.slice(1),16); return [(n>>16)&255,(n>>8)&255,n&255]; };
+    const grey = hex => { if(!clean(hex)) return false; const values=rgb(hex); return Math.max(...values)-Math.min(...values) <= 24; };
+    const chosen = clean(explicit) || (grey(primary) && clean(secondary) ? clean(secondary) : '');
+    if(!chosen) return;
+    const root = document.documentElement;
+    root.style.setProperty('--melato-product-cta', chosen);
+    document.querySelectorAll('.melato-pdp-rebuild').forEach(section => section.style.setProperty('--pdp-accent', chosen, 'important'));
+    document.querySelectorAll('body.template-product button[name="add"], body.template-product .pdp-sticky-atc button').forEach(button => {
+      if(button.disabled || button.classList.contains('pdp-atc--oos')) return;
+      button.style.setProperty('background', chosen, 'important');
+      button.style.setProperty('border-color', chosen, 'important');
+    });
+  })();
+  </script>
+{% endif %}
