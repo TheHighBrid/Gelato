@@ -67,7 +67,6 @@ jobs:
           media_contracts = {
               'sections/melato-home-house.liquid': (4, 3),
               'sections/melato-product-page-rebuild.liquid': (3, 2),
-              'sections/main-collection.liquid': (1, 1),
               'sections/melato-footer.liquid': (1, 1),
           }
           for path, (min_widths, min_lazy) in media_contracts.items():
@@ -80,6 +79,12 @@ jobs:
                   width = int(match.group(1))
                   if width > 2400:
                       failures.append(f'{path}: image source ceiling {width}px exceeds 2400px')
+
+          cards = read('snippets/product-card.liquid')
+          if cards.count('srcset=') < 2:
+              failures.append('snippets/product-card.liquid: responsive product-card srcset contract weakened')
+          if cards.count('loading="lazy"') < 2:
+              failures.append('snippets/product-card.liquid: product-card lazy loading contract weakened')
 
           if failures:
               print('Melato fit/payment/media regression detected:')
