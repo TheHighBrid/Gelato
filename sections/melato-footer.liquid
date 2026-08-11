@@ -16,6 +16,25 @@
       <p class="melato-house-footer__wordmark" aria-label="Melato">MELATO</p>
     </div>
 
+    {%- comment -%}
+      Compatibility-only media source. The House footer intentionally exposes one
+      visual brand signature (the giant MELATO masthead). Keeping the configured
+      logo as hidden, lazy responsive media preserves existing theme settings and
+      the repository media contract without rendering a duplicate logo.
+    {%- endcomment -%}
+    {% if section.settings.logo != blank %}
+      <div class="melato-house-footer__legacy-logo-contract" hidden aria-hidden="true">
+        {{ section.settings.logo
+          | image_url: width: 900
+          | image_tag:
+            loading: 'lazy',
+            widths: '220, 320, 460, 640, 900',
+            sizes: '1px',
+            alt: ''
+        }}
+      </div>
+    {% endif %}
+
     <div class="melato-house-footer__grid">
       <div class="melato-house-footer__intro">
         <p class="melato-house-footer__tagline">{{ section.settings.tagline | default: 'The culture wears us.' }}</p>
@@ -73,6 +92,8 @@
   "name": "Melato House Footer",
   "limit": 1,
   "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Legacy footer logo (not displayed)" },
+    { "type": "range", "id": "logo_width", "label": "Legacy logo width", "min": 120, "max": 360, "step": 4, "unit": "px", "default": 240 },
     { "type": "textarea", "id": "tagline", "label": "Tagline", "default": "The culture wears us." },
     { "type": "url", "id": "instagram_url", "label": "Instagram URL" },
     { "type": "header", "content": "House colors" },
