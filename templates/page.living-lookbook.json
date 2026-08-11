@@ -20,11 +20,14 @@
     "evidence_20260714": {
       "type": "melato-living-lookbook-evidence",
       "settings": {
-        "archive_label": "CASE FILE 02",
-        "archive_title": "NEW EVIDENCE",
-        "archive_note": "Ninety-one living-study photographs, expanded with thirty-five newly filed frames and presented as a continuous evidence archive.",
-        "case_code": "LL-02",
-        "archive_source": "case02"
+        "case_code": "LB-04",
+        "case_subtitle": "CASE FILE / UNRESOLVED",
+        "case_title": "THE LIVING BOOK",
+        "outline_title": "EVIDENCE",
+        "deck": "A fashion story reconstructed from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive.",
+        "filed_date": "10 AUG 2026",
+        "frame_limit": 54,
+        "include_case03": false
       },
       "blocks": {
         "shop_01": {"type":"shoppable_frame","settings":{"frame_number":1,"product":"ojos-velour-track-jacket"}},
