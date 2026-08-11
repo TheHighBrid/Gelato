@@ -1,8 +1,8 @@
 {% comment %}
   Melato smart CTA palette guard.
-  Product palette rule: an explicit theme_cta wins. If palette_1 is near-neutral
-  grey and palette_2 exists, the CTA uses palette_2 so an available product never
-  reads as visually disabled. Otherwise the existing palette system remains intact.
+  Explicit custom.theme_cta wins. Otherwise, when palette_1 is a near-neutral
+  grey and palette_2 exists, use palette_2 so an available CTA never reads as
+  disabled. Text color is calculated from the selected color for contrast.
 {% endcomment %}
 {% if request.page_type == 'product' and product %}
   {%- assign melato_cta_explicit = product.metafields.custom.theme_cta.value | default: '' -%}
@@ -18,13 +18,18 @@
     const grey = hex => { if(!clean(hex)) return false; const values=rgb(hex); return Math.max(...values)-Math.min(...values) <= 24; };
     const chosen = clean(explicit) || (grey(primary) && clean(secondary) ? clean(secondary) : '');
     if(!chosen) return;
+    const values = rgb(chosen);
+    const luminance = (0.2126*values[0] + 0.7152*values[1] + 0.0722*values[2]) / 255;
+    const foreground = luminance > 0.58 ? '#101418' : '#ffffff';
     const apply = () => {
       document.documentElement.style.setProperty('--melato-product-cta', chosen);
+      document.documentElement.style.setProperty('--melato-product-cta-text', foreground);
       document.querySelectorAll('.melato-pdp-rebuild').forEach(section => section.style.setProperty('--pdp-accent', chosen, 'important'));
       document.querySelectorAll('body.template-product button[name="add"], body.template-product .pdp-sticky-atc button').forEach(button => {
         if(button.disabled || button.classList.contains('pdp-atc--oos')) return;
         button.style.setProperty('background', chosen, 'important');
         button.style.setProperty('border-color', chosen, 'important');
+        button.style.setProperty('color', foreground, 'important');
       });
     };
     if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', apply, {once:true}); else apply();
