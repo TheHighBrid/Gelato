@@ -2,12 +2,18 @@
   MELATO - Product Safe Accent Controller
   Accent applies only to small section labels / UI accents.
   Big PDP headings stay white/bold for hierarchy and readability.
+  Products still under specification review inherit the canonical neutral PDP shell.
 {% endcomment %}
 
 {%- liquid
   assign title_down = product.title | downcase
   assign tags_down = product.tags | join: ' ' | downcase
   assign raw_accent = product.metafields.custom.ui_accent.value
+  assign lock_neutral_shell = false
+
+  if tags_down contains 'specification_pending'
+    assign lock_neutral_shell = true
+  endif
 
   if raw_accent == blank
     if tags_down contains 'colorway_divididos' or title_down contains 'divididos'
@@ -50,6 +56,16 @@
     --melato-product-safe-accent: {{ raw_accent }};
     --melato-product-accent: {{ raw_accent }};
   }
+
+  {% if lock_neutral_shell %}
+    /* Draft/review products must not inherit garment palette colors as page surfaces. */
+    body.template-product .melato-pdp-rebuild,
+    body[class*="template-product"] .melato-pdp-rebuild{
+      --pdp-bg: #080808 !important;
+      --pdp-surface: #111214 !important;
+      --pdp-text: #f5f1e8 !important;
+    }
+  {% endif %}
 
   body.template-product .melato-pdp-rebuild,
   body[class*="template-product"] .melato-pdp-rebuild{
