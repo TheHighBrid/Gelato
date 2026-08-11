@@ -22,6 +22,10 @@
         "accent_2": "#d3a74a"
       }
     },
+    "complete_uniform": {
+      "type": "melato-complete-uniform",
+      "settings": {}
+    },
     "safe_accent": {
       "type": "melato-product-safe-accent",
       "settings": {}
@@ -59,6 +63,7 @@
   },
   "order": [
     "main_product",
+    "complete_uniform",
     "safe_accent",
     "tag_recommendations",
     "1781310708d3669657",
