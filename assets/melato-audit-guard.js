@@ -183,6 +183,28 @@
     }));
   }
 
+  function labelProductGallery() {
+    document.querySelectorAll('.pdp-thumbs').forEach((group) => {
+      const productTitle = (document.querySelector('.pdp-title')?.textContent || document.querySelector('h1')?.textContent || 'Product').trim();
+      const seen = new Set();
+      group.querySelectorAll('[data-pdp-thumb]').forEach((button, index) => {
+        const mediaAlt = (button.getAttribute('data-media-alt') || '').trim();
+        const key = mediaAlt.toLowerCase();
+        const weak = !mediaAlt || /^(image|photo|product)$/i.test(mediaAlt) || mediaAlt === productTitle || seen.has(key);
+        const descriptive = weak ? `${productTitle}, product view ${index + 1}` : mediaAlt;
+        button.setAttribute('aria-label', `Show ${descriptive}`);
+        if (weak) button.setAttribute('data-media-alt', descriptive);
+        seen.add((descriptive || mediaAlt).toLowerCase());
+      });
+    });
+
+    const genericControls = document.querySelectorAll('button[aria-label="Image"], a[aria-label="Image"]');
+    if (genericControls.length) {
+      const productTitle = (document.querySelector('.pdp-title')?.textContent || document.querySelector('h1')?.textContent || 'Product').trim();
+      genericControls.forEach((control, index) => control.setAttribute('aria-label', `${productTitle}, product view ${index + 1}`));
+    }
+  }
+
   function clean() {
     if (window.DRIP && window.DRIP.shop) window.DRIP.shop.freeShippingThreshold = 0;
     loadAuditCss();
@@ -190,6 +212,7 @@
     cleanFilters();
     cleanUtilities();
     labelIcons();
+    labelProductGallery();
     localizeFrench();
   }
 
