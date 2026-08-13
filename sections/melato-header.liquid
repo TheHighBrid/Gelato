@@ -51,7 +51,7 @@
 
   <div class="mxh__shade" hidden data-mxh-shade></div>
 
-  <aside id="mxh-drawer-{{ section.id }}" class="mxh__drawer" aria-hidden="true" hidden data-mxh-drawer>
+  <aside id="mxh-drawer-{{ section.id }}" class="mxh__drawer" role="dialog" aria-modal="true" aria-label="Navigation menu" aria-hidden="true" hidden inert data-mxh-drawer>
     <div class="mxh__drawer-inner">
       <div class="mxh__drawer-top">
         <span class="mxh__drawer-kicker">Melato / Navigation</span>
@@ -98,7 +98,7 @@
     </div>
   </aside>
 
-  <section id="mxh-search-{{ section.id }}" class="mxh__search" aria-hidden="true" hidden data-mxh-search>
+  <section id="mxh-search-{{ section.id }}" class="mxh__search" role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true" hidden inert data-mxh-search>
     <div class="mxh__search-panel">
       <button class="mxh__close mxh__search-close" type="button" aria-label="Close search" data-mxh-search-close><span></span><span></span></button>
       <p class="mxh__search-kicker">Search Melato</p>
@@ -518,33 +518,57 @@
     var searchOpeners = root.querySelectorAll('[data-mxh-search-open]');
     var searchClose = root.querySelector('[data-mxh-search-close]');
     var searchInput = root.querySelector('[data-mxh-search-input]');
+    var returnFocus = null;
+
+    function focusable(container) {
+      return Array.prototype.slice.call(container.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'));
+    }
+
+    function trapFocus(event, container) {
+      if (event.key !== 'Tab') return;
+      var nodes = focusable(container);
+      if (!nodes.length) { event.preventDefault(); return; }
+      var first = nodes[0];
+      var last = nodes[nodes.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
 
     function lock(yes) { document.body.classList.toggle('mxh-lock', !!yes); }
 
     function openDrawer() {
       if (!drawer) return;
       closeSearch();
+      returnFocus = document.activeElement;
       drawer.hidden = false;
+      drawer.removeAttribute('inert');
       if (shade) shade.hidden = false;
       requestAnimationFrame(function(){ drawer.classList.add('is-open'); });
       if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
       drawer.setAttribute('aria-hidden', 'false');
       lock(true);
+      window.setTimeout(function(){ var target = drawer.querySelector('[data-mxh-close]'); if (target) target.focus(); }, 90);
     }
 
-    function closeDrawer() {
-      if (!drawer) return;
+    function closeDrawer(restoreFocus) {
+      if (!drawer || !drawer.classList.contains('is-open')) return;
       drawer.classList.remove('is-open');
       if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
       drawer.setAttribute('aria-hidden', 'true');
-      window.setTimeout(function(){ drawer.hidden = true; if (shade && !search.classList.contains('is-open')) shade.hidden = true; }, 250);
+      drawer.setAttribute('inert', '');
+      window.setTimeout(function(){ drawer.hidden = true; if (shade && (!search || !search.classList.contains('is-open'))) shade.hidden = true; }, 250);
       lock(false);
+      if (restoreFocus !== false && returnFocus && typeof returnFocus.focus === 'function') returnFocus.focus();
     }
 
     function openSearch() {
       if (!search) return;
-      closeDrawer();
+      var opener = document.activeElement;
+      var openedFromDrawer = drawer && drawer.contains(opener);
+      closeDrawer(false);
+      returnFocus = openedFromDrawer ? menuBtn : opener;
       search.hidden = false;
+      search.removeAttribute('inert');
       if (shade) shade.hidden = false;
       requestAnimationFrame(function(){ search.classList.add('is-open'); });
       search.setAttribute('aria-hidden', 'false');
@@ -554,12 +578,14 @@
     }
 
     function closeSearch() {
-      if (!search) return;
+      if (!search || !search.classList.contains('is-open')) return;
       search.classList.remove('is-open');
       search.setAttribute('aria-hidden', 'true');
+      search.setAttribute('inert', '');
       searchOpeners.forEach(function(btn){ btn.setAttribute('aria-expanded', 'false'); });
       window.setTimeout(function(){ search.hidden = true; if (shade && !drawer.classList.contains('is-open')) shade.hidden = true; }, 250);
       lock(false);
+      if (returnFocus && typeof returnFocus.focus === 'function') returnFocus.focus();
     }
 
     if (menuBtn) menuBtn.addEventListener('click', function(){ drawer && drawer.classList.contains('is-open') ? closeDrawer() : openDrawer(); });
@@ -567,7 +593,15 @@
     if (shade) shade.addEventListener('click', function(){ closeDrawer(); closeSearch(); });
     searchOpeners.forEach(function(btn){ btn.addEventListener('click', openSearch); });
     if (searchClose) searchClose.addEventListener('click', closeSearch);
-    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') { closeDrawer(); closeSearch(); } });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') {
+        if (drawer && drawer.classList.contains('is-open')) closeDrawer();
+        else if (search && search.classList.contains('is-open')) closeSearch();
+        return;
+      }
+      if (drawer && drawer.classList.contains('is-open')) trapFocus(e, drawer);
+      else if (search && search.classList.contains('is-open')) trapFocus(e, search);
+    });
     window.addEventListener('scroll', function(){ root.classList.toggle('is-scrolled', window.scrollY > 8); }, { passive: true });
   })();
 </script>
