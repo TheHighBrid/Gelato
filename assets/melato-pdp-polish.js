@@ -11,30 +11,51 @@
     const root = document.querySelector('[id^="MelatoPDP-"]') || document.querySelector('main');
     if (!root) return;
 
-    polishSet(root);
+    cleanCopy();
+    polishSet();
+    dynamicCompleteSet();
     bindGalleryThumbs(root);
     ensureProductGallery(root);
     bindMainImageZoom(root);
 
     window.setTimeout(() => {
-      polishSet(root);
       ensureProductGallery(root);
-      bindGalleryThumbs(root);
       bindMainImageZoom(root);
     }, 900);
 
+    // Debounced + LOCK_KEY-aware: defers while guard/nav scripts are mid-patch.
+    const LOCK_KEY = '__MELATO_AUDIT_PATCHING__';
     let polishTimer;
     new MutationObserver(() => {
+      if (window[LOCK_KEY]) return;
       clearTimeout(polishTimer);
       polishTimer = setTimeout(() => {
-        polishSet(root);
+        if (window[LOCK_KEY]) return;
+        cleanCopy();
+        polishSet();
         bindGalleryThumbs(root);
         bindMainImageZoom(root);
       }, 300);
     }).observe(root, { childList: true, subtree: true });
   });
 
-  function polishSet(root) {
+  function cleanCopy() {
+    document.querySelectorAll('.pdp-rte, .pdp-detail-list li, .pdp-proof-mini span, .pdp-thesis, .product__description, .rte').forEach((el) => {
+      if (!el || el.children.length) return;
+      const original = el.textContent || '';
+      const cleaned = original
+        .replace(/Exact fibre percentage is not published yet\.?/gi, '')
+        .replace(/fibre percentage is not published yet\.?/gi, '')
+        .replace(/fiber percentage is not published yet\.?/gi, '')
+        .replace(/to be confirmed|tbd|not provided|information unavailable|details unavailable/gi, '')
+        .trim();
+      if (cleaned !== original.trim()) {
+        el.textContent = cleaned || 'Premium construction selected for clean movement, shape, and everyday wearability.';
+      }
+    });
+  }
+
+  function polishSet() {
     document.querySelectorAll('.pdp-set h2').forEach((el) => {
       const original = el.textContent || '';
       const cleaned = original
@@ -61,41 +82,29 @@
       if (label) label.textContent = 'Full set price';
       if (price) price.style.marginLeft = 'auto';
     });
-
-    ensurePurchaseReassurance(root);
-    ensureFitGuidance(root);
   }
 
-  function ensurePurchaseReassurance(root) {
-    const form = root.querySelector('.pdp-form');
-    if (!form) return;
+  function dynamicCompleteSet() {
+    document.querySelectorAll('.melato-set').forEach((box) => {
+      if (box.dataset.dynamicPriceLoaded === 'true') return;
+      const link = box.querySelector('a[href*="/products/"]');
+      if (!link) return;
 
-    let assurances = root.querySelector('.product-assurances[data-melato-assurances]');
-    if (!assurances) {
-      assurances = document.createElement('ul');
-      assurances.className = 'product-assurances';
-      assurances.dataset.melatoAssurances = 'true';
-      assurances.setAttribute('aria-label', 'Purchase reassurance');
-      assurances.innerHTML = [
-        'Complimentary delivery',
-        'Secure checkout',
-        'Eligible returns'
-      ].map((label) => `<li>${label}</li>`).join('');
-      form.insertAdjacentElement('afterend', assurances);
-    }
-  }
+      const match = link.getAttribute('href').match(/\/products\/([^?#/]+)/);
+      if (!match) return;
+      box.dataset.dynamicPriceLoaded = 'true';
 
-  function ensureFitGuidance(root) {
-    root.querySelectorAll('.pdp-spec').forEach((detail) => {
-      const summary = detail.querySelector('summary');
-      const content = detail.querySelector('.pdp-rte');
-      if (!summary || !content || summary.textContent.trim().toLowerCase() !== 'fit') return;
-      if (content.querySelector('[data-melato-fit-guide-link]')) return;
-      const line = document.createElement('p');
-      line.dataset.melatoFitGuideLink = 'true';
-      line.className = 'pdp-fit-guidance-link';
-      line.innerHTML = '<a href="/pages/size-guide">Fit guidance and measurement policy</a>';
-      content.appendChild(line);
+      fetch(`/products/${match[1]}.js`, { headers: { Accept: 'application/json' } })
+        .then((response) => response.ok ? response.json() : null)
+        .then((product) => {
+          if (!product) return;
+          const cents = product.price_min || product.price || 0;
+          const name = box.querySelector('.melato-set__name');
+          const price = box.querySelector('.melato-set__price');
+          if (name) name.textContent = product.title;
+          if (price) price.textContent = `$${(cents / 100).toFixed(2)} CAD`;
+        })
+        .catch(() => { box.dataset.dynamicPriceLoaded = 'false'; });
     });
   }
 

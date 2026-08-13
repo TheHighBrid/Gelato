@@ -9,31 +9,42 @@
  */
 {
   "sections": {
-    "main_product": {
-      "type": "melato-product-page-rebuild",
+    "main": { "type": "main-product", "settings": {} },
+    "proof_bar": {
+      "type": "melato-product-proof-bar",
+      "settings": {},
+      "blocks": {
+        "proof_1": { "type": "proof", "settings": { "icon": "✦", "title": "Limited production", "text": "Produced in controlled quantities with a current-season product focus." } },
+        "proof_2": { "type": "proof", "settings": { "icon": "☁", "title": "Material", "text": "Fabric language adapts to the selected product." } },
+        "proof_3": { "type": "proof", "settings": { "icon": "↗", "title": "Ships Worldwide", "text": "Complimentary delivery on all orders." } },
+        "proof_4": { "type": "proof", "settings": { "icon": "⌁", "title": "Secure checkout", "text": "Major cards, Shop Pay, Apple Pay, Google Pay." } }
+      },
+      "block_order": ["proof_1", "proof_2", "proof_3", "proof_4"]
+    },
+    "complete_set": {
+      "type": "melato-complete-the-set",
       "settings": {
-        "eyebrow": "Product focus",
-        "bg": "#080808",
-        "surface": "#111214",
-        "surface_2": "#171717",
-        "text": "#f5f1e8",
-        "muted": "#9b968d",
-        "accent": "#9e1824",
-        "accent_2": "#d3a74a"
+        "eyebrow": "Complete the set",
+        "heading": "Complete the Melato set",
+        "description": "Pair the matching pieces for the full drop look."
       }
     },
-    "safe_accent": {
-      "type": "melato-product-safe-accent",
-      "settings": {}
-    },
-    "tag_recommendations": {
-      "type": "tag-recommendations",
+    "accordions": {
+      "type": "melato-product-trust-accordions",
       "settings": {
-        "eyebrow": "FOR YOU",
-        "heading": "MOST WANTED",
-        "max_products": 4
+        "eyebrow": "Product intelligence",
+        "heading": "Fit, material, care, and shipping",
+        "open_first": true
+      }
+    },
+    "related": {
+      "type": "related-products",
+      "settings": {
+        "eyebrow": "More from the collection",
+        "heading": "You might also like",
+        "products_to_show": 4
       }
     }
   },
-  "order": ["main_product", "safe_accent", "tag_recommendations"]
+  "order": ["main", "proof_bar", "complete_set", "accordions", "related"]
 }

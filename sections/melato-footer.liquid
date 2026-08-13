@@ -1,6 +1,7 @@
 {% comment %}
   MELATO - Global Footer
-  One durable footer source. No runtime removal of trust or reassurance UI.
+  Single footer source for Gelato v5.30.
+  Copyright contract: exactly one customer-facing copyright notice.
 {% endcomment %}
 
 <footer class="melato-footer melato-footer--{{ section.id }}" role="contentinfo">
@@ -15,8 +16,6 @@
           {% endif %}
         </a>
         <p class="melato-footer__tagline">{{ section.settings.tagline | default: 'Premium garments. Cut with intent.' }}</p>
-        <a href="mailto:support@melato.ca" class="melato-footer__contact">support@melato.ca</a>
-        <a href="tel:+16132096464" class="melato-footer__contact">+1 (613) 209-6464</a>
         {% if section.settings.instagram_url != blank %}
           <a href="{{ section.settings.instagram_url }}" class="melato-footer__social" target="_blank" rel="noopener noreferrer" aria-label="Melato Instagram">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg><span>Instagram</span>
@@ -35,13 +34,12 @@
         </ul>
       </nav>
 
-      <nav class="melato-footer__column" aria-label="Editorial and information links">
-        <h2>House</h2>
+      <nav class="melato-footer__column" aria-label="Information links">
+        <h2>Info</h2>
         <ul>
           <li><a href="/pages/our-story">Our Story</a></li>
           <li><a href="/pages/living-lookbook">Living Lookbook</a></li>
-          <li><a href="/pages/popup-calendar">Popup Calendar</a></li>
-          <li><a href="/blogs/news">Melato Journal</a></li>
+          <li><a href="/pages/newsletter">Newsletter</a></li>
           <li><a href="/pages/faq">FAQ</a></li>
           <li><a href="/pages/contact">Contact</a></li>
         </ul>
@@ -50,58 +48,79 @@
       <nav class="melato-footer__column" aria-label="Legal links">
         <h2>Legal</h2>
         <ul>
-          <li><a href="/policies/shipping-policy">Delivery</a></li>
-          <li><a href="/policies/refund-policy">Returns & Refunds</a></li>
           <li><a href="/policies/privacy-policy">Privacy Policy</a></li>
           <li><a href="/policies/terms-of-service">Terms of Service</a></li>
+          <li><a href="/policies/refund-policy">Returns & Refunds</a></li>
         </ul>
       </nav>
     </div>
 
-    <div class="melato-footer__notes">
-      <div>
-        <p class="melato-footer__eyebrow">MELATO NOTES</p>
-        <h2>DROP INTELLIGENCE.</h2>
-        <p>New releases, restocks, popup coordinates and editorial updates.</p>
-      </div>
-      <div>
-        {%- assign footer_form_id = 'melato-footer-form-' | append: section.id -%}
-        {%- form 'customer', id: footer_form_id, class: 'melato-footer__form' -%}
-          <input type="hidden" name="contact[tags]" value="newsletter">
-          {% if form.posted_successfully? %}
-            <p class="melato-footer__success" role="status">You are on the list.</p>
-          {% else %}
-            <label class="visually-hidden" for="melato-footer-email-{{ section.id }}">Email address</label>
-            <div class="melato-footer__field">
-              <input id="melato-footer-email-{{ section.id }}" type="email" name="contact[email]" placeholder="Email address" autocomplete="email" required>
-              <button type="submit">Join</button>
-            </div>
-            {% if form.errors %}<div class="melato-footer__error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}
-          {% endif %}
-        {%- endform -%}
-      </div>
-    </div>
-
     <div class="melato-footer__bottom">
-      <div>
-        <p class="melato-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name | default: 'Melato' }}.</p>
-        <p class="melato-footer__microcopy">Complimentary standard delivery · Secure checkout</p>
-      </div>
-      {% if shop.enabled_payment_types.size > 0 %}
-        <ul class="melato-footer__payments" aria-label="Accepted payment methods">
-          {% for type in shop.enabled_payment_types %}
-            <li>{{ type | payment_type_svg_tag }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
+      <p class="melato-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name | default: 'Melato' }}.</p>
+      <p class="melato-footer__microcopy">Culture-forward premium apparel</p>
     </div>
   </div>
 </footer>
 
 <style>
-  .melato-footer--{{ section.id }}{--footer-bg:{{ section.settings.bg_color | default: '#111111' }};--footer-text:{{ section.settings.text_color | default: '#F5F1E8' }};--footer-muted:rgba(245,241,232,.68);--footer-soft:rgba(245,241,232,.48);--footer-line:rgba(245,241,232,.10);background:var(--footer-bg)!important;color:var(--footer-text)!important;border-top:1px solid var(--footer-line)}
-  .melato-footer--{{ section.id }} *{box-sizing:border-box}.melato-footer--{{ section.id }} .melato-footer__wrap{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:clamp(56px,7vw,96px) 0 28px}.melato-footer--{{ section.id }} .melato-footer__top{display:grid;grid-template-columns:minmax(260px,1.7fr) minmax(140px,.8fr) minmax(150px,.9fr) minmax(150px,.8fr);gap:clamp(34px,6vw,76px);align-items:start}.melato-footer--{{ section.id }} .melato-footer__brand{display:flex;flex-direction:column;align-items:flex-start}.melato-footer--{{ section.id }} .melato-footer__logo-link{display:inline-flex;align-items:center;color:var(--footer-text)!important;text-decoration:none}.melato-footer--{{ section.id }} .melato-footer__logo{width:{{ section.settings.logo_width | default: 240 }}px!important;max-width:min({{ section.settings.logo_width | default: 240 }}px,72vw)!important;height:auto!important;display:block!important}.melato-footer--{{ section.id }} .melato-footer__wordmark{color:var(--footer-text)!important;font-size:clamp(30px,4vw,52px);line-height:.9;letter-spacing:-.07em;text-transform:uppercase;font-weight:900}.melato-footer--{{ section.id }} .melato-footer__tagline{margin:38px 0 18px;max-width:280px;color:var(--footer-muted)!important;font-size:14px;line-height:1.65}.melato-footer--{{ section.id }} .melato-footer__contact{display:block;color:var(--footer-muted)!important;text-decoration:none;font-size:13px;line-height:1.8}.melato-footer--{{ section.id }} .melato-footer__social{display:inline-flex;align-items:center;gap:10px;color:var(--footer-soft)!important;text-decoration:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-top:17px}.melato-footer--{{ section.id }} .melato-footer__social svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}.melato-footer--{{ section.id }} .melato-footer__column h2,.melato-footer--{{ section.id }} .melato-footer__eyebrow{margin:0 0 24px;color:var(--footer-text)!important;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}.melato-footer--{{ section.id }} .melato-footer__column ul{display:grid;gap:16px;list-style:none;margin:0;padding:0}.melato-footer--{{ section.id }} .melato-footer__column a{color:var(--footer-muted)!important;text-decoration:none;font-size:14px;line-height:1.2;transition:color 160ms ease}.melato-footer--{{ section.id }} a:hover{color:var(--footer-text)!important}.melato-footer--{{ section.id }} .melato-footer__notes{margin-top:clamp(56px,7vw,86px);padding:34px 0;border-top:1px solid var(--footer-line);border-bottom:1px solid var(--footer-line);display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,80px);align-items:end}.melato-footer--{{ section.id }} .melato-footer__notes h2{font:400 clamp(34px,5vw,58px)/.92 var(--font-heading-family,'Bebas Neue',sans-serif);margin:0 0 8px}.melato-footer--{{ section.id }} .melato-footer__notes p:not(.melato-footer__eyebrow){margin:0;color:var(--footer-muted);line-height:1.5}.melato-footer--{{ section.id }} .melato-footer__eyebrow{margin-bottom:10px}.melato-footer--{{ section.id }} .melato-footer__field{display:grid;grid-template-columns:1fr auto;gap:8px}.melato-footer--{{ section.id }} .melato-footer__field input,.melato-footer--{{ section.id }} .melato-footer__field button{min-height:48px;border-radius:0;font:inherit}.melato-footer--{{ section.id }} .melato-footer__field input{min-width:0;background:transparent;border:1px solid rgba(245,241,232,.24);color:var(--footer-text);padding:0 14px}.melato-footer--{{ section.id }} .melato-footer__field button{border:1px solid var(--footer-text);background:var(--footer-text);color:var(--footer-bg);padding:0 22px;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}.melato-footer--{{ section.id }} .melato-footer__success{color:var(--footer-text)!important}.melato-footer--{{ section.id }} .melato-footer__error{margin-top:10px;color:#f1a5a5;font-size:12px}.melato-footer--{{ section.id }} .melato-footer__bottom{padding-top:28px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px}.melato-footer--{{ section.id }} .melato-footer__copyright,.melato-footer--{{ section.id }} .melato-footer__microcopy{margin:0;color:var(--footer-muted)!important;font-size:12px;line-height:1.6}.melato-footer--{{ section.id }} .melato-footer__microcopy{text-transform:uppercase;letter-spacing:.08em;color:var(--footer-soft)!important}.melato-footer--{{ section.id }} .melato-footer__payments{list-style:none;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px;margin:0;padding:0}.melato-footer--{{ section.id }} .melato-footer__payments li{display:flex;align-items:center}.melato-footer--{{ section.id }} .melato-footer__payments svg{width:38px;height:auto;max-height:24px}.melato-footer--{{ section.id }} .shopify-payment-button,.melato-footer--{{ section.id }} .additional-checkout-buttons{display:none!important}@media screen and (max-width:900px){.melato-footer--{{ section.id }} .melato-footer__top{grid-template-columns:1fr 1fr 1fr;gap:42px 28px}.melato-footer--{{ section.id }} .melato-footer__brand{grid-column:1/-1}.melato-footer--{{ section.id }} .melato-footer__notes{grid-template-columns:1fr}}@media screen and (max-width:640px){.melato-footer--{{ section.id }} .melato-footer__wrap{width:min(100% - 28px,1180px);padding-top:46px}.melato-footer--{{ section.id }} .melato-footer__top{grid-template-columns:1fr;gap:34px}.melato-footer--{{ section.id }} .melato-footer__bottom{grid-template-columns:1fr}.melato-footer--{{ section.id }} .melato-footer__payments{justify-content:flex-start}.melato-footer--{{ section.id }} .melato-footer__logo{width:min({{ section.settings.logo_width | default: 240 }}px,62vw)!important}.melato-footer--{{ section.id }} .melato-footer__field{grid-template-columns:1fr}}
+  /* MELATO storefront policy hard-stop. These surfaces must never display. */
+  .cart-free-shipping,
+  .cart-drawer__tax-note,
+  .shopify-payment-button,
+  .shopify-payment-button__button,
+  .shopify-payment-button__button--unbranded,
+  [data-shopify="payment-button"],
+  [data-testid="ShopifyPay-button"],
+  .additional-checkout-buttons,
+  .additional-checkout-button,
+  .dynamic-checkout__content,
+  .pdp-dynamic-checkout,
+  .shopify-cleanslate [role="button"] {
+    display:none!important;
+    visibility:hidden!important;
+    width:0!important;
+    height:0!important;
+    min-height:0!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    pointer-events:none!important;
+  }
+  .melato-footer--{{ section.id }}{--footer-bg:{{ section.settings.bg_color | default: '#111111' }};--footer-text:{{ section.settings.text_color | default: '#F5F1E8' }};--footer-muted:rgba(245,241,232,.68);--footer-soft:rgba(245,241,232,.48);--footer-line:rgba(245,241,232,.08);background:var(--footer-bg)!important;color:var(--footer-text)!important;border-top:1px solid var(--footer-line)}
+  .melato-footer--{{ section.id }} *{box-sizing:border-box}.melato-footer--{{ section.id }} .melato-footer__wrap{width:min(1180px,calc(100% - 40px));margin:0 auto;padding:clamp(56px,7vw,96px) 0 28px}.melato-footer--{{ section.id }} .melato-footer__top{display:grid!important;grid-template-columns:minmax(260px,1.7fr) minmax(140px,.8fr) minmax(150px,.8fr) minmax(150px,.8fr);gap:clamp(34px,6vw,86px);align-items:start}.melato-footer--{{ section.id }} .melato-footer__brand{display:flex;flex-direction:column;align-items:flex-start}.melato-footer--{{ section.id }} .melato-footer__logo-link{display:inline-flex;align-items:center;color:var(--footer-text)!important;text-decoration:none}.melato-footer--{{ section.id }} .melato-footer__logo{width:{{ section.settings.logo_width | default: 240 }}px!important;max-width:min({{ section.settings.logo_width | default: 240 }}px,72vw)!important;height:auto!important;display:block!important}.melato-footer--{{ section.id }} .melato-footer__wordmark{color:var(--footer-text)!important;font-size:clamp(30px,4vw,52px);line-height:.9;letter-spacing:-.07em;text-transform:uppercase;font-weight:900}.melato-footer--{{ section.id }} .melato-footer__tagline{margin:42px 0 24px;max-width:260px;color:var(--footer-muted)!important;font-size:14px;line-height:1.65}.melato-footer--{{ section.id }} .melato-footer__social{display:inline-flex;align-items:center;gap:10px;color:var(--footer-soft)!important;text-decoration:none;font-size:11px;letter-spacing:.14em;text-transform:uppercase}.melato-footer--{{ section.id }} .melato-footer__social svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5}.melato-footer--{{ section.id }} .melato-footer__column h2{margin:0 0 24px;color:var(--footer-text)!important;font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700}.melato-footer--{{ section.id }} .melato-footer__column ul{display:grid!important;gap:16px;list-style:none!important;margin:0!important;padding:0!important}.melato-footer--{{ section.id }} .melato-footer__column a{color:var(--footer-muted)!important;text-decoration:none;font-size:14px;line-height:1.2;transition:color 160ms ease}.melato-footer--{{ section.id }} .melato-footer__column a:hover,.melato-footer--{{ section.id }} .melato-footer__social:hover{color:var(--footer-text)!important}.melato-footer--{{ section.id }} .melato-footer__bottom{margin-top:clamp(56px,7vw,86px);padding-top:28px;border-top:1px solid var(--footer-line);display:grid!important;grid-template-columns:1fr auto;align-items:center;gap:24px}.melato-footer--{{ section.id }} .melato-footer__copyright,.melato-footer--{{ section.id }} .melato-footer__microcopy{margin:0;color:var(--footer-muted)!important;font-size:12px;line-height:1.5}.melato-footer--{{ section.id }} .melato-footer__microcopy{text-transform:uppercase;letter-spacing:.1em;color:var(--footer-soft)!important}@media screen and (max-width:900px){.melato-footer--{{ section.id }} .melato-footer__top{grid-template-columns:1fr 1fr 1fr;gap:42px 28px}.melato-footer--{{ section.id }} .melato-footer__brand{grid-column:1/-1}}@media screen and (max-width:640px){.melato-footer--{{ section.id }} .melato-footer__wrap{width:min(100% - 28px,1180px);padding-top:46px}.melato-footer--{{ section.id }} .melato-footer__top{grid-template-columns:1fr;gap:34px}.melato-footer--{{ section.id }} .melato-footer__bottom{grid-template-columns:1fr}.melato-footer--{{ section.id }} .melato-footer__logo{width:min({{ section.settings.logo_width | default: 240 }}px,62vw)!important}}
 </style>
+
+<script>
+(function(){
+  var walletSelectors = [
+    '.shopify-payment-button',
+    '[data-shopify="payment-button"]',
+    '.additional-checkout-buttons',
+    '.dynamic-checkout__content',
+    '.pdp-dynamic-checkout'
+  ];
+  function enforceMelatoPolicy(root){
+    root = root || document;
+    walletSelectors.forEach(function(selector){
+      root.querySelectorAll(selector).forEach(function(node){ node.remove(); });
+    });
+    root.querySelectorAll('.cart-free-shipping,.cart-drawer__tax-note').forEach(function(node){ node.remove(); });
+    root.querySelectorAll('.product-assurances li,.melato-home-conversion__proof-card').forEach(function(node){
+      var text=(node.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+      if(text.indexOf('fast dispatch')!==-1 || text.indexOf('secure checkout')!==-1 || text.indexOf('complimentary delivery')!==-1 || text.indexOf('google pay')!==-1 || text.indexOf('apple pay')!==-1 || text.indexOf('shop pay')!==-1){ node.remove(); }
+    });
+  }
+  enforceMelatoPolicy(document);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){enforceMelatoPolicy(document)});
+  new MutationObserver(function(mutations){
+    mutations.forEach(function(mutation){
+      mutation.addedNodes.forEach(function(node){
+        if(node.nodeType===1) enforceMelatoPolicy(node);
+      });
+    });
+  }).observe(document.documentElement,{childList:true,subtree:true});
+})();
+</script>
 
 {% schema %}
 {

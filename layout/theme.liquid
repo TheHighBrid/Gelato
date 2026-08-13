@@ -7,37 +7,14 @@
   {%- liquid
     assign melato_meta_title = page_title
     assign melato_meta_description = page_description
-    assign melato_noindex = false
-
-    if template.name == 'index'
-      assign melato_meta_title = 'Melato | Designer Apparel & Limited Collections'
-      assign melato_meta_description = 'Discover Melato designer apparel, limited-run tracksuits, denim and statement pieces. Curated in Canada, built for movement. Shop the latest drop.'
-    elsif template.name == 'product' and product
-      assign melato_meta_title = product.title
-    elsif template.name == 'collection' and collection.handle == 'all'
-      assign melato_meta_title = 'Designer Apparel & Accessories'
-      assign melato_meta_description = 'Shop the complete Melato index: designer apparel, tracksuits, denim, womenswear and accessories, curated in limited runs and built with intent.'
+    if template.name == 'collection' and collection.handle == 'all'
+      assign melato_meta_title = 'All Products'
+      assign melato_meta_description = 'Shop the complete Melato catalogue.'
     elsif template.name == 'page' and page.handle == 'contact'
       assign melato_meta_title = page.title | default: 'Contact'
-      assign melato_meta_description = 'Contact Melato for order support, sizing, delivery, returns, press and general inquiries. Our customer care team is here to help.'
-    elsif request.path contains '/policies/privacy-policy'
-      assign melato_meta_description = 'Read Melato’s Privacy Policy to understand how personal information is collected, used and protected when you browse, shop or contact us.'
-    elsif request.path contains '/policies/terms-of-service'
-      assign melato_meta_description = 'Read the Melato Terms of Service covering use of melato.ca, purchases, account responsibilities and other terms that govern the store.'
-    elsif request.path contains '/policies/refund-policy'
-      assign melato_meta_description = 'Review Melato’s return and refund policy, including eligibility, item condition requirements and how to request customer-care support.'
-    elsif request.path contains '/policies/shipping-policy'
-      assign melato_meta_description = 'Review Melato delivery information, including order preparation, complimentary standard delivery, tracking, duties and destination details.'
-    elsif template.name == 'cart'
-      assign melato_meta_description = blank
-      assign melato_noindex = true
-    elsif template.name == '404'
-      assign melato_meta_title = 'Page Not Found'
-      assign melato_meta_description = blank
-      assign melato_noindex = true
+      assign melato_meta_description = 'Contact Melato for order support, sizing, delivery, returns and general inquiries.'
     endif
   -%}
-  {%- if melato_noindex -%}<meta name="robots" content="noindex,follow">{%- endif -%}
   {%- if request.path == '/collections/denim-1' -%}<link rel="canonical" href="{{ shop.secure_url }}/collections/denim">{%- else -%}<link rel="canonical" href="{{ canonical_url }}">{%- endif -%}
   {%- if settings.favicon != blank -%}<link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width:32,height:32 }}">{%- endif -%}
   <title>{{ melato_meta_title | escape }}{%- if current_tags %} | Tagged {{ current_tags | join:', ' }}{% endif -%}{%- if current_page != 1 %} | Page {{ current_page }}{% endif -%}{%- unless melato_meta_title contains shop.name %} | {{ shop.name }}{% endunless -%}</title>
@@ -72,6 +49,6 @@
   {%- capture melato_cart_output -%}{%- render 'cart-drawer' -%}{%- endcapture -%}
   <div class="melato-utility-layer" aria-label="Store utilities"><div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>{% render 'melato-rendered-output-filters', html:melato_cart_output, context:'cart' %}{%- render 'search-drawer' -%}{%- render 'mobile-menu' -%}{%- render 'quick-view-modal' -%}<div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div></div>
   <script>window.DRIP={shop:{currency:{{ shop.currency | json }},moneyFormat:{{ shop.money_format | json }},locale:{{ request.locale.iso_code | json }},freeShippingThreshold:0,routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},search:{{ routes.search_url | json }},collections:{{ routes.collections_url | json }}}},cart:{{ cart | json }},customer:{{ customer | json }},strings:{addedToCart:{{ 'cart.added' | t | json }},cartEmpty:{{ 'cart.empty' | t | json }},soldOut:{{ 'products.sold_out' | t | json }},unavailable:{{ 'products.unavailable' | t | json }},addToCart:{{ 'products.add_to_cart' | t | json }},outOfStock:{{ 'products.out_of_stock' | t | json }}}};</script>
-  <script src="{{ 'theme.js' | asset_url }}" defer></script><script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script><script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script><script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script><script src="{{ 'melato-pdp-polish.js' | asset_url }}" defer></script><script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script><script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>{%- if template.name == 'collection' -%}<script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>{%- endif -%}{% render 'melato-living-lookbook-loader' %}{% render 'melato-back-in-stock-loader' %}{% render 'melato-product-color-engine' %}
+  <script src="{{ 'theme.js' | asset_url }}" defer></script><script src="{{ 'melato-hero-video.js' | asset_url }}" defer></script><script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script><script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script><script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script><script src="{{ 'melato-pdp-polish.js' | asset_url }}" defer></script><script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script><script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>{%- if template.name == 'collection' -%}<script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>{%- endif -%}{% render 'melato-living-lookbook-loader' %}{% render 'melato-back-in-stock-loader' %}{% render 'melato-product-color-engine' %}
 </body>
 </html>
