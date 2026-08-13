@@ -1,8 +1,4 @@
-{% comment %}
-  Melato native variant waitlist.
-  Captures the selected product and variant through Shopify's customer form.
-{% endcomment %}
-
+{% comment %}Melato stock notification / clean QA 2026-08-11.{% endcomment %}
 {%- liquid
   assign bis_variant = product.selected_or_first_available_variant
   assign bis_id = 'BackInStock-' | append: product.id
@@ -10,22 +6,6 @@
   assign bis_product_title = product.title | strip_html | replace: ',', '' | strip
   assign bis_variant_title = bis_variant.title | strip_html | replace: ',', '' | strip
   assign bis_sku = bis_variant.sku | default: 'not-assigned' | replace: ',', '' | strip
-  assign bis_type_down = product.product_type | downcase
-  assign bis_title_down = product.title | downcase
-  assign bis_is_fragrance = false
-
-  if bis_type_down contains 'fragrance' or bis_type_down contains 'eau de' or bis_title_down contains 'eau de toilette' or bis_title_down contains 'eau de parfum' or bis_title_down contains 'perfume'
-    assign bis_is_fragrance = true
-  endif
-
-  if bis_is_fragrance
-    assign bis_unavailable_heading = bis_variant_title | append: ' currently unavailable'
-  elsif product.has_only_default_variant
-    assign bis_unavailable_heading = 'Currently unavailable'
-  else
-    assign bis_unavailable_heading = 'Selected size currently unavailable'
-  endif
-
   capture bis_tags
     echo 'back-in-stock, BIS Product: ' | append: bis_product_title
     echo ', BIS Product Handle: ' | append: product.handle
@@ -34,126 +14,8 @@
     echo ', BIS SKU: ' | append: bis_sku
   endcapture
 -%}
-
-<div
-  class="melato-bis"
-  id="{{ bis_id }}"
-  data-bis-root
-  data-product-id="{{ product.id }}"
-  data-product-handle="{{ product.handle | escape }}"
-  {% if bis_variant.available %}hidden aria-hidden="true"{% else %}aria-hidden="false"{% endif %}
->
-  {% form 'customer', id: bis_form_id, class: 'melato-bis__form', novalidate: 'novalidate' %}
-    <input type="hidden" name="contact[tags]" value="{{ bis_tags | strip | escape }}" data-bis-tags>
-    <input type="hidden" name="contact[accepts_marketing]" value="true">
-
-    {% if form.posted_successfully? %}
-      <div class="melato-bis__message melato-bis__message--success" role="status" tabindex="-1">
-        <span aria-hidden="true">✓</span>
-        <span>You are on the priority notification list for this item.</span>
-      </div>
-    {% else %}
-      {% if form.errors %}
-        <div class="melato-bis__message melato-bis__message--error" role="alert">{{ form.errors | default_errors }}</div>
-      {% endif %}
-
-      <div class="melato-bis__content">
-        <p class="melato-bis__eyebrow">Inventory notice</p>
-        <h2 class="melato-bis__title">{{ bis_unavailable_heading }}</h2>
-        <p class="melato-bis__subtitle">
-          Join the priority list for <strong data-bis-variant-label>{{ bis_variant.title }}</strong>.
-          We will contact you if inventory returns or the next allocation opens.
-        </p>
-
-        <div class="melato-bis__input-group">
-          <label class="visually-hidden" for="BisEmail-{{ product.id }}">Email address for stock notification</label>
-          <input
-            type="email"
-            name="contact[email]"
-            id="BisEmail-{{ product.id }}"
-            class="melato-bis__input"
-            value="{{ customer.email | default: form.email | escape }}"
-            placeholder="ENTER YOUR EMAIL ADDRESS"
-            autocomplete="email"
-            inputmode="email"
-            required
-          >
-          <button type="submit" class="melato-bis__button">Join waitlist</button>
-        </div>
-
-        <p class="melato-bis__consent">By joining, you agree to receive this inventory alert and related Melato product updates. Unsubscribe at any time.</p>
-      </div>
-    {% endif %}
-  {% endform %}
-
-  <script type="application/json" data-bis-variants>{{ product.variants | json }}</script>
+<div class="melato-bis" id="{{ bis_id }}" data-bis-root data-product-id="{{ product.id }}" data-product-handle="{{ product.handle | escape }}" {% if bis_variant.available %}hidden aria-hidden="true"{% else %}aria-hidden="false"{% endif %}>
+  {% form 'customer', id: bis_form_id, class: 'melato-bis__form', novalidate: 'novalidate' %}<input type="hidden" name="contact[tags]" value="{{ bis_tags | strip | escape }}" data-bis-tags>{% if form.posted_successfully? %}<p class="melato-bis__success" role="status" tabindex="-1">We’ll email you if this option becomes available.</p>{% else %}{% if form.errors %}<div class="melato-bis__error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}<div class="melato-bis__content"><p class="melato-bis__eyebrow">Stock notification</p><h2 class="melato-bis__title">Out of stock</h2><p class="melato-bis__subtitle">Enter your email to be notified if <strong data-bis-variant-label>{{ bis_variant.title }}</strong> becomes available.</p><div class="melato-bis__input-group"><label class="visually-hidden" for="BisEmail-{{ product.id }}">Email address</label><input type="email" name="contact[email]" id="BisEmail-{{ product.id }}" class="melato-bis__input" value="{{ customer.email | default: form.email | escape }}" placeholder="Email address" autocomplete="email" inputmode="email" required><button type="submit" class="melato-bis__button">Notify me</button></div><p class="melato-bis__note">Stock notification only.</p></div>{% endif %}{% endform %}<script type="application/json" data-bis-variants>{{ product.variants | json }}</script>
 </div>
-
-<style>
-.melato-bis[hidden]{display:none!important}.melato-bis{margin:18px 0 4px;padding:20px;background:#0c0c0d;border:1px solid rgba(255,255,255,.12);border-radius:18px;color:#f5f1e8}.melato-bis__eyebrow{margin:0 0 7px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#d3a74a}.melato-bis__title{margin:0 0 8px;font-size:14px;line-height:1.25;letter-spacing:.14em;text-transform:uppercase;color:#fff}.melato-bis__subtitle{margin:0 0 14px;font-size:12px;line-height:1.55;color:#aaa49b}.melato-bis__subtitle strong{color:#f5f1e8;font-weight:700}.melato-bis__input-group{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.melato-bis__input,.melato-bis__button{min-height:48px;border-radius:12px;font:inherit}.melato-bis__input{width:100%;box-sizing:border-box;background:#050505;border:1px solid rgba(255,255,255,.2);color:#fff;padding:0 14px;font-size:12px;letter-spacing:.05em;outline:none}.melato-bis__input:focus{border-color:#d3a74a;box-shadow:0 0 0 2px rgba(211,167,74,.16)}.melato-bis__button{border:0;background:#f5f1e8;color:#080808;padding:0 18px;font-size:11px;font-weight:900;letter-spacing:.11em;text-transform:uppercase;cursor:pointer}.melato-bis__consent{margin:10px 0 0;font-size:10px;line-height:1.45;color:#77726b}.melato-bis__message{display:flex;align-items:flex-start;gap:9px;font-size:11px;line-height:1.5;letter-spacing:.06em;text-transform:uppercase}.melato-bis__message--success{color:#86d7a2}.melato-bis__message--error{color:#ff969e}.melato-bis__message--error ul{margin:0;padding-left:18px}@media(max-width:560px){.melato-bis__input-group{grid-template-columns:1fr}.melato-bis__button{width:100%}}
-</style>
-
-<script>
-(function(){
-  var root=document.getElementById({{ bis_id | json }});
-  if(!root||root.dataset.bisReady==='true')return;
-  root.dataset.bisReady='true';
-
-  var section=root.closest('[data-product-section],.melato-clean-product,.melato-luxury,.melato-fragrance-pdp,.mzp')||document;
-  var productForm=section.querySelector('form[action*="/cart/add"]');
-  var variantsNode=root.querySelector('[data-bis-variants]');
-  var tagsInput=root.querySelector('[data-bis-tags]');
-  var variantLabel=root.querySelector('[data-bis-variant-label]');
-  var dynamicCheckout=section.querySelector('.pdp-dynamic-checkout,.melato-clean-product__dynamic-checkout,.melato-fragrance-pdp__dynamic-checkout,.shopify-payment-button');
-  var variants=[];
-
-  try{variants=JSON.parse(variantsNode.textContent||'[]')}catch(error){return}
-  if(!productForm||!variants.length)return;
-
-  var variantSelect=productForm.querySelector('[name="id"]');
-  if(variantSelect&&variantSelect.options){
-    Array.prototype.forEach.call(variantSelect.options,function(option){if(/sold out|out of stock/i.test(option.textContent||''))option.disabled=false});
-  }
-
-  function selectedOptions(){
-    return Array.prototype.map.call(section.querySelectorAll('.melato-clean-product__option,.pdp-option,.melato-fragrance-pdp__option,[data-option]'),function(group){
-      var checked=group.querySelector('input:checked');
-      return checked?checked.value:null;
-    });
-  }
-
-  function resolveVariant(){
-    var options=selectedOptions();
-    var byOptions=variants.find(function(variant){return options.length&&variant.options.every(function(value,index){return options[index]===value})});
-    if(byOptions)return byOptions;
-    if(variantSelect)return variants.find(function(variant){return String(variant.id)===String(variantSelect.value)});
-    return variants[0];
-  }
-
-  function cleanTag(value){return String(value||'not-assigned').replace(/,/g,'').trim()}
-
-  function syncWaitlist(){
-    var variant=resolveVariant();
-    if(!variant)return;
-    var isAvailable=Boolean(variant.available);
-    root.hidden=isAvailable;
-    root.setAttribute('aria-hidden',isAvailable?'true':'false');
-    if(dynamicCheckout)dynamicCheckout.hidden=!isAvailable;
-    if(variantLabel)variantLabel.textContent=variant.title||'Selected option';
-    if(tagsInput){
-      tagsInput.value=[
-        'back-in-stock',
-        'BIS Product: '+cleanTag({{ product.title | json }}),
-        'BIS Product Handle: '+cleanTag({{ product.handle | json }}),
-        'BIS Variant: '+cleanTag(variant.title),
-        'BIS Variant ID: '+cleanTag(variant.id),
-        'BIS SKU: '+cleanTag(variant.sku)
-      ].join(', ');
-    }
-  }
-
-  productForm.addEventListener('change',function(){window.setTimeout(syncWaitlist,0)});
-  document.addEventListener('variant:change',syncWaitlist);
-  syncWaitlist();
-})();
-</script>
+<style>.melato-bis[hidden]{display:none!important}.melato-bis{margin:18px 0 0;padding:18px 0 0;border-top:1px solid rgba(245,241,232,.12);color:#f5f1e8;background:transparent}.melato-bis__eyebrow{margin:0 0 7px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--pdp-title-accent,#d3a74a)}.melato-bis__title{margin:0 0 8px;font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:20px;line-height:1;text-transform:uppercase;color:#f5f1e8}.melato-bis__subtitle{margin:0 0 14px;font-size:13px;line-height:1.55;color:#aaa49b}.melato-bis__input-group{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.melato-bis__input,.melato-bis__button{min-height:48px;border-radius:12px;font:inherit}.melato-bis__input{width:100%;box-sizing:border-box;background:#09090a;border:1px solid rgba(255,255,255,.16);color:#fff;padding:0 14px;font-size:13px}.melato-bis__button{border:0;background:#f5f1e8;color:#080808;padding:0 18px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.melato-bis__note{margin:9px 0 0;color:#77726b;font-size:10px}.melato-bis__success{margin:0;color:#9ed7ae;font-size:13px}.melato-bis__error{color:#ff969e;font-size:12px}@media(max-width:560px){.melato-bis__input-group{grid-template-columns:1fr}}</style>
+<script>(function(){var root=document.getElementById({{ bis_id | json }});if(!root||root.dataset.bisReady==='true')return;root.dataset.bisReady='true';var section=root.closest('[data-product-section],.melato-clean-product,.melato-luxury,.melato-fragrance-pdp,.mzp')||document;var productForm=section.querySelector('form[action*="/cart/add"]');var variantsNode=root.querySelector('[data-bis-variants]');var tagsInput=root.querySelector('[data-bis-tags]');var variantLabel=root.querySelector('[data-bis-variant-label]');var variants=[];try{variants=JSON.parse(variantsNode.textContent||'[]')}catch(error){return}if(!productForm||!variants.length)return;function selectedOptions(){return Array.prototype.map.call(section.querySelectorAll('.melato-clean-product__option,.pdp-option,.melato-fragrance-pdp__option,[data-option]'),function(group){var checked=group.querySelector('input:checked');return checked?checked.value:null})}function resolveVariant(){var options=selectedOptions();var byOptions=variants.find(function(v){return options.length&&v.options.every(function(value,index){return options[index]===value})});if(byOptions)return byOptions;var id=productForm.querySelector('[name="id"]');if(id)return variants.find(function(v){return String(v.id)===String(id.value)});return variants[0]}function cleanTag(v){return String(v||'not-assigned').replace(/,/g,'').trim()}function syncWaitlist(){var variant=resolveVariant();if(!variant)return;root.hidden=Boolean(variant.available);root.setAttribute('aria-hidden',variant.available?'true':'false');if(variantLabel)variantLabel.textContent=variant.title||'selected option';if(tagsInput)tagsInput.value=['back-in-stock','BIS Product: '+cleanTag({{ product.title | json }}),'BIS Product Handle: '+cleanTag({{ product.handle | json }}),'BIS Variant: '+cleanTag(variant.title),'BIS Variant ID: '+cleanTag(variant.id),'BIS SKU: '+cleanTag(variant.sku)].join(', ')}productForm.addEventListener('change',function(){setTimeout(syncWaitlist,0)});document.addEventListener('variant:change',syncWaitlist);syncWaitlist()})();</script>

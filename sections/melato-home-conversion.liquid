@@ -1,55 +1,28 @@
-{% comment %}
-  Melato homepage conversion section.
-{% endcomment %}
+{% comment %}Melato homepage opening / clean QA 2026-08-11{% endcomment %}
 {%- liquid
   assign home_collection = section.settings.featured_collection
   if home_collection == blank
-    assign home_collection = collections['all']
+    assign home_collection = collections['new-arrivals']
   endif
 -%}
-<section class="melato-home-conversion" id="MelatoHomeConversion-{{ section.id }}">
-  <div class="melato-home-conversion__shell">
-    <div class="melato-home-conversion__hero">
-      <div>
-        {% if section.settings.eyebrow != blank %}<p class="melato-home-conversion__eyebrow">{{ section.settings.eyebrow }}</p>{% endif %}
-        <h1 class="melato-home-conversion__title">{{ section.settings.heading }}</h1>
-        {% if section.settings.copy != blank %}<p class="melato-home-conversion__copy">{{ section.settings.copy }}</p>{% endif %}
+<section class="melato-home-clean" id="MelatoHomeClean-{{ section.id }}">
+  <div class="melato-home-clean__shell">
+    <header class="melato-home-clean__header">
+      {%- if section.settings.eyebrow != blank -%}<p class="melato-home-clean__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+      <h1>{{ section.settings.heading }}</h1>
+      {%- if section.settings.copy != blank -%}<p class="melato-home-clean__copy">{{ section.settings.copy }}</p>{%- endif -%}
+      <a class="melato-home-clean__cta" href="{{ home_collection.url | default: '/collections/new-arrivals' }}">View collection</a>
+    </header>
+    {%- if home_collection != blank and home_collection.products_count > 0 -%}
+      <div class="melato-home-clean__products" aria-label="Featured products">
+        {%- for product in home_collection.products limit:4 -%}<div>{%- render 'product-card', product: product -%}</div>{%- endfor -%}
       </div>
-    </div>
-    <div class="melato-home-conversion__sections">
-      <article class="melato-home-conversion__panel"><p class="melato-section-eyebrow">Limited productions</p><h2>Built in small runs</h2><p>Each release is treated like a capsule: focused colourways, intentional graphics, and no unnecessary overproduction.</p></article>
-      <article class="melato-home-conversion__panel"><p class="melato-section-eyebrow">Melato Picks</p><h2>Pieces in Rotation</h2><p>Browse selected pieces from the current Melato rotation, then complete the set with matching jackets and pants.</p></article>
-      <article class="melato-home-conversion__panel"><p class="melato-section-eyebrow">Brand Value</p><h2>Culture-forward premium apparel</h2><p>Melato combines retro athletic codes, symbolic graphics, and elevated product photography for a sharper identity.</p></article>
-    </div>
-    {% if home_collection != blank and home_collection.products_count > 0 %}
-      <div class="melato-home-conversion__products" aria-label="Melato picks">
-        {% for product in home_collection.products limit: 4 %}
-          <a class="melato-home-conversion__product" href="{{ product.url }}">
-            {% if product.featured_image != blank %}
-              {{ product.featured_image | image_url: width: 900 | image_tag: class: 'melato-home-conversion__product-image', loading: 'lazy', widths: '320, 480, 640, 900', sizes: '(max-width: 749px) 100vw, 25vw', alt: product.featured_image.alt | default: product.title }}
-            {% endif %}
-            <div class="melato-home-conversion__product-text">
-              <p class="melato-home-conversion__product-title">{{ product.title }}</p>
-              <span class="visually-hidden">, </span>
-              <p class="melato-home-conversion__product-price" aria-label="Price">{{ product.price | money }}</p>
-            </div>
-          </a>
-        {% endfor %}
-      </div>
-    {% endif %}
+    {%- endif -%}
   </div>
 </section>
+<style>
+#MelatoHomeClean-{{ section.id }}{background:#080808;color:#f5f1e8;padding:clamp(54px,8vw,110px) 0 44px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:min(1360px,calc(100% - 32px));margin:auto}#MelatoHomeClean-{{ section.id }} .melato-home-clean__header{max-width:930px;margin:0 auto clamp(42px,6vw,72px);text-align:center}#MelatoHomeClean-{{ section.id }} .melato-home-clean__eyebrow{margin:0 0 14px;color:#d3a74a;font:700 10px/1.2 var(--font-mono-family,monospace);letter-spacing:.2em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} h1{margin:0;font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:clamp(58px,11vw,150px);line-height:.84;letter-spacing:-.02em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} .melato-home-clean__copy{max-width:560px;margin:22px auto 0;color:#aaa49b;font-size:16px;line-height:1.55}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta{display:inline-flex;margin-top:26px;min-height:46px;align-items:center;padding:0 20px;border:1px solid rgba(245,241,232,.22);border-radius:999px;color:#f5f1e8;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}@media(max-width:900px){#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}@media(max-width:520px){#MelatoHomeClean-{{ section.id }}{padding-top:44px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:calc(100% - 24px)}}
+</style>
 {% schema %}
-{
-  "name": "Melato conversion hero",
-  "tag": "section",
-  "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Limited-drop apparel" },
-    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Premium retro made to stand out before it sells out." },
-    { "type": "textarea", "id": "copy", "label": "Copy", "default": "Melato tracksuits and statement pieces built with bold colour-blocking, premium textures, and limited capsule energy." },
-    { "type": "collection", "id": "featured_collection", "label": "Featured product collection" }
-  ],
-  "presets": [{ "name": "Melato conversion hero" }]
-}
+{"name":"Melato clean homepage","tag":"section","settings":[{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Melato"},{"type":"textarea","id":"heading","label":"Heading","default":"THE CULTURE WEARS US"},{"type":"textarea","id":"copy","label":"Copy","default":"Tailored for movement, cut with intent."},{"type":"collection","id":"featured_collection","label":"Featured collection"}],"presets":[{"name":"Melato clean homepage"}]}
 {% endschema %}
-{% comment %} Direct live policy sync 2026-08-07c {% endcomment %}
