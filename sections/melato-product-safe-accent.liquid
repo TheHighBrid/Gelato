@@ -1,8 +1,14 @@
-{% comment %}MELATO - Product Safe Accent Controller{% endcomment %}
+{% comment %}
+  MELATO - Product Safe Accent Controller
+  Accent applies only to small section labels / UI accents.
+  Big PDP headings stay white/bold for hierarchy and readability.
+{% endcomment %}
+
 {%- liquid
   assign title_down = product.title | downcase
   assign tags_down = product.tags | join: ' ' | downcase
   assign raw_accent = product.metafields.custom.ui_accent.value
+
   if raw_accent == blank
     if tags_down contains 'colorway_divididos' or title_down contains 'divididos'
       assign raw_accent = '#9E2A3D'
@@ -37,8 +43,108 @@
     endif
   endif
 -%}
+
 <style id="melato-product-safe-accent-{{ section.id }}">
-body.template-product,body[class*="template-product"]{--melato-product-safe-accent:{{ raw_accent }};--melato-product-accent:{{ raw_accent }}}body.template-product .melato-pdp-rebuild,body[class*="template-product"] .melato-pdp-rebuild{--pdp-title-accent:{{ raw_accent }}!important;--pdp-accent-2:{{ raw_accent }}!important}body.template-product .melato-pdp-rebuild .pdp-eyebrow,body.template-product .melato-pdp-rebuild .pdp-kicker,body.template-product .melato-pdp-rebuild .pdp-option legend,body.template-product .melato-pdp-rebuild .pdp-spec summary,body.template-product .melato-pdp-rebuild .pdp-proof-mini strong,body.template-product .melato-pdp-rebuild .pdp-set-label,body.template-product .melato-pdp-rebuild .pdp-sticky-atc span,body.template-product .melato-pdp-rebuild .pdp-section-head .pdp-kicker{color:{{ raw_accent }}!important}body.template-product .melato-pdp-rebuild .pdp-panel h2,body.template-product .melato-pdp-rebuild .pdp-section-head h2{color:#f5f1e8!important;font-weight:950!important}body.template-product .melato-pdp-rebuild .pdp-choice.is-selected span,body.template-product .melato-pdp-rebuild .pdp-thumb.is-active{border-color:{{ raw_accent }}!important;box-shadow:0 0 0 1px {{ raw_accent }}!important}
+  body.template-product,
+  body[class*="template-product"]{
+    --melato-product-safe-accent: {{ raw_accent }};
+    --melato-product-accent: {{ raw_accent }};
+  }
+
+  body.template-product .melato-pdp-rebuild,
+  body[class*="template-product"] .melato-pdp-rebuild{
+    --pdp-title-accent: {{ raw_accent }} !important;
+    --pdp-accent-2: {{ raw_accent }} !important;
+  }
+
+  /* Accent: tiny labels + UI states only */
+  body.template-product .melato-pdp-rebuild .pdp-eyebrow,
+  body.template-product .melato-pdp-rebuild .pdp-kicker,
+  body.template-product .melato-pdp-rebuild .pdp-option legend,
+  body.template-product .melato-pdp-rebuild .pdp-spec summary,
+  body.template-product .melato-pdp-rebuild .pdp-proof-mini strong,
+  body.template-product .melato-pdp-rebuild .pdp-set-label,
+  body.template-product .melato-pdp-rebuild .pdp-sticky-atc span,
+  body.template-product .melato-pdp-rebuild .pdp-section-head .pdp-kicker,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-eyebrow,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-kicker,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-option legend,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-spec summary,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-proof-mini strong,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-set-label,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-sticky-atc span,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-section-head .pdp-kicker{
+    color: {{ raw_accent }} !important;
+  }
+
+  /* Big headings: always white and bold */
+  body.template-product .melato-pdp-rebuild .pdp-panel h2,
+  body.template-product .melato-pdp-rebuild .pdp-section-head h2,
+  body.template-product .melato-pdp-rebuild #PDPStory-{{ section.id }},
+  body.template-product .melato-pdp-rebuild #PDPTech-{{ section.id }},
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-panel h2,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-section-head h2,
+  body[class*="template-product"] .melato-pdp-rebuild [id^="PDPStory-"],
+  body[class*="template-product"] .melato-pdp-rebuild [id^="PDPTech-"]{
+    color: #f5f1e8 !important;
+    font-weight: 950 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-detail-list li:before,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-detail-list li:before{
+    color: {{ raw_accent }} !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-choice.is-selected span,
+  body.template-product .melato-pdp-rebuild .pdp-thumb.is-active,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-choice.is-selected span,
+  body[class*="template-product"] .melato-pdp-rebuild .pdp-thumb.is-active{
+    border-color: {{ raw_accent }} !important;
+    box-shadow: 0 0 0 1px {{ raw_accent }} !important;
+  }
+
+  body.template-product .announcement-bar,
+  body.template-product .announcement-bar *,
+  body.template-product [class*="announcement"],
+  body.template-product [class*="announcement"] *,
+  body[class*="template-product"] .announcement-bar,
+  body[class*="template-product"] .announcement-bar *,
+  body[class*="template-product"] [class*="announcement"],
+  body[class*="template-product"] [class*="announcement"] *{
+    color: {{ raw_accent }} !important;
+    border-color: color-mix(in srgb, {{ raw_accent }} 50%, transparent) !important;
+  }
 </style>
-<script>(function(){function applyMelatoHeadingFix(){document.querySelectorAll('.melato-pdp-rebuild [id^="PDPStory-"]').forEach(function(el){if((el.textContent||'').trim().toLowerCase()==='cut with intent.')el.textContent='The story.';el.style.color='#f5f1e8';el.style.fontWeight='950'});document.querySelectorAll('.melato-pdp-rebuild [id^="PDPTech-"]').forEach(function(el){el.style.color='#f5f1e8';el.style.fontWeight='950'})}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applyMelatoHeadingFix);else applyMelatoHeadingFix()})();</script>
-{% schema %}{"name":"Product safe accent","tag":"section","class":"section-melato-product-safe-accent","settings":[],"presets":[{"name":"Product safe accent"}]}{% endschema %}
+
+<script>
+  (function(){
+    function applyMelatoHeadingFix(){
+      document.querySelectorAll('.melato-pdp-rebuild [id^="PDPStory-"]').forEach(function(el){
+        if ((el.textContent || '').trim().toLowerCase() === 'cut with intent.') {
+          el.textContent = 'The story.';
+        }
+        el.style.color = '#f5f1e8';
+        el.style.fontWeight = '950';
+      });
+      document.querySelectorAll('.melato-pdp-rebuild [id^="PDPTech-"]').forEach(function(el){
+        el.style.color = '#f5f1e8';
+        el.style.fontWeight = '950';
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', applyMelatoHeadingFix);
+    } else {
+      applyMelatoHeadingFix();
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product safe accent",
+  "tag": "section",
+  "class": "section-melato-product-safe-accent",
+  "settings": [],
+  "presets": [{ "name": "Product safe accent" }]
+}
+{% endschema %}
