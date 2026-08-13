@@ -11,49 +11,27 @@
     const root = document.querySelector('[id^="MelatoPDP-"]') || document.querySelector('main');
     if (!root) return;
 
-    cleanCopy();
     polishSet();
-    dynamicCompleteSet();
     bindGalleryThumbs(root);
     ensureProductGallery(root);
     bindMainImageZoom(root);
 
     window.setTimeout(() => {
       ensureProductGallery(root);
+      bindGalleryThumbs(root);
       bindMainImageZoom(root);
     }, 900);
 
-    // Debounced + LOCK_KEY-aware: defers while guard/nav scripts are mid-patch.
-    const LOCK_KEY = '__MELATO_AUDIT_PATCHING__';
     let polishTimer;
     new MutationObserver(() => {
-      if (window[LOCK_KEY]) return;
       clearTimeout(polishTimer);
       polishTimer = setTimeout(() => {
-        if (window[LOCK_KEY]) return;
-        cleanCopy();
         polishSet();
         bindGalleryThumbs(root);
         bindMainImageZoom(root);
       }, 300);
     }).observe(root, { childList: true, subtree: true });
   });
-
-  function cleanCopy() {
-    document.querySelectorAll('.pdp-rte, .pdp-detail-list li, .pdp-proof-mini span, .pdp-thesis, .product__description, .rte').forEach((el) => {
-      if (!el || el.children.length) return;
-      const original = el.textContent || '';
-      const cleaned = original
-        .replace(/Exact fibre percentage is not published yet\.?/gi, '')
-        .replace(/fibre percentage is not published yet\.?/gi, '')
-        .replace(/fiber percentage is not published yet\.?/gi, '')
-        .replace(/to be confirmed|tbd|not provided|information unavailable|details unavailable/gi, '')
-        .trim();
-      if (cleaned !== original.trim()) {
-        el.textContent = cleaned || 'Premium construction selected for clean movement, shape, and everyday wearability.';
-      }
-    });
-  }
 
   function polishSet() {
     document.querySelectorAll('.pdp-set h2').forEach((el) => {
@@ -81,30 +59,6 @@
       const price = el.querySelector('strong');
       if (label) label.textContent = 'Full set price';
       if (price) price.style.marginLeft = 'auto';
-    });
-  }
-
-  function dynamicCompleteSet() {
-    document.querySelectorAll('.melato-set').forEach((box) => {
-      if (box.dataset.dynamicPriceLoaded === 'true') return;
-      const link = box.querySelector('a[href*="/products/"]');
-      if (!link) return;
-
-      const match = link.getAttribute('href').match(/\/products\/([^?#/]+)/);
-      if (!match) return;
-      box.dataset.dynamicPriceLoaded = 'true';
-
-      fetch(`/products/${match[1]}.js`, { headers: { Accept: 'application/json' } })
-        .then((response) => response.ok ? response.json() : null)
-        .then((product) => {
-          if (!product) return;
-          const cents = product.price_min || product.price || 0;
-          const name = box.querySelector('.melato-set__name');
-          const price = box.querySelector('.melato-set__price');
-          if (name) name.textContent = product.title;
-          if (price) price.textContent = `$${(cents / 100).toFixed(2)} CAD`;
-        })
-        .catch(() => { box.dataset.dynamicPriceLoaded = 'false'; });
     });
   }
 
