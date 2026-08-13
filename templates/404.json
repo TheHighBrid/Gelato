@@ -1,13 +1,41 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
+    "featured_collection_D4thCL": {
+      "type": "featured-collection",
+      "name": "Featured Collection",
+      "settings": {
+        "eyebrow": "THE FAVORITES",
+        "title": "BEST SELLERS",
+        "collection": "best-sellers",
+        "products_to_show": 12,
+        "columns_desktop": 2,
+        "columns_mobile": 2,
+        "show_view_all": true,
+        "view_all_label": "View All Favorites Best Sellers"
+      }
+    },
     "main": {
       "type": "main-404",
+      "disabled": true,
+      "name": "-",
       "settings": {
-        "subheading": "Nothing lives here.",
-        "cta_label": "View new arrivals",
-        "cta_url": "/collections/new-arrivals"
+        "subheading": ".",
+        "cta_label": "Back to the Drop",
+        "cta_url": "/"
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "featured_collection_D4thCL",
+    "main"
+  ]
 }

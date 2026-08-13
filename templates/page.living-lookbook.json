@@ -1,42 +1,35 @@
 /*
  * ------------------------------------------------------------
- * Living Book / World of Melato
- * Evidence sections remain authoritative for filed imagery and product mapping.
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
 {
   "sections": {
     "main": {
-      "type": "melato-world-living-intro",
-      "settings": {
-        "eyebrow": "World of Melato / Living Book",
-        "title": "LIVING BOOK",
-        "season": "Season 02",
-        "location": "Montreal / Ottawa",
-        "deck": "A living record of the uniform outside the studio.",
-        "statement": "Flash, movement, afterimages. Clothes are documented where they acquire a life of their own."
-      }
+      "type": "melato-living-lookbook-old",
+      "settings": {}
     },
     "evidence_20260714": {
       "type": "melato-living-lookbook-evidence",
       "settings": {
-        "case_code": "LB-04",
-        "case_subtitle": "CASE FILE / UNRESOLVED",
-        "case_title": "THE LIVING BOOK",
-        "outline_title": "EVIDENCE",
-        "deck": "A fashion story reconstructed from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive.",
-        "filed_date": "10 AUG 2026",
-        "frame_limit": 54,
-        "include_case03": false
+        "archive_label": "CASE FILE 02",
+        "archive_title": "NEW EVIDENCE",
+        "archive_note": "Ninety-one living-study photographs, expanded with thirty-five newly filed frames and presented as a continuous evidence archive.",
+        "case_code": "LL-02",
+        "archive_source": "case02"
       },
       "blocks": {
         "shop_01": {"type":"shoppable_frame","settings":{"frame_number":1,"product":"ojos-velour-track-jacket"}},
         "shop_04": {"type":"shoppable_frame","settings":{"frame_number":4,"product":"ojos-velour-track-jacket"}},
-        "shop_10": {"type":"shoppable_frame","settings":{"frame_number":8,"product":"taupe-secret-retro-panel-jacket"}},
-        "shop_18": {"type":"shoppable_frame","settings":{"frame_number":9,"product":"noir-alibi-lace-corset-dress"}},
-        "shop_24": {"type":"shoppable_frame","settings":{"frame_number":10,"product":"conquista-velour-track-jacket"}},
-        "shop_18b": {"type":"shoppable_frame","settings":{"frame_number":18,"product":"conquista-velour-track-jacket"}},
-        "shop_24b": {"type":"shoppable_frame","settings":{"frame_number":24,"product":"conquista-velour-track-jacket"}}
+        "shop_10": {"type":"shoppable_frame","settings":{"frame_number":8,"product":"the-taupe-secret-retro-panel-jacket"}},
+        "shop_18": {"type":"shoppable_frame","settings":{"frame_number":9,"product":"the-noir-alibi-lace-corset-dress"}},
+        "shop_24": {"type":"shoppable_frame","settings":{"frame_number":10,"product":"the-conquista-premium-velour-track-jacket-by-melato"}},
+        "shop_18b": {"type":"shoppable_frame","settings":{"frame_number":18,"product":"the-conquista-premium-velour-track-jacket-by-melato"}},
+        "shop_24b": {"type":"shoppable_frame","settings":{"frame_number":24,"product":"the-conquista-premium-velour-track-jacket-by-melato"}}
       },
       "block_order": ["shop_01","shop_04","shop_10","shop_18","shop_24","shop_18b","shop_24b"]
     },
