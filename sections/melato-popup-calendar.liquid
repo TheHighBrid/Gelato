@@ -1,0 +1,95 @@
+<section class="melato-popup" id="MelatoPopup-{{ section.id }}">
+  <div class="melato-popup__hero">
+    <p class="melato-popup__eyebrow">MELATO / FIELD OPERATIONS</p>
+    <h1>POPUP<br>CALENDAR</h1>
+    <p class="melato-popup__lede">Three dates. One rule: the exact location is released 48 hours before each show.</p>
+  </div>
+
+  <div class="melato-popup__calendar" aria-label="Upcoming Melato popup shows">
+    <article class="melato-popup__event melato-popup__event--next">
+      <div class="melato-popup__number">05</div>
+      <div>
+        <p class="melato-popup__status">NEXT OPERATION</p>
+        <h2>AUGUST 20, 2026</h2>
+        <p>Popup Show #5</p>
+      </div>
+      <div class="melato-popup__location">LOCATION<br><strong>RELEASED 48H PRIOR</strong></div>
+    </article>
+    <article class="melato-popup__event">
+      <div class="melato-popup__number">06</div>
+      <div>
+        <p class="melato-popup__status">UPCOMING</p>
+        <h2>SEPTEMBER 21, 2026</h2>
+        <p>Popup Show #6</p>
+      </div>
+      <div class="melato-popup__location">LOCATION<br><strong>RELEASED 48H PRIOR</strong></div>
+    </article>
+    <article class="melato-popup__event">
+      <div class="melato-popup__number">07</div>
+      <div>
+        <p class="melato-popup__status">UPCOMING</p>
+        <h2>OCTOBER 21, 2026</h2>
+        <p>Popup Show #7</p>
+      </div>
+      <div class="melato-popup__location">LOCATION<br><strong>RELEASED 48H PRIOR</strong></div>
+    </article>
+  </div>
+
+  <div class="melato-popup__mechanics">
+    <div>
+      <p class="melato-popup__eyebrow">HOW IT WORKS</p>
+      <h2>THE LOCATION IS PART OF THE DROP.</h2>
+    </div>
+    <ol>
+      <li><span>01</span><p>Save the show date.</p></li>
+      <li><span>02</span><p>Return to this page 48 hours before the show for the location announcement.</p></li>
+      <li><span>03</span><p>Follow <a href="https://www.instagram.com/melato.ca" rel="noopener" target="_blank">@melato.ca</a> for the same field update.</p></li>
+      <li><span>04</span><p>Past shows, photographs and recaps are preserved in the Melato Journal.</p></li>
+    </ol>
+  </div>
+
+  <div class="melato-popup__archive">
+    <p class="melato-popup__eyebrow">CASE ARCHIVE</p>
+    <h2>PAST POPUP SHOWS</h2>
+    <p>Reports, photographs, recaps and artifacts from previous Melato popup operations.</p>
+    <a href="/blogs/news" class="melato-popup__cta">ENTER THE JOURNAL</a>
+  </div>
+</section>
+
+<style>
+#MelatoPopup-{{ section.id }}{--ink:#080808;--paper:#f1ede4;--line:rgba(241,237,228,.18);background:var(--ink);color:var(--paper);min-height:100vh;font-family:var(--font-body-family,'Barlow',sans-serif)}
+#MelatoPopup-{{ section.id }} .melato-popup__hero,#MelatoPopup-{{ section.id }} .melato-popup__calendar,#MelatoPopup-{{ section.id }} .melato-popup__mechanics,#MelatoPopup-{{ section.id }} .melato-popup__archive{width:min(1240px,calc(100% - 32px));margin-inline:auto}
+#MelatoPopup-{{ section.id }} .melato-popup__hero{padding:clamp(72px,10vw,150px) 0 clamp(54px,8vw,110px)}
+#MelatoPopup-{{ section.id }} .melato-popup__eyebrow,#MelatoPopup-{{ section.id }} .melato-popup__status{font:500 10px/1.4 var(--font-mono-family,monospace);letter-spacing:.19em;text-transform:uppercase;opacity:.68}
+#MelatoPopup-{{ section.id }} .melato-popup__hero h1{font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:clamp(76px,16vw,210px);font-weight:400;line-height:.75;letter-spacing:-.025em;margin:24px 0 32px}
+#MelatoPopup-{{ section.id }} .melato-popup__lede{max-width:520px;font-size:clamp(17px,2vw,24px);line-height:1.35;margin:0}
+#MelatoPopup-{{ section.id }} .melato-popup__calendar{border-top:1px solid var(--line)}
+#MelatoPopup-{{ section.id }} .melato-popup__event{display:grid;grid-template-columns:110px 1fr 240px;gap:24px;align-items:center;padding:30px 0;border-bottom:1px solid var(--line)}
+#MelatoPopup-{{ section.id }} .melato-popup__event--next{background:var(--paper);color:var(--ink);margin-inline:-16px;padding-inline:16px}
+#MelatoPopup-{{ section.id }} .melato-popup__number{font:400 clamp(42px,6vw,78px)/.8 var(--font-heading-family,'Bebas Neue',sans-serif)}
+#MelatoPopup-{{ section.id }} .melato-popup__event h2{font:400 clamp(28px,4vw,52px)/1 var(--font-heading-family,'Bebas Neue',sans-serif);margin:4px 0}
+#MelatoPopup-{{ section.id }} .melato-popup__event p{margin:0}
+#MelatoPopup-{{ section.id }} .melato-popup__location{text-align:right;font:400 10px/1.6 var(--font-mono-family,monospace);letter-spacing:.12em}
+#MelatoPopup-{{ section.id }} .melato-popup__location strong{font-weight:500}
+#MelatoPopup-{{ section.id }} .melato-popup__mechanics{display:grid;grid-template-columns:1fr 1fr;gap:60px;padding:clamp(80px,10vw,140px) 0}
+#MelatoPopup-{{ section.id }} .melato-popup__mechanics h2,#MelatoPopup-{{ section.id }} .melato-popup__archive h2{font:400 clamp(44px,7vw,86px)/.9 var(--font-heading-family,'Bebas Neue',sans-serif);margin:16px 0}
+#MelatoPopup-{{ section.id }} .melato-popup__mechanics ol{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+#MelatoPopup-{{ section.id }} .melato-popup__mechanics li{display:grid;grid-template-columns:48px 1fr;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)}
+#MelatoPopup-{{ section.id }} .melato-popup__mechanics li span{font:400 10px var(--font-mono-family,monospace);opacity:.55}
+#MelatoPopup-{{ section.id }} .melato-popup__mechanics li p{margin:0;line-height:1.5}
+#MelatoPopup-{{ section.id }} a{color:inherit}
+#MelatoPopup-{{ section.id }} .melato-popup__archive{padding:0 0 clamp(90px,12vw,170px);border-top:1px solid var(--line);padding-top:50px}
+#MelatoPopup-{{ section.id }} .melato-popup__archive>p:not(.melato-popup__eyebrow){max-width:520px;line-height:1.55}
+#MelatoPopup-{{ section.id }} .melato-popup__cta{display:inline-flex;margin-top:26px;padding:14px 20px;border:1px solid currentColor;text-decoration:none;font:600 11px var(--font-mono-family,monospace);letter-spacing:.12em}
+@media(max-width:760px){#MelatoPopup-{{ section.id }} .melato-popup__event{grid-template-columns:58px 1fr;gap:16px}#MelatoPopup-{{ section.id }} .melato-popup__location{grid-column:2;text-align:left;margin-top:-8px}#MelatoPopup-{{ section.id }} .melato-popup__mechanics{grid-template-columns:1fr;gap:38px}}
+</style>
+
+{% schema %}
+{
+  "name": "Popup Calendar",
+  "tag": "section",
+  "class": "melato-popup-calendar-section",
+  "settings": [],
+  "presets": [{"name":"Popup Calendar"}]
+}
+{% endschema %}
