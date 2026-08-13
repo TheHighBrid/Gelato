@@ -2,7 +2,7 @@
    Melato Concierge Strip — Shared Styles
    ============================================================ */
 
-.melato-page {
+:root {
   --melato-black: #0a0a0a;
   --melato-white: #ffffff;
   --melato-gray-100: #f5f5f5;

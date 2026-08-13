@@ -1,1 +1,125 @@
-{"current":{"color_background":"#000000","color_text":"#ffd9a5","color_muted":"#949494","color_accent":"#ff8f6c","color_accent_hover":"#ff4c0a","color_surface":"#1A1A1A","color_border":"#454545","color_error":"#8a0707","font_heading":"bebas_neue_n4","font_body":"archivo_black_n4","font_size_base":17,"line_height_body":1.6,"letter_spacing_heading":0,"favicon":"shopify://shop_images/Melato-logo-Favicon.png","share_image":"shopify://shop_images/1778940554608_4.png","header_bg":"#080808","header_text_color":"#ffcf8d","sticky_header":true,"header_transparent":true,"container_width":1400,"container_padding":48,"grid_gap":16,"border_radius":0,"card_image_ratio":"portrait","card_hover_second_image":true,"card_quick_view":false,"card_wishlist":true,"card_swatch_style":"square","card_show_vendor":false,"card_show_rating":false,"drop_social_proof":true,"drop_social_proof_min":2,"drop_social_proof_max":11,"drop_low_stock":true,"drop_low_stock_threshold":5,"cart_type":"page","cart_free_shipping_bar":false,"cart_free_shipping_threshold":"0","cart_upsell":true,"cart_upsell_title":"COMPLETE THE UNIFORM","animations_enabled":true,"animation_style":"fade","animations_reduce_motion":true,"social_instagram":"melato.ca","high_contrast":false,"custom_css":"/* MELATO HOMEPAGE MOBILE REFINEMENT 2026-07-26\n   Keeps the announcement compact, cleans the mobile header and concierge,\n   differentiates homepage CTAs, and restores card contrast. */\n\n.melato-ann__cta {\n  display: none !important;\n}\n\n@media screen and (max-width: 989px) {\n  .melato-ann {\n    display: flex !important;\n    min-height: 44px !important;\n    height: 44px !important;\n    padding: 0 !important;\n    gap: 0 !important;\n  }\n\n  .melato-ann__badge,\n  .melato-ann__cta,\n  .melato-ann > span[aria-hidden=\"true\"] {\n    display: none !important;\n  }\n\n  .melato-ann__viewport {\n    width: 100% !important;\n    padding-inline: 16px !important;\n    mask-image: none !important;\n    -webkit-mask-image: none !important;\n  }\n\n  .melato-ann__track {\n    min-height: 44px !important;\n  }\n\n  .melato-ann__group {\n    gap: 30px !important;\n    padding-right: 30px !important;\n  }\n\n  .melato-ann__item {\n    font-size: 12px !important;\n    line-height: 1 !important;\n    letter-spacing: .12em !important;\n  }\n\n  .melato-ann__item small {\n    display: none !important;\n  }\n\n  .mxh .mxh__bar {\n    min-height: 64px !important;\n    padding: 0 14px !important;\n    gap: 8px !important;\n  }\n\n  .mxh .mxh__menu {\n    width: 40px !important;\n    min-width: 40px !important;\n    height: 40px !important;\n    min-height: 40px !important;\n    padding: 0 !important;\n    background: transparent !important;\n    border-color: rgba(166, 136, 93, .42) !important;\n    box-shadow: none !important;\n  }\n\n  .mxh .mxh__menu-mark,\n  .mxh .mxh__menu-mark svg {\n    width: 22px !important;\n    height: 22px !important;\n  }\n\n  .mxh .mxh__logo-img {\n    width: min(var(--mxh-logo-width), 148px) !important;\n    max-width: 148px !important;\n    max-height: 38px !important;\n  }\n\n  .mxh .mxh__bag {\n    width: auto !important;\n    min-width: 64px !important;\n    height: 40px !important;\n    min-height: 40px !important;\n    padding: 0 8px 0 12px !important;\n    gap: 8px !important;\n    background: transparent !important;\n    border-color: rgba(166, 136, 93, .42) !important;\n    box-shadow: none !important;\n  }\n\n  .mxh .mxh__bag-count {\n    min-width: 20px !important;\n    width: 20px !important;\n    height: 20px !important;\n    background: #a6885d !important;\n    color: #080808 !important;\n  }\n\n  .concierge-strip--mobile {\n    height: 50px !important;\n  }\n\n  .concierge-strip__mobile-track {\n    display: grid !important;\n    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;\n    gap: 8px !important;\n    overflow: visible !important;\n    padding: 6px 12px !important;\n  }\n\n  .concierge-strip__mobile-pill {\n    width: 100% !important;\n    min-width: 0 !important;\n    justify-content: center !important;\n    padding: 8px 4px !important;\n    border-radius: 10px !important;\n    border-color: rgba(244, 234, 216, .18) !important;\n  }\n\n  .concierge-strip__mobile-label {\n    overflow: hidden !important;\n    text-overflow: ellipsis !important;\n    font-size: 10px !important;\n    letter-spacing: .07em !important;\n  }\n}\n\nbody.template-index .melato-home-conversion__ctas {\n  gap: 10px !important;\n}\n\nbody.template-index .melato-home-conversion__cta,\nbody.template-index .melato-home-conversion__cta-secondary {\n  min-height: 52px !important;\n  border-radius: 12px !important;\n  letter-spacing: .13em !important;\n}\n\nbody.template-index .melato-home-conversion__cta {\n  background: #a6885d !important;\n  color: #080808 !important;\n  border: 1px solid #a6885d !important;\n  box-shadow: 0 14px 36px rgba(0, 0, 0, .28) !important;\n}\n\nbody.template-index .melato-home-conversion__cta:hover {\n  background: #c2a478 !important;\n  border-color: #c2a478 !important;\n}\n\nbody.template-index .melato-home-conversion__cta-secondary {\n  background: #0b0b0b !important;\n  color: #f5f1e8 !important;\n  border: 1px solid rgba(245, 241, 232, .28) !important;\n}\n\nbody.template-index .melato-home-conversion__proof-card,\nbody.template-index .melato-home-conversion__panel {\n  background: linear-gradient(145deg, #151515 0%, #0d0d0d 100%) !important;\n  border: 1px solid rgba(245, 241, 232, .22) !important;\n  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035),\n              0 18px 44px rgba(0, 0, 0, .24) !important;\n}\n\nbody.template-index .melato-home-conversion__proof-card strong,\nbody.template-index .melato-home-conversion__panel h2 {\n  color: #fffaf2 !important;\n}\n\nbody.template-index .melato-home-conversion__proof-card span,\nbody.template-index .melato-home-conversion__panel p {\n  color: rgba(245, 241, 232, .76) !important;\n}\n\n@media screen and (max-width: 749px) {\n  body.template-index .melato-home-conversion__ctas {\n    display: grid !important;\n    grid-template-columns: 1fr !important;\n  }\n\n  body.template-index .melato-home-conversion__cta,\n  body.template-index .melato-home-conversion__cta-secondary {\n    width: 100% !important;\n  }\n\n  body.template-index .melato-home-conversion__proof {\n    gap: 12px !important;\n  }\n\n  body.template-index .melato-home-conversion__proof-card,\n  body.template-index .melato-home-conversion__panel {\n    padding: 24px !important;\n  }\n}","sections":{"melato-announcement-bar":{"type":"melato-announcement-bar","settings":{"enabled":true,"default_accent":"cream","height":48,"speed":24,"font_size":16,"badge_text":"POPUP CALENDAR","cta_text":"","cta_link":"","fallback_message":"\u00b7 POPUP SHOW #5 AUGUST 20 \u00b7 POPUP SHOW #6 SEPTEMBER 21 \u00b7 POPUP SHOW #7 OCTOBER 21 \u00b7 LOCATION ANNOUNCED 48 HOURS PRIOR \u00b7 \"LIKE NEVER CHANGE\"","fallback_micro":"Melato"}},"melato-header":{"type":"melato-header","settings":{"menu":"main-menu","logo":"shopify://shop_images/melato_logo_32eb50cd-b029-4c60-ab92-78b657f9f493.png","logo_width":320,"menu_label":"\u200e","drawer_note":"Designer apparel, edited with intention. Worn anywhere.","show_account":true,"bg_color":"#0a0a0a","text_color":"#a6885d","accent_color":"#ffcf8d"}},"melato-footer":{"type":"melato-footer","settings":{"logo":"shopify://shop_images/ChatGPT_Image_Jun_19_2026_08_19_50_PM_1_1_0f2ee861-7aa7-4533-af8d-516730fcd64b.png","logo_width":320,"tagline":"Join the collective.","instagram_url":"https://www.instagram.com/melato.ca","show_payment_icons":false,"bg_color":"#111111","text_color":"#f5f1e8"}},"melato-concierge-strip":{"type":"melato-concierge-strip","blocks":{"melato-concierge-strip-0":{"type":"pillar","settings":{"label":"Care","title":"Order Companion","link":"/pages/order-companion","icon":""}},"melato-concierge-strip-1":{"type":"pillar","settings":{"label":"Access","title":"The Preview Room","link":"/pages/preview-room","icon":""}},"melato-concierge-strip-2":{"type":"pillar","settings":{"label":"Fit","title":"Fit Concierge","link":"/pages/fit-concierge","icon":""}},"melato-concierge-strip-3":{"type":"pillar","settings":{"label":"Delivery","title":"Delivery Concierge","link":"/pages/delivery-concierge","icon":""}}},"block_order":["melato-concierge-strip-0","melato-concierge-strip-1","melato-concierge-strip-2","melato-concierge-strip-3"],"settings":{}}},"content_for_index":[],"blocks":{"855628211100114053":{"type":"shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507","disabled":false,"settings":{}},"6544682535036668446":{"type":"shopify://apps/pumper-bundles/blocks/app-embed/0856870d-2aca-4b1e-a662-cf1797f61270","disabled":true,"settings":{}},"15079184273603081885":{"type":"shopify://apps/essential-free-shipping/blocks/app_embed/4125375e-37c8-4137-949d-c4e1a3aac572","disabled":true,"settings":{}},"14060646107696862457":{"type":"shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8","disabled":false,"settings":{}}}},"presets":{}}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "current": {
+    "color_background": "#000000",
+    "color_text": "#ffd9a5",
+    "color_muted": "#949494",
+    "color_accent": "#ff8f6c",
+    "color_accent_hover": "#ff4c0a",
+    "color_surface": "#1A1A1A",
+    "color_border": "#454545",
+    "color_error": "#8a0707",
+    "font_heading": "bebas_neue_n4",
+    "font_body": "archivo_black_n4",
+    "font_size_base": 17,
+    "line_height_body": 1.6,
+    "letter_spacing_heading": 0,
+    "favicon": "shopify://shop_images/Melato-logo-Favicon.png",
+    "share_image": "shopify://shop_images/1778940554608_4.png",
+    "header_bg": "#080808",
+    "header_text_color": "#ffcf8d",
+    "sticky_header": true,
+    "header_transparent": true,
+    "container_width": 1400,
+    "container_padding": 48,
+    "grid_gap": 16,
+    "border_radius": 0,
+    "card_image_ratio": "portrait",
+    "card_hover_second_image": true,
+    "card_quick_view": false,
+    "card_wishlist": true,
+    "card_swatch_style": "square",
+    "card_show_vendor": false,
+    "card_show_rating": false,
+    "drop_social_proof": true,
+    "drop_social_proof_min": 2,
+    "drop_social_proof_max": 11,
+    "drop_low_stock": true,
+    "drop_low_stock_threshold": 5,
+    "cart_type": "page",
+    "cart_free_shipping_bar": true,
+    "cart_free_shipping_threshold": "0",
+    "cart_upsell": true,
+    "cart_upsell_title": "COMPLETE THE UNIFORM",
+    "animations_enabled": true,
+    "animation_style": "fade",
+    "animations_reduce_motion": true,
+    "social_instagram": "melato.ca",
+    "high_contrast": false,
+    "custom_css": "/* MELATO HOMEPAGE MOBILE REFINEMENT 2026-07-26\n   Keeps the announcement compact, cleans the mobile header and concierge,\n   differentiates homepage CTAs, and restores card contrast. */\n\n.melato-ann__cta {\n  display: none !important;\n}\n\n@media screen and (max-width: 989px) {\n  .melato-ann {\n    display: flex !important;\n    min-height: 44px !important;\n    height: 44px !important;\n    padding: 0 !important;\n    gap: 0 !important;\n  }\n\n  .melato-ann__badge,\n  .melato-ann__cta,\n  .melato-ann > span[aria-hidden=\"true\"] {\n    display: none !important;\n  }\n\n  .melato-ann__viewport {\n    width: 100% !important;\n    padding-inline: 16px !important;\n    mask-image: none !important;\n    -webkit-mask-image: none !important;\n  }\n\n  .melato-ann__track {\n    min-height: 44px !important;\n  }\n\n  .melato-ann__group {\n    gap: 30px !important;\n    padding-right: 30px !important;\n  }\n\n  .melato-ann__item {\n    font-size: 12px !important;\n    line-height: 1 !important;\n    letter-spacing: .12em !important;\n  }\n\n  .melato-ann__item small {\n    display: none !important;\n  }\n\n  .mxh .mxh__bar {\n    min-height: 64px !important;\n    padding: 0 14px !important;\n    gap: 8px !important;\n  }\n\n  .mxh .mxh__menu {\n    width: 40px !important;\n    min-width: 40px !important;\n    height: 40px !important;\n    min-height: 40px !important;\n    padding: 0 !important;\n    background: transparent !important;\n    border-color: rgba(166, 136, 93, .42) !important;\n    box-shadow: none !important;\n  }\n\n  .mxh .mxh__menu-mark,\n  .mxh .mxh__menu-mark svg {\n    width: 22px !important;\n    height: 22px !important;\n  }\n\n  .mxh .mxh__logo-img {\n    width: min(var(--mxh-logo-width), 148px) !important;\n    max-width: 148px !important;\n    max-height: 38px !important;\n  }\n\n  .mxh .mxh__bag {\n    width: auto !important;\n    min-width: 64px !important;\n    height: 40px !important;\n    min-height: 40px !important;\n    padding: 0 8px 0 12px !important;\n    gap: 8px !important;\n    background: transparent !important;\n    border-color: rgba(166, 136, 93, .42) !important;\n    box-shadow: none !important;\n  }\n\n  .mxh .mxh__bag-count {\n    min-width: 20px !important;\n    width: 20px !important;\n    height: 20px !important;\n    background: #a6885d !important;\n    color: #080808 !important;\n  }\n\n  .concierge-strip--mobile {\n    height: 50px !important;\n  }\n\n  .concierge-strip__mobile-track {\n    display: grid !important;\n    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;\n    gap: 8px !important;\n    overflow: visible !important;\n    padding: 6px 12px !important;\n  }\n\n  .concierge-strip__mobile-pill {\n    width: 100% !important;\n    min-width: 0 !important;\n    justify-content: center !important;\n    padding: 8px 4px !important;\n    border-radius: 10px !important;\n    border-color: rgba(244, 234, 216, .18) !important;\n  }\n\n  .concierge-strip__mobile-label {\n    overflow: hidden !important;\n    text-overflow: ellipsis !important;\n    font-size: 10px !important;\n    letter-spacing: .07em !important;\n  }\n}\n\nbody.template-index .melato-home-conversion__ctas {\n  gap: 10px !important;\n}\n\nbody.template-index .melato-home-conversion__cta,\nbody.template-index .melato-home-conversion__cta-secondary {\n  min-height: 52px !important;\n  border-radius: 12px !important;\n  letter-spacing: .13em !important;\n}\n\nbody.template-index .melato-home-conversion__cta {\n  background: #a6885d !important;\n  color: #080808 !important;\n  border: 1px solid #a6885d !important;\n  box-shadow: 0 14px 36px rgba(0, 0, 0, .28) !important;\n}\n\nbody.template-index .melato-home-conversion__cta:hover {\n  background: #c2a478 !important;\n  border-color: #c2a478 !important;\n}\n\nbody.template-index .melato-home-conversion__cta-secondary {\n  background: #0b0b0b !important;\n  color: #f5f1e8 !important;\n  border: 1px solid rgba(245, 241, 232, .28) !important;\n}\n\nbody.template-index .melato-home-conversion__proof-card,\nbody.template-index .melato-home-conversion__panel {\n  background: linear-gradient(145deg, #151515 0%, #0d0d0d 100%) !important;\n  border: 1px solid rgba(245, 241, 232, .22) !important;\n  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .035),\n              0 18px 44px rgba(0, 0, 0, .24) !important;\n}\n\nbody.template-index .melato-home-conversion__proof-card strong,\nbody.template-index .melato-home-conversion__panel h2 {\n  color: #fffaf2 !important;\n}\n\nbody.template-index .melato-home-conversion__proof-card span,\nbody.template-index .melato-home-conversion__panel p {\n  color: rgba(245, 241, 232, .76) !important;\n}\n\n@media screen and (max-width: 749px) {\n  body.template-index .melato-home-conversion__ctas {\n    display: grid !important;\n    grid-template-columns: 1fr !important;\n  }\n\n  body.template-index .melato-home-conversion__cta,\n  body.template-index .melato-home-conversion__cta-secondary {\n    width: 100% !important;\n  }\n\n  body.template-index .melato-home-conversion__proof {\n    gap: 12px !important;\n  }\n\n  body.template-index .melato-home-conversion__proof-card,\n  body.template-index .melato-home-conversion__panel {\n    padding: 24px !important;\n  }\n}",
+    "sections": {
+      "melato-announcement-bar": {
+        "type": "melato-announcement-bar",
+        "settings": {
+          "enabled": true,
+          "default_accent": "cream",
+          "height": 48,
+          "speed": 24,
+          "font_size": 16,
+          "badge_text": "POPUP CALENDAR",
+          "cta_text": "",
+          "cta_link": "",
+          "fallback_message": "· POPUP SHOW #5 AUGUST 20 · POPUP SHOW #6 SEPTEMBER 21 · POPUP SHOW #7 OCTOBER 21 · LOCATION ANNOUNCED 48 HOURS PRIOR · COMPLIMENTARY DELIVERY ON ALL ORDERS · \"LIKE NEVER CHANGE\"",
+          "fallback_micro": "Melato"
+        }
+      },
+      "melato-header": {
+        "type": "melato-header",
+        "settings": {
+          "menu": "main-menu",
+          "logo": "shopify://shop_images/MELATO_Official_Logo.png",
+          "logo_width": 212,
+          "menu_label": "‎",
+          "drawer_note": "Designer apparel, edited with intention. Worn anywhere.",
+          "show_account": true,
+          "bg_color": "#0a0a0a",
+          "text_color": "#a6885d",
+          "accent_color": "#FFC371"
+        }
+      },
+      "melato-footer": {
+        "type": "melato-footer",
+        "settings": {
+          "logo": "shopify://shop_images/ChatGPT_Image_Jun_19_2026_08_19_50_PM_1_1_0f2ee861-7aa7-4533-af8d-516730fcd64b.png",
+          "logo_width": 320,
+          "tagline": "Join the collective.",
+          "instagram_url": "https://www.instagram.com/melato.ca",
+          "bg_color": "#111111",
+          "text_color": "#f5f1e8"
+        }
+      }
+    },
+    "content_for_index": [],
+    "blocks": {
+      "855628211100114053": {
+        "type": "shopify://apps/klaviyo-email-marketing-sms/blocks/klaviyo-onsite-embed/2632fe16-c075-4321-a88b-50b567f42507",
+        "disabled": false,
+        "settings": {}
+      },
+      "6544682535036668446": {
+        "type": "shopify://apps/pumper-bundles/blocks/app-embed/0856870d-2aca-4b1e-a662-cf1797f61270",
+        "disabled": true,
+        "settings": {}
+      },
+      "15079184273603081885": {
+        "type": "shopify://apps/essential-free-shipping/blocks/app_embed/4125375e-37c8-4137-949d-c4e1a3aac572",
+        "disabled": true,
+        "settings": {}
+      },
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {}
+      }
+    }
+  },
+  "presets": {}
+}
