@@ -55,7 +55,9 @@
   function showProducts(products){
     if(!products.length){results.innerHTML='<p class="melato-search__empty">No matching pieces found.</p>';results.hidden=false;input.setAttribute('aria-expanded','true');return}
     results.innerHTML=products.map(function(product){
-      var image=product.featured_image&&product.featured_image.url?'<img src="'+escapeHtml(product.featured_image.url)+'&width=116" alt="" width="58" height="72" loading="lazy">':'<span aria-hidden="true"></span>';
+      var rawImage=product.featured_image&&product.featured_image.url?String(product.featured_image.url):'';
+      var imageUrl=rawImage?rawImage+(rawImage.indexOf('?')>-1?'&':'?')+'width=116':'';
+      var image=imageUrl?'<img src="'+escapeHtml(imageUrl)+'" alt="" width="58" height="72" loading="lazy">':'<span aria-hidden="true"></span>';
       return '<a class="melato-search__result" role="option" href="'+escapeHtml(product.url)+'">'+image+'<span><strong>'+escapeHtml(product.title)+'</strong><small>'+escapeHtml(product.type||product.vendor||'Melato')+'</small></span></a>';
     }).join('');
     results.hidden=false;
