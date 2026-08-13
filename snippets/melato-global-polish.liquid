@@ -1,27 +1,46 @@
 {%- comment -%}
-  Melato global polish
-  Rendered once inside layout/theme.liquid before </head>.
-  Footer contract: global CTA styling must never reinterpret footer navigation.
+  MELATO CLEANUP MASTER LAYER / 2026-08-11
+  One final system replaces legacy one-off storefront overrides.
 {%- endcomment -%}
+{{ 'melato-site-cleanup-20260811.css' | asset_url | stylesheet_tag }}
 <style>
-  :root{--melato-polish-bg:#050608;--melato-polish-surface:#101116;--melato-polish-text:#f6efe3;--melato-polish-muted:#b7ab9b;--melato-polish-cream:#f1e4cf;--melato-polish-gold:#c68b3a}
-  html body{background:var(--melato-polish-bg)}
-  header,.site-header,.header-wrapper,sticky-header,.shopify-section-header,.section-header{background:rgba(5,6,8,.94)!important;border-color:rgba(246,239,227,.1)!important}
-  header img,.site-header img,.header-wrapper img,.header__heading-logo,.site-header__logo img,.header__logo img{image-rendering:auto}
-  .header__heading,.header__heading-link,.site-header__logo,.header__logo{transform:translateY(7px)}
-  .header__heading-logo,.site-header__logo img,.header__logo img{max-height:54px!important;width:auto!important}
-  .melato-global-pill{min-height:38px!important;padding:0 18px!important;border-radius:999px!important;border:1px solid rgba(246,239,227,.2)!important;background:rgba(255,255,255,.055)!important;color:var(--melato-polish-text)!important;font-size:11px!important;font-weight:800!important;letter-spacing:.14em!important;text-transform:uppercase!important;text-decoration:none!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;box-shadow:0 14px 34px rgba(0,0,0,.26)!important;transition:transform .2s ease,background .2s ease,border-color .2s ease,color .2s ease!important}
-  .melato-global-pill:hover{transform:translateY(-2px)!important;border-color:rgba(246,239,227,.38)!important;background:var(--melato-polish-cream)!important;color:#111!important}
-  .melato-global-pill--new{background:var(--melato-polish-cream)!important;color:#111!important;border-color:var(--melato-polish-cream)!important}.melato-global-pill--shop{background:rgba(255,255,255,.055)!important;color:var(--melato-polish-text)!important}
-  footer,.footer,.shopify-section-footer{background:#0d0d0e!important;color:rgba(246,239,227,.72)!important;border-top:1px solid rgba(246,239,227,.1)!important}footer a,.footer a{color:rgba(246,239,227,.72)!important;text-decoration:none!important}footer a:hover,.footer a:hover{color:var(--melato-polish-cream)!important}
-  footer .footer__content-top,footer .footer__blocks-wrapper,.footer .footer__content-top,.footer .footer__blocks-wrapper{align-items:end!important}
-  footer .footer-block:has(img),.footer .footer-block:has(img),footer .footer-block--brand-info,.footer .footer-block--brand-info{transform:translateY(18px)}
-  footer img[src*="logo"],.footer img[src*="logo"],footer .footer-block__brand-info img,.footer .footer-block__brand-info img{max-width:220px!important;height:auto!important}
-  .melato-footer-ig-card{width:min(100%,260px)!important;min-height:64px!important;padding:18px 22px!important;margin-top:16px!important;border:1px solid rgba(246,239,227,.18)!important;border-radius:24px!important;background:rgba(255,255,255,.035)!important;display:inline-flex!important;align-items:center!important;gap:10px!important;color:rgba(246,239,227,.76)!important}
-  @media(max-width:740px){.header__heading,.header__heading-link,.site-header__logo,.header__logo{transform:translateY(3px)}footer .footer-block:has(img),.footer .footer-block:has(img),footer .footer-block--brand-info,.footer .footer-block--brand-info{transform:none}}
+/* Product price normalization. Legacy theme layers previously styled price spans as floating pills. */
+.product-card__price{
+  position:static!important;
+  inset:auto!important;
+  transform:none!important;
+  width:100%!important;
+  min-width:0!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:baseline!important;
+  gap:8px!important;
+  margin:0 auto!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  text-align:center!important;
+}
+.product-card__price>span{
+  position:static!important;
+  inset:auto!important;
+  transform:none!important;
+  display:inline!important;
+  width:auto!important;
+  min-width:0!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  color:inherit!important;
+  text-align:center!important;
+}
+.product-card__price .product-card__compare{text-decoration:line-through!important;opacity:.62!important}
 </style>
-<script>
-(()=>{const ready=fn=>{if(document.readyState!=='loading')fn();else document.addEventListener('DOMContentLoaded',fn)};ready(()=>{const normalize=value=>(value||'').replace(/\s+/g,' ').trim().toLowerCase();document.querySelectorAll('a,button').forEach(el=>{if(el.closest('footer,.footer,.shopify-section-footer'))return;const text=normalize(el.textContent);if(text==='new drop'||text==='new drops'||text==='new arrivals')el.classList.add('melato-global-pill','melato-global-pill--new');if(text==='shop now'||text==='shop drop'||text==='shop drop #00')el.classList.add('melato-global-pill','melato-global-pill--shop')});document.querySelectorAll('footer a[href*="instagram.com"],.footer a[href*="instagram.com"]').forEach(el=>{el.classList.add('melato-footer-ig-card');if(!/instagram/i.test(el.textContent||''))el.setAttribute('aria-label','Instagram')})})})();
-</script>
-{{ 'melato-gelato-hotfix-20260811.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'melato-gelato-hotfix-20260811.js' | asset_url }}" defer></script>
+<script src="{{ 'melato-site-cleanup-20260811.js' | asset_url }}" defer></script>
+<script src="{{ 'melato-content-policy-20260811.js' | asset_url }}" defer></script>
