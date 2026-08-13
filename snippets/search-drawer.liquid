@@ -1,35 +1,83 @@
 {% comment %}
-  snippets/search-drawer.liquid
-  Safe search drawer using Shopify-compatible HTML GET search form.
+  Search drawer with Shopify Predictive Search API.
+  Locale-aware, product-only suggestions, ordinary GET search remains the fallback.
 {% endcomment %}
 
 <div
   class="search-drawer"
   role="dialog"
   aria-modal="true"
-  aria-label="Search"
+  aria-label="Search Melato"
   aria-hidden="true"
+  data-predictive-search-drawer
 >
-  <form action="{{ routes.search_url }}" method="get" class="search-form" role="search">
-    <label class="visually-hidden" for="SearchDrawerInput">Search</label>
-    <input
-      id="SearchDrawerInput"
-      type="search"
-      name="q"
-      placeholder="Search Melato"
-      aria-label="Search Melato"
-      autocomplete="off"
-      spellcheck="false"
-    >
-    <input type="hidden" name="type" value="product">
-    <input type="hidden" name="options[prefix]" value="last">
-    <button
-  type="button"
-  class="header-search-button"
-  data-open-utility="search"
-  aria-controls="MelatoUtilityLayer"
->
-  Search
-</button>
+  <form action="{{ routes.search_url }}" method="get" class="search-form" role="search" data-predictive-search-form>
+    <label class="visually-hidden" for="SearchDrawerInput">Search Melato</label>
+    <div class="melato-search__field">
+      <input
+        id="SearchDrawerInput"
+        type="search"
+        name="q"
+        placeholder="Search Melato"
+        aria-label="Search Melato"
+        aria-autocomplete="list"
+        aria-controls="MelatoPredictiveResults"
+        aria-expanded="false"
+        autocomplete="off"
+        spellcheck="false"
+        data-predictive-search-input
+      >
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="melato-search__submit">Search</button>
+    </div>
+    <div id="MelatoPredictiveResults" class="melato-search__results" role="listbox" hidden data-predictive-search-results></div>
   </form>
 </div>
+
+<style>
+.search-drawer .melato-search__field{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;width:100%}.search-drawer .melato-search__field input{min-width:0}.search-drawer .melato-search__submit{min-width:92px}.search-drawer .melato-search__results{margin-top:12px;border-top:1px solid rgba(255,255,255,.12);max-height:min(62vh,520px);overflow:auto}.search-drawer .melato-search__result{display:grid;grid-template-columns:58px minmax(0,1fr);gap:13px;align-items:center;padding:11px 2px;border-bottom:1px solid rgba(255,255,255,.08);color:inherit;text-decoration:none}.search-drawer .melato-search__result img{display:block;width:58px;height:72px;object-fit:cover;background:#eee}.search-drawer .melato-search__result strong{display:block;font-size:13px;line-height:1.25}.search-drawer .melato-search__result small{display:block;margin-top:5px;opacity:.6;font-size:10px;letter-spacing:.08em;text-transform:uppercase}.search-drawer .melato-search__empty{padding:16px 2px;font-size:12px;opacity:.7}@media(max-width:520px){.search-drawer .melato-search__field{grid-template-columns:1fr}.search-drawer .melato-search__submit{width:100%}}
+</style>
+
+<script>
+(function(){
+  var drawer=document.querySelector('[data-predictive-search-drawer]');
+  if(!drawer||drawer.dataset.predictiveReady==='true')return;
+  drawer.dataset.predictiveReady='true';
+  var input=drawer.querySelector('[data-predictive-search-input]');
+  var results=drawer.querySelector('[data-predictive-search-results]');
+  if(!input||!results)return;
+
+  var timer=null;
+  var controller=null;
+  function escapeHtml(value){return String(value||'').replace(/[&<>"']/g,function(char){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]})}
+  function closeResults(){results.hidden=true;results.innerHTML='';input.setAttribute('aria-expanded','false')}
+  function showProducts(products){
+    if(!products.length){results.innerHTML='<p class="melato-search__empty">No matching pieces found.</p>';results.hidden=false;input.setAttribute('aria-expanded','true');return}
+    results.innerHTML=products.map(function(product){
+      var image=product.featured_image&&product.featured_image.url?'<img src="'+escapeHtml(product.featured_image.url)+'&width=116" alt="" width="58" height="72" loading="lazy">':'<span aria-hidden="true"></span>';
+      return '<a class="melato-search__result" role="option" href="'+escapeHtml(product.url)+'">'+image+'<span><strong>'+escapeHtml(product.title)+'</strong><small>'+escapeHtml(product.type||product.vendor||'Melato')+'</small></span></a>';
+    }).join('');
+    results.hidden=false;
+    input.setAttribute('aria-expanded','true');
+  }
+  function search(query){
+    if(controller)controller.abort();
+    controller=new AbortController();
+    var root=(window.Shopify&&Shopify.routes&&Shopify.routes.root)||'{{ routes.root_url }}';
+    var url=root+'search/suggest.json?q='+encodeURIComponent(query)+'&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last&resources[options][fields]=title,product_type,variants.title,vendor';
+    fetch(url,{signal:controller.signal,headers:{Accept:'application/json'}})
+      .then(function(response){if(!response.ok)throw new Error('Predictive search failed');return response.json()})
+      .then(function(data){showProducts((data.resources&&data.resources.results&&data.resources.results.products)||[])})
+      .catch(function(error){if(error.name!=='AbortError')closeResults()});
+  }
+  input.addEventListener('input',function(){
+    var query=input.value.trim();
+    clearTimeout(timer);
+    if(query.length<2){closeResults();return}
+    timer=setTimeout(function(){search(query)},140);
+  });
+  input.addEventListener('keydown',function(event){if(event.key==='Escape')closeResults()});
+  document.addEventListener('click',function(event){if(!drawer.contains(event.target))closeResults()});
+})();
+</script>
