@@ -7,7 +7,7 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-/* Melato homepage clean QA / 2026-08-11 */
+/* Melato homepage clean QA / 2026-08-13 */
 {
   "sections": {
     "melato_conversion_2026": {
@@ -45,7 +45,7 @@
         "eyebrow": "Collection",
         "title": "THE UNIFORM",
         "collection": "frontpage",
-        "products_to_show": 8,
+        "products_to_show": 16,
         "columns_desktop": 4,
         "columns_mobile": 2,
         "show_view_all": true,

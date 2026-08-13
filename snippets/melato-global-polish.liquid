@@ -1,10 +1,10 @@
 {%- comment -%}
-  MELATO CLEANUP MASTER LAYER / 2026-08-11
-  One final system replaces legacy one-off storefront overrides.
+  MELATO CLEANUP MASTER LAYER / 2026-08-13
+  Final storefront normalization layer.
 {%- endcomment -%}
 {{ 'melato-site-cleanup-20260811.css' | asset_url | stylesheet_tag }}
 <style>
-/* Product price normalization. Legacy theme layers previously styled price spans as floating pills. */
+/* Preserve accessible price labels while preventing them from becoming visible UI. */
 .product-card__price{
   position:static!important;
   inset:auto!important;
@@ -23,7 +23,7 @@
   box-shadow:none!important;
   text-align:center!important;
 }
-.product-card__price>span{
+.product-card__price>span:not(.visually-hidden){
   position:static!important;
   inset:auto!important;
   transform:none!important;
@@ -40,7 +40,54 @@
   color:inherit!important;
   text-align:center!important;
 }
+.product-card__price>.visually-hidden{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  padding:0!important;
+  margin:-1px!important;
+  overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;
+  white-space:nowrap!important;
+  border:0!important;
+}
 .product-card__price .product-card__compare{text-decoration:line-through!important;opacity:.62!important}
+
+/* THE UNIFORM: make each product's title/price read as one unit and separate rows clearly. */
+.featured-collection .grid{row-gap:40px!important}
+.featured-collection .product-card__info{
+  padding:14px 6px 8px!important;
+  gap:8px!important;
+}
+.featured-collection .product-card__price{
+  margin:8px auto 0!important;
+  line-height:1.35!important;
+}
+.featured-collection .product-card__price .price{
+  font-size:.9rem!important;
+  font-weight:500!important;
+  letter-spacing:.06em!important;
+}
+
+/* THE UNIFORM mobile CTA: cream button with deliberate dark contrast. */
+.featured-collection .u-show-mobile .btn.btn--secondary{
+  min-width:144px!important;
+  background:var(--melato-offwhite,#f4ead8)!important;
+  color:var(--melato-black,#050505)!important;
+  border:1px solid var(--melato-offwhite,#f4ead8)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+.featured-collection .u-show-mobile .btn.btn--secondary:hover,
+.featured-collection .u-show-mobile .btn.btn--secondary:focus-visible{
+  background:var(--melato-offwhite-2,#fff8eb)!important;
+  color:var(--melato-black,#050505)!important;
+  border-color:var(--melato-offwhite-2,#fff8eb)!important;
+}
+@media (max-width:768px){
+  .featured-collection .grid{row-gap:36px!important}
+  .featured-collection .product-card__price{margin-top:10px!important}
+}
 </style>
 <script src="{{ 'melato-site-cleanup-20260811.js' | asset_url }}" defer></script>
 <script src="{{ 'melato-content-policy-20260811.js' | asset_url }}" defer></script>
