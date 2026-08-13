@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "melato-popup-calendar",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
