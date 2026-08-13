@@ -1,49 +1,43 @@
-{% comment %} Melato Client Services navigation, unified visual system. {% endcomment %}
+{% comment %}
+  Melato Client Services navigation / clean QA 2026-08-11.
+  Only public, useful service destinations are shown.
+{% endcomment %}
 {{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
 {%- liquid
-  assign current = section.settings.current_pillar | default: 'post-purchase'
+  assign current = section.settings.current_pillar | default: 'order-support'
   case page.handle
-    when 'thank-you'
-      assign current = 'post-purchase'
-    when 'preview'
-      assign current = 'private-preview'
     when 'size-guide'
       assign current = 'fit-guidance'
     when 'size-guide-1'
       assign current = 'fit-guidance'
     when 'shipping-returns'
       assign current = 'delivery-policy'
+    when 'contact'
+      assign current = 'order-support'
   endcase
-  assign pillars = 'post-purchase,private-preview,fit-guidance,delivery-policy' | split: ','
-  assign pillar_labels = 'Order Support,Private Preview,Fit Guide,Delivery & Returns' | split: ','
-  assign pillar_urls = '/pages/thank-you,/pages/preview,/pages/size-guide,/pages/shipping-returns' | split: ','
+  assign pillars = 'order-support,fit-guidance,delivery-policy' | split: ','
+  assign labels = 'Order Support,Fit Guide,Delivery & Returns' | split: ','
+  assign urls = '/pages/contact,/pages/size-guide,/pages/shipping-returns' | split: ','
 -%}
-<style>
-.melato-strip__inner{max-width:1200px;margin:0 auto;padding:0 16px}.melato-strip__eyebrow{text-align:center;margin:0 0 20px;font-size:10px;letter-spacing:3px;text-transform:uppercase}.melato-strip__nav{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}.melato-strip-link{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border:1px solid currentColor;text-decoration:none;font-size:12px;font-weight:600}.melato-strip__contextual{text-align:center;margin:20px auto 0;padding:14px;max-width:600px}.melato-strip__contextual-text{font-size:13px;line-height:1.6}
-</style>
 <div class="melato-strip" data-concierge-strip data-current-pillar="{{ current }}">
   <div class="melato-strip__inner">
     <div class="melato-strip__eyebrow">Client Services</div>
     <nav class="melato-strip__nav" aria-label="Client services">
       {%- for pillar in pillars -%}
-        {%- assign label = pillar_labels[forloop.index0] -%}
-        {%- assign url = pillar_urls[forloop.index0] -%}
-        <a href="{{ url }}" class="melato-strip-link{% if pillar == current %} melato-strip-link--active{% endif %}" data-pillar="{{ pillar }}" {% if pillar == current %}aria-current="page"{% endif %}>{{ label }}</a>
+        {%- assign label = labels[forloop.index0] -%}
+        {%- assign url = urls[forloop.index0] -%}
+        <a href="{{ url }}" class="melato-strip-link{% if pillar == current %} melato-strip-link--active{% endif %}" {% if pillar == current %}aria-current="page"{% endif %}>
+          {%- if pillar == 'order-support' -%}<svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>{%- elsif pillar == 'fit-guidance' -%}<svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>{%- else -%}<svg class="melato-strip-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>{%- endif -%}
+          {{ label }}
+        </a>
       {%- endfor -%}
     </nav>
-    {%- if section.settings.show_contextual and section.settings.contextual_copy != blank -%}
-      <div class="melato-strip__contextual"><div class="melato-strip__contextual-text">{{ section.settings.contextual_copy }}</div></div>
-    {%- endif -%}
+    {%- if section.settings.show_contextual and section.settings.contextual_copy != blank -%}<div class="melato-strip__contextual"><div class="melato-strip__contextual-text">{{ section.settings.contextual_copy }}</div></div>{%- endif -%}
   </div>
 </div>
+<style>
+.melato-strip{padding:36px 0;margin-top:38px;background:#0b0b0c;color:#f5f1e8}.melato-strip__inner{max-width:1180px;margin:auto;padding:0 16px}.melato-strip__eyebrow{text-align:center;margin:0 0 18px;color:#aaa49b;font-size:10px;letter-spacing:.2em;text-transform:uppercase}.melato-strip__nav{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}.melato-strip-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:0 16px;border:1px solid rgba(245,241,232,.3);border-radius:999px;color:#f5f1e8;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}.melato-strip-link--active,.melato-strip-link:hover{background:#f5f1e8;color:#080808;border-color:#f5f1e8}.melato-strip-link__icon{width:15px;height:15px}.melato-strip__contextual{max-width:620px;margin:20px auto 0;padding:14px 16px;background:#fff;border-radius:14px;text-align:center}.melato-strip__contextual-text,.melato-strip__contextual-text *{color:#262626!important;font-size:13px;line-height:1.55}.melato-strip__contextual-text a{color:#262626!important}@media(max-width:600px){.melato-strip__nav{display:grid;grid-template-columns:1fr}.melato-strip-link{width:100%}}
+</style>
 {% schema %}
-{
-  "name":"Client Services Nav",
-  "settings":[
-    {"type":"select","id":"current_pillar","label":"Current service","options":[{"value":"post-purchase","label":"Order Support"},{"value":"private-preview","label":"Private Preview"},{"value":"fit-guidance","label":"Fit Guide"},{"value":"delivery-policy","label":"Delivery & Returns"}],"default":"post-purchase"},
-    {"type":"richtext","id":"contextual_copy","label":"Support copy","default":"<p>Need help with an order? Email <a href=\"mailto:support@melato.ca\">support@melato.ca</a> and include your order number.</p>"},
-    {"type":"checkbox","id":"show_contextual","label":"Show support copy","default":true}
-  ],
-  "presets":[{"name":"Client Services Nav","category":"Melato"}]
-}
+{"name":"Client Services Nav","settings":[{"type":"select","id":"current_pillar","label":"Current service","options":[{"value":"order-support","label":"Order Support"},{"value":"fit-guidance","label":"Fit Guide"},{"value":"delivery-policy","label":"Delivery & Returns"}],"default":"order-support"},{"type":"richtext","id":"contextual_copy","label":"Support copy","default":"<p>Need help with an order? Email <a href=\"mailto:support@melato.ca\">support@melato.ca</a> and include your order number.</p>"},{"type":"checkbox","id":"show_contextual","label":"Show support copy","default":true}],"presets":[{"name":"Client Services Nav","category":"Melato"}]}
 {% endschema %}

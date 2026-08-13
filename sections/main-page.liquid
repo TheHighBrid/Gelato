@@ -1,95 +1,30 @@
 {% comment %}
   sections/main-page.liquid
   Generic page renderer with duplicate-H1 protection.
-  Our Story receives the World of Melato editorial shell.
-  Published service pages receive the Client Services house shell while
-  Shopify-managed body content remains authoritative.
 {% endcomment %}
 
 {%- liquid
   assign page_content_down = page.content | downcase
   assign content_has_h1 = false
-  assign world_story_content = page.content
-  assign service_content = page.content
-  assign is_client_service = false
-  assign service_title = page.title
-  assign service_intro = 'Information and support from the Melato client services desk.'
 
   if page_content_down contains '<h1'
     assign content_has_h1 = true
   endif
-
-  if page.handle == 'our-story'
-    assign world_story_content = world_story_content | replace: '<h1>Our Story</h1>', ''
-  endif
-
-  case page.handle
-    when 'contact'
-      assign is_client_service = true
-      assign service_title = 'Contact'
-      assign service_intro = 'Orders, fit, returns, partnerships and brand enquiries, routed to the right Melato desk.'
-      assign service_content = service_content | replace: '<h1>Contact Melato</h1>', ''
-    when 'faq'
-      assign is_client_service = true
-      assign service_title = 'FAQ'
-      assign service_intro = 'A concise guide to orders, delivery, sizing, product care, returns and limited releases.'
-      assign service_content = service_content | replace: '<h1>FAQ</h1>', ''
-      assign service_content = service_content | replace: '/pages/living-lookbook', '/collections/the-living-lookbook'
-    when 'size-guide'
-      assign is_client_service = true
-      assign service_title = 'Size Guide'
-      assign service_intro = 'Measurements, category guidance and fit notes for choosing the intended Melato silhouette.'
-      assign service_content = service_content | replace: '<h1>Melato Size Guide</h1>', ''
-  endcase
 -%}
 
-{%- if page.handle == 'our-story' -%}
-  <section class="melato-world-story" aria-labelledby="WorldStoryTitle-{{ section.id }}">
-    {% render 'melato-world-rail' %}
-    <header class="melato-world-story__masthead">
-      <p class="melato-world-kicker">The House / Melato</p>
-      <h1 id="WorldStoryTitle-{{ section.id }}">Our Story</h1>
-    </header>
-    <div class="melato-world-story__content">
-      {{ world_story_content }}
-    </div>
-  </section>
-{%- elsif is_client_service -%}
-  <section class="melato-client-services" aria-labelledby="ClientServiceTitle-{{ section.id }}">
-    {% render 'melato-services-rail' %}
-    <header class="melato-client-services__masthead">
-      <div>
-        <p class="melato-utility-kicker">Client Services / Melato</p>
-        <h1 id="ClientServiceTitle-{{ section.id }}">{{ service_title }}</h1>
-      </div>
-      <p class="melato-client-services__intro">{{ service_intro }}</p>
-    </header>
+<section class="section-spacing melato-page-main" aria-labelledby="MainPageHeading-{{ section.id }}">
+  <div class="container--narrow">
+    {%- unless content_has_h1 -%}
+      <h1 id="MainPageHeading-{{ section.id }}" class="heading-md drip-reveal" style="margin-bottom:40px;">
+        {{ page.title }}
+      </h1>
+    {%- endunless -%}
 
-    <div class="melato-client-services__content">
-      <aside class="melato-client-services__aside" aria-label="Service note">
-        <p class="melato-utility-kicker">Assistance</p>
-        <p>For order-specific help, include the order number and email used at checkout.</p>
-      </aside>
-      <div class="melato-client-services__body page-content">
-        {{ service_content }}
-      </div>
+    <div class="page-content drip-reveal drip-reveal--delay-1" style="color:var(--color-muted);line-height:1.9;font-size:0.95rem;">
+      {{ page.content }}
     </div>
-  </section>
-{%- else -%}
-  <section class="section-spacing melato-page-main" aria-labelledby="MainPageHeading-{{ section.id }}">
-    <div class="container--narrow">
-      {%- unless content_has_h1 -%}
-        <h1 id="MainPageHeading-{{ section.id }}" class="heading-md drip-reveal" style="margin-bottom:40px;">
-          {{ page.title }}
-        </h1>
-      {%- endunless -%}
-
-      <div class="page-content drip-reveal drip-reveal--delay-1" style="color:var(--color-muted);line-height:1.9;font-size:0.95rem;">
-        {{ page.content }}
-      </div>
-    </div>
-  </section>
-{%- endif -%}
+  </div>
+</section>
 
 {% schema %}
 {

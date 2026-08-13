@@ -1,72 +1,78 @@
 {% comment %}
   sections/main-account.liquid
-  Customer order ledger and account details.
 {% endcomment %}
 
-<section class="melato-account" aria-labelledby="MelatoAccountTitle-{{ section.id }}">
-  <header class="melato-account__header">
-    <div>
-      <p class="melato-account__eyebrow">Account / {{ customer.first_name | default: 'Melato' }}</p>
-      <h1 id="MelatoAccountTitle-{{ section.id }}" class="melato-account__title">Account</h1>
+<section class="section-spacing">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:48px;" class="drip-reveal">
+      <h1 class="heading-md">{{ 'account.my_account' | t }}</h1>
+      <a href="{{ routes.account_logout_url }}" class="btn btn--secondary btn--sm">{{ 'account.logout' | t }}</a>
     </div>
-    <a href="{{ routes.account_logout_url }}" class="melato-utility-link">Sign out</a>
-  </header>
 
-  <div class="melato-account__grid">
-    <section aria-labelledby="MelatoOrdersTitle-{{ section.id }}">
-      <h2 id="MelatoOrdersTitle-{{ section.id }}" class="melato-account__section-title">Order archive</h2>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:48px;align-items:start;" class="account-grid">
 
-      {%- if customer.orders.size > 0 -%}
-        <table class="melato-account__table">
-          <thead>
-            <tr>
-              <th>Order</th>
-              <th>Date</th>
-              <th>Status</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {%- for order in customer.orders -%}
+      <div class="drip-reveal">
+        <h2 class="heading-xs" style="margin-bottom:24px;">{{ 'account.orders' | t }}</h2>
+        {%- if customer.orders.size > 0 -%}
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
               <tr>
-                <td><a href="{{ order.customer_url }}">{{ order.name }}</a></td>
-                <td>{{ order.created_at | date: '%b %d, %Y' }}</td>
-                <td><span class="melato-account__status">{{ order.financial_status | capitalize }}</span></td>
-                <td>{{ order.total_price | money }}</td>
+                <th style="text-align:left;padding:12px 0;border-bottom:1px solid var(--color-border);" class="text-label">Order</th>
+                <th style="text-align:left;padding:12px 0;border-bottom:1px solid var(--color-border);" class="text-label">Date</th>
+                <th style="text-align:left;padding:12px 0;border-bottom:1px solid var(--color-border);" class="text-label">Status</th>
+                <th style="text-align:right;padding:12px 0;border-bottom:1px solid var(--color-border);" class="text-label">Total</th>
               </tr>
-            {%- endfor -%}
-          </tbody>
-        </table>
-      {%- else -%}
-        <div class="melato-empty-state" style="padding-inline:0;min-height:260px;">
-          <p class="melato-empty-state__eyebrow">Orders / 00</p>
-          <div>
-            <h3 class="melato-empty-state__title">No orders filed yet.</h3>
-            <p class="melato-empty-state__copy">When you place a Melato order, its history and status will appear here.</p>
-            <div class="melato-empty-state__actions">
-              <a class="melato-utility-link" href="/collections/new-arrivals">View new arrivals</a>
-            </div>
-          </div>
-        </div>
-      {%- endif -%}
-    </section>
-
-    <aside class="melato-account__details" aria-labelledby="MelatoAccountDetails-{{ section.id }}">
-      <p class="melato-account__label">Account details</p>
-      <h2 id="MelatoAccountDetails-{{ section.id }}" class="melato-account__section-title">{{ customer.name | default: customer.email }}</h2>
-      <p>
-        {{ customer.email }}
-        {%- if customer.default_address -%}
-          <br><br>{{ customer.default_address.address1 }}
-          {%- if customer.default_address.address2 != blank -%}<br>{{ customer.default_address.address2 }}{%- endif -%}
-          <br>{{ customer.default_address.city }}{% if customer.default_address.province != blank %}, {{ customer.default_address.province }}{% endif %}
-          <br>{{ customer.default_address.country }} {{ customer.default_address.zip }}
+            </thead>
+            <tbody>
+              {%- for order in customer.orders -%}
+                <tr>
+                  <td style="padding:16px 0;border-bottom:1px solid var(--color-border);">
+                    <a href="{{ order.customer_url }}" style="color:var(--color-accent);font-family:var(--font-mono-family);font-size:0.75rem;">{{ order.name }}</a>
+                  </td>
+                  <td style="padding:16px 0;border-bottom:1px solid var(--color-border);color:var(--color-muted);font-family:var(--font-mono-family);font-size:0.7rem;">
+                    {{ order.created_at | date: '%b %d, %Y' }}
+                  </td>
+                  <td style="padding:16px 0;border-bottom:1px solid var(--color-border);">
+                    <span class="badge badge--{% if order.financial_status == 'paid' %}new{% else %}limited{% endif %}">
+                      {{ order.financial_status | capitalize }}
+                    </span>
+                  </td>
+                  <td style="padding:16px 0;border-bottom:1px solid var(--color-border);text-align:right;font-family:var(--font-mono-family);font-size:0.8rem;">
+                    {{ order.total_price | money }}
+                  </td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        {%- else -%}
+          <p style="color:var(--color-muted);">You haven't placed any orders yet.</p>
+          <a href="/collections/all" class="btn btn--primary btn--sm" style="margin-top:20px;">Shop the Drop</a>
         {%- endif -%}
-      </p>
-      <a href="{{ routes.account_addresses_url }}" class="melato-utility-link">Manage addresses</a>
-    </aside>
+      </div>
+
+      <div class="drip-reveal drip-reveal--delay-2" style="background:var(--color-surface);padding:32px;">
+        <h2 class="heading-xs" style="margin-bottom:20px;">Account Details</h2>
+        <p style="font-family:var(--font-mono-family);font-size:0.75rem;color:var(--color-muted);line-height:1.8;">
+          {{ customer.name }}<br>
+          {{ customer.email }}<br>
+          {%- if customer.default_address -%}
+            <br>
+            {{ customer.default_address.address1 }}<br>
+            {{ customer.default_address.city }}, {{ customer.default_address.country }}
+          {%- endif -%}
+        </p>
+        <a href="{{ routes.account_addresses_url }}" class="btn btn--secondary btn--sm btn--full" style="margin-top:20px;">
+          {{ 'account.addresses' | t }}
+        </a>
+      </div>
+
+    </div>
   </div>
 </section>
+
+<style>
+  @media (max-width: 768px) { .account-grid { grid-template-columns: 1fr !important; } }
+</style>
 
 {% schema %}
 { "name": "Account", "tag": "section", "settings": [] }

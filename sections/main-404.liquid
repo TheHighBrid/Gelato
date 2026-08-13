@@ -1,26 +1,21 @@
 {% comment %}
   sections/main-404.liquid
-  House error state with controlled routes back into the live catalogue.
 {% endcomment %}
 
-<section class="melato-error-page" aria-labelledby="Melato404Title-{{ section.id }}">
-  <div class="melato-error-page__index">
-    <span>Error / 404</span>
-    <span>Melato / Page not found</span>
-  </div>
-
-  <span class="melato-error-page__code" aria-hidden="true">404</span>
-
-  <div class="melato-error-page__footer">
-    <p class="melato-error-page__eyebrow">Lost address</p>
-    <div>
-      <h1 id="Melato404Title-{{ section.id }}">{{ section.settings.subheading | default: 'Nothing lives here.' }}</h1>
-      <p>The address may have moved, expired, or never belonged to this chapter.</p>
-      <div class="melato-error-page__actions">
-        <a class="melato-utility-link" href="{{ section.settings.cta_url | default: '/collections/new-arrivals' }}">{{ section.settings.cta_label | default: 'View new arrivals' }}</a>
-        <a class="melato-utility-link" href="/collections/all-products">All products</a>
-        <a class="melato-utility-link" href="{{ routes.root_url }}">Return home</a>
-      </div>
+<section class="error-page">
+  <div>
+    <span class="error-page__code" aria-hidden="true">404</span>
+    <h1 class="heading-md drip-reveal" style="margin-bottom:16px;">
+      {{ section.settings.subheading | default: "This page dropped. And it's not coming back." }}
+    </h1>
+    <p style="color:var(--color-muted);margin-bottom:36px;" class="drip-reveal drip-reveal--delay-1">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;" class="drip-reveal drip-reveal--delay-2">
+      <a href="{{ section.settings.cta_url | default: '/' }}" class="btn btn--primary">
+        {{ section.settings.cta_label | default: 'Back to the Drop' }}
+      </a>
+      <a href="/collections/all" class="btn btn--secondary">Shop All</a>
     </div>
   </div>
 </section>
@@ -30,9 +25,9 @@
   "name": "404",
   "tag": "section",
   "settings": [
-    { "type": "text", "id": "subheading", "label": "Heading", "default": "Nothing lives here." },
-    { "type": "text", "id": "cta_label", "label": "Primary link text", "default": "View new arrivals" },
-    { "type": "url", "id": "cta_url", "label": "Primary link" }
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "This page dropped. And it's not coming back." },
+    { "type": "text", "id": "cta_label", "label": "Button text", "default": "Back to the Drop" },
+    { "type": "url", "id": "cta_url", "label": "Button link" }
   ]
 }
 {% endschema %}

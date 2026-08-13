@@ -1,71 +1,19 @@
-{% comment %}
-  sections/brand-story.liquid
-{% endcomment %}
-
-{%- assign img_pos = section.settings.image_position | default: 'right' -%}
-
-<section class="brand-story section-spacing">
-  <div
-    class="brand-story"
-    style="{% if img_pos == 'left' %}direction:rtl;{% endif %}"
-  >
-
-    <div class="brand-story__media drip-reveal" style="{% if img_pos == 'left' %}direction:ltr;{% endif %}">
-      {%- if section.settings.image != blank -%}
-        <img
-          src="{{ section.settings.image | image_url: width: 1000 }}"
-          srcset="{{ section.settings.image | image_url: width: 600 }} 600w, {{ section.settings.image | image_url: width: 1000 }} 1000w"
-          sizes="50vw"
-          alt="{{ section.settings.image.alt | escape }}"
-          loading="lazy"
-          width="{{ section.settings.image.width }}"
-          height="{{ section.settings.image.height }}"
-        >
-      {%- else -%}
-        {{ 'lifestyle-1' | placeholder_svg_tag: 'brand-story__placeholder' }}
-      {%- endif -%}
+{% comment %}Melato story gateway / clean QA 2026-08-11. No placeholder art.{% endcomment %}
+{%- assign has_image = false -%}{%- if section.settings.image != blank -%}{%- assign has_image = true -%}{%- endif -%}
+<section class="melato-brand-clean{% unless has_image %} melato-brand-clean--text-only{% endunless %}">
+  <div class="melato-brand-clean__shell">
+    {%- if has_image -%}<div class="melato-brand-clean__media">{{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width:900px) 50vw, 100vw', alt: section.settings.image.alt }}</div>{%- endif -%}
+    <div class="melato-brand-clean__content">
+      {%- if section.settings.eyebrow != blank -%}<p>{{ section.settings.eyebrow }}</p>{%- endif -%}
+      {%- if section.settings.heading != blank -%}<h2>{{ section.settings.heading | newline_to_br }}</h2>{%- endif -%}
+      {%- if section.settings.body != blank -%}<div class="melato-brand-clean__body">{{ section.settings.body }}</div>{%- endif -%}
+      {%- if section.settings.cta_label != blank and section.settings.cta_url != blank -%}<a href="{{ section.settings.cta_url }}">{{ section.settings.cta_label }}</a>{%- endif -%}
     </div>
-
-    <div class="brand-story__content drip-reveal drip-reveal--delay-2" style="{% if img_pos == 'left' %}direction:ltr;{% endif %}">
-      {%- if section.settings.eyebrow != blank -%}
-        <p class="text-label u-accent-line" style="margin-bottom:20px;">{{ section.settings.eyebrow }}</p>
-      {%- endif -%}
-      {%- if section.settings.heading != blank -%}
-        <h2 class="heading-lg" style="margin-bottom:24px;">{{ section.settings.heading | newline_to_br }}</h2>
-      {%- endif -%}
-      {%- if section.settings.body != blank -%}
-        <p style="color:var(--color-muted);font-size:1rem;line-height:1.8;max-width:480px;margin-bottom:36px;">{{ section.settings.body }}</p>
-      {%- endif -%}
-      {%- if section.settings.cta_label != blank -%}
-        <a href="{{ section.settings.cta_url }}" class="btn btn--primary">{{ section.settings.cta_label }}</a>
-      {%- endif -%}
-    </div>
-
   </div>
 </section>
-
+<style>
+.melato-brand-clean{background:#0c0c0d;color:#f5f1e8;padding:clamp(44px,6vw,72px) 0}.melato-brand-clean__shell{width:min(1280px,calc(100% - 32px));margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,90px);align-items:center}.melato-brand-clean--text-only .melato-brand-clean__shell{grid-template-columns:1fr}.melato-brand-clean--text-only .melato-brand-clean__content{max-width:760px;margin:auto;text-align:center}.melato-brand-clean__media{overflow:hidden;border-radius:18px;background:#f2efe9}.melato-brand-clean__media img{display:block;width:100%;height:auto}.melato-brand-clean__content>p{margin:0 0 12px;color:#d3a74a;font:700 10px/1.2 var(--font-mono-family,monospace);letter-spacing:.2em;text-transform:uppercase}.melato-brand-clean h2{margin:0;font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:clamp(44px,5.5vw,72px);line-height:.94;text-transform:uppercase}.melato-brand-clean__body{max-width:520px;margin:18px 0 0;color:#aaa49b;line-height:1.6}.melato-brand-clean--text-only .melato-brand-clean__body{margin-inline:auto}.melato-brand-clean a{display:inline-flex;margin-top:24px;padding-bottom:5px;border-bottom:1px solid currentColor;color:#f5f1e8;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}@media(max-width:800px){.melato-brand-clean__shell{grid-template-columns:1fr}.melato-brand-clean__content{text-align:center}.melato-brand-clean__body{margin-inline:auto}}
+</style>
 {% schema %}
-{
-  "name": "Brand Story",
-  "tag": "section",
-  "settings": [
-    { "type": "image_picker", "id": "image", "label": "Image" },
-    { "type": "text", "id": "eyebrow", "label": "Eyebrow" },
-    { "type": "textarea", "id": "heading", "label": "Heading", "default": "THE\nCULTURE\nWEARS US" },
-    { "type": "textarea", "id": "body", "label": "Body text" },
-    { "type": "text", "id": "cta_label", "label": "Button text", "default": "Our Story" },
-    { "type": "url", "id": "cta_url", "label": "Button link" },
-    {
-      "type": "select",
-      "id": "image_position",
-      "label": "Image position",
-      "options": [
-        { "value": "left", "label": "Left" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "right"
-    }
-  ],
-  "presets": [{ "name": "Brand Story" }]
-}
+{"name":"Brand Story","tag":"section","settings":[{"type":"image_picker","id":"image","label":"Image"},{"type":"text","id":"eyebrow","label":"Eyebrow","default":"About"},{"type":"textarea","id":"heading","label":"Heading","default":"MELATO, IN CONTEXT"},{"type":"textarea","id":"body","label":"Body text","default":"The references, process and decisions behind the work."},{"type":"text","id":"cta_label","label":"Button text","default":"Our Story"},{"type":"url","id":"cta_url","label":"Button link"},{"type":"select","id":"image_position","label":"Image position","options":[{"value":"left","label":"Left"},{"value":"right","label":"Right"}],"default":"right"}],"presets":[{"name":"Brand Story"}]}
 {% endschema %}

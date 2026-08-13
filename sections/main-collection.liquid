@@ -1,19 +1,14 @@
 {% comment %}
-  Melato collection page
-  Source-level collection repairs:
-  - active-filter badge renders only when filters are active
-  - filter option quantities are intentionally omitted because Shopify values can count variants
-  - Best Sellers renders purchasable products first and unavailable products in Archive Icons
-  - New Arrivals receives category shortcuts and an editorial introduction
+  Melato collection / clean QA 2026-08-11.
+  Collection introductions are controlled here so legacy campaign copy cannot
+  leak into the catalogue. Filtering and sorting remain Shopify-native.
 {% endcomment %}
-
 {%- liquid
   assign cols_desktop = section.settings.columns_desktop | default: 4
   assign cols_mobile = section.settings.columns_mobile | default: 2
   assign per_page = section.settings.products_per_page | default: 24
   assign sort_by = collection.sort_by | default: collection.default_sort_by
   assign active_filter_count = 0
-
   for filter in collection.filters
     for value in filter.values
       if value.active
@@ -21,238 +16,75 @@
       endif
     endfor
   endfor
+  assign collection_intro = blank
+  case collection.handle
+    when 'all'
+      assign collection_intro = 'The complete catalogue.'
+    when 'new-arrivals'
+      assign collection_intro = 'Recent additions to the current collection.'
+    when 'best-sellers'
+      assign collection_intro = 'Frequently selected pieces from the current catalogue.'
+    when 'tracksuits'
+      assign collection_intro = 'Track jackets, track pants, satin and velour sets.'
+    when 'denim'
+      assign collection_intro = 'Denim in straight, slim and flared silhouettes.'
+    when 'accessories'
+      assign collection_intro = 'Bags, eyewear, ties and small accessories.'
+    when 'shirts'
+      assign collection_intro = 'Shirts, polos and woven layers.'
+    when 'womens-zellige-capsule'
+      assign collection_intro = 'Women’s clothing and accessories from the current Melato edit.'
+    when 'fragrance'
+      assign collection_intro = 'Eau de Parfum and Eau de Toilette from Melato.'
+    when 'men'
+      assign collection_intro = 'Men’s clothing and accessories from the current Melato edit.'
+  endcase
 -%}
-
 <section class="melato-collection" data-collection-root>
   <header class="melato-collection-header">
-    {%- if collection.image -%}
-      <div class="melato-collection-hero">
-        {{ collection.image | image_url: width: 2000 | image_tag:
-          class: 'melato-collection-hero__image',
-          loading: 'eager',
-          fetchpriority: 'high',
-          widths: '750, 1100, 1500, 2000',
-          sizes: '100vw',
-          alt: collection.image.alt | default: collection.title
-        }}
-        <div class="melato-collection-hero__overlay" aria-hidden="true"></div>
-        <div class="melato-collection-hero__content">
-    {%- else -%}
-      <div class="melato-collection-header__text">
-    {%- endif -%}
-
-        <p class="melato-collection-eyebrow">
-          {% if collection.handle == 'all' %}Catalogue{% else %}Collection{% endif %}
-        </p>
-        <h1 class="melato-collection-title">
-          {% if collection.handle == 'all' %}THE MELATO INDEX{% else %}{{ collection.title }}{% endif %}
-        </h1>
-        {%- if collection.handle == 'all' -%}
-          <p class="melato-collection-desc">The complete catalogue across the current rotation and archive.</p>
-        {%- elsif collection.description != blank -%}
-          <div class="melato-collection-desc rte">{{ collection.description }}</div>
-        {%- endif -%}
-
-    {%- if collection.image -%}
-        </div>
-      </div>
-    {%- else -%}
-      </div>
-    {%- endif -%}
+    {%- if collection.image -%}<div class="melato-collection-hero">{{ collection.image | image_url: width: 2000 | image_tag: class:'melato-collection-hero__image', loading:'eager', fetchpriority:'high', widths:'750,1100,1500,2000', sizes:'100vw', alt: collection.image.alt | default: collection.title }}<div class="melato-collection-hero__overlay" aria-hidden="true"></div><div class="melato-collection-hero__content">{%- else -%}<div class="melato-collection-header__text">{%- endif -%}
+      <p class="melato-collection-eyebrow">{% if collection.handle == 'all' %}Catalogue{% else %}Collection{% endif %}</p>
+      <h1 class="melato-collection-title">{% if collection.handle == 'all' %}THE MELATO INDEX{% else %}{{ collection.title }}{% endif %}</h1>
+      {%- if collection_intro != blank -%}<p class="melato-collection-desc">{{ collection_intro }}</p>{%- endif -%}
+    {%- if collection.image -%}</div></div>{%- else -%}</div>{%- endif -%}
   </header>
 
   {%- if collection.handle == 'new-arrivals' -%}
-    <nav class="melato-collection-chips" aria-label="New arrivals categories">
-      <a href="{{ collection.url }}">View all</a>
-      <a href="{{ collection.url }}?filter.p.product_type=Track+Jacket">Track jackets</a>
-      <a href="{{ collection.url }}?filter.p.product_type=Track+Pant">Track pants</a>
-      <a href="{{ collection.url }}?filter.p.product_type=Fragrance">Fragrance</a>
-      <a href="{{ collection.url }}?filter.p.product_type=Accessories">Accessories</a>
-      <a href="/collections/eves-wardrobe">Eve’s Wardrobe</a>
-    </nav>
-    <aside class="melato-collection-editorial" aria-label="Newest Melato release">
-      <p>Current rotation</p>
-      <h2>New work, edited before the full index.</h2>
-      <span>Begin with the latest silhouettes, then move through the complete arrival ledger.</span>
-    </aside>
+    <nav class="melato-collection-chips" aria-label="New arrivals categories"><a href="{{ collection.url }}">View all</a><a href="{{ collection.url }}?filter.p.product_type=Track+Jacket">Track jackets</a><a href="{{ collection.url }}?filter.p.product_type=Track+Pant">Track pants</a><a href="{{ collection.url }}?filter.p.product_type=Fragrance">Fragrance</a><a href="{{ collection.url }}?filter.p.product_type=Accessories">Accessories</a><a href="/collections/eves-wardrobe">Women</a></nav>
   {%- endif -%}
 
   <div class="melato-collection-toolbar" data-collection-toolbar>
     <div class="melato-collection-toolbar__left">
-      {%- if section.settings.enable_filtering -%}
-        <button
-          class="melato-filter-btn"
-          type="button"
-          data-filter-open
-          aria-expanded="false"
-          aria-controls="melato-filter-drawer"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
-          <span>Filter</span>
-          {%- if active_filter_count > 0 -%}
-            <span class="melato-filter-btn__badge" data-active-filter-count aria-label="{{ active_filter_count }} active filters">{{ active_filter_count }}</span>
-          {%- endif -%}
-        </button>
-      {%- endif -%}
-
-      <span class="melato-collection-count" data-product-count>
-        {{ collection.products_count }} {{ collection.products_count | pluralize: 'piece', 'pieces' }}
-      </span>
-
-      {%- if active_filter_count > 0 -%}
-        <a class="melato-clear-filters" href="{{ collection.url }}" data-clear-all-filters>Clear all</a>
-      {%- endif -%}
+      {%- if section.settings.enable_filtering -%}<button class="melato-filter-btn" type="button" data-filter-open aria-expanded="false" aria-controls="melato-filter-drawer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/></svg><span>Filter</span>{%- if active_filter_count > 0 -%}<span class="melato-filter-btn__badge" data-active-filter-count>{{ active_filter_count }}</span>{%- endif -%}</button>{%- endif -%}
+      <span class="melato-collection-count" data-product-count>{{ collection.products_count }} {{ collection.products_count | pluralize:'piece','pieces' }}</span>
+      {%- if active_filter_count > 0 -%}<a class="melato-clear-filters" href="{{ collection.url }}" data-clear-all-filters>Clear</a>{%- endif -%}
     </div>
-
-    {%- if section.settings.enable_sorting -%}
-      <div class="melato-sort-wrap">
-        <label for="melato-sort-select" class="visually-hidden">Sort by</label>
-        <select id="melato-sort-select" class="melato-sort-select" data-sort-select aria-label="Sort products by">
-          <option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Featured</option>
-          <option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Best selling</option>
-          <option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: low to high</option>
-          <option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: high to low</option>
-          <option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
-          <option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>A to Z</option>
-        </select>
-      </div>
-    {%- endif -%}
+    {%- if section.settings.enable_sorting -%}<div class="melato-sort-wrap"><label for="melato-sort-select" class="visually-hidden">Sort by</label><select id="melato-sort-select" class="melato-sort-select" data-sort-select aria-label="Sort products by"><option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Featured</option><option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Best selling</option><option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: low to high</option><option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: high to low</option><option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option><option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>A to Z</option></select></div>{%- endif -%}
   </div>
 
-  {%- if active_filter_count > 0 -%}
-    <div class="melato-active-filters" data-active-filters-bar aria-label="Active filters">
-      {%- for filter in collection.filters -%}
-        {%- for value in filter.values -%}
-          {%- if value.active -%}
-            <a href="{{ value.url_to_remove }}" class="melato-active-filter-pill" data-filter-pill>
-              {{ filter.label }}: {{ value.label }}
-              <span aria-hidden="true">×</span>
-            </a>
-          {%- endif -%}
-        {%- endfor -%}
-      {%- endfor -%}
-    </div>
-  {%- endif -%}
+  {%- if active_filter_count > 0 -%}<div class="melato-active-filters" data-active-filters-bar aria-label="Active filters">{%- for filter in collection.filters -%}{%- for value in filter.values -%}{%- if value.active -%}<a href="{{ value.url_to_remove }}" class="melato-active-filter-pill" data-filter-pill>{{ filter.label }}: {{ value.label }} <span aria-hidden="true">×</span></a>{%- endif -%}{%- endfor -%}{%- endfor -%}</div>{%- endif -%}
 
   {%- if section.settings.enable_filtering -%}
     <div id="melato-filter-drawer" class="melato-filter-drawer" role="dialog" aria-modal="true" aria-label="Filter products" aria-hidden="true" data-filter-drawer>
-      <div class="melato-filter-drawer__header">
-        <h2>Filter</h2>
-        <button type="button" data-filter-close aria-label="Close filters">×</button>
-      </div>
-
-      <div class="melato-filter-drawer__body">
-        {%- for filter in collection.filters -%}
-          <section class="melato-filter-group" data-filter-group="{{ filter.param_name }}">
-            <button class="melato-filter-group__trigger" type="button" aria-expanded="true" aria-controls="FilterGroup-{{ forloop.index }}">
-              <span>{{ filter.label }}</span>
-              {%- assign group_active = 0 -%}
-              {%- for value in filter.values -%}
-                {%- if value.active -%}{%- assign group_active = group_active | plus: 1 -%}{%- endif -%}
-              {%- endfor -%}
-              {%- if group_active > 0 -%}<span aria-label="{{ group_active }} active">{{ group_active }}</span>{%- endif -%}
-            </button>
-
-            <div id="FilterGroup-{{ forloop.index }}" class="melato-filter-group__options">
-              {%- if filter.type == 'list' -%}
-                {%- for value in filter.values -%}
-                  <label class="melato-filter-option">
-                    <input type="checkbox" name="{{ filter.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} data-filter-input>
-                    <span>{{ value.label }}</span>
-                  </label>
-                {%- endfor -%}
-              {%- elsif filter.type == 'price_range' -%}
-                <div class="melato-price-range">
-                  <label>Minimum
-                    <input type="number" name="{{ filter.min_value.param_name }}" value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | remove: ',' }}{% endif %}" min="0" data-filter-price-input>
-                  </label>
-                  <label>Maximum
-                    <input type="number" name="{{ filter.max_value.param_name }}" value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | remove: ',' }}{% endif %}" min="0" data-filter-price-input>
-                  </label>
-                </div>
-              {%- endif -%}
-            </div>
-          </section>
-        {%- endfor -%}
-      </div>
-
-      <div class="melato-filter-drawer__footer">
-        <a href="{{ collection.url }}" class="melato-filter-clear-btn" data-filter-drawer-clear>Clear all</a>
-        <button class="melato-filter-apply-btn" type="button" data-filter-apply>Show results</button>
-      </div>
+      <div class="melato-filter-drawer__header"><h2>Filter</h2><button type="button" data-filter-close aria-label="Close filters">×</button></div>
+      <div class="melato-filter-drawer__body">{%- for filter in collection.filters -%}<section class="melato-filter-group" data-filter-group="{{ filter.param_name }}"><button class="melato-filter-group__trigger" type="button" aria-expanded="true" aria-controls="FilterGroup-{{ forloop.index }}"><span>{{ filter.label }}</span>{%- assign group_active = 0 -%}{%- for value in filter.values -%}{%- if value.active -%}{%- assign group_active = group_active | plus:1 -%}{%- endif -%}{%- endfor -%}{%- if group_active > 0 -%}<span>{{ group_active }}</span>{%- endif -%}</button><div id="FilterGroup-{{ forloop.index }}" class="melato-filter-group__options">{%- if filter.type == 'list' -%}{%- for value in filter.values -%}<label class="melato-filter-option"><input type="checkbox" name="{{ filter.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} data-filter-input><span>{{ value.label }}</span></label>{%- endfor -%}{%- elsif filter.type == 'price_range' -%}<div class="melato-price-range"><label>Minimum<input type="number" name="{{ filter.min_value.param_name }}" value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | remove:',' }}{% endif %}" min="0" data-filter-price-input></label><label>Maximum<input type="number" name="{{ filter.max_value.param_name }}" value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | remove:',' }}{% endif %}" min="0" data-filter-price-input></label></div>{%- endif -%}</div></section>{%- endfor -%}</div>
+      <div class="melato-filter-drawer__footer"><a href="{{ collection.url }}" class="melato-filter-clear-btn" data-filter-drawer-clear>Clear</a><button class="melato-filter-apply-btn" type="button" data-filter-apply>Show results</button></div>
     </div>
   {%- endif -%}
 
-  <div class="melato-collection-grid" id="melato-product-grid" aria-live="polite" aria-label="Product grid" data-product-grid data-cols-desktop="{{ cols_desktop }}" data-cols-mobile="{{ cols_mobile }}">
+  <div class="melato-collection-grid" id="melato-product-grid" aria-live="polite" aria-label="Product grid" data-product-grid>
     {%- paginate collection.products by per_page -%}
       {%- if collection.products.size > 0 -%}
-        <div class="melato-product-grid__inner" style="--cols-desktop:{{ cols_desktop }};--cols-mobile:{{ cols_mobile }}">
-          {%- if collection.handle == 'best-sellers' -%}
-            {%- for product in collection.products -%}
-              {%- if product.available -%}
-                <article class="melato-product-grid__item" data-product-type="{{ product.product_type | escape }}">
-                  {%- render 'product-card', product: product -%}
-                </article>
-              {%- endif -%}
-            {%- endfor -%}
-          {%- else -%}
-            {%- for product in collection.products -%}
-              <article class="melato-product-grid__item" data-product-type="{{ product.product_type | escape }}">
-                {%- render 'product-card', product: product -%}
-              </article>
-            {%- endfor -%}
-          {%- endif -%}
-        </div>
-
-        {%- if collection.handle == 'best-sellers' -%}
-          {%- assign unavailable_count = 0 -%}
-          {%- for product in collection.products -%}
-            {%- unless product.available -%}{%- assign unavailable_count = unavailable_count | plus: 1 -%}{%- endunless -%}
-          {%- endfor -%}
-          {%- if unavailable_count > 0 -%}
-            <section class="melato-archive-icons" aria-labelledby="ArchiveIconsTitle">
-              <p>Previously sold-out Melato favourites</p>
-              <h2 id="ArchiveIconsTitle">Archive Icons</h2>
-              <div class="melato-product-grid__inner" style="--cols-desktop:{{ cols_desktop }};--cols-mobile:{{ cols_mobile }}">
-                {%- for product in collection.products -%}
-                  {%- unless product.available -%}
-                    <article class="melato-product-grid__item melato-product-grid__item--archive">
-                      {%- render 'product-card', product: product -%}
-                    </article>
-                  {%- endunless -%}
-                {%- endfor -%}
-              </div>
-            </section>
-          {%- endif -%}
-        {%- endif -%}
-
-        {%- if paginate.pages > 1 -%}
-          <nav class="melato-pagination" aria-label="Collection page navigation">{{ paginate | default_pagination }}</nav>
-        {%- endif -%}
-      {%- else -%}
-        <div class="melato-collection-empty">
-          <h2>No products found</h2>
-          <p>Try adjusting your filters.</p>
-          <a href="{{ collection.url }}">Clear all filters</a>
-        </div>
-      {%- endif -%}
+        <div class="melato-product-grid__inner" style="--cols-desktop:{{ cols_desktop }};--cols-mobile:{{ cols_mobile }}">{%- if collection.handle == 'best-sellers' -%}{%- for product in collection.products -%}{%- if product.available -%}<article class="melato-product-grid__item" data-product-type="{{ product.product_type | escape }}">{%- render 'product-card', product:product -%}</article>{%- endif -%}{%- endfor -%}{%- else -%}{%- for product in collection.products -%}<article class="melato-product-grid__item" data-product-type="{{ product.product_type | escape }}">{%- render 'product-card', product:product -%}</article>{%- endfor -%}{%- endif -%}</div>
+        {%- if collection.handle == 'best-sellers' -%}{%- assign unavailable_count = 0 -%}{%- for product in collection.products -%}{%- unless product.available -%}{%- assign unavailable_count = unavailable_count | plus:1 -%}{%- endunless -%}{%- endfor -%}{%- if unavailable_count > 0 -%}<section class="melato-archive-icons" aria-labelledby="ArchiveIconsTitle"><p>Sold out</p><h2 id="ArchiveIconsTitle">Archive</h2><div class="melato-product-grid__inner" style="--cols-desktop:{{ cols_desktop }};--cols-mobile:{{ cols_mobile }}">{%- for product in collection.products -%}{%- unless product.available -%}<article class="melato-product-grid__item melato-product-grid__item--archive">{%- render 'product-card', product:product -%}</article>{%- endunless -%}{%- endfor -%}</div></section>{%- endif -%}{%- endif -%}
+        {%- if paginate.pages > 1 -%}<nav class="melato-pagination" aria-label="Collection page navigation">{{ paginate | default_pagination }}</nav>{%- endif -%}
+      {%- else -%}<div class="melato-collection-empty"><h2>No products found</h2><a href="{{ collection.url }}">Clear filters</a></div>{%- endif -%}
     {%- endpaginate -%}
   </div>
 </section>
-
 <style>
-.melato-collection{background:#080808;color:#f5f1e8;min-height:60vh}.melato-collection *{box-sizing:border-box}.melato-collection-header{background:#080808}.melato-collection-hero{position:relative;height:320px;overflow:hidden}.melato-collection-hero__image{width:100%;height:100%;object-fit:cover}.melato-collection-hero__overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,.9),rgba(8,8,8,.18))}.melato-collection-hero__content{position:absolute;inset:auto 0 0;padding:32px min(5vw,60px)}.melato-collection-header__text{padding:48px min(5vw,60px) 32px}.melato-collection-eyebrow,.melato-collection-editorial p,.melato-archive-icons>p{margin:0 0 9px;color:#d3a74a;font-size:10px;letter-spacing:.22em;text-transform:uppercase}.melato-collection-title{margin:0 0 12px;font-size:clamp(42px,7vw,100px);line-height:.9;letter-spacing:-.03em;text-transform:uppercase}.melato-collection-desc{max-width:620px;color:#aaa49b;line-height:1.65}.melato-collection-chips{display:flex;gap:8px;padding:18px min(5vw,60px);overflow:auto;border-top:1px solid rgba(255,255,255,.08)}.melato-collection-chips a{flex:0 0 auto;padding:9px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;color:#ddd6ca;text-decoration:none;font-size:10px;letter-spacing:.12em;text-transform:uppercase}.melato-collection-editorial{margin:0 min(5vw,60px) 22px;padding:22px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:#111214}.melato-collection-editorial h2{margin:0 0 8px;font-size:clamp(26px,4vw,46px);text-transform:uppercase}.melato-collection-editorial span{color:#9b968d}.melato-collection-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px min(5vw,60px);border-block:1px solid rgba(255,255,255,.08);background:#0b0b0c}.melato-collection-toolbar__left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.melato-filter-btn,.melato-sort-select,.melato-clear-filters{min-height:42px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:#151516;color:#f5f1e8;padding:0 13px}.melato-filter-btn{display:inline-flex;align-items:center;gap:8px}.melato-filter-btn__badge{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#d3a74a;color:#080808;font-weight:800}.melato-clear-filters{display:inline-flex;align-items:center;text-decoration:none}.melato-collection-count{color:#9b968d;font-size:12px}.melato-active-filters{display:flex;gap:8px;flex-wrap:wrap;padding:14px min(5vw,60px)}.melato-active-filter-pill{padding:8px 10px;border:1px solid rgba(255,255,255,.13);border-radius:999px;color:#f5f1e8;text-decoration:none;font-size:11px}.melato-filter-drawer{position:fixed;inset:0 0 0 auto;z-index:900;width:min(440px,100%);background:#0b0b0c;color:#f5f1e8;border-left:1px solid rgba(255,255,255,.12);transform:translateX(100%);transition:transform .25s ease;overflow:auto}.melato-filter-drawer[aria-hidden="false"]{transform:translateX(0)}.melato-filter-drawer__header,.melato-filter-drawer__footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid rgba(255,255,255,.1)}.melato-filter-drawer__header h2{margin:0;text-transform:uppercase}.melato-filter-drawer__header button{background:none;border:0;color:#fff;font-size:28px}.melato-filter-drawer__body{padding:0 20px}.melato-filter-group{padding:18px 0;border-bottom:1px solid rgba(255,255,255,.08)}.melato-filter-group__trigger{width:100%;display:flex;justify-content:space-between;background:none;border:0;color:#fff;padding:0 0 12px;text-transform:uppercase;letter-spacing:.12em}.melato-filter-group__options{display:grid;gap:9px}.melato-filter-option{display:flex;align-items:center;gap:9px;color:#c8c1b6}.melato-price-range{display:grid;grid-template-columns:1fr 1fr;gap:10px}.melato-price-range input{width:100%;margin-top:6px;background:#151516;border:1px solid rgba(255,255,255,.12);color:#fff;padding:10px}.melato-filter-drawer__footer{position:sticky;bottom:0;background:#0b0b0c;border-top:1px solid rgba(255,255,255,.1)}.melato-filter-clear-btn,.melato-filter-apply-btn{flex:1;min-height:46px;display:grid;place-items:center;border-radius:12px;text-decoration:none}.melato-filter-clear-btn{border:1px solid rgba(255,255,255,.15);color:#fff}.melato-filter-apply-btn{border:0;background:#f5f1e8;color:#080808;font-weight:800}.melato-collection-grid{padding:28px min(5vw,60px) 54px}.melato-product-grid__inner{display:grid;grid-template-columns:repeat(var(--cols-desktop),minmax(0,1fr));gap:18px}.melato-archive-icons{margin-top:54px;padding-top:32px;border-top:1px solid rgba(255,255,255,.12)}.melato-archive-icons h2{margin:0 0 22px;font-size:clamp(32px,5vw,58px);text-transform:uppercase}.melato-product-grid__item--archive{opacity:.78}.melato-pagination{display:flex;justify-content:center;margin-top:38px}.melato-collection-empty{text-align:center;padding:70px 20px}@media(max-width:900px){.melato-product-grid__inner{grid-template-columns:repeat(var(--cols-mobile),minmax(0,1fr))}.melato-collection-toolbar{align-items:stretch}.melato-collection-hero{height:260px}}@media(prefers-reduced-motion:reduce){.melato-filter-drawer{transition:none}}
+.melato-collection{background:#080808;color:#f5f1e8;min-height:60vh}.melato-collection *{box-sizing:border-box}.melato-collection-header{background:#080808}.melato-collection-hero{position:relative;height:320px;overflow:hidden}.melato-collection-hero__image{width:100%;height:100%;object-fit:cover}.melato-collection-hero__overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,8,.9),rgba(8,8,8,.18))}.melato-collection-hero__content{position:absolute;inset:auto 0 0;padding:32px min(5vw,60px)}.melato-collection-header__text{padding:48px min(5vw,60px) 32px}.melato-collection-eyebrow,.melato-archive-icons>p{margin:0 0 9px;color:#d3a74a;font-size:10px;letter-spacing:.22em;text-transform:uppercase}.melato-collection-title{margin:0 0 12px;font-size:clamp(42px,7vw,100px);line-height:.9;text-transform:uppercase}.melato-collection-desc{max-width:620px;margin:0;color:#aaa49b;line-height:1.65}.melato-collection-chips{display:flex;gap:8px;padding:18px min(5vw,60px);overflow:auto;border-top:1px solid rgba(255,255,255,.08)}.melato-collection-chips a{flex:0 0 auto;padding:9px 12px;border:1px solid rgba(255,255,255,.14);border-radius:999px;color:#ddd6ca;text-decoration:none;font-size:10px;letter-spacing:.12em;text-transform:uppercase}.melato-collection-toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px min(5vw,60px);border-block:1px solid rgba(255,255,255,.08);background:#0b0b0c}.melato-collection-toolbar__left{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.melato-filter-btn,.melato-sort-select,.melato-clear-filters{min-height:42px;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:#151516;color:#f5f1e8;padding:0 13px}.melato-filter-btn{display:inline-flex;align-items:center;gap:8px}.melato-filter-btn__badge{display:grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#d3a74a;color:#080808}.melato-clear-filters{display:inline-flex;align-items:center;text-decoration:none}.melato-collection-count{color:#9b968d;font-size:12px}.melato-active-filters{display:flex;gap:8px;flex-wrap:wrap;padding:14px min(5vw,60px)}.melato-active-filter-pill{padding:8px 10px;border:1px solid rgba(255,255,255,.13);border-radius:999px;color:#f5f1e8;text-decoration:none;font-size:11px}.melato-filter-drawer{position:fixed;inset:0 0 0 auto;z-index:2500;width:min(440px,100%);background:#0b0b0c;color:#f5f1e8;border-left:1px solid rgba(255,255,255,.12);transform:translateX(100%);transition:transform .25s ease;overflow:auto}.melato-filter-drawer[aria-hidden="false"]{transform:translateX(0)}.melato-filter-drawer__header,.melato-filter-drawer__footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px;border-bottom:1px solid rgba(255,255,255,.1)}.melato-filter-drawer__header h2{margin:0;text-transform:uppercase}.melato-filter-drawer__header button{background:none;border:0;color:#fff;font-size:28px}.melato-filter-drawer__body{padding:0 20px}.melato-filter-group{padding:18px 0;border-bottom:1px solid rgba(255,255,255,.08)}.melato-filter-group__trigger{width:100%;display:flex;justify-content:space-between;background:none;border:0;color:#fff;padding:0 0 12px;text-transform:uppercase;letter-spacing:.12em}.melato-filter-group__options{display:grid;gap:9px}.melato-filter-option{display:flex;align-items:center;gap:9px;color:#c8c1b6}.melato-price-range{display:grid;grid-template-columns:1fr 1fr;gap:10px}.melato-price-range input{width:100%;margin-top:6px;background:#151516;border:1px solid rgba(255,255,255,.12);color:#fff;padding:10px}.melato-filter-drawer__footer{position:sticky;bottom:0;background:#0b0b0c;border-top:1px solid rgba(255,255,255,.1)}.melato-filter-clear-btn,.melato-filter-apply-btn{flex:1;min-height:46px;display:grid;place-items:center;border-radius:12px;text-decoration:none}.melato-filter-clear-btn{border:1px solid rgba(255,255,255,.15);color:#fff}.melato-filter-apply-btn{border:0;background:#f5f1e8;color:#080808;font-weight:800}.melato-collection-grid{padding:28px min(5vw,60px) 54px}.melato-product-grid__inner{display:grid;grid-template-columns:repeat(var(--cols-desktop),minmax(0,1fr));gap:18px}.melato-archive-icons{margin-top:54px;padding-top:32px;border-top:1px solid rgba(255,255,255,.12)}.melato-archive-icons h2{margin:0 0 22px;font-size:clamp(32px,5vw,58px);text-transform:uppercase}.melato-product-grid__item--archive{opacity:.78}.melato-collection-empty{text-align:center;padding:70px 20px}@media(max-width:900px){.melato-product-grid__inner{grid-template-columns:repeat(var(--cols-mobile),minmax(0,1fr));gap:12px}.melato-collection-toolbar{align-items:stretch}.melato-collection-hero{height:260px}}@media(prefers-reduced-motion:reduce){.melato-filter-drawer{transition:none}}
 </style>
-
 {% schema %}
-{
-  "name": "Main collection",
-  "settings": [
-    {"type":"range","id":"columns_desktop","label":"Desktop columns","min":2,"max":5,"step":1,"default":4},
-    {"type":"select","id":"columns_mobile","label":"Mobile columns","default":"2","options":[{"value":"1","label":"1"},{"value":"2","label":"2"}]},
-    {"type":"range","id":"products_per_page","label":"Products per page","min":8,"max":48,"step":4,"default":24},
-    {"type":"checkbox","id":"enable_filtering","label":"Enable filtering","default":true},
-    {"type":"checkbox","id":"enable_sorting","label":"Enable sorting","default":true}
-  ]
-}
+{"name":"Main collection","settings":[{"type":"range","id":"columns_desktop","label":"Desktop columns","min":2,"max":5,"step":1,"default":4},{"type":"select","id":"columns_mobile","label":"Mobile columns","default":"2","options":[{"value":"1","label":"1"},{"value":"2","label":"2"}]},{"type":"range","id":"products_per_page","label":"Products per page","min":8,"max":48,"step":4,"default":24},{"type":"checkbox","id":"enable_filtering","label":"Enable filtering","default":true},{"type":"checkbox","id":"enable_sorting","label":"Enable sorting","default":true}]}
 {% endschema %}
