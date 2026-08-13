@@ -33,8 +33,8 @@
     "total": "Total",
     "item": "article",
     "items": "articles",
-    "free_shipping_message": "Plus que {{ amount }} pour la livraison gratuite",
-    "free_shipping_achieved": "Livraison gratuite débloquée ! 🎉",
+    "free_shipping_message": "Livraison standard offerte sur toutes les commandes",
+    "free_shipping_achieved": "Livraison standard offerte",
     "quantity": "Quantité"
   },
   "products": {
@@ -82,7 +82,7 @@
     "success": "Merci pour votre inscription !"
   },
   "general": {
-    "free_shipping": "Livraison gratuite",
+    "free_shipping": "Livraison standard offerte",
     "secure_checkout": "Paiement sécurisé"
   },
   "drop": {
