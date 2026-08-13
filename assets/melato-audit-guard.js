@@ -32,12 +32,97 @@
     [/Designer apparel, edited with intention\. Built in Ottawa\. Worn anywhere\./g, 'Designer apparel, edited with intention. Worn anywhere.']
   ];
 
+  const frenchExact = new Map([
+    ['Search', 'Rechercher'],
+    ['Account', 'Compte'],
+    ['Bag', 'Panier'],
+    ['Melato / Navigation', 'Melato / Navigation'],
+    ['Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.', 'Vêtements de créateur, pensés avec intention. Portés partout.'],
+    ['Designer apparel, edited with intention. Worn anywhere.', 'Vêtements de créateur, pensés avec intention. Portés partout.'],
+    ['Collection', 'Collection'],
+    ['Home', 'Accueil'],
+    ['Search the archive', 'Rechercher dans les archives'],
+    ['Search Melato', 'Rechercher sur Melato'],
+    ['Search products', 'Rechercher des produits'],
+    ['Type what you want', 'Recherchez ce que vous voulez'],
+    ['Your Cart', 'Votre panier'],
+    ['Your cart is empty.', 'Votre panier est vide.'],
+    ['New arrivals', 'Nouveautés'],
+    ['New Arrivals', 'Nouveautés'],
+    ['Tracksuits', 'Survêtements'],
+    ['Fragrance', 'Parfums'],
+    ['Accessories', 'Accessoires'],
+    ['Eve’s Wardrobe', 'Le vestiaire d’Eve'],
+    ["Eve's Wardrobe", 'Le vestiaire d’Eve'],
+    ['Best Sellers', 'Meilleures ventes'],
+    ['Living Lookbook', 'Lookbook vivant'],
+    ['The Living Lookbook', 'Le lookbook vivant'],
+    ['Newsletter', 'Infolettre'],
+    ['Our Story', 'Notre histoire'],
+    ['FAQ', 'FAQ'],
+    ['Size Guide', 'Guide des tailles'],
+    ['Shipping & Returns', 'Livraison et retours'],
+    ['Remove', 'Supprimer'],
+    ['Quantity', 'Quantité'],
+    ['Add order note', 'Ajouter une note'],
+    ['Order note', 'Note de commande'],
+    ['Subtotal', 'Sous-total'],
+    ['Complimentary standard delivery.', 'Livraison standard offerte.'],
+    ['Checkout', 'Commander'],
+    ['View cart', 'Voir le panier']
+  ]);
+
+  const frenchAria = new Map([
+    ['Open navigation', 'Ouvrir la navigation'],
+    ['Close navigation', 'Fermer la navigation'],
+    ['Header tools', 'Outils de navigation'],
+    ['Open search', 'Ouvrir la recherche'],
+    ['Close search', 'Fermer la recherche'],
+    ['Main navigation', 'Navigation principale'],
+    ['Shopping cart', 'Panier'],
+    ['Cart items', 'Articles du panier'],
+    ['Close cart and continue shopping', 'Fermer le panier et continuer les achats']
+  ]);
+
   function patchPlainText(el) {
     if (!el || el.children.length || /^(SCRIPT|STYLE|NOSCRIPT|SVG|PATH|INPUT|TEXTAREA)$/i.test(el.tagName)) return;
     let next = el.textContent || '';
     const before = next;
     textRules.forEach(([from, to]) => { next = next.replace(from, to); });
     if (next !== before) el.textContent = next.replace(/\s{2,}/g, ' ').trim();
+  }
+
+  function localizeFrench() {
+    if (!/^fr(?:-|$)/i.test(document.documentElement.lang || '')) return;
+    const roots = document.querySelectorAll('[data-mxh], .cart-drawer, cart-drawer, [data-cart-drawer], footer');
+    roots.forEach((root) => {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach((node) => {
+        const raw = node.nodeValue || '';
+        const trimmed = raw.trim();
+        if (!trimmed) return;
+        let next = frenchExact.get(trimmed);
+        if (!next) {
+          next = trimmed
+            .replace(/^Cart\s*\/\s*(\d+)$/i, 'Panier / $1')
+            .replace(/^Cart with (\d+) item$/i, 'Panier avec $1 article')
+            .replace(/^Cart with (\d+) items$/i, 'Panier avec $1 articles');
+        }
+        if (next && next !== trimmed) node.nodeValue = raw.replace(trimmed, next);
+      });
+      root.querySelectorAll('[aria-label]').forEach((el) => {
+        const label = el.getAttribute('aria-label');
+        const direct = frenchAria.get(label);
+        if (direct) el.setAttribute('aria-label', direct);
+        else if (/^Cart with (\d+) item$/i.test(label)) el.setAttribute('aria-label', label.replace(/^Cart with (\d+) item$/i, 'Panier avec $1 article'));
+        else if (/^Cart with (\d+) items$/i.test(label)) el.setAttribute('aria-label', label.replace(/^Cart with (\d+) items$/i, 'Panier avec $1 articles'));
+      });
+      root.querySelectorAll('input[placeholder]').forEach((el) => {
+        if (el.placeholder === 'Type what you want') el.placeholder = 'Recherchez ce que vous voulez';
+      });
+    });
   }
 
   function cleanFilters() {
@@ -105,6 +190,7 @@
     cleanFilters();
     cleanUtilities();
     labelIcons();
+    localizeFrench();
   }
 
   ready(() => {
