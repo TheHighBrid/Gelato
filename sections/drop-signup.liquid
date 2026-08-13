@@ -1,8 +1,23 @@
-{% comment %}Melato email signup / clean QA 2026-08-11{% endcomment %}
+{% comment %}Melato email signup{% endcomment %}
 <section class="melato-mail" id="MelatoMail-{{ section.id }}" style="--mail-bg:{{ section.settings.bg_color | default:'#0a0a0a' }};--mail-text:{{ section.settings.text_color | default:'#f5f1e8' }};--mail-accent:{{ section.settings.accent_color | default:'#f5f1e8' }}">
   <div class="melato-mail__inner">
     <div>{%- if section.settings.eyebrow != blank -%}<p class="melato-mail__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}<h2>{{ section.settings.heading | default:'Melato notes' }}</h2>{%- if section.settings.subtext != blank -%}<p class="melato-mail__sub">{{ section.settings.subtext }}</p>{%- endif -%}</div>
-    <div>{%- form 'customer', id:'droplist-form-{{ section.id }}', class:'melato-mail__form' -%}<input type="hidden" name="contact[tags]" value="newsletter">{% if form.posted_successfully? %}<p class="melato-mail__success" role="status">Thank you.</p>{% else %}<div class="melato-mail__field"><label class="visually-hidden" for="droplist-email-{{ section.id }}">Email address</label><input id="droplist-email-{{ section.id }}" type="email" name="contact[email]" placeholder="{{ section.settings.placeholder | default:'Email address' }}" autocomplete="email" required><button type="submit">{{ section.settings.btn_label | default:'Join' }}</button></div>{% if form.errors %}<div class="melato-mail__error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}{% endif %}{%- endform -%}</div>
+    <div>
+      {%- assign form_id = 'droplist-form-' | append: section.id -%}
+      {%- form 'customer', id: form_id, class: 'melato-mail__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        {% if form.posted_successfully? %}
+          <p class="melato-mail__success" role="status">Thank you.</p>
+        {% else %}
+          <div class="melato-mail__field">
+            <label class="visually-hidden" for="droplist-email-{{ section.id }}">Email address</label>
+            <input id="droplist-email-{{ section.id }}" type="email" name="contact[email]" placeholder="{{ section.settings.placeholder | default:'Email address' }}" autocomplete="email" required>
+            <button type="submit">{{ section.settings.btn_label | default:'Join' }}</button>
+          </div>
+          {% if form.errors %}<div class="melato-mail__error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}
+        {% endif %}
+      {%- endform -%}
+    </div>
   </div>
 </section>
 <style>

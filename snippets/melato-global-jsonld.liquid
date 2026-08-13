@@ -1,22 +1,20 @@
 {%- assign site_url = shop.url | default: request.origin -%}
 {%- assign search_target = site_url | append: routes.search_url | append: '?q=' | append: '{search_term_string}' -%}
-{%- assign social_image = blank -%}
-{%- if template.name == 'product' and product.featured_image != blank -%}{%- assign social_image = product.featured_image | image_url: width: 1200 | prepend: 'https:' -%}{%- elsif template.name == 'collection' and collection.image != blank -%}{%- assign social_image = collection.image | image_url: width: 1200 | prepend: 'https:' -%}{%- elsif page_image != blank -%}{%- assign social_image = page_image | image_url: width: 1200 | prepend: 'https:' -%}{%- elsif settings.share_image != blank -%}{%- assign social_image = settings.share_image | image_url: width: 1200 | prepend: 'https:' -%}{%- endif -%}
 
-{%- assign melato_description = page_description | strip_html | strip_newlines | strip -%}
+{%- assign melato_description = page_description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip -%}
 {%- if melato_description == blank -%}
   {%- if template.name == 'product' and product != blank -%}
-    {%- assign melato_description = product.description | strip_html | strip_newlines | strip | truncate: 160 -%}
+    {%- assign melato_description = product.description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | truncate: 160 -%}
     {%- if melato_description == blank -%}
-      {%- capture melato_description -%}Shop {{ product.title }} by Melato. Explore verified product details, fit guidance, care information, complimentary standard delivery, and secure checkout.{%- endcapture -%}
+      {%- capture melato_description -%}Shop {{ product.title }} by Melato. Explore product details, fit guidance, care information, complimentary standard delivery, and secure checkout.{%- endcapture -%}
     {%- endif -%}
   {%- elsif template.name == 'collection' and collection != blank -%}
-    {%- assign melato_description = collection.description | strip_html | strip_newlines | strip | truncate: 160 -%}
+    {%- assign melato_description = collection.description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | truncate: 160 -%}
     {%- if melato_description == blank -%}
       {%- capture melato_description -%}Shop {{ collection.title }} from Melato, featuring premium apparel, accessories, and limited pieces selected with intention.{%- endcapture -%}
     {%- endif -%}
   {%- elsif template.name == 'page' and page != blank -%}
-    {%- assign melato_description = page.content | strip_html | strip_newlines | strip | truncate: 160 -%}
+    {%- assign melato_description = page.content | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | truncate: 160 -%}
     {%- if melato_description == blank -%}
       {%- capture melato_description -%}Explore {{ page.title }} from Melato for current brand, product, service, and customer-care information.{%- endcapture -%}
     {%- endif -%}
@@ -33,11 +31,7 @@
 {%- if melato_incomplete_locale -%}<meta name="robots" content="noindex,follow">{%- endif -%}
 
 {%- if page_description == blank and melato_description != blank -%}<meta name="description" content="{{ melato_description | escape }}">{%- endif -%}
-<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@melato_ca">
-<meta name="twitter:title" content="{{ page_title | escape }}">
-{%- if melato_description != blank -%}<meta name="twitter:description" content="{{ melato_description | escape }}">{%- endif -%}
-{%- if social_image != blank -%}<meta name="twitter:image" content="{{ social_image }}">{%- endif -%}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":{{ site_url | append: '#organization' | json }},"name":{{ shop.name | json }},"url":{{ site_url | json }},"sameAs":["https://www.instagram.com/melato.ca"]},{"@type":"WebSite","@id":{{ site_url | append: '#website' | json }},"url":{{ site_url | json }},"name":{{ shop.name | json }},"publisher":{"@id":{{ site_url | append: '#organization' | json }}},"potentialAction":{"@type":"SearchAction","target":{{ search_target | json }},"query-input":"required name=search_term_string"}},{"@type":"WebPage","@id":{{ canonical_url | append: '#webpage' | json }},"url":{{ canonical_url | json }},"name":{{ page_title | json }},"isPartOf":{"@id":{{ site_url | append: '#website' | json }}}{% if melato_description != blank %},"description":{{ melato_description | json }}{% endif %}},{"@type":"BreadcrumbList","@id":{{ canonical_url | append: '#breadcrumb' | json }},"itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":{{ site_url | json }}}{% if template.name == 'product' and product != blank %},{"@type":"ListItem","position":2,"name":"Products","item":{{ site_url | append: routes.all_products_collection_url | json }}},{"@type":"ListItem","position":3,"name":{{ product.title | json }},"item":{{ canonical_url | json }}}{% elsif template.name == 'collection' and collection != blank %},{"@type":"ListItem","position":2,"name":{{ collection.title | json }},"item":{{ canonical_url | json }}}{% elsif template.name == 'page' and page != blank %},{"@type":"ListItem","position":2,"name":{{ page.title | json }},"item":{{ canonical_url | json }}}{% endif %}]}{% if template.name == 'collection' and collection != blank %},{"@type":"CollectionPage","@id":{{ canonical_url | append: '#collection' | json }},"name":{{ collection.title | json }},"url":{{ canonical_url | json }},"mainEntity":{"@type":"ItemList","numberOfItems":{{ collection.products_count | json }},"itemListElement":[{%- for item in collection.products limit: 24 -%}{"@type":"ListItem","position":{{ forloop.index | json }},"url":{{ site_url | append: item.url | json }},"name":{{ item.title | json }}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]}}{% endif %}]}
 </script>
@@ -46,7 +40,3 @@
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does order processing take?","acceptedAnswer":{"@type":"Answer","text":"Orders are usually prepared within 1 to 3 business days. During limited drops, holidays, or high-volume periods, processing may take slightly longer."}},{"@type":"Question","name":"How long does shipping take?","acceptedAnswer":{"@type":"Answer","text":"Delivery times depend on destination and the available service. Estimated delivery information appears during checkout and tracking is sent after dispatch."}},{"@type":"Question","name":"Do you offer complimentary delivery?","acceptedAnswer":{"@type":"Answer","text":"Complimentary standard delivery is available on all orders. Taxes and applicable duties are calculated at checkout."}},{"@type":"Question","name":"Will I receive tracking?","acceptedAnswer":{"@type":"Answer","text":"Once your order ships, tracking details are sent to the email or phone number used at checkout."}},{"@type":"Question","name":"How does Melato fit?","acceptedAnswer":{"@type":"Answer","text":"Fit varies by product and silhouette. Use the product-specific fit guidance and available measurements, or contact Melato Customer Care before ordering."}},{"@type":"Question","name":"How do I start a return?","acceptedAnswer":{"@type":"Answer","text":"Email support@melato.ca with your order number, the item you want to return, and the reason for return. We will review the request and send next steps if approved."}}]}
 </script>
 {%- endif -%}
-{{ 'melato-audit-completion-2026.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'melato-audit-guard.js' | asset_url }}" defer></script>
-<script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script>
-<script src="{{ 'melato-audit-completion-2026.js' | asset_url }}" defer></script>

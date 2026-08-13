@@ -64,131 +64,106 @@ jobs:
 
           print('Announcement color ownership authorization check passed.')
 
-      - name: Block removed commerce UI from returning
+      - name: Protect repaired storefront contracts
         shell: python
         run: |
           from pathlib import Path
 
-          checks = {
-              'sections/melato-product-page-rebuild.liquid': {
-                  'banned': [
-                      'content_for_additional_checkout_buttons',
-                      '<li>Fast dispatch</li>',
-                      '<li>Secure checkout</li>',
-                      'class="product-assurances"',
-                      'Complimentary delivery is available on all orders.',
-                  ],
-                  'required': [
-                      'product.metafields.melato.product_story',
-                      'product.metafields.melato.material_composition',
-                      'product.metafields.melato.fit',
-                      'product.metafields.melato.care_instructions',
-                      'product.metafields.melato.colorway',
-                  ],
-              },
-              'sections/melato-home-conversion.liquid': {
-                  'banned': [
-                      '<strong>Fast dispatch</strong>',
-                      '<strong>Secure checkout</strong>',
-                      'Shop Pay',
-                      'Apple Pay',
-                      'Google Pay',
-                      'melato-home-conversion__ctas',
-                      'primary_cta_label',
-                      'secondary_cta_label',
-                  ],
-                  'required': [],
-              },
-              'sections/melato-header.liquid': {
-                  'banned': [
-                      '>Shop all</a>',
-                      '<span>02</span>Shop</a>',
-                  ],
-                  'required': [],
-              },
-              'sections/melato-hero.liquid': {
-                  'banned': [
-                      '>Shop Now</a>',
-                      '"default": "Shop Now"',
-                      '"cta_label": "Shop Now"',
-                  ],
-                  'required': [],
-              },
-              'sections/melato-announcement-bar.liquid': {
-                  'banned': [
-                      '"default":"Shop now"',
-                  ],
-                  'required': [
-                      'MELATO OWNER-PROTECTED ANNOUNCEMENT COLOR CONTRACT',
-                      'product.metafields.custom.background_hex_color_code',
-                      'product.metafields.custom.foreground_hex_color_code',
-                      'product.metafields.custom.bar_bg',
-                      'product.metafields.custom.bar_fg',
-                      'product.metafields.custom.palette_1',
-                      'product.metafields.custom.palette_2',
-                      'product.metafields.custom.palette_3',
-                      'data-melato-color-owner="announcement-section"',
-                      'window.setInterval(rotate,4200)',
-                      'background:var(--ab-bg)!important',
-                      'assign fallback_message = section.settings.fallback_message',
-                      'Melato storefront policy hard-stop',
-                      '.shopify-payment-button',
-                      '.melato-home-conversion__ctas',
-                  ],
-              },
-              'snippets/cart-drawer.liquid': {
-                  'banned': [
-                      'Free shipping unlocked!',
-                      'away from free shipping',
-                      'Complimentary standard delivery.',
-                      'cart_free_shipping_threshold',
-                  ],
-                  'required': [
-                      'Taxes and applicable duties are calculated at checkout.',
-                      'v2.7 — Melato cart policy cleanup',
-                  ],
-              },
-              'sections/melato-footer.liquid': {
-                  'banned': [
-                      'shop.enabled_payment_types',
-                      'payment_type_svg_tag',
-                  ],
-                  'required': [],
-              },
-              'templates/index.json': {
-                  'banned': [
-                      '"text": "Complimentary delivery on all orders."',
-                  ],
-                  'required': [],
-              },
-              'config/settings_data.json': {
-                  'banned': [
-                      '"cart_free_shipping_bar":true',
-                      '"show_payment_icons":true',
-                      'COMPLIMENTARY DELIVERY ON ALL ORDERS',
-                  ],
-                  'required': [],
-              },
-          }
-
           failures = []
-          for filename, policy in checks.items():
-              path = Path(filename)
-              if not path.exists():
-                  failures.append(f'{filename}: required policy file is missing')
-                  continue
-              text = path.read_text()
-              for needle in policy['banned']:
-                  if needle in text:
-                      failures.append(f'{filename}: removed UI returned: {needle!r}')
-              for needle in policy['required']:
-                  if needle not in text:
-                      failures.append(f'{filename}: required Melato policy contract missing: {needle!r}')
+
+          def read(path):
+              file = Path(path)
+              if not file.exists():
+                  failures.append(f'{path}: required file is missing')
+                  return ''
+              return file.read_text()
+
+          def require(path, needle, label=None):
+              if needle not in read(path):
+                  failures.append(f'{path}: missing {label or needle!r}')
+
+          def ban(path, needle, label=None):
+              file = Path(path)
+              if file.exists() and needle in file.read_text():
+                  failures.append(f'{path}: forbidden {label or needle!r} returned')
+
+          # Announcement owns color and navigation only. It must never suppress unrelated commerce UI.
+          for needle in (
+              'MELATO OWNER-PROTECTED ANNOUNCEMENT COLOR CONTRACT',
+              'product.metafields.custom.background_hex_color_code',
+              'product.metafields.custom.foreground_hex_color_code',
+              'product.metafields.custom.palette_1',
+              'product.metafields.custom.palette_2',
+              'product.metafields.custom.palette_3',
+              'data-melato-color-owner="announcement-section"',
+              'window.setInterval(rotate,4200)',
+              'href="/pages/popup-calendar"',
+          ):
+              require('sections/melato-announcement-bar.liquid', needle)
+          for needle in (
+              'Melato storefront policy hard-stop',
+              '.shopify-payment-button',
+              '.pdp-proof-mini',
+              '.melato-home-conversion__ctas',
+              'new MutationObserver',
+          ):
+              ban('sections/melato-announcement-bar.liquid', needle, 'cross-component suppression')
+
+          # Footer trust surfaces are intentional and must remain source-rendered.
+          for needle in (
+              'support@melato.ca',
+              '+1 (613) 209-6464',
+              "form 'customer'",
+              'shop.enabled_payment_types',
+              'payment_type_svg_tag',
+              'Complimentary standard delivery',
+              'Secure checkout',
+              '/pages/popup-calendar',
+              '/blogs/news',
+          ):
+              require('sections/melato-footer.liquid', needle)
+          ban('sections/melato-footer.liquid', 'new MutationObserver', 'footer mutation observer')
+
+          # Cart values must be formatted from the current presentment currency.
+          for needle in ('Intl.NumberFormat', 'cart.currency', 'style:\'currency\''):
+              require('assets/melato-cart-drawer.js', needle)
+          ban('assets/melato-cart-drawer.js', '"$"+(Number(cents||0)/100)', 'hard-coded dollar fallback')
+
+          # PDP polish may enhance interaction but must never conceal missing source data.
+          for needle in ('Complimentary delivery', 'Secure checkout', 'Eligible returns', '/pages/size-guide'):
+              require('assets/melato-pdp-polish.js', needle)
+          for needle in (
+              'Exact fibre percentage is not published yet',
+              'to be confirmed|tbd|not provided|information unavailable|details unavailable',
+              'dynamicCompleteSet',
+          ):
+              ban('assets/melato-pdp-polish.js', needle, 'client-side catalog data scrubber')
+
+          # Reviews are intentionally removed from the default PDP.
+          for needle in ('judge_me_reviews', 'shopify://apps/judge-me', 'jdgm-widget'):
+              ban('templates/product.json', needle, 'Judge.me product embed')
+              ban('sections/product-tabs.liquid', needle, 'Judge.me product markup')
+
+          # Audit-era global loaders must not be reintroduced through structured-data snippets.
+          for needle in (
+              'melato-audit-guard.js',
+              'melato-audit-completion-2026.js',
+              'melato-audit-completion-2026.css',
+              'melato-audit-nav-collections.js',
+          ):
+              ban('snippets/melato-global-jsonld.liquid', needle, 'audit asset loader')
+          ban('layout/theme.liquid', 'melato-hero-video.js', 'dead homepage video loader')
+
+          # Content infrastructure required by the current storefront.
+          require('templates/page.popup-calendar.json', '"type": "melato-popup-calendar"', 'popup calendar template')
+          require('sections/melato-popup-calendar.liquid', 'AUGUST 20, 2026', 'Popup Show #5 date')
+          require('templates/404.json', '"main"', 'enabled 404 section')
+          ban('templates/404.json', '"disabled": true', 'disabled 404 content')
 
           if failures:
               print('Melato brand policy regression detected:')
               for failure in failures:
-                  print(f' - {failure}')
+                  print(' -', failure)
               raise SystemExit(1)
 
-          print('Melato brand policy guard passed.')
+          print('Melato repaired brand policy guard passed.')

@@ -24,18 +24,19 @@ jobs:
           failures = []
 
           def read(path):
-              p = Path(path)
-              if not p.exists():
+              file = Path(path)
+              if not file.exists():
                   failures.append(f'{path}: missing')
                   return ''
-              return p.read_text()
+              return file.read_text()
 
-          # Global fit guidance must never become a generic house measurement chart.
+          # Fit guidance intentionally renders the curated Shopify Page body and
+          # must never generate a universal house measurement chart in the theme.
           fit_page = read('templates/page.size-guide.liquid')
-          for banned in ('page.content', '<table', 'All measurements', 'Chest (in)', 'Waist (in)', 'Hip (in)'):
+          for banned in ('<table', 'All measurements', 'Chest (in)', 'Waist (in)', 'Hip (in)', 'Category measurements'):
               if banned in fit_page:
                   failures.append(f'templates/page.size-guide.liquid: generic sizing output returned: {banned!r}')
-          for required in ('Fit is product-specific.', 'Product Measurements', 'support@melato.ca'):
+          for required in ('page.content', 'Fit is product-specific.', 'Product Measurements', 'support@melato.ca'):
               if required not in fit_page:
                   failures.append(f'templates/page.size-guide.liquid: required fit contract missing: {required!r}')
 
@@ -43,12 +44,14 @@ jobs:
           if 'Legacy global size-guide output intentionally disabled.' not in modal:
               failures.append('snippets/size-guide-modal.liquid: legacy global size modal was re-enabled')
 
-          for path in ('sections/melato-header.liquid', 'sections/melato-footer.liquid'):
-              text = read(path)
-              if '/pages/size-guide' not in text or 'Fit Guidance' not in text:
-                  failures.append(f'{path}: fit guidance navigation contract missing')
+          # Fit handoff belongs on the PDP where the buying decision happens.
+          polish = read('assets/melato-pdp-polish.js')
+          for required in ('ensureFitGuidance(root);', '/pages/size-guide', 'Fit guidance and measurement policy'):
+              if required not in polish:
+                  failures.append(f'assets/melato-pdp-polish.js: PDP fit-guidance contract missing: {required!r}')
 
-          # Default and compatibility PDPs must not surface accelerated-wallet brand UI.
+          # Default and compatibility PDPs stay on the consolidated renderer and
+          # do not surface accelerated-wallet brand UI inside the product template.
           pdp = read('sections/melato-product-page-rebuild.liquid')
           for banned in ('payment_button', 'content_for_additional_checkout_buttons'):
               if banned in pdp:
@@ -63,19 +66,19 @@ jobs:
               if banned in compatibility:
                   failures.append(f'templates/product.melato-audit.json: branded wallet proof returned: {banned!r}')
 
-          # High-traffic image sections must keep responsive CDN output and sane source ceilings.
+          # High-traffic image sections keep responsive CDN output and sane source ceilings.
           media_contracts = {
-              'sections/melato-home-house.liquid': (4, 3),
+              'sections/melato-home-conversion.liquid': (1, 0),
               'sections/melato-product-page-rebuild.liquid': (3, 2),
               'sections/melato-footer.liquid': (1, 1),
           }
           for path, (min_widths, min_lazy) in media_contracts.items():
-              text = read(path)
-              if text.count('widths:') < min_widths:
+              source = read(path)
+              if source.count('widths:') < min_widths:
                   failures.append(f'{path}: responsive image widths contract weakened')
-              if text.count("loading: 'lazy'") < min_lazy:
+              if source.count("loading: 'lazy'") < min_lazy:
                   failures.append(f'{path}: below-fold lazy loading contract weakened')
-              for match in re.finditer(r'image_url:\s*width:\s*(\d+)', text):
+              for match in re.finditer(r'image_url:\s*width:\s*(\d+)', source):
                   width = int(match.group(1))
                   if width > 2400:
                       failures.append(f'{path}: image source ceiling {width}px exceeds 2400px')
