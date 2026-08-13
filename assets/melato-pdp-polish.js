@@ -8,22 +8,23 @@
   ready(() => {
     if (!location.pathname.includes('/products/')) return;
 
-    const root = document.querySelector('[id^="MelatoPDP-"]') || document.querySelector('main');
+    const root = document.querySelector('[id^="MelatoCleanPDP-"],[id^="MelatoPDP-"]') || document.querySelector('main');
     if (!root) return;
 
     cleanCopy();
     polishSet();
+    ensureSizeGuide(root);
     dynamicCompleteSet();
     bindGalleryThumbs(root);
     ensureProductGallery(root);
     bindMainImageZoom(root);
 
     window.setTimeout(() => {
+      ensureSizeGuide(root);
       ensureProductGallery(root);
       bindMainImageZoom(root);
     }, 900);
 
-    // Debounced + LOCK_KEY-aware: defers while guard/nav scripts are mid-patch.
     const LOCK_KEY = '__MELATO_AUDIT_PATCHING__';
     let polishTimer;
     new MutationObserver(() => {
@@ -33,11 +34,28 @@
         if (window[LOCK_KEY]) return;
         cleanCopy();
         polishSet();
+        ensureSizeGuide(root);
         bindGalleryThumbs(root);
         bindMainImageZoom(root);
       }, 300);
     }).observe(root, { childList: true, subtree: true });
   });
+
+  function ensureSizeGuide(root) {
+    root.querySelectorAll('.pdp-option').forEach((fieldset) => {
+      const legend = fieldset.querySelector('legend');
+      const header = fieldset.querySelector('.pdp-option__header');
+      if (!legend || !header || header.querySelector('.size-guide-trigger')) return;
+      const label = (legend.textContent || '').trim().toLowerCase();
+      if (label !== 'size' && label !== 'taille') return;
+      const link = document.createElement('a');
+      link.className = 'size-guide-trigger';
+      link.href = '/pages/size-guide';
+      link.textContent = document.documentElement.lang?.toLowerCase().startsWith('fr') ? 'Guide des tailles' : 'Size guide';
+      link.setAttribute('aria-label', link.textContent);
+      header.appendChild(link);
+    });
+  }
 
   function cleanCopy() {
     document.querySelectorAll('.pdp-rte, .pdp-detail-list li, .pdp-proof-mini span, .pdp-thesis, .product__description, .rte').forEach((el) => {
