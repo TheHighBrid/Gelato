@@ -17,11 +17,10 @@
 
   const textRules = [
     [/Free\s+Complimentary\s+Delivery/gi, 'Complimentary delivery'],
-    [/Free\s+shipping\s+over\s+\$60/gi, 'Complimentary delivery on all orders'],
-    [/FREE\s+SHIPPING\s+OVER\s+\$60/gi, 'COMPLIMENTARY DELIVERY ON ALL ORDERS'],
-    [/\$60\.00\s+away\s+from\s+free\s+shipping/gi, 'Complimentary delivery included on every order.'],
-    [/Free\s+domestic\s+shipping\s+over\s+\$43\s+USD\s*\(\$60\s+CAD\)/gi, 'Complimentary delivery on all orders.'],
-    [/On\s+orders\s+over\s+\$150\s+CAD/gi, 'On all orders'],
+    [/Free\s+shipping\s+over\s+\$\s*\d+(?:\.\d{2})?/gi, 'Complimentary delivery on all orders'],
+    [/\$\s*\d+(?:\.\d{2})?\s+away\s+from\s+free\s+shipping/gi, 'Complimentary delivery included on every order.'],
+    [/Free\s+domestic\s+shipping\s+over\s+\$\s*\d+(?:\.\d{2})?\s+USD\s*\(\$\s*\d+(?:\.\d{2})?\s+CAD\)/gi, 'Complimentary delivery on all orders.'],
+    [/On\s+orders\s+over\s+\$\s*\d+(?:\.\d{2})?\s+CAD/gi, 'On all orders'],
     [/On\s+all\s+oders/gi, 'On all orders'],
     [/orders@melato\.ca/gi, 'support@melato.ca'],
     [/inquiries@melato\.ca|inquiry@melato\.ca/gi, 'contact@melato.ca'],
