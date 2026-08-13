@@ -11,12 +11,13 @@
     const root = document.querySelector('[id^="MelatoPDP-"]') || document.querySelector('main');
     if (!root) return;
 
-    polishSet();
+    polishSet(root);
     bindGalleryThumbs(root);
     ensureProductGallery(root);
     bindMainImageZoom(root);
 
     window.setTimeout(() => {
+      polishSet(root);
       ensureProductGallery(root);
       bindGalleryThumbs(root);
       bindMainImageZoom(root);
@@ -26,14 +27,14 @@
     new MutationObserver(() => {
       clearTimeout(polishTimer);
       polishTimer = setTimeout(() => {
-        polishSet();
+        polishSet(root);
         bindGalleryThumbs(root);
         bindMainImageZoom(root);
       }, 300);
     }).observe(root, { childList: true, subtree: true });
   });
 
-  function polishSet() {
+  function polishSet(root) {
     document.querySelectorAll('.pdp-set h2').forEach((el) => {
       const original = el.textContent || '';
       const cleaned = original
@@ -59,6 +60,42 @@
       const price = el.querySelector('strong');
       if (label) label.textContent = 'Full set price';
       if (price) price.style.marginLeft = 'auto';
+    });
+
+    ensurePurchaseReassurance(root);
+    ensureFitGuidance(root);
+  }
+
+  function ensurePurchaseReassurance(root) {
+    const form = root.querySelector('.pdp-form');
+    if (!form) return;
+
+    let assurances = root.querySelector('.product-assurances[data-melato-assurances]');
+    if (!assurances) {
+      assurances = document.createElement('ul');
+      assurances.className = 'product-assurances';
+      assurances.dataset.melatoAssurances = 'true';
+      assurances.setAttribute('aria-label', 'Purchase reassurance');
+      assurances.innerHTML = [
+        'Complimentary delivery',
+        'Secure checkout',
+        'Eligible returns'
+      ].map((label) => `<li>${label}</li>`).join('');
+      form.insertAdjacentElement('afterend', assurances);
+    }
+  }
+
+  function ensureFitGuidance(root) {
+    root.querySelectorAll('.pdp-spec').forEach((detail) => {
+      const summary = detail.querySelector('summary');
+      const content = detail.querySelector('.pdp-rte');
+      if (!summary || !content || summary.textContent.trim().toLowerCase() !== 'fit') return;
+      if (content.querySelector('[data-melato-fit-guide-link]')) return;
+      const line = document.createElement('p');
+      line.dataset.melatoFitGuideLink = 'true';
+      line.className = 'pdp-fit-guidance-link';
+      line.innerHTML = '<a href="/pages/size-guide">Fit guidance and measurement policy</a>';
+      content.appendChild(line);
     });
   }
 
