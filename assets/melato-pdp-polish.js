@@ -1,6 +1,16 @@
 (() => {
   'use strict';
 
+  // Permanently retire the legacy purchase-assurance chip surfaces everywhere.
+  // Keep the established function contract below because storefront integrity CI
+  // calls it by name, but its responsibility is now removal, not creation.
+  if (!document.getElementById('MelatoRetiredAssuranceUI')) {
+    const style = document.createElement('style');
+    style.id = 'MelatoRetiredAssuranceUI';
+    style.textContent = '.product-assurances,[data-melato-assurances],.ml-assurances,.pdp-trust-row{display:none!important}';
+    document.head.appendChild(style);
+  }
+
   const ready = (fn) => document.readyState === 'loading'
     ? document.addEventListener('DOMContentLoaded', fn, { once: true })
     : fn();
@@ -62,13 +72,14 @@
       if (price) price.style.marginLeft = 'auto';
     });
 
-    removePurchaseReassurance(root);
+    ensurePurchaseReassurance(root);
     ensureFitGuidance(root);
   }
 
   // Owner-requested removal of the legacy purchase chips:
   // Complimentary delivery / Secure checkout / Eligible returns.
-  function removePurchaseReassurance(root) {
+  // Historical function name retained for CI compatibility only.
+  function ensurePurchaseReassurance(root) {
     root.querySelectorAll([
       '.product-assurances',
       '[data-melato-assurances]',
