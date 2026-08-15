@@ -1,28 +1,69 @@
-{% comment %}Melato homepage opening / clean QA 2026-08-11{% endcomment %}
+{% comment %}
+  Melato homepage opening.
+  Hero visual inherits the merchandised collection image unless a dedicated image
+  is chosen in the theme editor. This prevents an empty first viewport.
+{% endcomment %}
 {%- liquid
   assign home_collection = section.settings.featured_collection
   if home_collection == blank
     assign home_collection = collections['new-arrivals']
   endif
+  assign hero_image = section.settings.hero_image
+  if hero_image == blank and home_collection != blank
+    assign hero_image = home_collection.image
+  endif
+  if hero_image == blank and home_collection != blank and home_collection.products_count > 0
+    assign hero_image = home_collection.products.first.featured_image
+  endif
 -%}
 <section class="melato-home-clean" id="MelatoHomeClean-{{ section.id }}">
-  <div class="melato-home-clean__shell">
+  <div class="melato-home-clean__hero">
+    {%- if hero_image != blank -%}
+      <div class="melato-home-clean__media" aria-hidden="true">
+        {{ hero_image | image_url: width: 2200 | image_tag:
+          class: 'melato-home-clean__hero-image',
+          loading: 'eager',
+          fetchpriority: 'high',
+          widths: '750, 1100, 1500, 1800, 2200',
+          sizes: '100vw',
+          alt: ''
+        }}
+      </div>
+    {%- endif -%}
+    <div class="melato-home-clean__shade" aria-hidden="true"></div>
     <header class="melato-home-clean__header">
       {%- if section.settings.eyebrow != blank -%}<p class="melato-home-clean__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
       <h1>{{ section.settings.heading }}</h1>
       {%- if section.settings.copy != blank -%}<p class="melato-home-clean__copy">{{ section.settings.copy }}</p>{%- endif -%}
-      <a class="melato-home-clean__cta" href="{{ home_collection.url | default: '/collections/new-arrivals' }}">View collection</a>
+      <div class="melato-home-clean__actions">
+        <a class="melato-home-clean__cta melato-home-clean__cta--primary" href="{{ home_collection.url | default: '/collections/new-arrivals' }}">Shop the drop</a>
+        <a class="melato-home-clean__cta" href="/pages/living-lookbook">Living Lookbook</a>
+      </div>
     </header>
-    {%- if home_collection != blank and home_collection.products_count > 0 -%}
+  </div>
+
+  {%- if home_collection != blank and home_collection.products_count > 0 -%}
+    <div class="melato-home-clean__shell">
       <div class="melato-home-clean__products" aria-label="Featured products">
         {%- for product in home_collection.products limit:4 -%}<div>{%- render 'product-card', product: product -%}</div>{%- endfor -%}
       </div>
-    {%- endif -%}
-  </div>
+    </div>
+  {%- endif -%}
 </section>
 <style>
-#MelatoHomeClean-{{ section.id }}{background:#080808;color:#f5f1e8;padding:clamp(54px,8vw,110px) 0 44px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:min(1360px,calc(100% - 32px));margin:auto}#MelatoHomeClean-{{ section.id }} .melato-home-clean__header{max-width:930px;margin:0 auto clamp(42px,6vw,72px);text-align:center}#MelatoHomeClean-{{ section.id }} .melato-home-clean__eyebrow{margin:0 0 14px;color:#d3a74a;font:700 10px/1.2 var(--font-mono-family,monospace);letter-spacing:.2em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} h1{margin:0;font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:clamp(58px,11vw,150px);line-height:.84;letter-spacing:-.02em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} .melato-home-clean__copy{max-width:560px;margin:22px auto 0;color:#aaa49b;font-size:16px;line-height:1.55}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta{display:inline-flex;margin-top:26px;min-height:46px;align-items:center;padding:0 20px;border:1px solid rgba(245,241,232,.22);border-radius:999px;color:#f5f1e8;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}@media(max-width:900px){#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}@media(max-width:520px){#MelatoHomeClean-{{ section.id }}{padding-top:44px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:calc(100% - 24px)}}
+#MelatoHomeClean-{{ section.id }}{background:#080808;color:#f5f1e8}#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero{position:relative;min-height:clamp(610px,82svh,940px);display:grid;align-items:end;overflow:hidden}#MelatoHomeClean-{{ section.id }} .melato-home-clean__media,#MelatoHomeClean-{{ section.id }} .melato-home-clean__shade{position:absolute;inset:0}#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero-image{width:100%;height:100%;object-fit:cover;object-position:50% 45%;display:block}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shade{background:linear-gradient(180deg,rgba(8,8,8,.08) 10%,rgba(8,8,8,.24) 48%,rgba(8,8,8,.90) 100%),linear-gradient(90deg,rgba(8,8,8,.45),transparent 62%)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__header{position:relative;z-index:1;width:min(1360px,calc(100% - 40px));margin:0 auto;padding:clamp(54px,8vw,100px) 0;text-align:left}#MelatoHomeClean-{{ section.id }} .melato-home-clean__eyebrow{margin:0 0 14px;color:#f5f1e8;font:700 10px/1.2 var(--font-mono-family,monospace);letter-spacing:.2em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} h1{max-width:980px;margin:0;font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:clamp(72px,13vw,190px);line-height:.77;letter-spacing:-.025em;text-transform:uppercase;text-wrap:balance}#MelatoHomeClean-{{ section.id }} .melato-home-clean__copy{max-width:560px;margin:24px 0 0;color:rgba(245,241,232,.84);font-size:clamp(16px,2vw,20px);line-height:1.5}#MelatoHomeClean-{{ section.id }} .melato-home-clean__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta{display:inline-flex;min-height:46px;align-items:center;padding:0 20px;border:1px solid rgba(245,241,232,.55);border-radius:999px;color:#f5f1e8;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;backdrop-filter:blur(8px)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta--primary{background:#f5f1e8;color:#080808;border-color:#f5f1e8}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:min(1360px,calc(100% - 32px));margin:auto;padding:34px 0 48px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}@media(max-width:900px){#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}@media(max-width:520px){#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero{min-height:72svh}#MelatoHomeClean-{{ section.id }} .melato-home-clean__header{width:calc(100% - 28px);padding-bottom:48px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:calc(100% - 24px)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__actions{display:grid;grid-template-columns:1fr}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta{justify-content:center}}
 </style>
 {% schema %}
-{"name":"Melato clean homepage","tag":"section","settings":[{"type":"text","id":"eyebrow","label":"Eyebrow","default":"Melato"},{"type":"textarea","id":"heading","label":"Heading","default":"THE CULTURE WEARS US"},{"type":"textarea","id":"copy","label":"Copy","default":"Tailored for movement, cut with intent."},{"type":"collection","id":"featured_collection","label":"Featured collection"}],"presets":[{"name":"Melato clean homepage"}]}
+{
+  "name":"Melato homepage hero",
+  "tag":"section",
+  "settings":[
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Melato"},
+    {"type":"textarea","id":"heading","label":"Heading","default":"THE CULTURE WEARS US"},
+    {"type":"textarea","id":"copy","label":"Copy","default":"Tailored for movement, cut with intent."},
+    {"type":"image_picker","id":"hero_image","label":"Hero image","info":"Optional. Falls back to the featured collection image."},
+    {"type":"collection","id":"featured_collection","label":"Featured collection"}
+  ],
+  "presets":[{"name":"Melato homepage hero"}]
+}
 {% endschema %}

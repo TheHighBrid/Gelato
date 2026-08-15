@@ -1,20 +1,17 @@
 {% comment %}
   MELATO OWNER-PROTECTED ANNOUNCEMENT COLOR CONTRACT
-  Restored 2026-08-08 after the product-aware color engine was removed by commit a0f83e1.
 
-  This system must not be flattened to one static announcement color without explicit owner authorization.
+  This component owns announcement presentation only. It must never remove,
+  hide, or mutate cart, PDP, payment, trust, or homepage conversion UI.
 
-  Priority:
-  1. Product/collection foreground + background hex metafields
-     - custom.background_hex_color_code / custom.foreground_hex_color_code
-     - legacy aliases custom.bar_bg / custom.bar_fg
+  Color priority:
+  1. Product/collection foreground + background metafields
   2. Product hex tags: bar_bg_RRGGBB + bar_fg_RRGGBB
   3. Product accent_<name> tag
   4. Product type / collection handle
   5. Theme customizer default accent
 
-  Product palette_1, palette_2 and palette_3 are a deliberate rotating color layer.
-  When present, they rotate through the announcement bar every 4.2 seconds.
+  Product palette_1, palette_2 and palette_3 remain a deliberate rotating layer.
 {% endcomment %}
 
 {%- liquid
@@ -264,7 +261,6 @@
   if hex_fg_tag != blank
     assign fg = '#' | append: hex_fg_tag
   endif
-
   if mf_bg != blank
     assign clean_bg = mf_bg | remove: '#'
     assign bg = '#' | append: clean_bg
@@ -274,20 +270,16 @@
     assign bg = '#' | append: clean_palette_1
     assign color_source = 'palette-1'
   endif
-
   if mf_fg != blank
     assign clean_fg = mf_fg | remove: '#'
     assign fg = '#' | append: clean_fg
   endif
-
   if mf_bg != blank or mf_fg != blank or hex_bg_tag != blank or hex_fg_tag != blank
     assign muted = 'color-mix(in srgb,' | append: fg | append: ' 72%,transparent)'
     assign border_c = 'color-mix(in srgb,' | append: fg | append: ' 20%,transparent)'
     assign button_bg = fg
     assign button_fg = bg
   endif
-
-  assign fallback_message = section.settings.fallback_message | replace: ' · COMPLIMENTARY DELIVERY ON ALL ORDERS', '' | replace: 'COMPLIMENTARY DELIVERY ON ALL ORDERS · ', '' | replace: 'COMPLIMENTARY DELIVERY ON ALL ORDERS', ''
 -%}
 
 {% if section.settings.enabled %}
@@ -304,7 +296,7 @@
     style="--ab-bg:{{ bg }};--ab-fg:{{ fg }};--ab-muted:{{ muted }};--ab-border:{{ border_c }};--ab-btn-bg:{{ button_bg }};--ab-btn-fg:{{ button_fg }};--ab-h:{{ section.settings.height }}px;--ab-fs:{{ section.settings.font_size }}px;--ab-speed:{{ section.settings.speed }}s"
   >
     {%- if section.settings.badge_text != blank -%}
-      <span class="melato-ann__badge">{{ section.settings.badge_text }}</span>
+      <a class="melato-ann__badge" href="/pages/popup-calendar">{{ section.settings.badge_text }}</a>
     {%- else -%}
       <span aria-hidden="true"></span>
     {%- endif -%}
@@ -331,11 +323,7 @@
               {%- endif -%}
             {%- endfor -%}
           {%- else -%}
-            <span class="melato-ann__item">
-              <span class="melato-ann__dot" aria-hidden="true"></span>
-              <span>{{ fallback_message }}</span>
-              {%- if section.settings.fallback_micro != blank -%}<small>{{ section.settings.fallback_micro }}</small>{%- endif -%}
-            </span>
+            <span class="melato-ann__item"><span class="melato-ann__dot" aria-hidden="true"></span><span>{{ section.settings.fallback_message }}</span>{%- if section.settings.fallback_micro != blank -%}<small>{{ section.settings.fallback_micro }}</small>{%- endif -%}</span>
           {%- endif -%}
         </div>
       </div>
@@ -376,34 +364,19 @@
       if(!value)return '';
       var hex=String(value).trim();
       if(hex.charAt(0)!=='#')hex='#'+hex;
-      if(/^#[0-9a-f]{3}$/i.test(hex)){
-        hex='#'+hex.slice(1).split('').map(function(c){return c+c}).join('');
-      }
+      if(/^#[0-9a-f]{3}$/i.test(hex))hex='#'+hex.slice(1).split('').map(function(c){return c+c}).join('');
       return /^#[0-9a-f]{6}$/i.test(hex)?hex:'';
     }
-
     function luminance(hex){
       var n=parseInt(hex.slice(1),16);
-      var rgb=[(n>>16)&255,(n>>8)&255,n&255].map(function(v){
-        v=v/255;
-        return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);
-      });
+      var rgb=[(n>>16)&255,(n>>8)&255,n&255].map(function(v){v=v/255;return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
       return 0.2126*rgb[0]+0.7152*rgb[1]+0.0722*rgb[2];
     }
-
-    function readableText(background){
-      return luminance(background)>0.58?'#111111':'#fff7ea';
-    }
+    function readableText(background){return luminance(background)>0.58?'#111111':'#fff7ea'}
 
     var fixedBg=cleanHex(bar.dataset.melatoExplicitBg);
     var fixedFg=cleanHex(bar.dataset.melatoExplicitFg);
-    var colors=[
-      fixedBg,
-      cleanHex(bar.dataset.melatoPalette1),
-      cleanHex(bar.dataset.melatoPalette2),
-      cleanHex(bar.dataset.melatoPalette3)
-    ].filter(Boolean).filter(function(color,index,array){return array.indexOf(color)===index});
-
+    var colors=[fixedBg,cleanHex(bar.dataset.melatoPalette1),cleanHex(bar.dataset.melatoPalette2),cleanHex(bar.dataset.melatoPalette3)].filter(Boolean).filter(function(color,index,array){return array.indexOf(color)===index});
     if(!colors.length)return;
 
     var index=0;
@@ -418,20 +391,17 @@
       bar.style.setProperty('--ab-btn-fg',background);
       index+=1;
     }
-
     rotate();
-    if(colors.length>1){
-      window.setInterval(rotate,4200);
-    }
+    if(colors.length>1)window.setInterval(rotate,4200);
   })();
   </script>
 {% endif %}
 
 <style>
 #melato-announcement-bar{min-height:var(--ab-h);display:grid;grid-template-columns:minmax(108px,.72fr) minmax(0,2.8fr) minmax(108px,.72fr);align-items:center;gap:14px;padding:0 clamp(14px,3vw,34px);overflow:hidden;position:relative;background:var(--ab-bg)!important;color:var(--ab-fg)!important;border-bottom:1px solid var(--ab-border)!important;font-family:var(--font-mono-family,'DM Mono',monospace);transition:background-color 1.8s cubic-bezier(.4,0,.2,1),color .8s ease,border-color .8s ease}
-#melato-announcement-bar .melato-ann__badge,#melato-announcement-bar .melato-ann__cta{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border-radius:999px;font-size:max(10px,calc(var(--ab-fs) - 2px));font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+#melato-announcement-bar .melato-ann__badge,#melato-announcement-bar .melato-ann__cta{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 14px;border-radius:999px;font-size:max(10px,calc(var(--ab-fs) - 2px));font-weight:800;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;text-decoration:none}
 #melato-announcement-bar .melato-ann__badge{justify-self:start;border:1px solid var(--ab-border)!important;color:var(--ab-fg)!important;background:color-mix(in srgb,var(--ab-fg) 7%,transparent)}
-#melato-announcement-bar .melato-ann__cta{justify-self:end;background:var(--ab-btn-bg)!important;color:var(--ab-btn-fg)!important;text-decoration:none}
+#melato-announcement-bar .melato-ann__cta{justify-self:end;background:var(--ab-btn-bg)!important;color:var(--ab-btn-fg)!important}
 #melato-announcement-bar .melato-ann__viewport{width:100%;overflow:hidden;mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent 0,black 8%,black 92%,transparent 100%)}
 #melato-announcement-bar .melato-ann__track{display:flex;width:max-content;align-items:center;animation:melato-ann-scroll var(--ab-speed) linear infinite;will-change:transform}
 #melato-announcement-bar .melato-ann__group{display:inline-flex;align-items:center;gap:clamp(24px,4vw,56px);padding-right:clamp(24px,4vw,56px)}
@@ -442,49 +412,7 @@
 @keyframes melato-ann-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){#melato-announcement-bar .melato-ann__track{animation:none}#melato-announcement-bar .melato-ann__group[aria-hidden="true"]{display:none}}
 @media(max-width:749px){#melato-announcement-bar{grid-template-columns:1fr;min-height:max(48px,calc(var(--ab-h) - 8px));padding:0 14px}#melato-announcement-bar .melato-ann__badge,#melato-announcement-bar .melato-ann__cta{display:none}#melato-announcement-bar .melato-ann__item{font-size:max(11px,calc(var(--ab-fs) - 1px))}}
-
-/* Melato storefront policy hard-stop. */
-.cart-free-shipping,
-.cart-drawer__tax-note,
-.shopify-payment-button,
-.shopify-payment-button__button,
-.shopify-payment-button__button--unbranded,
-[data-shopify="payment-button"],
-.additional-checkout-buttons,
-.additional-checkout-button,
-.dynamic-checkout__content,
-.pdp-dynamic-checkout,
-.pdp-proof-mini,
-.melato-home-conversion__ctas{display:none!important;visibility:hidden!important;height:0!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden!important;pointer-events:none!important}
 </style>
-
-<script>
-(function(){
-  var selectors=[
-    '.cart-free-shipping',
-    '.cart-drawer__tax-note',
-    '.shopify-payment-button',
-    '[data-shopify="payment-button"]',
-    '.additional-checkout-buttons',
-    '.additional-checkout-button',
-    '.dynamic-checkout__content',
-    '.pdp-dynamic-checkout',
-    '.pdp-proof-mini',
-    '.melato-home-conversion__ctas'
-  ];
-  function clean(root){
-    root=root||document;
-    selectors.forEach(function(selector){root.querySelectorAll(selector).forEach(function(node){node.remove()})});
-    root.querySelectorAll('.product-assurances li,.melato-home-conversion__proof-card').forEach(function(node){
-      var text=(node.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
-      if(text.indexOf('fast dispatch')>-1||text.indexOf('secure checkout')>-1||text.indexOf('complimentary delivery')>-1||text.indexOf('google pay')>-1||text.indexOf('apple pay')>-1||text.indexOf('shop pay')>-1){node.remove()}
-    });
-  }
-  clean(document);
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',function(){clean(document)})}
-  new MutationObserver(function(mutations){mutations.forEach(function(mutation){mutation.addedNodes.forEach(function(node){if(node.nodeType===1)clean(node)})})}).observe(document.documentElement,{childList:true,subtree:true});
-})();
-</script>
 
 {% schema %}
 {
@@ -497,10 +425,10 @@
     {"type":"range","id":"height","label":"Bar height (px)","min":42,"max":80,"step":2,"unit":"px","default":56},
     {"type":"range","id":"speed","label":"Scroll speed (s)","min":10,"max":60,"step":2,"unit":"s","default":26},
     {"type":"range","id":"font_size","label":"Ticker font size (px)","min":10,"max":18,"step":1,"unit":"px","default":13},
-    {"type":"text","id":"badge_text","label":"Drop badge text","default":"NEW DROP"},
+    {"type":"text","id":"badge_text","label":"Drop badge text","default":"POPUP CALENDAR"},
     {"type":"text","id":"cta_text","label":"CTA button text"},
     {"type":"url","id":"cta_link","label":"CTA link"},
-    {"type":"text","id":"fallback_message","label":"Fallback ticker text","default":"Premium velour tracksuits — limited quantities online"},
+    {"type":"text","id":"fallback_message","label":"Fallback ticker text","default":"Premium garments cut with intent"},
     {"type":"text","id":"fallback_micro","label":"Fallback micro text","default":"Melato"}
   ],
   "blocks":[{"type":"message","name":"Ticker message","settings":[{"type":"text","id":"message","label":"Message","default":"Premium velour cut with intent"},{"type":"text","id":"micro_text","label":"Micro text","default":"Melato"},{"type":"url","id":"link","label":"Link (optional)"}]}],
@@ -508,4 +436,3 @@
   "presets":[{"name":"Announcement Bar"}]
 }
 {% endschema %}
-{% comment %} Direct live policy sync 2026-08-08: owner-protected dynamic announcement color restoration {% endcomment %}
