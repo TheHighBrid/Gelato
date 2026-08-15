@@ -31,9 +31,9 @@
     customElements.define('product-recommendations', MelatoProductRecommendations);
   }
 
-  // The current PDP uses native <details> for Fit, Material, Care and Shipping.
-  // Older theme/audit scripts also observe click/open state. Own the PDP toggle
-  // explicitly so a delayed legacy mutation cannot immediately undo the shopper's click.
+  // The PDP uses native <details> for Story, Construction, Fit, Material, Care
+  // and Shipping. Legacy theme code can mutate the open attribute after a click.
+  // Shopper intent owns that state until the shopper explicitly toggles it again.
   function bindStablePdpDetail(detail) {
     if (!(detail instanceof HTMLDetailsElement) || detail.dataset.melatoStableDetail === 'true') return;
     const summary = detail.querySelector(':scope > summary');
@@ -41,7 +41,6 @@
 
     detail.dataset.melatoStableDetail = 'true';
     let intendedOpen = detail.open;
-    let lastUserToggle = 0;
     let internalMutation = false;
 
     const setOpen = (nextOpen) => {
@@ -54,26 +53,22 @@
     summary.addEventListener('click', (event) => {
       event.preventDefault();
       event.stopImmediatePropagation();
-      lastUserToggle = Date.now();
-      setOpen(!detail.open);
+      setOpen(!intendedOpen);
     }, true);
 
     new MutationObserver(() => {
-      if (internalMutation) return;
-      const withinInteractionWindow = Date.now() - lastUserToggle < 2500;
-      if (withinInteractionWindow && detail.open !== intendedOpen) {
-        requestAnimationFrame(() => setOpen(intendedOpen));
-      } else if (!withinInteractionWindow) {
-        intendedOpen = detail.open;
-      }
+      if (internalMutation || detail.open === intendedOpen) return;
+      requestAnimationFrame(() => setOpen(intendedOpen));
     }).observe(detail, { attributes: true, attributeFilter: ['open'] });
   }
 
   function bindStablePdpDetails(root = document) {
     root.querySelectorAll([
+      '[id^="MelatoPDP-"] details',
       '.melato-clean-pdp details.pdp-detail',
       '.melato-pdp-rebuild details.pdp-spec',
-      '.melato-pdp-rebuild details.pdp-mini-detail'
+      '.melato-pdp-rebuild details.pdp-mini-detail',
+      'details.ml-meta-card'
     ].join(',')).forEach(bindStablePdpDetail);
   }
 
@@ -90,7 +85,22 @@
     });
   }, true);
 
-  const init = () => bindStablePdpDetails(document);
+  let bindFrame = 0;
+  const bindDynamicPdpDetails = () => {
+    if (bindFrame) return;
+    bindFrame = requestAnimationFrame(() => {
+      bindFrame = 0;
+      bindStablePdpDetails(document);
+    });
+  };
+
+  const init = () => {
+    bindStablePdpDetails(document);
+    if (document.body) {
+      new MutationObserver(bindDynamicPdpDetails).observe(document.body, { childList: true, subtree: true });
+    }
+  };
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init, { once: true });
   } else {

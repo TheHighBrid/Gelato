@@ -5,6 +5,10 @@ assign technical_paragraph = product.metafields.custom.pdp_technical_paragraph.v
 assign fit_details = product.metafields.custom.pdp_fit_details.value
 assign material_details = product.metafields.custom.pdp_material_details.value
 assign material_text = product.metafields.custom.fabric_composition.value | default: product.metafields.custom.composition.value | default: product.metafields.custom.material.value
+assign material_text_check = material_text | strip_html | downcase
+if material_text_check contains 'to be confirmed' or material_text_check contains 'supplier documentation' or material_text_check contains 'specification pending' or material_text_check contains 'pending supplier confirmation'
+  assign material_text = blank
+endif
 assign care_details = product.metafields.custom.pdp_care_details.value
 assign shipping_returns_details = product.metafields.custom.pdp_shipping_returns_details.value
 assign button_accent = product.metafields.custom.ui_accent.value | default: product.metafields.custom.palette_1.value | default: product.metafields.custom.palette_2.value
@@ -30,6 +34,9 @@ endif
 -%}
 <style id="MelatoPDPRefinement-{{ section.id }}">
 .melato-pdp-rebuild .pdp-trust-row,
+.melato-pdp-rebuild .product-assurances,
+.melato-pdp-rebuild [data-melato-assurances],
+.ml-assurances,
 .melato-pdp-rebuild .pdp-proof-mini,
 .melato-pdp-rebuild .pdp-dynamic-checkout,
 .melato-pdp-rebuild .shopify-payment-button {
@@ -89,6 +96,10 @@ body[class*="template-product"] .melato-pdp-rebuild .pdp-panel .pdp-story-tech__
 </script>
 <script>
 (function() {
+  function isPendingSpecification(value) {
+    return /to be confirmed|supplier documentation|specification pending|pending supplier confirmation/i.test(String(value || ''));
+  }
+
   function initMelatoPDPRefinement() {
     var dataElement = document.getElementById('MelatoPDPContentPatchData-{{ section.id }}');
     var root = document.querySelector('.melato-pdp-rebuild');
@@ -96,8 +107,8 @@ body[class*="template-product"] .melato-pdp-rebuild .pdp-panel .pdp-story-tech__
     var data = {};
     try { data = JSON.parse(dataElement.textContent || '{}'); } catch (error) { return; }
 
-    ['.pdp-trust-row', '.pdp-proof-mini', '.pdp-dynamic-checkout', '.shopify-payment-button'].forEach(function(selector) {
-      root.querySelectorAll(selector).forEach(function(element) { element.remove(); });
+    ['.pdp-trust-row', '.product-assurances', '[data-melato-assurances]', '.ml-assurances', '.pdp-proof-mini', '.pdp-dynamic-checkout', '.shopify-payment-button'].forEach(function(selector) {
+      document.querySelectorAll(selector).forEach(function(element) { element.remove(); });
     });
 
     var storyBlock = root.querySelector('.pdp-story-tech__story');
@@ -155,13 +166,21 @@ body[class*="template-product"] .melato-pdp-rebuild .pdp-panel .pdp-story-tech__
     }
 
     replaceWithList('Fit', data.fit);
-    if (!replaceWithList('Material', data.material) && data.materialText) {
-      var materialTarget = findSpecification('Material');
+
+    var cleanMaterialItems = Array.isArray(data.material)
+      ? data.material.filter(function(item) { return !isPendingSpecification(item); })
+      : [];
+    var hasMaterial = replaceWithList('Material', cleanMaterialItems);
+    var materialTarget = findSpecification('Material');
+    if (!hasMaterial && data.materialText && !isPendingSpecification(data.materialText)) {
       if (materialTarget) {
         var materialBody = materialTarget.querySelector('.pdp-rte');
         if (materialBody) materialBody.textContent = data.materialText;
       }
+    } else if (!hasMaterial && materialTarget) {
+      materialTarget.remove();
     }
+
     replaceWithList('Care', data.care);
     replaceWithList('Shipping & returns', data.shippingReturns);
   }

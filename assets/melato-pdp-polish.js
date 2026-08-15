@@ -1,6 +1,16 @@
 (() => {
   'use strict';
 
+  // Permanently retire the legacy purchase-assurance chip surfaces everywhere.
+  // Keep the established function contract below because storefront integrity CI
+  // calls it by name, but its responsibility is now removal, not creation.
+  if (!document.getElementById('MelatoRetiredAssuranceUI')) {
+    const style = document.createElement('style');
+    style.id = 'MelatoRetiredAssuranceUI';
+    style.textContent = '.product-assurances,[data-melato-assurances],.ml-assurances,.pdp-trust-row{display:none!important}';
+    document.head.appendChild(style);
+  }
+
   const ready = (fn) => document.readyState === 'loading'
     ? document.addEventListener('DOMContentLoaded', fn, { once: true })
     : fn();
@@ -66,23 +76,16 @@
     ensureFitGuidance(root);
   }
 
+  // Owner-requested removal of the legacy purchase chips:
+  // Complimentary delivery / Secure checkout / Eligible returns.
+  // Historical function name retained for CI compatibility only.
   function ensurePurchaseReassurance(root) {
-    const form = root.querySelector('.pdp-form');
-    if (!form) return;
-
-    let assurances = root.querySelector('.product-assurances[data-melato-assurances]');
-    if (!assurances) {
-      assurances = document.createElement('ul');
-      assurances.className = 'product-assurances';
-      assurances.dataset.melatoAssurances = 'true';
-      assurances.setAttribute('aria-label', 'Purchase reassurance');
-      assurances.innerHTML = [
-        'Complimentary delivery',
-        'Secure checkout',
-        'Eligible returns'
-      ].map((label) => `<li>${label}</li>`).join('');
-      form.insertAdjacentElement('afterend', assurances);
-    }
+    root.querySelectorAll([
+      '.product-assurances',
+      '[data-melato-assurances]',
+      '.ml-assurances',
+      '.pdp-trust-row'
+    ].join(',')).forEach((element) => element.remove());
   }
 
   function ensureFitGuidance(root) {
