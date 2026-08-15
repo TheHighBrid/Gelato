@@ -33,7 +33,21 @@
         "heading": "MOST WANTED",
         "max_products": 4
       }
+    },
+    "related": {
+      "type": "related-products",
+      "settings": {
+        "eyebrow": "Continue shopping",
+        "heading": "You might also like",
+        "products_to_show": 4
+      }
+    },
+    "recently_viewed": {
+      "type": "recently-viewed",
+      "settings": {
+        "heading": "Recently viewed"
+      }
     }
   },
-  "order": ["main_product", "safe_accent", "tag_recommendations"]
+  "order": ["main_product", "safe_accent", "tag_recommendations", "related", "recently_viewed"]
 }
