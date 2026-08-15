@@ -62,27 +62,19 @@
       if (price) price.style.marginLeft = 'auto';
     });
 
-    ensurePurchaseReassurance(root);
+    removePurchaseReassurance(root);
     ensureFitGuidance(root);
   }
 
-  function ensurePurchaseReassurance(root) {
-    const form = root.querySelector('.pdp-form');
-    if (!form) return;
-
-    let assurances = root.querySelector('.product-assurances[data-melato-assurances]');
-    if (!assurances) {
-      assurances = document.createElement('ul');
-      assurances.className = 'product-assurances';
-      assurances.dataset.melatoAssurances = 'true';
-      assurances.setAttribute('aria-label', 'Purchase reassurance');
-      assurances.innerHTML = [
-        'Complimentary delivery',
-        'Secure checkout',
-        'Eligible returns'
-      ].map((label) => `<li>${label}</li>`).join('');
-      form.insertAdjacentElement('afterend', assurances);
-    }
+  // Owner-requested removal of the legacy purchase chips:
+  // Complimentary delivery / Secure checkout / Eligible returns.
+  function removePurchaseReassurance(root) {
+    root.querySelectorAll([
+      '.product-assurances',
+      '[data-melato-assurances]',
+      '.ml-assurances',
+      '.pdp-trust-row'
+    ].join(',')).forEach((element) => element.remove());
   }
 
   function ensureFitGuidance(root) {
