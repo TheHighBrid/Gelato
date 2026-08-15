@@ -1,0 +1,73 @@
+{{ 'melato-living-book-director.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'melato-living-book-director.js' | asset_url }}" defer></script>
+
+<section
+  id="MelatoLivingBookDirector-{{ section.id }}"
+  class="mlbd"
+  data-lb-director
+  hidden
+  aria-labelledby="MelatoLivingBookDirectorTitle-{{ section.id }}"
+>
+  <header class="mlbd__hero">
+    <div class="mlbd__hero-noise" aria-hidden="true"></div>
+    <div class="mlbd__hero-topline">
+      <span>MELATO / VISUAL EVIDENCE UNIT</span>
+      <span>THE LIVING BOOK / 2026</span>
+      <span data-lbd-total>CASE ARCHIVE</span>
+    </div>
+    <div class="mlbd__hero-grid">
+      <div>
+        <p class="mlbd__kicker">AUTHORIZED EDITORIAL RECORD</p>
+        <h1 id="MelatoLivingBookDirectorTitle-{{ section.id }}">
+          THE LIVING BOOK
+          <span>CASE ARCHIVE</span>
+        </h1>
+      </div>
+      <div class="mlbd__hero-brief">
+        <p>
+          Each photoshoot is filed independently. Shared wardrobe, locations, light and visual language
+          establish custody. Unknown material stays unknown until the evidence supports a stronger claim.
+        </p>
+        <div class="mlbd__hero-status">
+          <span>METHOD</span>
+          <strong>ANALYZE / SEPARATE / CONNECT / FILE</strong>
+        </div>
+      </div>
+    </div>
+    <div class="mlbd__case-index-shell">
+      <div class="mlbd__case-index-label">CASE INDEX</div>
+      <nav class="mlbd__case-index" data-lbd-index aria-label="Living Book case files"></nav>
+    </div>
+  </header>
+
+  <main class="mlbd__archive" data-lbd-cases></main>
+
+  <div class="mlbd__viewer" data-lbd-viewer hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Living Book exhibit viewer">
+    <button class="mlbd__viewer-close" type="button" data-lbd-close aria-label="Close exhibit">CLOSE ×</button>
+    <button class="mlbd__viewer-nav mlbd__viewer-nav--prev" type="button" data-lbd-prev aria-label="Previous exhibit">←</button>
+    <figure class="mlbd__viewer-figure">
+      <img data-lbd-viewer-image alt="">
+      <figcaption>
+        <span data-lbd-viewer-code></span>
+        <strong data-lbd-viewer-title></strong>
+        <p data-lbd-viewer-caption></p>
+        <a data-lbd-viewer-product hidden>VIEW VERIFIED PRODUCT ↗</a>
+      </figcaption>
+    </figure>
+    <button class="mlbd__viewer-nav mlbd__viewer-nav--next" type="button" data-lbd-next aria-label="Next exhibit">→</button>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Living Book Case Director",
+  "tag": "section",
+  "class": "section-living-book-case-director",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Living Book Case Director"
+    }
+  ]
+}
+{% endschema %}
