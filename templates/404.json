@@ -25,17 +25,16 @@
     },
     "main": {
       "type": "main-404",
-      "disabled": true,
-      "name": "-",
+      "name": "Page not found",
       "settings": {
-        "subheading": ".",
+        "subheading": "The page you were looking for is no longer here.",
         "cta_label": "Back to the Drop",
         "cta_url": "/"
       }
     }
   },
   "order": [
-    "featured_collection_D4thCL",
-    "main"
+    "main",
+    "featured_collection_D4thCL"
   ]
 }

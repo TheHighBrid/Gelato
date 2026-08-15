@@ -1,3 +1,12 @@
+const melatoEvidenceLoaderSrc = document.currentScript && document.currentScript.src;
+if (melatoEvidenceLoaderSrc && !document.querySelector('script[data-melato-evidence-image-repair]')) {
+  const repairScript = document.createElement('script');
+  repairScript.src = new URL('melato-living-lookbook-image-repair.js', melatoEvidenceLoaderSrc).href;
+  repairScript.defer = true;
+  repairScript.dataset.melatoEvidenceImageRepair = 'true';
+  document.head.appendChild(repairScript);
+}
+
 const initializeMelatoEvidenceArchives = (scope = document) => {
     const archives = scope.querySelectorAll('[data-evidence-archive]');
 

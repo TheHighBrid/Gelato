@@ -32,12 +32,18 @@ body {
   overflow-x: hidden;
 }
 
-/* Reduced motion */
+/* Reduced motion: honor the operating-system preference without requiring a
+   second, JavaScript-added body class. */
 @media (prefers-reduced-motion: reduce) {
-  .animations-enabled.animations-reduce-motion * {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
