@@ -1,11 +1,28 @@
 {% comment %}
-  sections/recently-viewed.liquid
+  Recently viewed products for PDP continuity.
+  The hidden product marker supplies the existing theme tracker with complete product data.
 {% endcomment %}
 
-<section class="section-spacing" style="border-top:1px solid var(--color-border);" data-recently-viewed>
-  <div class="container">
-    <h2 class="heading-sm" style="margin-bottom:40px;">{{ section.settings.heading | default: 'RECENTLY VIEWED' }}</h2>
-    <div class="grid grid--4" data-recently-viewed-grid></div>
+{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+
+{%- if product != blank -%}
+  <span
+    hidden
+    data-product-id="{{ product.id }}"
+    data-product-title="{{ product.title | escape }}"
+    data-product-url="{{ product.url }}"
+    data-product-image="{% if product.featured_image %}{{ product.featured_image | image_url: width: 700 }}{% endif %}"
+    data-product-price="{{ product.price }}"
+    aria-hidden="true"></span>
+{%- endif -%}
+
+<section class="melato-related melato-recently-viewed section-{{ section.id }}" data-recently-viewed aria-labelledby="RecentlyViewedHeading-{{ section.id }}">
+  <div class="melato-section-wrap">
+    <div class="melato-section-head">
+      <p class="melato-eyebrow">Your trail</p>
+      <h2 id="RecentlyViewedHeading-{{ section.id }}">{{ section.settings.heading | default: 'Recently viewed' }}</h2>
+    </div>
+    <div class="melato-grid melato-grid--cards" data-recently-viewed-grid></div>
   </div>
 </section>
 
@@ -13,8 +30,12 @@
 {
   "name": "Recently Viewed",
   "tag": "section",
+  "class": "section melato-section",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "RECENTLY VIEWED" }
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Recently viewed" }
+  ],
+  "presets": [
+    { "name": "Recently Viewed" }
   ]
 }
 {% endschema %}
