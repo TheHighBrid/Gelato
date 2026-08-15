@@ -9,6 +9,10 @@
  */
 {
   "sections": {
+    "case_director": {
+      "type": "melato-living-book-director",
+      "settings": {}
+    },
     "main": {
       "type": "melato-living-lookbook-old",
       "settings": {}
@@ -95,6 +99,7 @@
     }
   },
   "order": [
+    "case_director",
     "main",
     "evidence_20260714",
     "evidence_case03"
