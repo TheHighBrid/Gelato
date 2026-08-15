@@ -79,7 +79,7 @@
     if (!raw) return '';
     try {
       var parsed = new URL(raw, window.location.origin);
-      if (parsed.origin !== window.location.origin || parsed.pathname.indexOf('/products/') !== 0) return '';
+      if (parsed.origin !== window.location.origin || !/\/products\/[^/?#]+/.test(parsed.pathname)) return '';
       return parsed.pathname + parsed.search;
     } catch (error) {
       return '';
@@ -105,7 +105,8 @@
     var title = cleanString(item.title || item.productTitle || item.product_title);
     var url = safeProductUrl(item.url || item.productUrl || item.product_url);
     var image = safeImageUrl(item.img || item.image || item.productImage || item.product_image || item.featuredImage || item.featured_image);
-    var parsedPrice = Number(item.price);
+    var rawPrice = cleanString(item.price);
+    var parsedPrice = rawPrice ? Number(rawPrice) : NaN;
 
     if (!id || !title || !url || !image) return null;
 
