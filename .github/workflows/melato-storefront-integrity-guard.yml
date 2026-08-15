@@ -46,6 +46,17 @@ jobs:
               if file.exists() and needle in file.read_text():
                   failures.append(f'{path}: forbidden {label or needle!r} returned')
 
+          # Every literal theme asset reference must resolve to a checked-in file.
+          # Scan every Liquid surface, including templates and blocks, so missing assets cannot hide outside sections/snippets.
+          for liquid_file in sorted(Path('.').rglob('*.liquid')):
+              if '.git' in liquid_file.parts:
+                  continue
+              source = liquid_file.read_text()
+              for match in re.finditer(r"['\"]([^'\"]+)['\"]\s*\|\s*asset_url", source):
+                  asset = Path('assets', match.group(1))
+                  if not asset.is_file():
+                      failures.append(f'{liquid_file}: referenced asset is missing: {asset}')
+
           # Retired duplicate concierge implementations stay retired.
           for filename in (
               'sections/melato-concierge-strip.liquid',
