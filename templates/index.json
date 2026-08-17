@@ -77,6 +77,21 @@
         "view_all_label": "View all"
       }
     },
+    "reviews": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_all_reviews_text_home": {
+          "type": "shopify://apps/judge-me-reviews/blocks/all_reviews_text/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        },
+        "judge_me_reviews_verified_badge_home": {
+          "type": "shopify://apps/judge-me-reviews/blocks/verified_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        }
+      },
+      "block_order": ["judge_me_reviews_all_reviews_text_home", "judge_me_reviews_verified_badge_home"],
+      "settings": {}
+    },
     "brand_story": {
       "type": "brand-story",
       "settings": {
@@ -107,6 +122,7 @@
     "melato_conversion_2026",
     "ticker",
     "featured_collection",
+    "reviews",
     "brand_story",
     "drop_signup_FMehUL"
   ]
