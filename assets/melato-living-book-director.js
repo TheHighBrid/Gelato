@@ -578,13 +578,18 @@
     if (Math.abs(distance) > 50) stepViewer(distance < 0 ? 1 : -1);
   }, { passive: true });
 
-  const scheduleRender = (() => {
-    let timer = null;
-    return (delay = 160) => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(renderArchive, delay);
-    };
-  })();
+  let scheduledRenderTimer = null;
+  const scheduleRender = (delay = 160) => {
+    window.clearTimeout(scheduledRenderTimer);
+    scheduledRenderTimer = window.setTimeout(() => {
+      scheduledRenderTimer = null;
+      renderArchive();
+    }, delay);
+  };
+  const clearScheduledRender = () => {
+    window.clearTimeout(scheduledRenderTimer);
+    scheduledRenderTimer = null;
+  };
 
   const sourceObserver = new MutationObserver((mutations) => {
     if (mutations.some((mutation) => mutation.type === 'attributes' && ['src', 'srcset'].includes(mutation.attributeName))) {
@@ -596,10 +601,22 @@
     sourceObserver.observe(source, { subtree: true, attributes: true, attributeFilter: ['src', 'srcset'] });
   });
 
+  const bootTimers = new Set();
+  const scheduleBootRender = (delay) => {
+    const timer = window.setTimeout(() => {
+      bootTimers.delete(timer);
+      renderArchive();
+    }, delay);
+    bootTimers.add(timer);
+  };
+  const clearBootRenders = () => {
+    bootTimers.forEach((timer) => window.clearTimeout(timer));
+    bootTimers.clear();
+  };
   const boot = () => {
     scheduleRender(300);
-    window.setTimeout(renderArchive, 1300);
-    window.setTimeout(renderArchive, 3200);
+    scheduleBootRender(1300);
+    scheduleBootRender(3200);
   };
 
   if (document.readyState === 'complete') {
@@ -608,8 +625,21 @@
     window.addEventListener('load', boot, { once: true });
   }
 
-  document.addEventListener('shopify:section:load', () => {
+  const isDirectorSectionEvent = (event) => {
+    const sectionId = event.detail?.sectionId;
+    return event.target === root || !sectionId || root.id.endsWith(sectionId);
+  };
+  const cleanup = (event) => {
+    if (!isDirectorSectionEvent(event)) return;
+    sourceObserver.disconnect();
+    clearScheduledRender();
+    clearBootRenders();
+    closeViewer();
+  };
+  document.addEventListener('shopify:section:load', (event) => {
+    if (!isDirectorSectionEvent(event)) return;
     renderedSignature = '';
     scheduleRender(250);
   });
+  document.addEventListener('shopify:section:unload', cleanup);
 })();
