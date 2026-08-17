@@ -49,12 +49,16 @@
     scope.querySelectorAll('a[href]').forEach(normalizeLink);
   }
 
-  function ensureDesktopNavStyles() {
-    if (document.getElementById('MelatoDesktopNavStyles')) return;
+  function ensureStyles() {
+    if (document.getElementById('MelatoDiscoveryStyles')) return;
     var style = document.createElement('style');
-    style.id = 'MelatoDesktopNavStyles';
+    style.id = 'MelatoDiscoveryStyles';
     style.textContent = [
       '.mxh__desktop-nav{display:none}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__track{animation:none!important;transform:none!important;width:100%!important;justify-content:center}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__group{padding-right:0!important;justify-content:center}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__group[aria-hidden="true"]{display:none!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__item.melato-ann__secondary-message{display:none!important}',
       '@media(min-width:1180px){',
       '.mxh__left{gap:16px!important}',
       '.mxh__desktop-nav{display:flex;align-items:center;gap:clamp(10px,1.25vw,20px);min-width:0}',
@@ -77,7 +81,7 @@
 
   function ensureDesktopNav(root) {
     var scope = root && root.querySelectorAll ? root : document;
-    ensureDesktopNavStyles();
+    ensureStyles();
     scope.querySelectorAll('[data-mxh]').forEach(function (header) {
       if (header.querySelector('.mxh__desktop-nav')) return;
       var left = header.querySelector('.mxh__left');
@@ -105,10 +109,33 @@
     });
   }
 
+  function simplifyAnnouncement(root) {
+    var scope = root && root.querySelector ? root : document;
+    var bar = scope.querySelector('#melato-announcement-bar') || document.querySelector('#melato-announcement-bar');
+    if (!bar) return;
+    ensureStyles();
+
+    var source = bar.querySelector('[data-announcement-source]');
+    if (!source) return;
+    var items = Array.from(source.querySelectorAll('.melato-ann__item'));
+    if (!items.length) return;
+
+    var delivery = items.find(function (item) {
+      return /complimentary delivery on all orders/i.test(item.textContent || '');
+    });
+    if (!delivery) return;
+
+    items.forEach(function (item) {
+      if (item !== delivery) item.classList.add('melato-ann__secondary-message');
+    });
+    bar.classList.add('is-melato-static');
+  }
+
   function run(root) {
     window.requestAnimationFrame(function () {
       normalizeLinks(root || document);
       ensureDesktopNav(root || document);
+      simplifyAnnouncement(root || document);
     });
   }
 
