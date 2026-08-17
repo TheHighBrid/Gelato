@@ -1,13 +1,21 @@
 (() => {
   'use strict';
 
-  // Permanently retire the legacy purchase-assurance chip surfaces everywhere.
-  // Keep the established function contract below because storefront integrity CI
-  // calls it by name, but its responsibility is now removal, not creation.
+  // Retire the old chip UI while keeping one concise, high-value trust line in the buybox.
   if (!document.getElementById('MelatoRetiredAssuranceUI')) {
     const style = document.createElement('style');
     style.id = 'MelatoRetiredAssuranceUI';
-    style.textContent = '.product-assurances,[data-melato-assurances],.ml-assurances,.pdp-trust-row{display:none!important}';
+    style.textContent = `
+      .product-assurances,[data-melato-assurances],.ml-assurances,.pdp-trust-row{display:none!important}
+      .melato-buybox-trust{margin:8px 0 2px;color:var(--pdp-muted,#b9b5aa);font-family:var(--font-mono-family,monospace);font-size:11px;line-height:1.45;letter-spacing:.07em;text-transform:uppercase}
+      .melato-size-guide-inline{display:inline-flex;align-items:center;min-height:34px;color:inherit;font-family:var(--font-mono-family,monospace);font-size:10px;letter-spacing:.08em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;opacity:.82}
+      .melato-size-guide-inline:hover{opacity:1}
+      .pdp-atc-row{grid-template-columns:64px minmax(0,1fr)!important;gap:10px!important}
+      .pdp-atc{min-height:60px!important;font-weight:800}
+      .pdp-qty{min-width:0!important;padding-inline:6px!important}
+      .melato-buybox-rating{margin:8px 0 0}
+      @media(max-width:520px){.pdp-atc-row{grid-template-columns:58px minmax(0,1fr)!important}.pdp-atc{min-height:58px!important}}
+    `;
     document.head.appendChild(style);
   }
 
@@ -73,12 +81,13 @@
     });
 
     ensurePurchaseReassurance(root);
+    ensureBuyboxTrust(root);
+    ensureSizeRowGuide(root);
     ensureFitGuidance(root);
+    surfaceExistingRating(root);
   }
 
-  // Owner-requested removal of the legacy purchase chips:
-  // Complimentary delivery / Secure checkout / Eligible returns.
-  // Historical function name retained for CI compatibility only.
+  // Historical function name retained for storefront integrity CI compatibility.
   function ensurePurchaseReassurance(root) {
     root.querySelectorAll([
       '.product-assurances',
@@ -86,6 +95,54 @@
       '.ml-assurances',
       '.pdp-trust-row'
     ].join(',')).forEach((element) => element.remove());
+  }
+
+  function ensureBuyboxTrust(root) {
+    if (root.querySelector('[data-melato-buybox-trust]')) return;
+    const price = root.querySelector('.pdp-price-row');
+    if (!price) return;
+    const line = document.createElement('p');
+    line.className = 'melato-buybox-trust';
+    line.dataset.melatoBuyboxTrust = 'true';
+    line.textContent = 'Complimentary delivery · 30-day returns';
+    price.insertAdjacentElement('afterend', line);
+  }
+
+  function ensureSizeRowGuide(root) {
+    root.querySelectorAll('.pdp-option').forEach((fieldset) => {
+      const header = fieldset.querySelector('.pdp-option__header');
+      const legend = header?.querySelector('legend');
+      if (!header || !legend) return;
+      const label = legend.textContent.trim().toLowerCase();
+      if (label !== 'size' && label !== 'taille') return;
+      if (header.querySelector('.size-guide-trigger,[data-melato-inline-size-guide]')) return;
+
+      const link = document.createElement('a');
+      link.href = '/pages/size-guide';
+      link.className = 'melato-size-guide-inline';
+      link.dataset.melatoInlineSizeGuide = 'true';
+      link.textContent = 'Size guide';
+      link.setAttribute('aria-label', 'Open Melato fit guidance and size guide');
+      header.appendChild(link);
+    });
+  }
+
+  function surfaceExistingRating(root) {
+    if (root.querySelector('[data-melato-buybox-rating]')) return;
+    const buybox = root.querySelector('.pdp-buybox');
+    const price = root.querySelector('.pdp-price-row');
+    if (!buybox || !price) return;
+
+    const source = document.querySelector('.jdgm-preview-badge .jdgm-prev-badge[data-average-rating], .jdgm-prev-badge[data-average-rating]');
+    if (!source || source.closest('.pdp-buybox')) return;
+    const clone = source.cloneNode(true);
+    const holder = document.createElement('div');
+    holder.className = 'melato-buybox-rating';
+    holder.dataset.melatoBuyboxRating = 'true';
+    holder.setAttribute('aria-label', 'Verified customer rating');
+    holder.appendChild(clone);
+    const trust = root.querySelector('[data-melato-buybox-trust]');
+    (trust || price).insertAdjacentElement('afterend', holder);
   }
 
   function ensureFitGuidance(root) {
