@@ -1,6 +1,7 @@
 {% comment %}
-  Reusable Melato product card. Clean QA 2026-08-11.
+  Reusable Melato product card. Clean QA 2026-08-17.
   One status system: NEW IN, EXCLUSIVE, LIMITED, SALE, SOLD OUT.
+  The first four collection products receive eager/high-priority media; all others remain lazy.
 {% endcomment %}
 {%- liquid
   assign card_image_ratio = settings.card_image_ratio | default: 'portrait'
@@ -12,8 +13,16 @@
   assign card_compare_at_price = card_variant.compare_at_price | default: product.compare_at_price
   assign color_option = product.options_by_name['Color'] | default: product.options_by_name['Colour'] | default: product.options_by_name['Couleur']
   assign card_color_count = 0
+  assign card_loading = 'lazy'
+  assign card_fetchpriority = 'auto'
   if color_option
     assign card_color_count = color_option.values.size
+  endif
+  if template.name == 'collection' and collection
+    if product.id == collection.products[0].id or product.id == collection.products[1].id or product.id == collection.products[2].id or product.id == collection.products[3].id
+      assign card_loading = 'eager'
+      assign card_fetchpriority = 'high'
+    endif
   endif
   assign on_sale = false
   assign sold_out = false
@@ -43,7 +52,7 @@
   <div class="product-card__media">
     <a href="{{ product.url }}" aria-label="View {{ product.title | escape }}" tabindex="-1">
       {%- if product.featured_image != blank -%}
-        <img class="product-card__img product-card__img--primary{% if product.images.size == 1 %} product-card__img--only{% endif %}" src="{{ product.featured_image | image_url: width: 600 }}" srcset="{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 800 }} 800w" sizes="(min-width:1200px) 25vw,(min-width:768px) 33vw,50vw" alt="{{ product.featured_image.alt | default: product.title | escape }}" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}" loading="lazy">
+        <img class="product-card__img product-card__img--primary{% if product.images.size == 1 %} product-card__img--only{% endif %}" src="{{ product.featured_image | image_url: width: 600 }}" srcset="{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 800 }} 800w" sizes="(min-width:1200px) 25vw,(min-width:768px) 33vw,50vw" alt="{{ product.featured_image.alt | default: product.title | escape }}" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}" loading="{{ card_loading }}" fetchpriority="{{ card_fetchpriority }}">
         {%- if product.images.size > 1 and settings.card_hover_second_image -%}<img class="product-card__img product-card__img--secondary" src="{{ product.images[1] | image_url: width: 600 }}" srcset="{{ product.images[1] | image_url: width: 400 }} 400w, {{ product.images[1] | image_url: width: 600 }} 600w, {{ product.images[1] | image_url: width: 800 }} 800w" sizes="(min-width:1200px) 25vw,(min-width:768px) 33vw,50vw" alt="" width="{{ product.images[1].width }}" height="{{ product.images[1].height }}" loading="lazy" aria-hidden="true">{%- endif -%}
       {%- else -%}{{ 'product-1' | placeholder_svg_tag: 'product-card__img product-card__img--primary product-card__img--only' }}{%- endif -%}
     </a>
