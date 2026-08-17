@@ -104,7 +104,7 @@
     const line = document.createElement('p');
     line.className = 'melato-buybox-trust';
     line.dataset.melatoBuyboxTrust = 'true';
-    line.textContent = 'Complimentary delivery · 30-day returns';
+    line.textContent = 'Complimentary delivery · Eligible returns · Secure checkout';
     price.insertAdjacentElement('afterend', line);
   }
 
