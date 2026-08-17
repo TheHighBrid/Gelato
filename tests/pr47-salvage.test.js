@@ -14,10 +14,12 @@ test('homepage keeps verified Judge.me social proof blocks', () => {
 });
 
 test('empty cart keeps a merchandised recovery rail', () => {
-  const snippet = read('snippets/cart-drawer.liquid');
+  const snippet = read('snippets/melato-cart-empty-state.liquid');
+  const drawer = read('snippets/cart-drawer.liquid');
   const runtime = read('assets/melato-cart-drawer.js');
   assert.match(snippet, /cart-recovery/);
-  assert.match(snippet, /data-cart-empty-template/);
+  assert.match(snippet, /new-arrivals/);
+  assert.match(drawer, /data-cart-empty-template/);
   assert.match(runtime, /data-cart-empty-template/);
   assert.match(runtime, /new-arrivals/);
 });

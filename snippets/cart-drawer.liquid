@@ -16,32 +16,7 @@
 
   <div class="cart-drawer__items" role="list" aria-label="Cart items" aria-live="polite" data-cart-items>
     {%- if cart.item_count == 0 -%}
-      {%- assign recovery_collection = collections['new-arrivals'] | default: collections.all -%}
-      <div class="cart-drawer__empty" data-cart-empty-template>
-        <div class="cart-drawer__empty-copy">
-          <p class="cart-drawer__empty-kicker">Your edit is open</p>
-          <p class="cart-drawer__empty-text">Your cart is empty.</p>
-          <p class="cart-drawer__empty-note">Start with a current piece, then build the rest of the uniform around it.</p>
-        </div>
-        {%- if recovery_collection != blank and recovery_collection.products.size > 0 -%}
-          <div class="cart-recovery" aria-label="Recommended new arrivals">
-            {%- assign recovery_count = 0 -%}
-            {%- for recovery_product in recovery_collection.products -%}
-              {%- if recovery_product.available and recovery_count < 3 -%}
-                {%- assign recovery_count = recovery_count | plus: 1 -%}
-                <a class="cart-recovery__item" href="{{ recovery_product.url }}">
-                  {%- if recovery_product.featured_image != blank -%}
-                    {%- assign recovery_alt = recovery_product.featured_image.alt | default: recovery_product.title -%}
-                    {{ recovery_product.featured_image | image_url: width: 360 | image_tag: class: 'cart-recovery__image', loading: 'lazy', widths: '160, 240, 360', sizes: '104px', alt: recovery_alt }}
-                  {%- endif -%}
-                  <span class="cart-recovery__meta"><strong>{{ recovery_product.title }}</strong><span>{{ recovery_product.price | money }}</span></span>
-                </a>
-              {%- endif -%}
-            {%- endfor -%}
-          </div>
-        {%- endif -%}
-        <a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a>
-      </div>
+      {%- render 'melato-cart-empty-state' -%}
     {%- else -%}
       {%- for item in cart.items -%}
         <div class="cart-item" role="listitem" data-line-key="{{ item.key }}" data-line-index="{{ forloop.index }}">
@@ -69,6 +44,7 @@
       {%- endfor -%}
     {%- endif -%}
   </div>
+  <template data-cart-empty-template>{%- render 'melato-cart-empty-state' -%}</template>
 
   {%- if cart.item_count > 0 -%}
     <div class="cart-extras">
