@@ -1,0 +1,17 @@
+/* Priority overrides for the mobile account and logo. Uses deliberate specificity to beat section-scoped !important rules. */
+@media (max-width:749px){
+  :is(#melato-profile-priority-a,.mxh):is(#melato-profile-priority-b,.mxh) .mxh__account.melato-mobile-profile{
+    display:inline-flex!important;
+  }
+  :is(#melato-logo-priority-a,.mxh):is(#melato-logo-priority-b,.mxh) .mxh__logo-img{
+    width:min(var(--mxh-logo-width),120px)!important;
+    max-width:120px!important;
+    max-height:36px!important;
+  }
+}
+@media (max-width:370px){
+  :is(#melato-logo-priority-c,.mxh):is(#melato-logo-priority-d,.mxh) .mxh__logo-img{
+    width:108px!important;
+    max-width:108px!important;
+  }
+}

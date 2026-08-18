@@ -34,17 +34,8 @@
         "index_copy": "Every verified garment assigned to a Living Book frame is collected here as a clean shopping exit after the editorial experience."
       },
       "blocks": {
-        "shop_001": {
-          "type": "wardrobe_frame",
-          "settings": {
-            "frame_number": 1,
-            "product_one": "ojos-velour-track-jacket",
-            "product_two": "ojos-velour-track-pants",
-            "frame_note": "Verified uniform"
-          }
-        },
-        "shop_004": {
-          "type": "wardrobe_frame",
+        "shop_04": {
+          "type": "shoppable_frame",
           "settings": {
             "frame_number": 4,
             "product_one": "ojos-velour-track-jacket",
@@ -52,33 +43,16 @@
             "frame_note": "Verified uniform"
           }
         },
-        "shop_008": {
-          "type": "wardrobe_frame",
-          "settings": {
-            "frame_number": 8,
-            "product_one": "taupe-secret-retro-panel-jacket",
-            "frame_note": "Verified outerwear"
-          }
-        },
-        "shop_009": {
-          "type": "wardrobe_frame",
+        "shop_18": {
+          "type": "shoppable_frame",
           "settings": {
             "frame_number": 9,
             "product_one": "noir-alibi-lace-corset-dress",
             "frame_note": "Verified wardrobe"
           }
         },
-        "shop_010": {
-          "type": "wardrobe_frame",
-          "settings": {
-            "frame_number": 10,
-            "product_one": "conquista-velour-track-jacket",
-            "product_two": "conquista-velour-track-pant",
-            "frame_note": "Verified full set"
-          }
-        },
-        "shop_018": {
-          "type": "wardrobe_frame",
+        "shop_18b": {
+          "type": "shoppable_frame",
           "settings": {
             "frame_number": 18,
             "product_one": "conquista-velour-track-jacket",
@@ -97,17 +71,31 @@
         }
       },
       "block_order": [
-        "shop_001",
-        "shop_004",
-        "shop_008",
-        "shop_009",
-        "shop_010",
-        "shop_018",
-        "shop_024"
+        "shop_04",
+        "shop_18",
+        "shop_18b",
+        "shop_24b"
       ]
+    },
+    "evidence_case03": {
+      "type": "melato-living-lookbook-evidence",
+      "settings": {
+        "archive_label": "CASE FILE 03",
+        "archive_title": "AFTERIMAGE RECORD",
+        "archive_note": "Seventeen newly isolated photographs form a third case, filed as peripheral sightings, movements and afterimages.",
+        "case_code": "LL-03",
+        "archive_source": "case03"
+      }
+    },
+    "curation_fixes": {
+      "type": "melato-living-lookbook-curation-fixes",
+      "settings": {}
     }
   },
   "order": [
-    "living_book"
+    "main",
+    "evidence_20260714",
+    "evidence_case03",
+    "curation_fixes"
   ]
 }

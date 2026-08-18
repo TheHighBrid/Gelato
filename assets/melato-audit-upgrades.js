@@ -1,18 +1,54 @@
 (() => {
   'use strict';
 
+  function loadPdpCleanup() {
+    if (document.documentElement.dataset.melatoPdpCleanupLoaded === 'true') return;
+    const source = document.currentScript?.src || '';
+    if (!source) return;
+    const base = source.replace(/melato-audit-upgrades\.js(?:\?[^#]*)?$/, '');
+    if (!base) return;
+    document.documentElement.dataset.melatoPdpCleanupLoaded = 'true';
+
+    if (!document.querySelector('link[data-melato-pdp-cleanup-css]')) {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = base + 'melato-pdp-cleanup-20260818.css';
+      css.dataset.melatoPdpCleanupCss = 'true';
+      document.head.appendChild(css);
+    }
+    if (!document.querySelector('script[data-melato-pdp-cleanup-js]')) {
+      const script = document.createElement('script');
+      script.src = base + 'melato-pdp-cleanup-20260818.js';
+      script.defer = true;
+      script.dataset.melatoPdpCleanupJs = 'true';
+      document.head.appendChild(script);
+    }
+  }
+
+  loadPdpCleanup();
+
   class MelatoProductRecommendations extends HTMLElement {
     connectedCallback() {
       const url = this.dataset.url;
       if (!url || this.dataset.loaded === 'true') return;
-      this.dataset.loaded = 'true';
 
+      /* A server-rendered fallback is already useful and stable. Do not replace it
+         after the shopper has started scrolling, which previously changed module
+         height under the viewport and could pull mobile scrolling downward. */
+      if (this.querySelector('.melato-related-grid .melato-card')) {
+        this.dataset.loaded = 'true';
+        this.dataset.recommendationSource = 'server-fallback';
+        return;
+      }
+
+      this.dataset.loaded = 'true';
       fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
         .then((response) => {
           if (!response.ok) throw new Error(`Melato recommendations failed: ${response.status}`);
           return response.text();
         })
         .then((text) => {
+          if (window.scrollY > 150) return;
           const html = document.createElement('div');
           html.innerHTML = text;
           const incoming = html.querySelector('product-recommendations');
