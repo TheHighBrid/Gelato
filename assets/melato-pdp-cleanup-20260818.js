@@ -24,6 +24,12 @@
 
   function removeRedundantProductUI(root = document) {
     root.querySelectorAll('.pdp-editorial, .melato-clean-pdp .pdp-editorial').forEach((node) => node.remove());
+    root.querySelectorAll('.pdp-sticky-atc, #melato-sticky-atc, .m-satc').forEach((node) => node.remove());
+    root.querySelectorAll('.melato-tag-recommendations, .m-recs').forEach((node) => {
+      const host = node.closest('.shopify-section');
+      if (host && !host.querySelector('.melato-related')) host.remove();
+      else node.remove();
+    });
     root.querySelectorAll('.m-recs__type-badge, .melato-card__eyebrow').forEach((node) => node.remove());
     root.querySelectorAll('.melato-buybox-trust').forEach((node) => node.remove());
   }
