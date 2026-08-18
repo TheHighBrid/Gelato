@@ -19,6 +19,10 @@
         "featured_collection": "new-arrivals"
       }
     },
+    "hero_visual_fix": {
+      "type": "melato-home-hero-visual-fix",
+      "settings": {}
+    },
     "ticker": {
       "type": "ticker",
       "blocks": {
@@ -105,6 +109,7 @@
   },
   "order": [
     "melato_conversion_2026",
+    "hero_visual_fix",
     "ticker",
     "featured_collection",
     "brand_story",
