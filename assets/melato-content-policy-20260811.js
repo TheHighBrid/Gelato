@@ -1,5 +1,31 @@
 (() => {
   'use strict';
+
+  function loadAug18Fixes(){
+    if(document.documentElement.dataset.melatoAug18Fixes==='true')return;
+    const current=document.currentScript?.src||'';
+    if(!current)return;
+    document.documentElement.dataset.melatoAug18Fixes='true';
+    const base=current.replace(/melato-content-policy-20260811\.js(?:\?[^#]*)?$/,'');
+    if(!base)return;
+    if(!document.querySelector('link[data-melato-aug18-css]')){
+      const link=document.createElement('link');
+      link.rel='stylesheet';
+      link.href=base+'melato-mobile-collection-header-20260818.css';
+      link.dataset.melatoAug18Css='true';
+      document.head.appendChild(link);
+    }
+    if(!document.querySelector('script[data-melato-aug18-js]')){
+      const script=document.createElement('script');
+      script.src=base+'melato-audit-ui-20260818.js';
+      script.defer=true;
+      script.dataset.melatoAug18Js='true';
+      document.head.appendChild(script);
+    }
+  }
+
+  loadAug18Fixes();
+
   const text=node=>(node?.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
   function unifyPolicyEmail(){
     if(!location.pathname.startsWith('/policies/'))return;
