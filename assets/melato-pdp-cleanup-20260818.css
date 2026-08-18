@@ -46,6 +46,7 @@ body.melato-fragrance-pdp .size-guide-trigger,
 body.melato-fragrance-pdp [data-open-size-drawer],
 body.melato-fragrance-pdp [data-melato-petal-specs],
 body.melato-fragrance-pdp #melato-petal-veil-specs,
+body.melato-fragrance-pdp #MelatoFragranceSpecifications,
 body.melato-fragrance-pdp .melato-audit-spec-card[data-fragrance-specs="true"]{
   display:none!important;
 }
