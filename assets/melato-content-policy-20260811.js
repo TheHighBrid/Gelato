@@ -29,20 +29,16 @@
       cleanupCss.dataset.melatoPdpCleanupCss='true';
       document.head.appendChild(cleanupCss);
     }
-    if(!document.querySelector('script[data-melato-aug18-js]')){
-      const script=document.createElement('script');
-      script.src=base+'melato-audit-ui-20260818.js';
-      script.defer=true;
-      script.dataset.melatoAug18Js='true';
-      document.head.appendChild(script);
-    }
-    if(!document.querySelector('script[data-melato-pdp-cleanup-js]')){
-      const cleanupJs=document.createElement('script');
-      cleanupJs.src=base+'melato-pdp-cleanup-20260818.js';
-      cleanupJs.defer=true;
-      cleanupJs.dataset.melatoPdpCleanupJs='true';
-      document.head.appendChild(cleanupJs);
-    }
+    /*
+      P0 stability guard, 2026-08-18.
+      melato-audit-ui-20260818.js is already loaded by melato-global-polish.liquid.
+      Loading it again here duplicated document listeners and MutationObservers.
+
+      melato-pdp-cleanup-20260818.js is intentionally NOT loaded here. Its broad
+      DOM observer removed elements that melato-pdp-polish.js recreated, producing
+      a permanent mutation ping-pong on product pages and eventual main-thread lock.
+      The companion cleanup CSS remains safe because it does not mutate the DOM.
+    */
   }
 
   loadAug18Fixes();
@@ -66,6 +62,34 @@
     document.querySelectorAll('.brand-story__placeholder').forEach(svg=>svg.closest('.brand-story__media')?.remove());
     unifyPolicyEmail();
   }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
-  let timer;new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(apply,100)}).observe(document.documentElement,{childList:true,subtree:true});
+
+  function installProductStabilityGuard(){
+    if(!document.body.matches('.template-product'))return;
+    if(document.documentElement.dataset.melatoPdpStabilityGuard==='true')return;
+    document.documentElement.dataset.melatoPdpStabilityGuard='true';
+
+    /* Product-image zoom is temporarily disabled at capture phase. The legacy
+       zoom implementation applies a document-wide scroll lock on click. Until
+       that component is rebuilt without a global overflow lock, image taps must
+       remain inert rather than risking a trapped storefront on mobile browsers. */
+    document.addEventListener('click',event=>{
+      if(event.target instanceof Element && event.target.closest('.pdp-main-image')){
+        event.stopImmediatePropagation();
+      }
+    },true);
+  }
+
+  const boot=()=>{
+    apply();
+    installProductStabilityGuard();
+
+    /* Product pages are deliberately excluded from the document-wide observer.
+       PDP content is server-rendered and the broad observer previously amplified
+       competing enhancement scripts into an interaction freeze. */
+    if(document.body.matches('.template-product'))return;
+    let timer;
+    new MutationObserver(()=>{clearTimeout(timer);timer=setTimeout(apply,100)}).observe(document.documentElement,{childList:true,subtree:true});
+  };
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
