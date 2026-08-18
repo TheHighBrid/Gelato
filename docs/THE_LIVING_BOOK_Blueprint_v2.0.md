@@ -1,4 +1,4 @@
-# THE LIVING BOOK — Blueprint v2.0
+# THE LIVING BOOK - Blueprint v2.0
 
 ## Production decision
 
@@ -6,8 +6,8 @@ The Living Book is a Shopify-native editorial engine inside the Gelato theme. It
 
 ## Runtime architecture
 
-- Source of truth: Shopify CDN evidence manifests.
-- Frame count: dynamic (`N`), currently 108 evidence records when Case File 03 is enabled.
+- Source of truth: Shopify CDN editorial manifests.
+- Frame count: dynamic (`N`). The v2 branch preserves all 31 legacy records and appends the current evidence manifests, for 139 archive records when Case File 03 is enabled.
 - Frame identity: stable `LB-<asset-filename>` IDs. Display order is separate and may change.
 - Presentation archetypes: hero, editorial, wide, cinema, tall, quiet, detail.
 - Motion presets: depth, drift, reveal, magnify, still.
@@ -19,7 +19,7 @@ The Living Book is a Shopify-native editorial engine inside the Gelato theme. It
 
 ## Narrative
 
-The four-act spine from v1 is retained and recalculated from the live archive size:
+The four-act spine from v1 is retained and recalculated from the archive size:
 
 1. THE SCENE: first ~15%
 2. THE EVIDENCE: ~15% to 50%
@@ -30,7 +30,7 @@ The act boundaries move automatically when frames are added.
 
 ## Commerce
 
-Frames may be mapped to products. Stable frame IDs are preferred. Legacy exhibit numbers remain as a fallback for existing mappings. Product overlays only appear when a mapping is explicitly supplied; the engine never guesses the product shown in a photograph.
+Frames may be mapped to products. Stable frame IDs are preferred. Legacy exhibit numbers remain available as a migration fallback, but v2 ships with no unverified mappings. Product overlays only appear when a mapping is explicitly supplied. The engine never guesses the product shown in a photograph.
 
 ## Wayfinding
 
@@ -42,7 +42,7 @@ First visit: forensic intro up to 4.3 seconds, dismissible immediately by user i
 
 ## Performance guardrails
 
-- No Next.js/R3F bundle on the Shopify storefront.
+- No Next.js or R3F bundle on the Shopify storefront.
 - No production TIFFs in Git.
 - Images remain on Shopify CDN.
 - No audio or WebGL is required for LCP.
