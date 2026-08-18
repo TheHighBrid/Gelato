@@ -15,6 +15,13 @@
       link.dataset.melatoAug18Css='true';
       document.head.appendChild(link);
     }
+    if(!document.querySelector('link[data-melato-aug18-header-priority]')){
+      const priority=document.createElement('link');
+      priority.rel='stylesheet';
+      priority.href=base+'melato-mobile-header-priority-20260818.css';
+      priority.dataset.melatoAug18HeaderPriority='true';
+      document.head.appendChild(priority);
+    }
     if(!document.querySelector('script[data-melato-aug18-js]')){
       const script=document.createElement('script');
       script.src=base+'melato-audit-ui-20260818.js';
