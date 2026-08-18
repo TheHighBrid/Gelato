@@ -1,6 +1,32 @@
 (() => {
   'use strict';
 
+  function loadPdpCleanup() {
+    if (document.documentElement.dataset.melatoPdpCleanupLoaded === 'true') return;
+    const source = document.currentScript?.src || '';
+    if (!source) return;
+    const base = source.replace(/melato-audit-upgrades\.js(?:\?[^#]*)?$/, '');
+    if (!base) return;
+    document.documentElement.dataset.melatoPdpCleanupLoaded = 'true';
+
+    if (!document.querySelector('link[data-melato-pdp-cleanup-css]')) {
+      const css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.href = base + 'melato-pdp-cleanup-20260818.css';
+      css.dataset.melatoPdpCleanupCss = 'true';
+      document.head.appendChild(css);
+    }
+    if (!document.querySelector('script[data-melato-pdp-cleanup-js]')) {
+      const script = document.createElement('script');
+      script.src = base + 'melato-pdp-cleanup-20260818.js';
+      script.defer = true;
+      script.dataset.melatoPdpCleanupJs = 'true';
+      document.head.appendChild(script);
+    }
+  }
+
+  loadPdpCleanup();
+
   class MelatoProductRecommendations extends HTMLElement {
     connectedCallback() {
       const url = this.dataset.url;
