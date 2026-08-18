@@ -40,6 +40,7 @@
     width: 2630,
     height: 2392
   };
+  const oldGalleryBrokenToken = 'The_Living_Lookbook-Frame-02_5.jpg';
 
   const sized = (url, width) => `${url}${url.includes('?') ? '&' : '?'}width=${width}`;
 
@@ -73,6 +74,36 @@
     });
   };
 
+  const setOldGalleryLightbox = (gallery) => {
+    const lightboxImage = gallery?.querySelector('[data-lb-img]');
+    if (!lightboxImage) return;
+
+    const applyReplacementMetadata = () => {
+      const current = lightboxImage.getAttribute('src') || '';
+      if (!current.includes(oldGalleryBrokenToken)) return;
+
+      lightboxImage.src = oldGalleryReplacement.url;
+      const tag = gallery.querySelector('[data-lb-tag]');
+      const name = gallery.querySelector('[data-lb-name]');
+      const desc = gallery.querySelector('[data-lb-desc]');
+      const price = gallery.querySelector('[data-lb-price]');
+      const cta = gallery.querySelector('[data-lb-cta]');
+      if (tag) tag.textContent = 'Tracksuits';
+      if (name) name.textContent = 'The Uniform in Motion';
+      if (desc) desc.textContent = 'A new Melato Living Lookbook frame from the current editorial archive.';
+      if (price) price.style.display = 'none';
+      if (cta) {
+        cta.style.display = '';
+        cta.href = '/collections/tracksuits';
+        cta.textContent = 'Shop tracksuits →';
+      }
+    };
+
+    const observer = new MutationObserver(applyReplacementMetadata);
+    observer.observe(lightboxImage, { attributes: true, attributeFilter: ['src'] });
+    applyReplacementMetadata();
+  };
+
   const replaceBrokenOldGalleryFrame = () => {
     const gallery = document.getElementById('MelatoLivingLookbook');
     if (!gallery) return;
@@ -80,15 +111,31 @@
     const img = Array.from(gallery.querySelectorAll('.mlb-card img')).find((candidate) => {
       const src = candidate.getAttribute('src') || '';
       const alt = candidate.getAttribute('alt') || '';
-      return src.includes('The_Living_Lookbook-Frame-02_5.jpg') || /kitchen counter.*(red|rose) wine/i.test(alt);
+      return src.includes(oldGalleryBrokenToken) || /kitchen counter.*(red|rose) wine/i.test(alt);
     });
 
-    if (!img) return;
-    img.src = oldGalleryReplacement.url;
-    img.removeAttribute('srcset');
-    img.width = oldGalleryReplacement.width;
-    img.height = oldGalleryReplacement.height;
-    img.alt = 'Melato Living Lookbook editorial frame 30';
+    if (img) {
+      const card = img.closest('.mlb-card');
+      img.src = oldGalleryReplacement.url;
+      img.removeAttribute('srcset');
+      img.width = oldGalleryReplacement.width;
+      img.height = oldGalleryReplacement.height;
+      img.alt = 'Melato Living Lookbook editorial frame 30';
+
+      if (card) {
+        card.dataset.cat = 'tracksuits velour';
+        const category = card.querySelector('.mlb-card-ov b');
+        const title = card.querySelector('.mlb-card-ov h3');
+        const price = card.querySelector('.mlb-card-ov p');
+        const cta = card.querySelector('.mlb-card-ov span');
+        if (category) category.textContent = 'Tracksuits';
+        if (title) title.textContent = 'The Uniform in Motion';
+        if (price) price.textContent = 'Current editorial frame';
+        if (cta) cta.textContent = 'Shop tracksuits →';
+      }
+    }
+
+    setOldGalleryLightbox(gallery);
   };
 
   const removeIncorrectFrameOneProduct = (root) => {
