@@ -1,41 +1,22 @@
 (() => {
   'use strict';
 
-  function loadPdpCleanup() {
-    if (document.documentElement.dataset.melatoPdpCleanupLoaded === 'true') return;
-    const source = document.currentScript?.src || '';
-    if (!source) return;
-    const base = source.replace(/melato-audit-upgrades\.js(?:\?[^#]*)?$/, '');
-    if (!base) return;
-    document.documentElement.dataset.melatoPdpCleanupLoaded = 'true';
-
-    if (!document.querySelector('link[data-melato-pdp-cleanup-css]')) {
-      const css = document.createElement('link');
-      css.rel = 'stylesheet';
-      css.href = base + 'melato-pdp-cleanup-20260818.css';
-      css.dataset.melatoPdpCleanupCss = 'true';
-      document.head.appendChild(css);
-    }
-    if (!document.querySelector('script[data-melato-pdp-cleanup-js]')) {
-      const script = document.createElement('script');
-      script.src = base + 'melato-pdp-cleanup-20260818.js';
-      script.defer = true;
-      script.dataset.melatoPdpCleanupJs = 'true';
-      document.head.appendChild(script);
-    }
-  }
-
-  loadPdpCleanup();
+  /*
+    P0 PDP stability, 2026-08-18.
+    This asset is intentionally observer-free. The previous runtime dynamically
+    loaded melato-pdp-cleanup-20260818.js and attached capture-phase summary click
+    interception plus per-detail and document MutationObservers. Those behaviors
+    competed with other PDP enhancement scripts and could saturate the main thread
+    after the first shopper interaction.
+  */
 
   class MelatoProductRecommendations extends HTMLElement {
     connectedCallback() {
       const url = this.dataset.url;
       if (!url || this.dataset.loaded === 'true') return;
 
-      /* A server-rendered fallback is already useful and stable. Do not replace it
-         after the shopper has started scrolling, which previously changed module
-         height under the viewport and could pull mobile scrolling downward. */
-      if (this.querySelector('.melato-related-grid .melato-card')) {
+      const existingCards = this.querySelector('.melato-grid--cards .melato-card, .melato-related-grid .melato-card');
+      if (existingCards) {
         this.dataset.loaded = 'true';
         this.dataset.recommendationSource = 'server-fallback';
         return;
@@ -66,82 +47,4 @@
   if (!customElements.get('product-recommendations')) {
     customElements.define('product-recommendations', MelatoProductRecommendations);
   }
-
-  // The PDP uses native <details> for Story, Construction, Fit, Material, Care
-  // and Shipping. Legacy theme code can mutate the open attribute after a click.
-  // Shopper intent owns that state until the shopper explicitly toggles it again.
-  function bindStablePdpDetail(detail) {
-    if (!(detail instanceof HTMLDetailsElement) || detail.dataset.melatoStableDetail === 'true') return;
-    const summary = detail.querySelector(':scope > summary');
-    if (!summary) return;
-
-    detail.dataset.melatoStableDetail = 'true';
-    let intendedOpen = detail.open;
-    let internalMutation = false;
-
-    const setOpen = (nextOpen) => {
-      intendedOpen = Boolean(nextOpen);
-      internalMutation = true;
-      detail.open = intendedOpen;
-      queueMicrotask(() => { internalMutation = false; });
-    };
-
-    summary.addEventListener('click', (event) => {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      setOpen(!intendedOpen);
-    }, true);
-
-    new MutationObserver(() => {
-      if (internalMutation || detail.open === intendedOpen) return;
-      requestAnimationFrame(() => setOpen(intendedOpen));
-    }).observe(detail, { attributes: true, attributeFilter: ['open'] });
-  }
-
-  function bindStablePdpDetails(root = document) {
-    root.querySelectorAll([
-      '[id^="MelatoPDP-"] details',
-      '.melato-clean-pdp details.pdp-detail',
-      '.melato-pdp-rebuild details.pdp-spec',
-      '.melato-pdp-rebuild details.pdp-mini-detail',
-      'details.ml-meta-card'
-    ].join(',')).forEach(bindStablePdpDetail);
-  }
-
-  document.addEventListener('toggle', (event) => {
-    const detail = event.target;
-    if (!(detail instanceof HTMLDetailsElement)) return;
-    if (!detail.classList.contains('melato-accordion')) return;
-
-    const list = detail.closest('.melato-accordion-list');
-    if (!list || !detail.open) return;
-
-    list.querySelectorAll('.melato-accordion[open]').forEach((item) => {
-      if (item !== detail) item.removeAttribute('open');
-    });
-  }, true);
-
-  let bindFrame = 0;
-  const bindDynamicPdpDetails = () => {
-    if (bindFrame) return;
-    bindFrame = requestAnimationFrame(() => {
-      bindFrame = 0;
-      bindStablePdpDetails(document);
-    });
-  };
-
-  const init = () => {
-    bindStablePdpDetails(document);
-    if (document.body) {
-      new MutationObserver(bindDynamicPdpDetails).observe(document.body, { childList: true, subtree: true });
-    }
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init, { once: true });
-  } else {
-    init();
-  }
-
-  document.addEventListener('shopify:section:load', (event) => bindStablePdpDetails(event.target));
 })();
