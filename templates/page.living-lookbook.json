@@ -19,9 +19,7 @@
         "deck": "A forensic fashion archive built from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive.",
         "filed_date": "18 AUG 2026",
         "include_case03": true
-      },
-      "blocks": {},
-      "block_order": []
+      }
     }
   },
   "order": ["living_book_v2"]
