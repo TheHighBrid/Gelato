@@ -22,12 +22,26 @@
       priority.dataset.melatoAug18HeaderPriority='true';
       document.head.appendChild(priority);
     }
+    if(!document.querySelector('link[data-melato-pdp-cleanup-css]')){
+      const cleanupCss=document.createElement('link');
+      cleanupCss.rel='stylesheet';
+      cleanupCss.href=base+'melato-pdp-cleanup-20260818.css';
+      cleanupCss.dataset.melatoPdpCleanupCss='true';
+      document.head.appendChild(cleanupCss);
+    }
     if(!document.querySelector('script[data-melato-aug18-js]')){
       const script=document.createElement('script');
       script.src=base+'melato-audit-ui-20260818.js';
       script.defer=true;
       script.dataset.melatoAug18Js='true';
       document.head.appendChild(script);
+    }
+    if(!document.querySelector('script[data-melato-pdp-cleanup-js]')){
+      const cleanupJs=document.createElement('script');
+      cleanupJs.src=base+'melato-pdp-cleanup-20260818.js';
+      cleanupJs.defer=true;
+      cleanupJs.dataset.melatoPdpCleanupJs='true';
+      document.head.appendChild(cleanupJs);
     }
   }
 
@@ -45,7 +59,7 @@
     if(document.body.matches('.template-product')){
       document.querySelectorAll('details').forEach(detail=>{const summary=detail.querySelector(':scope > summary');if(text(summary)==='story')detail.remove()});
       document.querySelectorAll('.pdp-thesis,.pdp-proof-mini,.product-assurances').forEach(node=>node.remove());
-      document.querySelectorAll('.pdp-editorial,.melato-clean-pdp .pdp-editorial').forEach(section=>{const kicker=section.querySelector('.pdp-kicker');if(kicker&&/editorial photos/i.test(kicker.textContent||''))kicker.remove();const heading=section.querySelector('.pdp-section-head h2');if(heading&&/extra angles|close-ups|texture/i.test(heading.textContent||''))heading.textContent='Details'});
+      document.querySelectorAll('.pdp-editorial,.melato-clean-pdp .pdp-editorial').forEach(section=>section.remove());
       document.querySelectorAll('.pdp-sticky-atc').forEach(bar=>{if(bar.querySelector('button[disabled],.pdp-atc--oos'))bar.remove()});
     }
     document.querySelectorAll('.cart-upsell').forEach(section=>{if(!section.querySelector('.upsell-card,[data-upsell-track]>*'))section.remove()});
