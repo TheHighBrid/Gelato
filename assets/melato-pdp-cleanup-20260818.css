@@ -1,0 +1,130 @@
+/* Melato PDP cleanup / 2026-08-18
+   User-verified mobile fixes: rolling announcement, persistent header,
+   fragrance-only cleanup, duplicate media removal and recommendation labels. */
+
+/* The announcement must move unless the customer explicitly requests reduced motion. */
+html #melato-announcement-bar:not([data-announcement-paused="true"]) .melato-ann__track{
+  animation:melato-ann-scroll var(--ab-speed,24s) linear infinite!important;
+  animation-play-state:running!important;
+}
+#melato-announcement-bar .melato-ann__item.melato-ann__secondary-message{display:flex!important}
+@media(prefers-reduced-motion:reduce){
+  html #melato-announcement-bar .melato-ann__track{animation:none!important;transform:none!important}
+}
+
+/* Keep the actual Melato header present while scrolling. */
+.shopify-section.melato-header-host{
+  position:sticky!important;
+  top:0!important;
+  z-index:1200!important;
+}
+.mxh,
+.mxh.hidden,
+.mxh.site-header--hidden{
+  position:sticky!important;
+  top:0!important;
+  transform:none!important;
+  translate:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+
+/* The main gallery already contains every product image. Do not repeat them below. */
+body.template-product .pdp-editorial,
+body.template-product .melato-clean-pdp .pdp-editorial{
+  display:none!important;
+}
+
+/* Keep one purchase action in the buybox. Floating purchase slabs were covering
+   product content and creating a second persistent CTA on small screens. */
+body.template-product .pdp-sticky-atc,
+body.template-product #melato-sticky-atc,
+body.template-product .m-satc{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+
+/* Generic assurance copy was audit-generated and is visually redundant in the buybox. */
+body.template-product .melato-buybox-trust{
+  display:none!important;
+}
+
+/* Fragrance is sold by volume, not apparel sizing. */
+body.melato-fragrance-pdp .melato-size-guide-inline,
+body.melato-fragrance-pdp .size-guide-trigger,
+body.melato-fragrance-pdp [data-open-size-drawer],
+body.melato-fragrance-pdp [data-melato-petal-specs],
+body.melato-fragrance-pdp #melato-petal-veil-specs,
+body.melato-fragrance-pdp #MelatoFragranceSpecifications,
+body.melato-fragrance-pdp .melato-audit-spec-card[data-fragrance-specs="true"]{
+  display:none!important;
+}
+
+/* The old tag-driven MOST WANTED module duplicated the Shopify recommendation
+   system. Templates now use related-products as the single continuation layer. */
+body.template-product .melato-tag-recommendations,
+body.template-product .m-recs{
+  display:none!important;
+}
+
+/* Remove redundant merchandising labels. Product titles already communicate identity. */
+.m-recs__type-badge,
+.melato-card__eyebrow{
+  display:none!important;
+}
+
+/* Recommendation modules must not become scroll anchors while async content settles. */
+.melato-related,
+.m-recs,
+product-recommendations{
+  overflow-anchor:none;
+}
+
+/* Compact fashion-house recommendation rail. On mobile, four products stay in a
+   clean 2 x 2 edit instead of becoming four full-width, viewport-tall cards. */
+body.template-product .melato-related:not(.melato-recently-viewed) .melato-section-head{
+  margin-bottom:16px!important;
+}
+body.template-product .melato-related:not(.melato-recently-viewed) .melato-section-head h2{
+  font-size:clamp(24px,7vw,36px)!important;
+  line-height:.96!important;
+  letter-spacing:-.035em!important;
+}
+body.template-product .melato-related:not(.melato-recently-viewed) .melato-eyebrow{
+  margin-bottom:7px!important;
+  font-size:10px!important;
+  letter-spacing:.16em!important;
+}
+body.template-product .melato-related:not(.melato-recently-viewed) .melato-grid--cards{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:18px 10px!important;
+}
+body.template-product .melato-related:not(.melato-recently-viewed) .melato-card__media{
+  border-radius:0!important;
+}
+body.template-product .melato-related:not(.melato-recently-viewed) .melato-card__content{
+  padding-top:8px!important;
+}
+body.template-product .melato-related:not(.melato-recently-viewed) .melato-card__title{
+  font-size:12px!important;
+  line-height:1.2!important;
+  letter-spacing:.01em!important;
+}
+body.template-product .melato-related:not(.melato-recently-viewed) .melato-card__price{
+  margin-top:5px!important;
+  font-size:12px!important;
+}
+body.template-product .shopify-section.section.melato-section:has(> .melato-related:not(.melato-recently-viewed)){
+  margin-block:42px 58px!important;
+}
+
+@media(min-width:750px){
+  body.template-product .melato-related:not(.melato-recently-viewed) .melato-grid--cards{
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    gap:20px!important;
+  }
+  body.template-product .melato-related:not(.melato-recently-viewed) .melato-section-head h2{
+    font-size:clamp(30px,3vw,48px)!important;
+  }
+}

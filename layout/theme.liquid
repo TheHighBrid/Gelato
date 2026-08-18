@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height">
   <meta name="theme-color" content="{{ settings.color_background }}">
+  <meta name="shop-currency" content="{{ shop.currency | escape }}">
   {%- liquid
     assign melato_meta_title = page_title
     assign melato_meta_description = page_description
@@ -26,7 +27,35 @@
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
   {%- style -%}:root{--color-bg:{{ settings.color_background }};--color-text:{{ settings.color_text }};--color-accent:{{ settings.color_accent }};--color-accent-hover:{{ settings.color_accent_hover }};--color-surface:{{ settings.color_surface }};--color-border:{{ settings.color_border }};--color-muted:{{ settings.color_muted }};--color-error:{{ settings.color_error }};--font-heading-family:'Bebas Neue',sans-serif;--font-heading-style:normal;--font-heading-weight:400;--font-body-family:'Barlow',sans-serif;--font-body-style:normal;--font-body-weight:400;--font-mono-family:'DM Mono','Courier New',monospace;--font-size-base:{{ settings.font_size_base }}px;--letter-spacing-heading:{{ settings.letter_spacing_heading }}em;--line-height-body:{{ settings.line_height_body }};--container-width:{{ settings.container_width }}px;--container-padding:{{ settings.container_padding }}px;--grid-gap:{{ settings.grid_gap }}px;--border-radius:{{ settings.border_radius }}px;--header-height:60px;--header-bg:{{ settings.header_bg }};--header-text:{{ settings.header_text_color }}}{%- endstyle -%}
   {{ content_for_header }}
-  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">{{ 'theme.css' | asset_url | stylesheet_tag }}{{ 'melato-enhancements.css' | asset_url | stylesheet_tag }}{{ 'melato-palette-logo-updated.css' | asset_url | stylesheet_tag }}{{ 'melato-info-legal-pages.css' | asset_url | stylesheet_tag }}{{ 'melato-header-logo-bigger.css' | asset_url | stylesheet_tag }}{{ 'melato-palette-v3.css' | asset_url | stylesheet_tag }}{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}{{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}{{ 'melato-header-footer-fix.css' | asset_url | stylesheet_tag }}{{ 'melato-optimization-2026.css' | asset_url | stylesheet_tag }}{{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}{{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}{{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}
+
+  {%- if template.name == 'collection' and collection -%}
+    {%- for preload_product in collection.products limit: 4 -%}
+      {%- if preload_product.featured_image != blank -%}
+        <link rel="preload" as="image" href="{{ preload_product.featured_image | image_url: width: 800 }}" imagesrcset="{{ preload_product.featured_image | image_url: width: 400 }} 400w, {{ preload_product.featured_image | image_url: width: 600 }} 600w, {{ preload_product.featured_image | image_url: width: 800 }} 800w" imagesizes="(min-width:1200px) 25vw,(min-width:768px) 33vw,50vw" fetchpriority="high">
+      {%- endif -%}
+    {%- endfor -%}
+    <style>
+      .melato-product-grid__inner .product-card__media{background:linear-gradient(110deg,var(--color-surface) 22%,color-mix(in srgb,var(--color-surface) 82%,var(--color-text)) 38%,var(--color-surface) 54%);background-size:220% 100%;animation:melato-card-placeholder 1.4s linear infinite}
+      .melato-product-grid__inner .product-card__img{position:relative;z-index:1;background:var(--color-surface)}
+      @keyframes melato-card-placeholder{to{background-position:-220% 0}}
+      @media(prefers-reduced-motion:reduce){.melato-product-grid__inner .product-card__media{animation:none}}
+    </style>
+  {%- endif -%}
+
+  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-enhancements.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-palette-logo-updated.css' | asset_url | stylesheet_tag }}
+  {%- if template.name == 'page' or request.path contains '/policies/' -%}{{ 'melato-info-legal-pages.css' | asset_url | stylesheet_tag }}{%- endif -%}
+  {{ 'melato-header-logo-bigger.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-palette-v3.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+  {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-header-footer-fix.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-optimization-2026.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}
+  {%- if template.name == 'product' -%}{{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}{%- endif -%}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}{% render 'melato-global-polish' %}
 </head>
@@ -49,7 +78,15 @@
   {%- capture melato_cart_output -%}{%- render 'cart-drawer' -%}{%- endcapture -%}
   <div class="melato-utility-layer" aria-label="Store utilities"><div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>{% render 'melato-rendered-output-filters', html:melato_cart_output, context:'cart' %}{%- render 'search-drawer' -%}{%- render 'mobile-menu' -%}{%- render 'quick-view-modal' -%}<div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div></div>
   <script>window.DRIP={shop:{currency:{{ shop.currency | json }},moneyFormat:{{ shop.money_format | json }},locale:{{ request.locale.iso_code | json }},freeShippingThreshold:0,routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},search:{{ routes.search_url | json }},collections:{{ routes.collections_url | json }}}},cart:{{ cart | json }},customer:{{ customer | json }},strings:{addedToCart:{{ 'cart.added' | t | json }},cartEmpty:{{ 'cart.empty' | t | json }},soldOut:{{ 'products.sold_out' | t | json }},unavailable:{{ 'products.unavailable' | t | json }},addToCart:{{ 'products.add_to_cart' | t | json }},outOfStock:{{ 'products.out_of_stock' | t | json }}}};</script>
-  <script src="{{ 'theme.js' | asset_url }}" defer></script><script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script><script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script><script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script><script src="{{ 'melato-pdp-polish.js' | asset_url }}" defer></script><script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script><script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>{%- if template.name == 'collection' -%}<script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>{%- endif -%}{% render 'melato-living-lookbook-loader' %}{% render 'melato-back-in-stock-loader' %}{% render 'melato-product-color-engine' %}
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script>
+  {%- if template.name == 'product' -%}<script src="{{ 'melato-pdp-polish.js' | asset_url }}" defer></script>{%- endif -%}
+  <script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>
+  {%- if template.name == 'collection' -%}<script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>{%- endif -%}
+  {% render 'melato-living-lookbook-loader' %}{% render 'melato-back-in-stock-loader' %}{% render 'melato-product-color-engine' %}
   <script>
     (function () {
       function initMelatoHeroVideo(scope) {

@@ -26,14 +26,6 @@
       "type": "melato-product-safe-accent",
       "settings": {}
     },
-    "tag_recommendations": {
-      "type": "tag-recommendations",
-      "settings": {
-        "eyebrow": "FOR YOU",
-        "heading": "MOST WANTED",
-        "max_products": 4
-      }
-    },
     "related": {
       "type": "related-products",
       "settings": {
@@ -49,5 +41,5 @@
       }
     }
   },
-  "order": ["main_product", "safe_accent", "tag_recommendations", "related", "recently_viewed"]
+  "order": ["main_product", "safe_accent", "related", "recently_viewed"]
 }
