@@ -5,14 +5,24 @@
     connectedCallback() {
       const url = this.dataset.url;
       if (!url || this.dataset.loaded === 'true') return;
-      this.dataset.loaded = 'true';
 
+      /* A server-rendered fallback is already useful and stable. Do not replace it
+         after the shopper has started scrolling, which previously changed module
+         height under the viewport and could pull mobile scrolling downward. */
+      if (this.querySelector('.melato-related-grid .melato-card')) {
+        this.dataset.loaded = 'true';
+        this.dataset.recommendationSource = 'server-fallback';
+        return;
+      }
+
+      this.dataset.loaded = 'true';
       fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
         .then((response) => {
           if (!response.ok) throw new Error(`Melato recommendations failed: ${response.status}`);
           return response.text();
         })
         .then((text) => {
+          if (window.scrollY > 150) return;
           const html = document.createElement('div');
           html.innerHTML = text;
           const incoming = html.querySelector('product-recommendations');
