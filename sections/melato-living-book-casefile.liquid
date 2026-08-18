@@ -1,5 +1,5 @@
 {% liquid
-  assign case_code = section.settings.case_code | default: 'LB-∞'
+  assign case_code = section.settings.case_code | default: 'LB-INFINITE'
   assign case_title = section.settings.case_title | default: 'THE LIVING BOOK'
   assign case_subtitle = section.settings.case_subtitle | default: 'CASE FILE / UNRESOLVED'
 %}
@@ -8,7 +8,7 @@
 <script src="{{ 'melato-living-book-casefile.js' | asset_url }}" defer></script>
 
 {% capture evidence_manifest %}
-  {% render 'melato-living-lookbook-evidence-data' %}~{% render 'melato-living-lookbook-evidence-case02-additions' %}{% if section.settings.include_case03 %}~{% render 'melato-living-lookbook-evidence-case03-data' %}{% endif %}
+  {% render 'melato-living-lookbook-legacy-data' %}~{% render 'melato-living-lookbook-evidence-data' %}~{% render 'melato-living-lookbook-evidence-case02-additions' %}{% if section.settings.include_case03 %}~{% render 'melato-living-lookbook-evidence-case03-data' %}{% endif %}
 {% endcapture %}
 {% assign evidence_items = evidence_manifest | strip | split: '~' %}
 {% assign displayed_count = evidence_items.size %}
