@@ -8,7 +8,7 @@ The Living Book is a Shopify-native editorial engine inside the Gelato theme. It
 
 - Source of truth: Shopify CDN editorial manifests.
 - Frame count: dynamic (`N`). The v2 branch preserves all 31 legacy records and appends the current evidence manifests, for 139 archive records when Case File 03 is enabled.
-- Frame identity: stable `LB-<asset-filename>` IDs. Display order is separate and may change.
+- Frame identity: stable `LB-<asset-key>` IDs derived from the Shopify CDN asset name/version. Display order is separate and may change.
 - Presentation archetypes: hero, editorial, wide, cinema, tall, quiet, detail.
 - Motion presets: depth, drift, reveal, magnify, still.
 - Loading: first three images are immediate; later images hydrate inside a 180% viewport prefetch window.
@@ -30,7 +30,7 @@ The act boundaries move automatically when frames are added.
 
 ## Commerce
 
-Frames may be mapped to products. Stable frame IDs are preferred. Legacy exhibit numbers remain available as a migration fallback, but v2 ships with no unverified mappings. Product overlays only appear when a mapping is explicitly supplied. The engine never guesses the product shown in a photograph.
+The production v2 foundation intentionally ships with product overlays disabled. Previous Living Lookbook work proved that inferring product identity from position or visual similarity is unsafe. Commerce returns only after each frame is mapped through its stable frame ID to a verified Shopify product. The engine must never guess which product appears in a photograph.
 
 ## Wayfinding
 
