@@ -1,0 +1,64 @@
+/* Melato PDP cleanup / 2026-08-18
+   User-verified mobile fixes: rolling announcement, persistent header,
+   fragrance-only cleanup, duplicate media removal and recommendation labels. */
+
+/* The announcement must move unless the customer explicitly requests reduced motion. */
+html #melato-announcement-bar:not([data-announcement-paused="true"]) .melato-ann__track{
+  animation:melato-ann-scroll var(--ab-speed,24s) linear infinite!important;
+  animation-play-state:running!important;
+}
+#melato-announcement-bar .melato-ann__item.melato-ann__secondary-message{display:flex!important}
+@media(prefers-reduced-motion:reduce){
+  html #melato-announcement-bar .melato-ann__track{animation:none!important;transform:none!important}
+}
+
+/* Keep the actual Melato header present while scrolling. */
+.shopify-section.melato-header-host{
+  position:sticky!important;
+  top:0!important;
+  z-index:1200!important;
+}
+.mxh,
+.mxh.hidden,
+.mxh.site-header--hidden{
+  position:sticky!important;
+  top:0!important;
+  transform:none!important;
+  translate:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+
+/* The main gallery already contains every product image. Do not repeat them below. */
+body.template-product .pdp-editorial,
+body.template-product .melato-clean-pdp .pdp-editorial{
+  display:none!important;
+}
+
+/* Generic assurance copy was audit-generated and is visually redundant in the buybox. */
+body.template-product .melato-buybox-trust{
+  display:none!important;
+}
+
+/* Fragrance is sold by volume, not apparel sizing. */
+body.melato-fragrance-pdp .melato-size-guide-inline,
+body.melato-fragrance-pdp .size-guide-trigger,
+body.melato-fragrance-pdp [data-open-size-drawer],
+body.melato-fragrance-pdp [data-melato-petal-specs],
+body.melato-fragrance-pdp #melato-petal-veil-specs,
+body.melato-fragrance-pdp .melato-audit-spec-card[data-fragrance-specs="true"]{
+  display:none!important;
+}
+
+/* Remove redundant merchandising labels. Product titles already communicate identity. */
+.m-recs__type-badge,
+.melato-card__eyebrow{
+  display:none!important;
+}
+
+/* Recommendation modules must not become scroll anchors while async content settles. */
+.melato-related,
+.m-recs,
+product-recommendations{
+  overflow-anchor:none;
+}
