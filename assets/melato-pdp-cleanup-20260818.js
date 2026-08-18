@@ -7,6 +7,32 @@
     return match ? match[1] : '';
   };
 
+  function ensurePdpCleanupStyles() {
+    if (document.getElementById('MelatoPdpCleanupRuntimeStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'MelatoPdpCleanupRuntimeStyles';
+    style.textContent = `
+      body.template-product .pdp-sticky-atc,
+      body.template-product #melato-sticky-atc,
+      body.template-product .m-satc{display:none!important;visibility:hidden!important;pointer-events:none!important}
+      body.template-product .melato-tag-recommendations,
+      body.template-product .m-recs{display:none!important}
+      body.template-product .melato-related:not(.melato-recently-viewed) .melato-section-head{margin-bottom:16px!important}
+      body.template-product .melato-related:not(.melato-recently-viewed) .melato-section-head h2{font-size:clamp(24px,7vw,36px)!important;line-height:.96!important;letter-spacing:-.035em!important}
+      body.template-product .melato-related:not(.melato-recently-viewed) .melato-eyebrow{margin-bottom:7px!important;font-size:10px!important;letter-spacing:.16em!important}
+      body.template-product .melato-related:not(.melato-recently-viewed) .melato-grid--cards{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px 10px!important}
+      body.template-product .melato-related:not(.melato-recently-viewed) .melato-card__media{border-radius:0!important}
+      body.template-product .melato-related:not(.melato-recently-viewed) .melato-card__content{padding-top:8px!important}
+      body.template-product .melato-related:not(.melato-recently-viewed) .melato-card__title{font-size:12px!important;line-height:1.2!important;letter-spacing:.01em!important}
+      body.template-product .melato-related:not(.melato-recently-viewed) .melato-card__price{margin-top:5px!important;font-size:12px!important}
+      @media(min-width:750px){
+        body.template-product .melato-related:not(.melato-recently-viewed) .melato-grid--cards{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:20px!important}
+        body.template-product .melato-related:not(.melato-recently-viewed) .melato-section-head h2{font-size:clamp(30px,3vw,48px)!important}
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
   function restoreAnnouncement() {
     const bar = document.querySelector('#melato-announcement-bar');
     if (!bar) return;
@@ -152,6 +178,7 @@
   }
 
   function run() {
+    ensurePdpCleanupStyles();
     restoreAnnouncement();
     stabilizeHeader();
     removeRedundantProductUI(document);
