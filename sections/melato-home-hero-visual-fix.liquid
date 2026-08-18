@@ -1,0 +1,25 @@
+{% comment %}
+  Visual-only homepage hero correction.
+  Keeps the H1, descriptive copy and both CTA links intact while neutralizing
+  any theme-level header background treatment that creates an opaque black panel.
+{% endcomment %}
+<style>
+  .melato-home-clean .melato-home-clean__header {
+    background: transparent !important;
+    background-image: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+</style>
+{% schema %}
+{
+  "name": "Homepage hero visual fix",
+  "tag": "section",
+  "class": "section-homepage-hero-visual-fix",
+  "settings": [],
+  "presets": [
+    { "name": "Homepage hero visual fix" }
+  ]
+}
+{% endschema %}
