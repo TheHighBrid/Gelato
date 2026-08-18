@@ -1,8 +1,9 @@
 {%- comment -%}
-  MELATO CLEANUP MASTER LAYER / 2026-08-13
+  MELATO CLEANUP MASTER LAYER / 2026-08-18
   Final storefront normalization layer.
-  Live sync marker: homepage Uniform price and CTA fixes.
+  Live sync marker: mobile header, collection cards, collection storytelling and bundle conversion.
 {%- endcomment -%}
+{{ 'melato-mobile-collection-header-20260818.css' | asset_url | stylesheet_tag }}
 <style>
 /* Preserve accessible price labels while preventing them from becoming visible UI. */
 .product-card__price{
@@ -91,3 +92,4 @@
 </style>
 <script src="{{ 'melato-site-cleanup-20260811.js' | asset_url }}" defer></script>
 <script src="{{ 'melato-content-policy-20260811.js' | asset_url }}" defer></script>
+<script src="{{ 'melato-audit-ui-20260818.js' | asset_url }}" defer></script>
