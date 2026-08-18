@@ -9,46 +9,64 @@
  */
 {
   "sections": {
-    "main": {
-      "type": "melato-living-lookbook-old",
-      "settings": {}
-    },
-    "evidence_20260714": {
-      "type": "melato-living-lookbook-evidence",
+    "living_book": {
+      "type": "melato-living-book",
       "settings": {
-        "archive_label": "CASE FILE 02",
-        "archive_title": "NEW EVIDENCE",
-        "archive_note": "Ninety-one living-study photographs, expanded with thirty-five newly filed frames and presented as a continuous evidence archive.",
-        "case_code": "LL-02",
-        "archive_source": "case02"
+        "section_anchor": "living-book",
+        "eyebrow": "MELATO / LIVING BOOK",
+        "title": "The Living Book",
+        "season": "Season I",
+        "dek": "A cinematic wardrobe archive. Read the scene, inspect the garment, shop the piece.",
+        "cover_note": "The lookbook becomes a digital fashion book: chaptered editorial pacing, verified product routing, and a wardrobe index that lets customers shop without breaking the cinematic mood.",
+        "archive_source": "all",
+        "shop_label": "Shop this frame",
+        "show_prices": true,
+        "show_unlinked_note": false,
+        "chapter_1_title": "The Uniform",
+        "chapter_1_copy": "Tracksuits, repetition, identity and the pieces that make Melato instantly readable.",
+        "chapter_2_title": "Eve's Wardrobe",
+        "chapter_2_copy": "Fitted silhouettes, evening textures and the more intimate side of the wardrobe.",
+        "chapter_3_title": "Objects of Use",
+        "chapter_3_copy": "Bags, accessories, small details and the quiet items that finish a look.",
+        "chapter_4_title": "After Hours",
+        "chapter_4_copy": "The archive becomes darker, more cinematic and closer to memory than product photography.",
+        "index_title": "Shop the archive",
+        "index_copy": "Every verified garment assigned to a Living Book frame is collected here as a clean shopping exit after the editorial experience."
       },
       "blocks": {
         "shop_04": {
           "type": "shoppable_frame",
           "settings": {
             "frame_number": 4,
-            "product": "ojos-velour-track-jacket"
+            "product_one": "ojos-velour-track-jacket",
+            "product_two": "ojos-velour-track-pants",
+            "frame_note": "Verified uniform"
           }
         },
         "shop_18": {
           "type": "shoppable_frame",
           "settings": {
             "frame_number": 9,
-            "product": "the-noir-alibi-lace-corset-dress"
+            "product_one": "noir-alibi-lace-corset-dress",
+            "frame_note": "Verified wardrobe"
           }
         },
         "shop_18b": {
           "type": "shoppable_frame",
           "settings": {
             "frame_number": 18,
-            "product": "the-conquista-premium-velour-track-jacket-by-melato"
+            "product_one": "conquista-velour-track-jacket",
+            "product_two": "conquista-velour-track-pant",
+            "frame_note": "Verified full set"
           }
         },
-        "shop_24b": {
-          "type": "shoppable_frame",
+        "shop_024": {
+          "type": "wardrobe_frame",
           "settings": {
             "frame_number": 24,
-            "product": "the-conquista-premium-velour-track-jacket-by-melato"
+            "product_one": "conquista-velour-track-jacket",
+            "product_two": "conquista-velour-track-pant",
+            "frame_note": "Verified full set"
           }
         }
       },
