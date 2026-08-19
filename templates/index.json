@@ -15,7 +15,7 @@
         "eyebrow": "Melato",
         "heading": "THE CULTURE WEARS US",
         "copy": "Tailored for movement, cut with intent.",
-        "hero_image": "shopify://shop_images/rn-image_picker_lib_temp_e477d527-dd80-4e58-9355-e1c0d7d6249e.jpg",
+        "hero_image": "shopify://shop_images/Melato.ca-_EL_TLB_-FRAME_261.jpg",
         "featured_collection": "new-arrivals"
       }
     },
@@ -67,66 +67,14 @@
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
-        "eyebrow": "Signature",
+        "eyebrow": "Collection",
         "title": "THE UNIFORM",
-        "collection": "tracksuits",
-        "products_to_show": 8,
+        "collection": "frontpage",
+        "products_to_show": 16,
         "columns_desktop": 4,
         "columns_mobile": 2,
         "show_view_all": true,
-        "view_all_label": "Shop the uniform"
-      }
-    },
-    "new_arrivals_home": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Now",
-        "title": "NEW ARRIVALS",
-        "collection": "new-arrivals",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": 2,
-        "show_view_all": true,
-        "view_all_label": "View new arrivals"
-      }
-    },
-    "best_sellers_home": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Most wanted",
-        "title": "BEST SELLERS",
-        "collection": "best-sellers",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": 2,
-        "show_view_all": true,
-        "view_all_label": "View best sellers"
-      }
-    },
-    "womens_home": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Women's edit",
-        "title": "EVE'S WARDROBE",
-        "collection": "womens-zellige-capsule",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": 2,
-        "show_view_all": true,
-        "view_all_label": "Explore Eve's Wardrobe"
-      }
-    },
-    "accessories_home": {
-      "type": "featured-collection",
-      "settings": {
-        "eyebrow": "Finishing pieces",
-        "title": "ACCESSORIES",
-        "collection": "accessories",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "columns_mobile": 2,
-        "show_view_all": true,
-        "view_all_label": "Shop accessories"
+        "view_all_label": "View all"
       }
     },
     "brand_story": {
@@ -159,10 +107,6 @@
     "melato_conversion_2026",
     "ticker",
     "featured_collection",
-    "new_arrivals_home",
-    "best_sellers_home",
-    "womens_home",
-    "accessories_home",
     "brand_story",
     "drop_signup_FMehUL"
   ]
