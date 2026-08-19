@@ -81,7 +81,6 @@ jobs:
               ('"gallery specs"', 'desktop spec placement'),
               ('grid-area: gallery !important;', 'gallery placement'),
               ('grid-area: specs !important;', 'spec placement'),
-              ('cursor: zoom-in;', 'interactive hero image affordance'),
           ):
               require('assets/melato-pdp-layout-2026.css', needle, label)
 
@@ -89,12 +88,18 @@ jobs:
           for needle, label in (
               ('class="pdp-gallery"', 'primary product gallery'),
               ("class: 'pdp-main-image'", 'primary product image'),
+              ('data-pdp-thumb', 'source-rendered gallery controls'),
+              ("mainImage.src=button.getAttribute('data-media-src')", 'source-rendered gallery switching'),
               ('<summary>Story</summary>', 'Story capsule'),
               ('<summary>Construction</summary>', 'Construction capsule'),
               ('<summary>Fit</summary>', 'Fit capsule'),
               ('<summary>Material</summary>', 'Material capsule'),
               ('<summary>Care</summary>', 'Care capsule'),
               ('<summary>Shipping &amp; returns</summary>', 'Shipping & returns capsule'),
+              ('class="pdp-proof-mini"', 'source-rendered purchase reassurance'),
+              ('product.metafields.custom.size_guide.value', 'product-specific size guide source'),
+              ('data-open-size-drawer', 'product-specific size guide trigger'),
+              ("render 'size-guide-drawer', product: product", 'product-specific size guide drawer'),
               ('product.metafields.custom.matching_product.value', 'matching product source'),
               ('product.metafields.custom.set_partner.value', 'set partner fallback'),
               ('class="pdp-panel pdp-set"', 'Complete the Set module'),
@@ -102,15 +107,21 @@ jobs:
               if needle not in pdp:
                   failures.append(f'sections/melato-product-page-rebuild.liquid: missing {label}')
 
+          # P0 stability contract: the retired polish layer stays disabled. Gallery,
+          # fit and reassurance behavior are validated above in the canonical section
+          # instead of reintroducing the observer-driven duplicate runtime.
           polish = text('assets/melato-pdp-polish.js')
-          for needle, label in (
-              ('ensureProductGallery(root);', 'gallery repair'),
-              ('bindMainImageZoom(root);', 'hero image zoom binding'),
-              ('ensurePurchaseReassurance(root);', 'purchase reassurance'),
-              ('ensureFitGuidance(root);', 'fit guidance handoff'),
+          if "melatoPdpPolishRuntime = 'disabled-p0'" not in polish:
+              failures.append('assets/melato-pdp-polish.js: P0 disabled runtime marker missing')
+          for forbidden, label in (
+              ('ensureProductGallery(', 'duplicate gallery runtime'),
+              ('bindMainImageZoom(', 'retired hero zoom runtime'),
+              ('ensurePurchaseReassurance(', 'client-side reassurance injection'),
+              ('ensureFitGuidance(', 'client-side fit injection'),
+              ('new MutationObserver', 'PDP mutation observer'),
           ):
-              if needle not in polish:
-                  failures.append(f'assets/melato-pdp-polish.js: missing {label}')
+              if forbidden in polish:
+                  failures.append(f'assets/melato-pdp-polish.js: forbidden {label} returned')
 
           # Default product template has exactly one Melato renderer and no review app embeds.
           product_template = text('templates/product.json')
