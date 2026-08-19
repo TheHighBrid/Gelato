@@ -122,5 +122,37 @@
       document.addEventListener('shopify:section:load', function (event) { initMelatoHeroVideo(event.target); });
     })();
   </script>
+  <script>
+    (function () {
+      var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (connection && (connection.saveData || /2g/.test(connection.effectiveType || ''))) return;
+      var budget = 2;
+      var seen = new Set();
+      var timer;
+      function warm(anchor) {
+        if (!anchor || budget < 1) return;
+        var url;
+        try { url = new URL(anchor.href, window.location.href); } catch (error) { return; }
+        if (url.origin !== window.location.origin || !/\/products\//.test(url.pathname) || seen.has(url.href)) return;
+        seen.add(url.href);
+        budget -= 1;
+        var link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.as = 'document';
+        link.href = url.href;
+        document.head.appendChild(link);
+      }
+      document.addEventListener('pointerover', function (event) {
+        var anchor = event.target.closest && event.target.closest('a[href*="/products/"]');
+        if (!anchor) return;
+        clearTimeout(timer);
+        timer = setTimeout(function () { warm(anchor); }, 120);
+      }, { passive: true });
+      document.addEventListener('focusin', function (event) {
+        var anchor = event.target.closest && event.target.closest('a[href*="/products/"]');
+        if (anchor) warm(anchor);
+      });
+    })();
+  </script>
 </body>
 </html>

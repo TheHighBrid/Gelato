@@ -129,15 +129,31 @@ jobs:
               require('assets/melato-cart-drawer.js', needle)
           ban('assets/melato-cart-drawer.js', '"$"+(Number(cents||0)/100)', 'hard-coded dollar fallback')
 
-          # PDP polish may enhance interaction but must never conceal missing source data.
-          for needle in ('Complimentary delivery', 'Secure checkout', 'Eligible returns', '/pages/size-guide'):
-              require('assets/melato-pdp-polish.js', needle)
+          # The consolidated PDP owns source-rendered trust/returns and fit handoff.
+          # The former polish runtime is intentionally disabled after the P0 freeze
+          # incident and must not regain observer-driven gallery/zoom/UI mutation.
           for needle in (
+              'class="pdp-proof-mini"',
+              '<strong>Returns</strong>',
+              '<summary>Shipping &amp; returns</summary>',
+              'product.metafields.custom.size_guide.value',
+              'data-open-size-drawer',
+              "render 'size-guide-drawer', product: product",
+          ):
+              require('sections/melato-product-page-rebuild.liquid', needle, 'source-rendered PDP trust/fit contract')
+
+          require('assets/melato-pdp-polish.js', "melatoPdpPolishRuntime = 'disabled-p0'", 'P0 disabled PDP polish marker')
+          for needle in (
+              'ensureProductGallery(',
+              'bindMainImageZoom(',
+              'ensurePurchaseReassurance(',
+              'ensureFitGuidance(',
+              'new MutationObserver',
               'Exact fibre percentage is not published yet',
               'to be confirmed|tbd|not provided|information unavailable|details unavailable',
               'dynamicCompleteSet',
           ):
-              ban('assets/melato-pdp-polish.js', needle, 'client-side catalog data scrubber')
+              ban('assets/melato-pdp-polish.js', needle, 'retired/client-side PDP mutation runtime')
 
           # Reviews are intentionally removed from the default PDP.
           for needle in ('judge_me_reviews', 'shopify://apps/judge-me', 'jdgm-widget'):
