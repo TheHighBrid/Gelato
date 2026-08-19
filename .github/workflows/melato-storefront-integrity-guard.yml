@@ -102,15 +102,32 @@ jobs:
               if needle not in pdp:
                   failures.append(f'sections/melato-product-page-rebuild.liquid: missing {label}')
 
+          # The former polish runtime caused a PDP stability incident and can be
+          # intentionally disabled. In P0 mode the server-rendered PDP owns the
+          # gallery, purchase reassurance and fit interactions. Outside P0 mode,
+          # the enhancement runtime must still install its normal routines.
           polish = text('assets/melato-pdp-polish.js')
-          for needle, label in (
-              ('ensureProductGallery(root);', 'gallery repair'),
-              ('bindMainImageZoom(root);', 'hero image zoom binding'),
-              ('ensurePurchaseReassurance(root);', 'purchase reassurance'),
-              ('ensureFitGuidance(root);', 'fit guidance handoff'),
-          ):
-              if needle not in polish:
-                  failures.append(f'assets/melato-pdp-polish.js: missing {label}')
+          safe_mode = 'P0 commerce-safe PDP mode' in polish and "melatoPdpPolishRuntime = 'disabled-p0'" in polish
+          if safe_mode:
+              for needle, label in (
+                  ('data-pdp-thumb', 'server-rendered gallery controls'),
+                  ("class: 'pdp-main-image'", 'server-rendered hero image'),
+                  ('class="pdp-proof-mini"', 'server-rendered purchase reassurance'),
+                  ('data-open-size-drawer', 'server-rendered fit guidance handoff'),
+              ):
+                  if needle not in pdp:
+                      failures.append(f'sections/melato-product-page-rebuild.liquid: P0 ownership missing {label}')
+              if 'MutationObserver' in polish:
+                  failures.append('assets/melato-pdp-polish.js: P0 safe mode must remain observer-free')
+          else:
+              for needle, label in (
+                  ('ensureProductGallery(root);', 'gallery repair'),
+                  ('bindMainImageZoom(root);', 'hero image zoom binding'),
+                  ('ensurePurchaseReassurance(root);', 'purchase reassurance'),
+                  ('ensureFitGuidance(root);', 'fit guidance handoff'),
+              ):
+                  if needle not in polish:
+                      failures.append(f'assets/melato-pdp-polish.js: missing {label}')
 
           # PDP disclosure state belongs to the shopper. Product runtime code must not
           # force-close Construction, Fit, Material, Care, or Shipping disclosures.
