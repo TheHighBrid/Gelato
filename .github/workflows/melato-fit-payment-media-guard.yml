@@ -44,11 +44,23 @@ jobs:
           if 'Legacy global size-guide output intentionally disabled.' not in modal:
               failures.append('snippets/size-guide-modal.liquid: legacy global size modal was re-enabled')
 
-          # Fit handoff belongs on the PDP where the buying decision happens.
+          # PDP fit ownership has two valid modes:
+          # 1. Normal polish runtime, where the enhancement layer installs the handoff.
+          # 2. P0 commerce-safe mode, where the enhancement layer is intentionally inert
+          #    and the server-rendered consolidated PDP owns product-specific fit UI.
           polish = read('assets/melato-pdp-polish.js')
-          for required in ('ensureFitGuidance(root);', '/pages/size-guide', 'Fit guidance and measurement policy'):
-              if required not in polish:
-                  failures.append(f'assets/melato-pdp-polish.js: PDP fit-guidance contract missing: {required!r}')
+          safe_mode = 'P0 commerce-safe PDP mode' in polish and "melatoPdpPolishRuntime = 'disabled-p0'" in polish
+          if safe_mode:
+              pdp_fit = read('sections/melato-product-page-rebuild.liquid')
+              for required in ('data-open-size-drawer', 'Product measurements', '<summary>Fit</summary>'):
+                  if required not in pdp_fit:
+                      failures.append(f'sections/melato-product-page-rebuild.liquid: P0 fit ownership missing: {required!r}')
+              if 'MutationObserver' in polish:
+                  failures.append('assets/melato-pdp-polish.js: P0 safe mode must remain observer-free')
+          else:
+              for required in ('ensureFitGuidance(root);', '/pages/size-guide', 'Fit guidance and measurement policy'):
+                  if required not in polish:
+                      failures.append(f'assets/melato-pdp-polish.js: PDP fit-guidance contract missing: {required!r}')
 
           # Default and compatibility PDPs stay on the consolidated renderer and
           # do not surface accelerated-wallet brand UI inside the product template.
