@@ -112,6 +112,26 @@ jobs:
               if needle not in polish:
                   failures.append(f'assets/melato-pdp-polish.js: missing {label}')
 
+          # PDP disclosure state belongs to the shopper. Product runtime code must not
+          # force-close Construction, Fit, Material, Care, or Shipping disclosures.
+          disclosure_close_patterns = (
+              re.compile(r"template-product.{0,240}details.{0,240}removeAttribute\(\s*['\"]open['\"]\s*\)", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}removeAttribute\(\s*['\"]open['\"]\s*\)", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}\.open\s*=\s*false", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}toggleAttribute\(\s*['\"]open['\"]\s*,\s*false\s*\)", re.I | re.S),
+          )
+          for js_file in sorted(Path('assets').glob('*.js')):
+              source = js_file.read_text()
+              for pattern in disclosure_close_patterns:
+                  if pattern.search(source):
+                      failures.append(f'{js_file}: forbidden PDP force-close behavior detected')
+
+          cleanup = text('assets/melato-site-cleanup-20260811.js')
+          if 'PDP disclosure state is user-owned' not in cleanup:
+              failures.append('assets/melato-site-cleanup-20260811.js: PDP disclosure ownership contract is missing')
+          if "if(document.body.matches('.template-product'))return;" not in cleanup:
+              failures.append('assets/melato-site-cleanup-20260811.js: product pages must be excluded from the document-wide cleanup observer')
+
           # Default product template has exactly one Melato renderer and no review app embeds.
           product_template = text('templates/product.json')
           if product_template.count('melato-product-page-rebuild') != 1:
