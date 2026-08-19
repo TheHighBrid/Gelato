@@ -129,9 +129,22 @@ jobs:
               require('assets/melato-cart-drawer.js', needle)
           ban('assets/melato-cart-drawer.js', '"$"+(Number(cents||0)/100)', 'hard-coded dollar fallback')
 
-          # PDP polish may enhance interaction but must never conceal missing source data.
-          for needle in ('Complimentary delivery', 'Secure checkout', 'Eligible returns', '/pages/size-guide'):
-              require('assets/melato-pdp-polish.js', needle)
+          # PDP polish may enhance interaction, but P0 stability mode intentionally
+          # disables that enhancement layer. In safe mode the server-rendered PDP owns
+          # the shopper-facing trust and fit surfaces, and the polish file must remain inert.
+          polish = read('assets/melato-pdp-polish.js')
+          safe_mode = 'P0 commerce-safe PDP mode' in polish and "melatoPdpPolishRuntime = 'disabled-p0'" in polish
+          if safe_mode:
+              for needle in ('P0 commerce-safe PDP mode', "melatoPdpPolishRuntime = 'disabled-p0'"):
+                  require('assets/melato-pdp-polish.js', needle)
+              for needle in ('MutationObserver', 'ensureProductGallery(root);', 'bindMainImageZoom(root);'):
+                  ban('assets/melato-pdp-polish.js', needle, 'active P0 polish behavior')
+              for needle in ('class="pdp-proof-mini"', '<summary>Shipping &amp; returns</summary>', 'data-open-size-drawer'):
+                  require('sections/melato-product-page-rebuild.liquid', needle, 'server-rendered P0 PDP contract')
+              require('templates/page.size-guide.liquid', 'Fit is product-specific.', 'fit guidance policy')
+          else:
+              for needle in ('Complimentary delivery', 'Secure checkout', 'Eligible returns', '/pages/size-guide'):
+                  require('assets/melato-pdp-polish.js', needle)
           for needle in (
               'Exact fibre percentage is not published yet',
               'to be confirmed|tbd|not provided|information unavailable|details unavailable',
