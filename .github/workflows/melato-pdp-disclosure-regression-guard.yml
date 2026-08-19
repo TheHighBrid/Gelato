@@ -1,0 +1,64 @@
+name: Melato PDP disclosure regression guard
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  pdp-disclosure-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Protect PDP disclosure state
+        shell: python
+        run: |
+          import re
+          from pathlib import Path
+
+          failures = []
+
+          pdp = Path('sections/melato-product-page-rebuild.liquid')
+          if not pdp.exists():
+              failures.append('Canonical PDP section is missing.')
+          else:
+              source = pdp.read_text()
+              for label in ('Construction', 'Fit', 'Material', 'Care', 'Shipping &amp; returns'):
+                  if f'<summary>{label}</summary>' not in source:
+                      failures.append(f'Canonical PDP is missing the {label} disclosure.')
+
+          # The native <details> open state belongs to the shopper. No global cleanup,
+          # observer, audit patch, or enhancement runtime may force-close PDP disclosures.
+          dangerous_patterns = (
+              re.compile(r"template-product.{0,240}details.{0,240}removeAttribute\(\s*['\"]open['\"]\s*\)", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}removeAttribute\(\s*['\"]open['\"]\s*\)", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}\.open\s*=\s*false", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}toggleAttribute\(\s*['\"]open['\"]\s*,\s*false\s*\)", re.I | re.S),
+          )
+
+          for js_file in sorted(Path('assets').glob('*.js')):
+              source = js_file.read_text()
+              for pattern in dangerous_patterns:
+                  if pattern.search(source):
+                      failures.append(f'{js_file}: forbidden PDP force-close behavior detected: {pattern.pattern}')
+
+          cleanup = Path('assets/melato-site-cleanup-20260811.js')
+          if cleanup.exists():
+              source = cleanup.read_text()
+              if "body.template-product details" in source and "removeAttribute('open')" in source:
+                  failures.append('assets/melato-site-cleanup-20260811.js: legacy force-close regression returned.')
+              if 'PDP disclosure state is user-owned' not in source:
+                  failures.append('assets/melato-site-cleanup-20260811.js: PDP disclosure ownership contract is missing.')
+
+          if failures:
+              print('PDP disclosure regression failures:')
+              for failure in failures:
+                  print(' -', failure)
+              raise SystemExit(1)
+
+          print('PDP disclosure regression guard passed.')
