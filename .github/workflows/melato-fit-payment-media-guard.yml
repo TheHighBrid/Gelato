@@ -44,15 +44,28 @@ jobs:
           if 'Legacy global size-guide output intentionally disabled.' not in modal:
               failures.append('snippets/size-guide-modal.liquid: legacy global size modal was re-enabled')
 
-          # Fit handoff belongs on the PDP where the buying decision happens.
+          # Fit guidance belongs in the consolidated, source-rendered PDP. The
+          # emergency P0 polish runtime must remain disabled so it cannot re-add
+          # the observer cascade involved in the product-page freeze incident.
+          pdp = read('sections/melato-product-page-rebuild.liquid')
+          for required in (
+              'product.metafields.custom.size_guide.value',
+              'data-open-size-drawer',
+              "render 'size-guide-drawer', product: product",
+              '<summary>Fit</summary>',
+          ):
+              if required not in pdp:
+                  failures.append(f'sections/melato-product-page-rebuild.liquid: PDP fit contract missing: {required!r}')
+
           polish = read('assets/melato-pdp-polish.js')
-          for required in ('ensureFitGuidance(root);', '/pages/size-guide', 'Fit guidance and measurement policy'):
-              if required not in polish:
-                  failures.append(f'assets/melato-pdp-polish.js: PDP fit-guidance contract missing: {required!r}')
+          if "melatoPdpPolishRuntime = 'disabled-p0'" not in polish:
+              failures.append('assets/melato-pdp-polish.js: P0 disabled runtime marker missing')
+          for banned in ('ensureFitGuidance(', 'new MutationObserver'):
+              if banned in polish:
+                  failures.append(f'assets/melato-pdp-polish.js: retired fit runtime returned: {banned!r}')
 
           # Default and compatibility PDPs stay on the consolidated renderer and
           # do not surface accelerated-wallet brand UI inside the product template.
-          pdp = read('sections/melato-product-page-rebuild.liquid')
           for banned in ('payment_button', 'content_for_additional_checkout_buttons'):
               if banned in pdp:
                   failures.append(f'sections/melato-product-page-rebuild.liquid: accelerated checkout surface returned: {banned!r}')
