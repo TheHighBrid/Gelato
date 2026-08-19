@@ -40,6 +40,17 @@
     const header = document.querySelector('.site-header, .mxh, [data-mxh]');
     if (!header) return;
 
+    /* The current Melato header is intentionally persistent. Legacy auto-hide
+       behavior made the header disappear on downward mobile scroll. */
+    if (header.matches('.mxh, [data-mxh]')) {
+      header.classList.remove('hidden', 'site-header--hidden');
+      window.addEventListener('scroll', () => {
+        header.classList.remove('hidden', 'site-header--hidden');
+        header.classList.toggle('is-scrolled', window.scrollY > 8);
+      }, { passive: true });
+      return;
+    }
+
     let lastScroll = window.pageYOffset || 0;
     window.addEventListener('scroll', () => {
       const currentScroll = window.pageYOffset || 0;

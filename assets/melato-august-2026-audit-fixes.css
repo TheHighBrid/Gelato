@@ -8,6 +8,15 @@
   display: none !important;
 }
 
+/* Preserve the homepage hero content and CTAs while removing any opaque panel styling. */
+.melato-home-clean .melato-home-clean__header {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
 /* Prevent semantic text nodes from reading as one unbroken sentence. */
 .pdp-trust-row,
 [class*="product"] [class*="trust-row"],
