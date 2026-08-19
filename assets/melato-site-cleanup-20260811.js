@@ -23,7 +23,7 @@
   function cleanup(){
     document.querySelectorAll('.cart-upsell').forEach(x=>{if(!x.querySelector('.upsell-card,[data-upsell-track]>*'))x.remove()});
     document.querySelectorAll('#cart-drawer a[data-cart-close][href]').forEach(a=>a.removeAttribute('data-cart-close'));
-    document.querySelectorAll('body.template-product details').forEach(d=>d.removeAttribute('open'));
+    // PDP disclosure state is user-owned. Never force-close product <details> here.
     document.querySelectorAll('body.template-product .pdp-sticky-atc').forEach(s=>{if(s.querySelector('button[disabled],.pdp-atc--oos'))s.remove()});
   }
   function run(){header();cards();sync();cleanup();savedPage()}
