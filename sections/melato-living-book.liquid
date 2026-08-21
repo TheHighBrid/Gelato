@@ -3,85 +3,87 @@
   assign source = section.settings.archive_source | default: 'all'
   assign season = section.settings.season | default: 'Season I'
   assign shop_label = section.settings.shop_label | default: 'Shop this frame'
+
+  if source == 'case02'
+    capture manifest
+      render 'melato-living-lookbook-evidence-data'
+      echo '~'
+      render 'melato-living-lookbook-evidence-case02-additions'
+    endcapture
+  elsif source == 'case03'
+    capture manifest
+      render 'melato-living-lookbook-evidence-case03-data'
+    endcapture
+  else
+    capture manifest
+      render 'melato-living-lookbook-evidence-data'
+      echo '~'
+      render 'melato-living-lookbook-evidence-case02-additions'
+      echo '~'
+      render 'melato-living-lookbook-evidence-case03-data'
+    endcapture
+  endif
+
+  assign records = manifest | strip | split: '~'
+  assign cover_fields = records.first | strip | split: '|'
+  assign cover_image = cover_fields[0] | strip
+  assign title_words = section.settings.title | split: ' '
 %}
 
-{% capture manifest %}
-  {% if source == 'case02' %}
-    {% render 'melato-living-lookbook-evidence-data' %}~{% render 'melato-living-lookbook-evidence-case02-additions' %}
-  {% elsif source == 'case03' %}
-    {% render 'melato-living-lookbook-evidence-case03-data' %}
-  {% else %}
-    {% render 'melato-living-lookbook-evidence-data' %}~{% render 'melato-living-lookbook-evidence-case02-additions' %}~{% render 'melato-living-lookbook-evidence-case03-data' %}
-  {% endif %}
-{% endcapture %}
-{% assign records = manifest | strip | split: '~' %}
+{{ 'melato-living-book.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'melato-living-book.js' | asset_url }}" defer="defer"></script>
 
 <section id="{{ anchor | escape }}" class="mlb" data-melato-living-book>
-  <style>
-    #shopify-section-{{ section.id }}{background:#080706;color:#f5ecde}
-    #shopify-section-{{ section.id }} .mlb{--bone:#f5ecde;--paper:#deceb4;--line:rgba(245,236,222,.16);--gold:#b49a63;--ink:#080706;--cream:#f2e8d8;background:radial-gradient(circle at 12% 0,rgba(80,23,28,.5),transparent 34rem),linear-gradient(180deg,#080706,#17110d 52%,#080706);color:var(--bone);overflow:clip}
-    #shopify-section-{{ section.id }} .mlb-cover{min-height:82vh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(18rem,.8fr);gap:clamp(2rem,5vw,5rem);align-items:end;padding:clamp(4rem,8vw,7rem) clamp(1rem,5vw,6rem);border-bottom:1px solid var(--line);position:relative}
-    #shopify-section-{{ section.id }} .mlb-cover:before{content:"";position:absolute;inset:1rem;border:1px solid rgba(245,236,222,.12);pointer-events:none}
-    #shopify-section-{{ section.id }} .mlb-eyebrow,#shopify-section-{{ section.id }} .mlb-small{display:block;text-transform:uppercase;letter-spacing:.22em;font-size:.68rem;color:var(--gold)}
-    #shopify-section-{{ section.id }} .mlb-title{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(4rem,12vw,11rem);line-height:.82;letter-spacing:-.07em;text-transform:uppercase;margin:.7rem 0 0}
-    #shopify-section-{{ section.id }} .mlb-season{display:block;margin-top:1rem;font:700 clamp(.9rem,1.6vw,1.25rem)/1.2 inherit;letter-spacing:.3em;color:var(--paper)}
-    #shopify-section-{{ section.id }} .mlb-copy{max-width:42rem;color:rgba(245,236,222,.68);font-size:clamp(1rem,1.4vw,1.18rem);line-height:1.7;margin:1.4rem 0 0}
-    #shopify-section-{{ section.id }} .mlb-panel{border:1px solid var(--line);background:rgba(245,236,222,.06);padding:clamp(1.1rem,3vw,2rem);backdrop-filter:blur(14px);position:relative;z-index:1}
-    #shopify-section-{{ section.id }} .mlb-panel p{line-height:1.7;color:var(--paper);margin:1rem 0 0}
-    #shopify-section-{{ section.id }} .mlb-link{display:inline-flex;margin-top:1.35rem;color:var(--bone);text-decoration:none;text-transform:uppercase;letter-spacing:.16em;font-size:.68rem;border-bottom:1px solid currentColor;padding-bottom:.35rem}
-    #shopify-section-{{ section.id }} .mlb-nav{position:sticky;top:0;z-index:5;display:flex;gap:.55rem;overflow-x:auto;padding:.8rem clamp(1rem,5vw,6rem);background:rgba(8,7,6,.88);border-bottom:1px solid var(--line);backdrop-filter:blur(16px);scrollbar-width:none}
-    #shopify-section-{{ section.id }} .mlb-nav::-webkit-scrollbar{display:none}
-    #shopify-section-{{ section.id }} .mlb-nav a{white-space:nowrap;text-decoration:none;color:var(--bone);border:1px solid var(--line);border-radius:999px;padding:.65rem .9rem;text-transform:uppercase;letter-spacing:.13em;font-size:.64rem}
-    #shopify-section-{{ section.id }} .mlb-chapter{padding:clamp(3rem,7vw,6rem) clamp(1rem,5vw,6rem);border-bottom:1px solid var(--line)}
-    #shopify-section-{{ section.id }} .mlb-chapter-head{max-width:70rem;margin:0 auto clamp(2rem,5vw,4rem);display:grid;grid-template-columns:.75fr 1fr;gap:clamp(1.5rem,4vw,4rem);align-items:end}
-    #shopify-section-{{ section.id }} .mlb-chapter-head h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(2.8rem,7vw,6.7rem);line-height:.86;letter-spacing:-.055em;text-transform:uppercase;margin:.6rem 0 0}
-    #shopify-section-{{ section.id }} .mlb-chapter-head p{color:rgba(245,236,222,.68);line-height:1.7;margin:0;max-width:40rem}
-    #shopify-section-{{ section.id }} .mlb-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(.8rem,1.7vw,1.3rem);align-items:start}
-    #shopify-section-{{ section.id }} .mlb-frame{grid-column:span 4;margin:0;min-width:0}
-    #shopify-section-{{ section.id }} .mlb-frame.is-hero{grid-column:span 7}#shopify-section-{{ section.id }} .mlb-frame.is-wide{grid-column:span 8}#shopify-section-{{ section.id }} .mlb-frame.is-tall{grid-column:span 5}#shopify-section-{{ section.id }} .mlb-frame.is-detail{grid-column:span 3}
-    #shopify-section-{{ section.id }} .mlb-media{position:relative;overflow:hidden;border:1px solid var(--line);background:#120f0c;box-shadow:0 1.5rem 4rem rgba(0,0,0,.32)}
-    #shopify-section-{{ section.id }} .mlb-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.64));pointer-events:none}
-    #shopify-section-{{ section.id }} .mlb-media img{display:block;width:100%;height:auto;filter:saturate(.94) contrast(1.02);transition:transform .5s ease}
-    #shopify-section-{{ section.id }} .mlb-frame:hover img{transform:scale(1.024)}
-    #shopify-section-{{ section.id }} .mlb-caption{position:absolute;left:.8rem;right:.8rem;bottom:.8rem;z-index:2;display:flex;justify-content:space-between;gap:.8rem;align-items:end;pointer-events:none}
-    #shopify-section-{{ section.id }} .mlb-num{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(2rem,4vw,3.7rem);line-height:.8}#shopify-section-{{ section.id }} .mlb-kind{text-transform:uppercase;letter-spacing:.16em;font-size:.6rem;color:var(--paper);text-align:right}
-    #shopify-section-{{ section.id }} .mlb-shop{margin-top:.7rem;border:1px solid var(--line);background:rgba(245,236,222,.055)}
-    #shopify-section-{{ section.id }} .mlb-shop summary{cursor:pointer;list-style:none;padding:.85rem 1rem;text-transform:uppercase;letter-spacing:.15em;font-size:.66rem;color:var(--bone);display:flex;justify-content:space-between}
-    #shopify-section-{{ section.id }} .mlb-shop summary::-webkit-details-marker{display:none}#shopify-section-{{ section.id }} .mlb-shop summary:after{content:"↗";color:var(--gold)}
-    #shopify-section-{{ section.id }} .mlb-products{padding:0 1rem 1rem;display:grid;gap:.55rem}
-    #shopify-section-{{ section.id }} .mlb-product{display:grid;grid-template-columns:3.2rem minmax(0,1fr) auto;gap:.7rem;align-items:center;color:var(--bone);text-decoration:none;border-top:1px solid var(--line);padding-top:.65rem}
-    #shopify-section-{{ section.id }} .mlb-product img{width:3.2rem;height:4rem;object-fit:cover;border:1px solid var(--line)}
-    #shopify-section-{{ section.id }} .mlb-product strong{display:block;font-size:.86rem;line-height:1.18}#shopify-section-{{ section.id }} .mlb-price{display:block;margin-top:.18rem;color:rgba(245,236,222,.62);font-size:.72rem}#shopify-section-{{ section.id }} .mlb-cta{text-transform:uppercase;letter-spacing:.13em;font-size:.6rem;color:var(--gold);white-space:nowrap}
-    #shopify-section-{{ section.id }} .mlb-note{color:rgba(245,236,222,.52);text-transform:uppercase;letter-spacing:.12em;font-size:.62rem}
-    #shopify-section-{{ section.id }} .mlb-index{background:var(--cream);color:#111;padding:clamp(3rem,7vw,6rem) clamp(1rem,5vw,6rem)}
-    #shopify-section-{{ section.id }} .mlb-index-inner{max-width:72rem;margin:0 auto;display:grid;grid-template-columns:.75fr 1.25fr;gap:clamp(1.5rem,5vw,5rem)}
-    #shopify-section-{{ section.id }} .mlb-index h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(2.8rem,7vw,6.5rem);line-height:.86;letter-spacing:-.055em;text-transform:uppercase;margin:.6rem 0 1rem}
-    #shopify-section-{{ section.id }} .mlb-index p{color:rgba(17,17,17,.68);line-height:1.7}#shopify-section-{{ section.id }} .mlb-index-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}#shopify-section-{{ section.id }} .mlb-index-link{min-height:7rem;display:flex;flex-direction:column;justify-content:space-between;color:#111;text-decoration:none;border:1px solid rgba(17,17,17,.16);padding:1rem;background:rgba(255,255,255,.35)}#shopify-section-{{ section.id }} .mlb-index-link small{text-transform:uppercase;letter-spacing:.14em;font-size:.62rem;color:rgba(17,17,17,.58)}
-    #shopify-section-{{ section.id }} .mlb-close{background:var(--cream);color:rgba(17,17,17,.62);display:flex;justify-content:space-between;gap:1rem;padding:2rem clamp(1rem,5vw,6rem);text-transform:uppercase;letter-spacing:.15em;font-size:.66rem;border-top:1px solid rgba(17,17,17,.12)}
-    @media(max-width:989px){#shopify-section-{{ section.id }} .mlb-cover,#shopify-section-{{ section.id }} .mlb-chapter-head,#shopify-section-{{ section.id }} .mlb-index-inner{grid-template-columns:1fr}#shopify-section-{{ section.id }} .mlb-grid{grid-template-columns:repeat(6,minmax(0,1fr))}#shopify-section-{{ section.id }} .mlb-frame,#shopify-section-{{ section.id }} .mlb-frame.is-hero,#shopify-section-{{ section.id }} .mlb-frame.is-wide,#shopify-section-{{ section.id }} .mlb-frame.is-tall{grid-column:span 3}#shopify-section-{{ section.id }} .mlb-frame.is-detail{grid-column:span 2}}
-    @media(max-width:640px){#shopify-section-{{ section.id }} .mlb-cover{min-height:74vh;padding-top:4rem}#shopify-section-{{ section.id }} .mlb-grid{display:block}#shopify-section-{{ section.id }} .mlb-frame{margin-bottom:1.1rem}#shopify-section-{{ section.id }} .mlb-index-grid{grid-template-columns:1fr}#shopify-section-{{ section.id }} .mlb-product{grid-template-columns:2.9rem minmax(0,1fr)}#shopify-section-{{ section.id }} .mlb-cta{grid-column:2}#shopify-section-{{ section.id }} .mlb-close{display:grid}}
-  </style>
+  <header class="mlb-cover" data-mlb-reveal>
+    {% if cover_image != blank %}
+      <div class="mlb-cover-image" aria-hidden="true">
+        <img
+          src="{{ cover_image | append: '&width=2000' | escape }}"
+          srcset="{{ cover_image | append: '&width=900' | escape }} 900w, {{ cover_image | append: '&width=1400' | escape }} 1400w, {{ cover_image | append: '&width=2000' | escape }} 2000w"
+          sizes="100vw"
+          width="{{ cover_fields[1] | strip }}"
+          height="{{ cover_fields[2] | strip }}"
+          alt=""
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        >
+      </div>
+    {% endif %}
 
-  <div class="mlb-cover">
-    <div>
-      <span class="mlb-eyebrow">{{ section.settings.eyebrow | escape }}</span>
-      <h1 class="mlb-title">{{ section.settings.title | escape }}<span class="mlb-season">{{ season | escape }}</span></h1>
-      <p class="mlb-copy">{{ section.settings.dek | escape }}</p>
-      <a class="mlb-link" href="#MLBChapter1-{{ section.id }}">Enter the book ↓</a>
+    <div class="mlb-cover-grid">
+      <div class="mlb-cover-copy">
+        <p class="mlb-kicker">{{ section.settings.eyebrow | escape }}</p>
+        <h1 class="mlb-title">
+          {% for word in title_words %}
+            {% if forloop.index == 2 %}<span class="mlb-title-accent">{{ word | escape }}</span>{% else %}{{ word | escape }}{% unless forloop.last %} {% endunless %}{% endif %}
+          {% endfor %}
+        </h1>
+        <span class="mlb-season">{{ season | escape }} · Digital wardrobe archive</span>
+        <p class="mlb-dek">{{ section.settings.dek | escape }}</p>
+        <div class="mlb-cover-actions">
+          <button class="mlb-button" type="button" data-mlb-scroll="#MLBChapter1-{{ section.id }}">Begin the story</button>
+          <a class="mlb-text-link" href="#MLBIndex-{{ section.id }}">Wardrobe index ↗</a>
+        </div>
+      </div>
+
+      <aside class="mlb-cover-note">
+        <span class="mlb-overline">Read / Inspect / Acquire</span>
+        <p>{{ section.settings.cover_note | escape }}</p>
+        <a class="mlb-text-link" href="#MLBIndex-{{ section.id }}">Open the archive ↗</a>
+      </aside>
     </div>
-    <aside class="mlb-panel">
-      <span class="mlb-small">Digital wardrobe archive</span>
-      <p>{{ section.settings.cover_note | escape }}</p>
-      <a class="mlb-link" href="#MLBIndex-{{ section.id }}">Open wardrobe index ↗</a>
-    </aside>
-  </div>
 
-  <nav class="mlb-nav" aria-label="Living Book chapters">
-    <a href="#MLBChapter1-{{ section.id }}">01 The Uniform</a>
-    <a href="#MLBChapter2-{{ section.id }}">02 Eve's Wardrobe</a>
-    <a href="#MLBChapter3-{{ section.id }}">03 Objects of Use</a>
-    <a href="#MLBChapter4-{{ section.id }}">04 After Hours</a>
-    <a href="#MLBIndex-{{ section.id }}">Wardrobe Index</a>
+    <div class="mlb-progress" aria-hidden="true"><span></span></div>
+  </header>
+
+  <nav class="mlb-dossier" aria-label="Living Book chapters">
+    <span class="mlb-dossier-label mlb-kicker">Case index</span>
+    <a class="mlb-dossier-link is-current" href="#MLBChapter1-{{ section.id }}" data-mlb-scroll="#MLBChapter1-{{ section.id }}">01 / {{ section.settings.chapter_1_title | escape }}</a>
+    <a class="mlb-dossier-link" href="#MLBChapter2-{{ section.id }}" data-mlb-scroll="#MLBChapter2-{{ section.id }}">02 / {{ section.settings.chapter_2_title | escape }}</a>
+    <a class="mlb-dossier-link" href="#MLBChapter3-{{ section.id }}" data-mlb-scroll="#MLBChapter3-{{ section.id }}">03 / {{ section.settings.chapter_3_title | escape }}</a>
+    <a class="mlb-dossier-link" href="#MLBChapter4-{{ section.id }}" data-mlb-scroll="#MLBChapter4-{{ section.id }}">04 / {{ section.settings.chapter_4_title | escape }}</a>
+    <a class="mlb-dossier-link" href="#MLBIndex-{{ section.id }}" data-mlb-scroll="#MLBIndex-{{ section.id }}">Wardrobe index</a>
   </nav>
 
   {% for chapter in (1..4) %}
@@ -91,31 +93,40 @@
         assign end_frame = 12
         assign chapter_title = section.settings.chapter_1_title
         assign chapter_copy = section.settings.chapter_1_copy
-        assign chapter_label = 'Chapter 01'
       elsif chapter == 2
         assign start_frame = 13
         assign end_frame = 30
         assign chapter_title = section.settings.chapter_2_title
         assign chapter_copy = section.settings.chapter_2_copy
-        assign chapter_label = 'Chapter 02'
       elsif chapter == 3
         assign start_frame = 31
         assign end_frame = 48
         assign chapter_title = section.settings.chapter_3_title
         assign chapter_copy = section.settings.chapter_3_copy
-        assign chapter_label = 'Chapter 03'
       else
         assign start_frame = 49
         assign end_frame = 999
         assign chapter_title = section.settings.chapter_4_title
         assign chapter_copy = section.settings.chapter_4_copy
-        assign chapter_label = 'Chapter 04'
       endif
+      capture chapter_code
+        if chapter < 10
+          echo '0'
+        endif
+        echo chapter
+      endcapture
     %}
-    <section id="MLBChapter{{ chapter }}-{{ section.id }}" class="mlb-chapter">
-      <header class="mlb-chapter-head">
-        <div><span class="mlb-small">{{ chapter_label }}</span><h2>{{ chapter_title | escape }}</h2></div>
-        <p>{{ chapter_copy | escape }}</p>
+
+    <section id="MLBChapter{{ chapter }}-{{ section.id }}" class="mlb-chapter" data-chapter-number="{{ chapter_code | strip }}" data-mlb-chapter>
+      <header class="mlb-chapter-intro" data-mlb-reveal>
+        <div>
+          <span class="mlb-overline mlb-chapter-number">Chapter {{ chapter_code | strip }}</span>
+          <h2 class="mlb-chapter-title">{{ chapter_title | escape }}</h2>
+        </div>
+        <div>
+          <p class="mlb-chapter-copy">{{ chapter_copy | escape }}</p>
+          <span class="mlb-chapter-meta mlb-kicker">A visual correspondence / {{ season | escape }}</span>
+        </div>
       </header>
 
       <div class="mlb-grid" role="list">
@@ -126,44 +137,100 @@
           {% assign frame_number = forloop.index %}
           {% if frame_number < start_frame or frame_number > end_frame %}{% continue %}{% endif %}
 
-          {% assign image_width = fields[1] | strip %}
-          {% assign image_height = fields[2] | strip %}
-          {% assign image_kind = fields[3] | strip | default: 'study' %}
-          {% assign p1 = blank %}{% assign p2 = blank %}{% assign p3 = blank %}{% assign frame_note = blank %}
-          {% for block in section.blocks %}
-            {% assign mapped_frame = block.settings.frame_number | plus: 0 %}
-            {% if mapped_frame == frame_number %}
-              {% assign p1 = block.settings.product_one %}
-              {% assign p2 = block.settings.product_two %}
-              {% assign p3 = block.settings.product_three %}
-              {% assign frame_note = block.settings.frame_note %}
-              {% break %}
-            {% endif %}
-          {% endfor %}
+          {% liquid
+            assign image_width = fields[1] | strip
+            assign image_height = fields[2] | strip
+            assign image_kind = fields[3] | strip | default: 'study'
+            assign p1 = blank
+            assign p2 = blank
+            assign p3 = blank
+            assign frame_note = blank
+            for block in section.blocks
+              assign mapped_frame = block.settings.frame_number | plus: 0
+              if mapped_frame == frame_number
+                assign p1 = block.settings.product_one
+                assign p2 = block.settings.product_two
+                assign p3 = block.settings.product_three
+                assign frame_note = block.settings.frame_note
+                break
+              endif
+            endfor
+            capture frame_code
+              if frame_number < 10
+                echo '0'
+              endif
+              echo frame_number
+            endcapture
+            assign mod6 = frame_number | modulo: 6
+            assign mod10 = frame_number | modulo: 10
+            capture card_class
+              echo 'mlb-frame'
+              if mod10 == 1 or mod10 == 7
+                echo ' is-hero'
+              elsif mod6 == 0
+                echo ' is-wide'
+              elsif mod6 == 3
+                echo ' is-tall'
+              elsif image_kind == 'fragment'
+                echo ' is-detail'
+              endif
+            endcapture
+            if image_kind == 'fragment'
+              assign frame_type = 'Detail study'
+            elsif image_kind == 'master'
+              assign frame_type = 'Cover print'
+            else
+              assign frame_type = 'Living study'
+            endif
+          %}
 
-          {% capture frame_code %}{% if frame_number < 10 %}0{% endif %}{{ frame_number }}{% endcapture %}
-          {% assign mod6 = frame_number | modulo: 6 %}
-          {% assign mod10 = frame_number | modulo: 10 %}
-          {% capture card_class %}mlb-frame{% if mod10 == 1 or mod10 == 7 %} is-hero{% elsif mod6 == 0 %} is-wide{% elsif mod6 == 3 %} is-tall{% elsif image_kind == 'fragment' %} is-detail{% endif %}{% endcapture %}
-
-          <figure class="{{ card_class | strip }}" role="listitem">
-            <div class="mlb-media">
-              <img src="{{ image_url | append: '&width=900' | escape }}" srcset="{{ image_url | append: '&width=520' | escape }} 520w, {{ image_url | append: '&width=900' | escape }} 900w, {{ image_url | append: '&width=1400' | escape }} 1400w" sizes="(min-width:1280px)34vw,(min-width:990px)42vw,(min-width:641px)48vw,100vw" width="{{ image_width }}" height="{{ image_height }}" alt="Melato Living Book {{ season | escape }} frame {{ frame_code | strip }}" {% if frame_number <= 3 %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
-              <figcaption class="mlb-caption"><span class="mlb-num">{{ frame_code | strip }}</span><span class="mlb-kind">{% if image_kind == 'fragment' %}Detail frame{% elsif image_kind == 'master' %}Cover print{% else %}Living study{% endif %}</span></figcaption>
-            </div>
+          <figure class="{{ card_class | strip }}" role="listitem" data-mlb-reveal>
+            <button
+              class="mlb-frame-trigger"
+              type="button"
+              data-mlb-open
+              data-mlb-image="{{ image_url | append: '&width=1800' | escape }}"
+              data-mlb-alt="Melato Living Book {{ season | escape }} frame {{ frame_code | strip }}"
+              data-mlb-frame="{{ frame_code | strip }}"
+              data-mlb-kind="{{ frame_type | escape }}"
+              data-mlb-note="{{ frame_note | default: chapter_copy | escape }}"
+              aria-haspopup="dialog"
+              aria-label="Open Living Book frame {{ frame_code | strip }}"
+            >
+              <img
+                src="{{ image_url | append: '&width=1000' | escape }}"
+                srcset="{{ image_url | append: '&width=520' | escape }} 520w, {{ image_url | append: '&width=1000' | escape }} 1000w, {{ image_url | append: '&width=1400' | escape }} 1400w"
+                sizes="(min-width: 1280px) 34vw, (min-width: 990px) 42vw, (min-width: 641px) 48vw, 100vw"
+                width="{{ image_width }}"
+                height="{{ image_height }}"
+                alt="Melato Living Book {{ season | escape }} frame {{ frame_code | strip }}"
+                {% if frame_number <= 2 %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+                decoding="async"
+              >
+              <span class="mlb-frame-caption"><span class="mlb-frame-no">{{ frame_code | strip }}</span><span class="mlb-frame-kind">{{ frame_type | escape }}</span></span>
+            </button>
 
             {% if p1 != blank or p2 != blank or p3 != blank %}
-              <details class="mlb-shop">
+              <details class="mlb-frame-shop">
                 <summary>{{ shop_label | escape }}</summary>
-                <div class="mlb-products">
-                  {% if frame_note != blank %}<span class="mlb-note">{{ frame_note | escape }}</span>{% endif %}
-                  {% if p1 != blank %}<a class="mlb-product" href="{{ p1.url }}" aria-label="Shop {{ p1.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p1.featured_image %}<img src="{{ p1.featured_image | image_url: width: 150 }}" alt="{{ p1.title | escape }}" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p1.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p1.price | money }}</span>{% endif %}</span><span class="mlb-cta">View</span></a>{% endif %}
-                  {% if p2 != blank %}<a class="mlb-product" href="{{ p2.url }}" aria-label="Shop {{ p2.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p2.featured_image %}<img src="{{ p2.featured_image | image_url: width: 150 }}" alt="{{ p2.title | escape }}" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p2.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p2.price | money }}</span>{% endif %}</span><span class="mlb-cta">View</span></a>{% endif %}
-                  {% if p3 != blank %}<a class="mlb-product" href="{{ p3.url }}" aria-label="Shop {{ p3.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p3.featured_image %}<img src="{{ p3.featured_image | image_url: width: 150 }}" alt="{{ p3.title | escape }}" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p3.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p3.price | money }}</span>{% endif %}</span><span class="mlb-cta">View</span></a>{% endif %}
+                <div class="mlb-product-list">
+                  {% if frame_note != blank %}<span class="mlb-kicker">{{ frame_note | escape }}</span>{% endif %}
+                  {% if p1 != blank %}<a class="mlb-product" href="{{ p1.url }}" aria-label="Shop {{ p1.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p1.featured_image %}<img src="{{ p1.featured_image | image_url: width: 150 }}" alt="" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p1.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p1.price | money }}</span>{% endif %}</span><span class="mlb-product-cta">View</span></a>{% endif %}
+                  {% if p2 != blank %}<a class="mlb-product" href="{{ p2.url }}" aria-label="Shop {{ p2.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p2.featured_image %}<img src="{{ p2.featured_image | image_url: width: 150 }}" alt="" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p2.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p2.price | money }}</span>{% endif %}</span><span class="mlb-product-cta">View</span></a>{% endif %}
+                  {% if p3 != blank %}<a class="mlb-product" href="{{ p3.url }}" aria-label="Shop {{ p3.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p3.featured_image %}<img src="{{ p3.featured_image | image_url: width: 150 }}" alt="" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p3.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p3.price | money }}</span>{% endif %}</span><span class="mlb-product-cta">View</span></a>{% endif %}
                 </div>
               </details>
+
+              <template data-mlb-product-template>
+                <div class="mlb-product-list">
+                  {% if frame_note != blank %}<span class="mlb-kicker">{{ frame_note | escape }}</span>{% endif %}
+                  {% if p1 != blank %}<a class="mlb-product" href="{{ p1.url }}">{% if p1.featured_image %}<img src="{{ p1.featured_image | image_url: width: 220 }}" alt="" loading="lazy" width="220" height="280">{% endif %}<span><strong>{{ p1.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p1.price | money }}</span>{% endif %}</span><span class="mlb-product-cta">Shop the piece ↗</span></a>{% endif %}
+                  {% if p2 != blank %}<a class="mlb-product" href="{{ p2.url }}">{% if p2.featured_image %}<img src="{{ p2.featured_image | image_url: width: 220 }}" alt="" loading="lazy" width="220" height="280">{% endif %}<span><strong>{{ p2.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p2.price | money }}</span>{% endif %}</span><span class="mlb-product-cta">Shop the piece ↗</span></a>{% endif %}
+                  {% if p3 != blank %}<a class="mlb-product" href="{{ p3.url }}">{% if p3.featured_image %}<img src="{{ p3.featured_image | image_url: width: 220 }}" alt="" loading="lazy" width="220" height="280">{% endif %}<span><strong>{{ p3.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p3.price | money }}</span>{% endif %}</span><span class="mlb-product-cta">Shop the piece ↗</span></a>{% endif %}
+                </div>
+              </template>
             {% elsif section.settings.show_unlinked_note %}
-              <p class="mlb-note">Editorial frame / no product assigned yet</p>
+              <p class="mlb-kicker">Editorial frame / product routing pending</p>
             {% endif %}
           </figure>
         {% endfor %}
@@ -171,9 +238,13 @@
     </section>
   {% endfor %}
 
-  <section id="MLBIndex-{{ section.id }}" class="mlb-index">
+  <section id="MLBIndex-{{ section.id }}" class="mlb-index" data-mlb-reveal>
     <div class="mlb-index-inner">
-      <div><span class="mlb-small">Wardrobe index</span><h2>{{ section.settings.index_title | escape }}</h2><p>{{ section.settings.index_copy | escape }}</p></div>
+      <div>
+        <span class="mlb-overline">Wardrobe index</span>
+        <h2 class="mlb-index-title">{{ section.settings.index_title | escape }}</h2>
+        <p>{{ section.settings.index_copy | escape }}</p>
+      </div>
       <div class="mlb-index-grid">
         {% assign indexed = '' %}
         {% for block in section.blocks %}
@@ -186,7 +257,21 @@
     </div>
   </section>
 
-  <footer class="mlb-close"><span>Creative direction: Melato</span><span>{{ season | escape }} / {{ section.settings.title | escape }}</span><span>Receive the next chapter</span></footer>
+  <footer class="mlb-close"><span>Creative direction: Melato</span><span>{{ season | escape }} / {{ section.settings.title | escape }}</span><span>Read the next chapter</span></footer>
+
+  <dialog class="mlb-viewer" aria-labelledby="MLBViewerTitle-{{ section.id }}" data-mlb-viewer>
+    <button class="mlb-viewer-close" type="button" aria-label="Close frame viewer" data-mlb-viewer-close>×</button>
+    <div class="mlb-viewer-grid">
+      <div class="mlb-viewer-media"><img alt="" width="1400" height="1800" data-mlb-viewer-image></div>
+      <div class="mlb-viewer-info">
+        <span class="mlb-overline mlb-viewer-count" data-mlb-viewer-count>Frame</span>
+        <h2 id="MLBViewerTitle-{{ section.id }}" class="mlb-viewer-title" data-mlb-viewer-title>Living study</h2>
+        <p class="mlb-viewer-copy" data-mlb-viewer-note></p>
+        <div class="mlb-viewer-products" data-mlb-viewer-products></div>
+        <p class="mlb-viewer-empty" data-mlb-viewer-empty hidden>Editorial frame. Its wardrobe route is being filed.</p>
+      </div>
+    </div>
+  </dialog>
 </section>
 
 {% schema %}
