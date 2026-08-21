@@ -108,6 +108,27 @@
 .melato-pdp-rebuild .pdp-mini-detail__content,
 .melato-pdp-rebuild .pdp-spec .pdp-rte{color:rgba(255,255,255,.78)!important}
 
+/* PDP QA 2026-08-21: prevent cramped two-column specification cards in the narrow right rail. */
+body.template-product .melato-pdp-rebuild .pdp-spec-grid{
+  grid-template-columns:1fr!important;
+  gap:10px!important;
+}
+body.template-product .melato-pdp-rebuild .pdp-spec summary{
+  min-height:48px!important;
+  display:flex!important;
+  align-items:center!important;
+}
+body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte{
+  max-width:62ch!important;
+  padding:0 18px 20px!important;
+  font-size:13px!important;
+  line-height:1.7!important;
+}
+body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte ul{
+  display:grid!important;
+  gap:7px!important;
+}
+
 /* PDP complete-the-set tags: clearer role labels, premium pill treatment. */
 .melato-pdp-rebuild .pdp-set-label{
   display:inline-flex!important;
@@ -136,6 +157,31 @@
   border-radius:50%;
   background:currentColor;
   opacity:.9;
+}
+
+/* Full-set purchase must inherit the product palette instead of using a generic cream box. */
+.melato-pdp-rebuild .melato-full-set-action{width:100%!important}
+.melato-pdp-rebuild .melato-full-set-button{
+  width:100%!important;
+  min-width:0!important;
+  border-color:var(--pdp-accent,#d3a74a)!important;
+  background:var(--pdp-accent,#d3a74a)!important;
+  color:#fff!important;
+  border-radius:12px!important;
+  transition:filter .2s ease,transform .2s ease!important;
+}
+.melato-pdp-rebuild .melato-full-set-button:hover,
+.melato-pdp-rebuild .melato-full-set-button:focus-visible{
+  filter:brightness(1.08)!important;
+}
+
+/* Announcement badge remains readable even when the bar rotates through product palettes. */
+#melato-announcement-bar .melato-ann__badge{
+  background:#f7f1e8!important;
+  color:#120c08!important;
+  border-color:rgba(18,12,8,.22)!important;
+  text-shadow:none!important;
+  box-shadow:0 1px 0 rgba(0,0,0,.16)!important;
 }
 
 /* Collection pagination: make page navigation visible, touch-safe and intentional. */
@@ -222,8 +268,17 @@
     });
   }
 
+  function renameLivingBook(root = document) {
+    root.querySelectorAll('[data-lb-director] .mlbd__case-identity h2').forEach((heading) => {
+      if (normalize(heading.textContent).toUpperCase() === 'THE UNIFORM IN MOTION') {
+        heading.textContent = 'THE LIVING BOOK';
+      }
+    });
+  }
+
   function run() {
     cleanCompleteSetPresentation(document);
+    renameLivingBook(document);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once:true });
