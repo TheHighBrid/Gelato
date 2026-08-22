@@ -38,7 +38,7 @@
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_45a7370d-a8f6-404f-bc76-7b95185bfe6f.jpg?v=1786713770', width: 2244, height: 2804 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_3ddb1074-e917-45e1-b2ba-f3eccb2e7ad9.jpg?v=1786713770', width: 1140, height: 894 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_928214d3-7fef-4c98-8eda-c8b6c902db9e.jpg?v=1786713770', width: 2244, height: 2804 },
-    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_867d3f57-913c-4ace-a874-5373ddd86d23.jpg?v=1786713770', width: 2048, height: 3072 }
+    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_53.jpg?v=1787150205', width: 2048, height: 3072 }
   ];
 
   const targetSelector = '[data-evidence-archive] .mea__image-well img';
