@@ -9,7 +9,7 @@
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_73.jpg?v=1787222359', width: 1000, height: 1488 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__Editorial_Lookbok_The_Living_Book_FRAME_9.jpg?v=1786713204', width: 656, height: 1008 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__Editorial_Lookbok_The_Living_Book_FRAME_10.jpg?v=1786713321', width: 1478, height: 1836 },
-    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__Editorial_Lookbok_The_Living_Book_FRAME_11.jpg?v=1786713439', width: 2458, height: 3072 },
+    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_62.jpg?v=1787150515', width: 2458, height: 3072 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__Editorial_Lookbok_The_Living_Book_FRAME_12.jpg?v=1786713506', width: 796, height: 944 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_c3f8a453-e89f-49bb-a921-fd36edf5beed.png?v=1786713773', width: 4599, height: 3078 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_5a36f772-2803-477b-bd9a-694c865fa988.png?v=1786713773', width: 3069, height: 4611 },
