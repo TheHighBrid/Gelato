@@ -1,0 +1,73 @@
+{
+  "project": "THE LIVING BOOK",
+  "version": "1.0-production",
+  "date": "2026-08-23",
+  "creativeDirection": {
+    "mode": "forensic-noir",
+    "palette": ["#0A0A0C", "#E8E4DC", "#C41E3A", "#FFBF00", "#B5A642", "#1A1A2E", "#8B8680"],
+    "photography": "single-source hard light, negative fill, high-contrast chiaroscuro, desaturated with selective amber/red/chalk saturation",
+    "masterSize": "4000x6000",
+    "masterFormat": "16-bit TIFF",
+    "webFormats": ["WebP", "AVIF"],
+    "aspectRatio": "2:3 portrait"
+  },
+  "frames": [
+    {"index":1,"id":"EXHIBIT-00","file":"f01-exhibit00-fingerprint-v1-4000x6000","productHandles":[],"role":"atmosphere"},
+    {"index":2,"id":"TAPE-BARRIER","file":"f02-tapebarrier-tape-v1-4000x6000","productHandles":[],"role":"brand amber reference"},
+    {"index":3,"id":"CHALK-01","file":"f03-chalk01-vest-outline-v1-4000x6000","productHandles":["protective-custody"],"role":"Protective Custody Vest silhouette"},
+    {"index":4,"id":"EVIDENCE-BAG","file":"f04-evidencebag-garment-v1-4000x6000","productHandles":[],"role":"generic Melato garment, intentionally unlinked"},
+    {"index":5,"id":"FLASH-BULB","file":"f05-flashbulb-afterimage-v1-4000x6000","productHandles":[],"role":"transition atmosphere","video":"f05-flash-loop"},
+    {"index":6,"id":"MEASURE-TAPE","file":"f06-measuretape-v1-4000x6000","productHandles":[],"role":"fit/sizing forensic metaphor"},
+    {"index":7,"id":"MIRROR-FRAGMENT","file":"f07-mirrorfragment-amber-alibi-v1-4000x6000","productHandles":["amber-alibi-sunglasses"],"role":"Amber Alibi Sunglasses"},
+    {"index":8,"id":"DOORKNOB","file":"f08-doorknob-brass-v1-4000x6000","productHandles":[],"role":"brass hardware tie-in"},
+    {"index":9,"id":"VEST-DISSECTION","file":"f09-vest-dissection-v1-4000x6000","productHandles":["protective-custody"],"role":"Protective Custody Vest hero"},
+    {"index":10,"id":"FABRIC-TEAR","file":"f10-fabric-tear-velour-v1-4000x6000","productHandles":[],"referenceHandles":["divididos-velour-track-jacket","passion-fruit-velour-track-jacket","chu-velour-track-jacket"],"role":"velour material study, intentionally unlinked"},
+    {"index":11,"id":"CHAIN-WALLET","file":"f11-chain-wallet-v1-4000x6000","productHandles":["return-to-sender-chain-wallet"],"role":"Return to Sender Chain Wallet"},
+    {"index":12,"id":"BAG-INTERIOR","file":"f12-bag-interior-v1-4000x6000","productHandles":["pocket-change-top-handle-bag"],"role":"Pocket Change Top Handle Bag"},
+    {"index":13,"id":"TRACK-PANT-DRAPE","file":"f13-trackpant-drape-divididos-v1-4000x6000","productHandles":["divididos-velour-track-pant"],"role":"Divididos Velour Track Pant"},
+    {"index":14,"id":"EMBROIDERY-MAGNIFY","file":"f14-embroidery-pain-v1-4000x6000","productHandles":[],"role":"痛 embroidery brand detail, no verified product handle"},
+    {"index":15,"id":"SUNGLASSES-REFLECTION","file":"f15-sunglasses-reflection-v1-4000x6000","productHandles":["amber-alibi-sunglasses"],"role":"Amber Alibi Sunglasses"},
+    {"index":16,"id":"JACKET-BACK","file":"f16-jacket-back-conquista-v1-4000x6000","productHandles":["conquista-velour-track-jacket"],"role":"Conquista Velour Track Jacket"},
+    {"index":17,"id":"SHOE-PRINT","file":"f17-shoeprint-m-mark-v1-4000x6000","productHandles":[],"role":"Melato M brand easter egg"},
+    {"index":18,"id":"COLLAR-DETAIL","file":"f18-collar-detail-v1-4000x6000","productHandles":[],"role":"jacket collar intimacy detail, intentionally unlinked"},
+    {"index":19,"id":"SILHOUETTE-01","file":"f19-silhouette-divididos-v1-4000x6000","productHandles":["divididos-velour-track-jacket","divididos-velour-track-pant"],"role":"Divididos full set","video":"f19-doorway-loop"},
+    {"index":20,"id":"HANDS-POCKET","file":"f20-hands-pocket-chu-v1-4000x6000","productHandles":["chu-velour-track-jacket"],"role":"Chū Velour Track Jacket"},
+    {"index":21,"id":"WALK-AWAY","file":"f21-walkaway-passion-fruit-v1-4000x6000","productHandles":["passion-fruit-velour-track-jacket","passion-fruit-velour-track-pant"],"role":"Passion Fruit full set","video":"f21-corridor-loop"},
+    {"index":22,"id":"SITTING-WAITING","file":"f22-sitting-protective-custody-v1-4000x6000","productHandles":["protective-custody"],"role":"Protective Custody Vest"},
+    {"index":23,"id":"EYE-CONTACT","file":"f23-eye-contact-amber-alibi-v1-4000x6000","productHandles":["amber-alibi-sunglasses"],"role":"Amber Alibi Sunglasses"},
+    {"index":24,"id":"BACK-TO-BACK","file":"f24-back-to-back-divididos-conquista-v1-4000x6000","productHandles":["divididos-velour-track-jacket","divididos-velour-track-pant","conquista-velour-track-jacket","conquista-velour-track-pant"],"role":"Divididos versus Conquista"},
+    {"index":25,"id":"DRESSING","file":"f25-dressing-chu-v1-4000x6000","productHandles":["chu-velour-track-jacket"],"role":"Chū Velour Track Jacket"},
+    {"index":26,"id":"DEPARTURE","file":"f26-departure-full-look-v1-4000x6000","productHandles":[],"role":"full-collection finale, identity and exact garment intentionally obscured","video":"f26-door-light"},
+    {"index":27,"id":"CASE-FILE","file":"f27-casefile-v1-4000x6000","productHandles":[],"role":"brand dossier"},
+    {"index":28,"id":"POLAROID-WALL","file":"f28-polaroids-v1-4000x6000","productHandles":[],"role":"collection recap"},
+    {"index":29,"id":"RED-TAPE","file":"f29-redtape-v1-4000x6000","productHandles":[],"role":"Melato brand lockup"},
+    {"index":30,"id":"THE-LOGO","file":"f30-logo-brass-v1-4000x6000","productHandles":[],"role":"Melato brass wordmark"},
+    {"index":31,"id":"CLOSING-STATEMENT","file":"f31-closing-fingerprint-v1-4000x6000","productHandles":[],"role":"viewer-participant fingerprint"}
+  ],
+  "videos": [
+    {"frame":5,"file":"f05-flash-loop","duration":"5-15s","master":"4K","delivery":["MP4 H.264","WebM VP9"],"seamless":true},
+    {"frame":19,"file":"f19-doorway-loop","duration":"5-15s","master":"4K","delivery":["MP4 H.264","WebM VP9"],"seamless":true},
+    {"frame":21,"file":"f21-corridor-loop","duration":"5-15s","master":"4K","delivery":["MP4 H.264","WebM VP9"],"seamless":true},
+    {"frame":26,"file":"f26-door-light","duration":"5-15s","master":"4K","delivery":["MP4 H.264","WebM VP9"],"seamless":true}
+  ],
+  "audio": [
+    "amb-void-drone-loop",
+    "sfx-shutter-click",
+    "sfx-tape-rustle",
+    "sfx-heartbeat-loop",
+    "sfx-wind-corridor",
+    "sfx-chair-creak",
+    "sfx-button-snap",
+    "sfx-seal-crack"
+  ],
+  "textures": [
+    "dust-overlay.png",
+    "paper-grain.jpg",
+    "fingerprint-alpha.png",
+    "concrete-diffuse.jpg",
+    "brass-normal.jpg",
+    "polaroid-frame.png",
+    "crime-tape-alpha.png"
+  ],
+  "mappingPolicy": "Only named products directly supported by the v1 blueprint/Quick Reference and verified against the live Shopify catalog receive product handles. Generic, atmospheric, brand-only, or ambiguous frames remain unlinked."
+}
