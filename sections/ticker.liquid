@@ -4,7 +4,6 @@
 {% endcomment %}
 
 {%- if section.blocks.size > 0 -%}
-
 <div
   class="ticker"
   style="
@@ -27,6 +26,7 @@
     class="ticker__track"
     data-ticker-track
     aria-hidden="true"
+    inert
     {% if section.settings.direction == 'right' %}style="animation-direction: reverse;"{% endif %}
   >
     {%- comment -%} Render twice for a seamless visual loop. Assistive technology receives the static summary above once. {%- endcomment -%}
@@ -63,7 +63,6 @@
     }
   }
 </style>
-
 {%- endif -%}
 
 {% schema %}
@@ -75,88 +74,22 @@
       "type": "item",
       "name": "Ticker item",
       "settings": [
-        {
-          "type": "text",
-          "id": "text",
-          "label": "Text",
-          "default": "The culture wears us"
-        }
+        {"type":"text","id":"text","label":"Text","default":"The culture wears us"}
       ]
     }
   ],
   "settings": [
-    {
-      "type": "text",
-      "id": "accessible_label",
-      "label": "Accessible label",
-      "default": "Melato announcements",
-      "info": "Read once by screen readers before the decorative moving text."
-    },
-    {
-      "type": "range",
-      "id": "speed",
-      "label": "Scroll speed",
-      "min": 10,
-      "max": 80,
-      "step": 5,
-      "default": 30,
-      "unit": "s",
-      "info": "Lower = faster"
-    },
-    {
-      "type": "text",
-      "id": "separator",
-      "label": "Separator character",
-      "default": "✦"
-    },
-    {
-      "type": "select",
-      "id": "direction",
-      "label": "Direction",
-      "options": [
-        { "value": "left",  "label": "Left" },
-        { "value": "right", "label": "Right" }
-      ],
-      "default": "left"
-    },
-    {
-      "type": "range",
-      "id": "padding",
-      "label": "Vertical padding",
-      "min": 6,
-      "max": 24,
-      "step": 2,
-      "default": 10,
-      "unit": "px"
-    },
-    {
-      "type": "color",
-      "id": "background_color",
-      "label": "Background",
-      "default": "#C8FF00"
-    },
-    {
-      "type": "color",
-      "id": "text_color",
-      "label": "Text color",
-      "default": "#080808"
-    },
-    {
-      "type": "color",
-      "id": "border_color",
-      "label": "Border color",
-      "default": "#2A2A2A"
-    }
+    {"type":"text","id":"accessible_label","label":"Accessible label","default":"Melato announcements","info":"Read once by screen readers before the decorative moving text."},
+    {"type":"range","id":"speed","label":"Scroll speed","min":10,"max":80,"step":5,"default":30,"unit":"s","info":"Lower = faster"},
+    {"type":"text","id":"separator","label":"Separator character","default":"✦"},
+    {"type":"select","id":"direction","label":"Direction","options":[{"value":"left","label":"Left"},{"value":"right","label":"Right"}],"default":"left"},
+    {"type":"range","id":"padding","label":"Vertical padding","min":6,"max":24,"step":2,"default":10,"unit":"px"},
+    {"type":"color","id":"background_color","label":"Background","default":"#C8FF00"},
+    {"type":"color","id":"text_color","label":"Text color","default":"#080808"},
+    {"type":"color","id":"border_color","label":"Border color","default":"#2A2A2A"}
   ],
   "presets": [
-    {
-      "name": "Ticker",
-      "blocks": [
-        { "type": "item", "settings": { "text": "THE CULTURE WEARS US" } },
-        { "type": "item", "settings": { "text": "CUT WITH INTENT" } },
-        { "type": "item", "settings": { "text": "LIMITED PRODUCTION" } }
-      ]
-    }
+    {"name":"Ticker","blocks":[{"type":"item","settings":{"text":"THE CULTURE WEARS US"}},{"type":"item","settings":{"text":"CUT WITH INTENT"}},{"type":"item","settings":{"text":"LIMITED PRODUCTION"}}]}
   ]
 }
 {% endschema %}

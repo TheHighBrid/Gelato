@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height">
   <meta name="theme-color" content="{{ settings.color_background }}">
+  <meta name="shop-currency" content="{{ shop.currency | escape }}">
   {%- liquid
     assign melato_meta_title = page_title
     assign melato_meta_description = page_description
@@ -35,6 +36,35 @@
   {%- endstyle -%}
   {{ content_for_header }}
   <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">{{ 'theme.css' | asset_url | stylesheet_tag }}{{ 'melato-enhancements.css' | asset_url | stylesheet_tag }}{{ 'melato-palette-logo-updated.css' | asset_url | stylesheet_tag }}{%- if template.name == 'page' or request.path contains '/policies/' -%}{{ 'melato-info-legal-pages.css' | asset_url | stylesheet_tag }}{%- endif -%}{{ 'melato-palette-v3.css' | asset_url | stylesheet_tag }}{{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}{{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}{{ 'melato-optimization-2026.css' | asset_url | stylesheet_tag }}{{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}{{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}{%- if template.name == 'product' -%}{{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}{%- endif -%}
+
+  {%- if template.name == 'collection' and collection -%}
+    {%- for preload_product in collection.products limit: 4 -%}
+      {%- if preload_product.featured_image != blank -%}
+        <link rel="preload" as="image" href="{{ preload_product.featured_image | image_url: width: 800 }}" imagesrcset="{{ preload_product.featured_image | image_url: width: 400 }} 400w, {{ preload_product.featured_image | image_url: width: 600 }} 600w, {{ preload_product.featured_image | image_url: width: 800 }} 800w" imagesizes="(min-width:1200px) 25vw,(min-width:768px) 33vw,50vw" fetchpriority="high">
+      {%- endif -%}
+    {%- endfor -%}
+    <style>
+      .melato-product-grid__inner .product-card__media{background:linear-gradient(110deg,var(--color-surface) 22%,color-mix(in srgb,var(--color-surface) 82%,var(--color-text)) 38%,var(--color-surface) 54%);background-size:220% 100%;animation:melato-card-placeholder 1.4s linear infinite}
+      .melato-product-grid__inner .product-card__img{position:relative;z-index:1;background:var(--color-surface)}
+      @keyframes melato-card-placeholder{to{background-position:-220% 0}}
+      @media(prefers-reduced-motion:reduce){.melato-product-grid__inner .product-card__media{animation:none}}
+    </style>
+  {%- endif -%}
+
+  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-enhancements.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-palette-logo-updated.css' | asset_url | stylesheet_tag }}
+  {%- if template.name == 'page' or request.path contains '/policies/' -%}{{ 'melato-info-legal-pages.css' | asset_url | stylesheet_tag }}{%- endif -%}
+  {{ 'melato-header-logo-bigger.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-palette-v3.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
+  {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-header-footer-fix.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-optimization-2026.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}
+  {%- if template.name == 'product' -%}{{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}{%- endif -%}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}{% render 'melato-global-polish' %}
 </head>
@@ -60,8 +90,82 @@
   {%- capture melato_cart_output -%}{%- render 'cart-drawer' -%}{%- endcapture -%}
   <div class="melato-utility-layer" aria-label="Store utilities"><div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>{% render 'melato-rendered-output-filters', html:melato_cart_output, context:'cart' %}{%- render 'search-drawer' -%}{%- render 'mobile-menu' -%}{%- render 'quick-view-modal' -%}<div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div></div>
   <script>window.DRIP={shop:{currency:{{ shop.currency | json }},moneyFormat:{{ shop.money_format | json }},locale:{{ request.locale.iso_code | json }},freeShippingThreshold:0,routes:{root:{{ routes.root_url | json }},cart:{{ routes.cart_url | json }},cartAdd:{{ routes.cart_add_url | json }},cartChange:{{ routes.cart_change_url | json }},search:{{ routes.search_url | json }},collections:{{ routes.collections_url | json }}}},cart:{{ cart | json }},customer:{{ customer | json }},strings:{addedToCart:{{ 'cart.added' | t | json }},cartEmpty:{{ 'cart.empty' | t | json }},soldOut:{{ 'products.sold_out' | t | json }},unavailable:{{ 'products.unavailable' | t | json }},addToCart:{{ 'products.add_to_cart' | t | json }},outOfStock:{{ 'products.out_of_stock' | t | json }}}};</script>
-  <script src="{{ 'theme.js' | asset_url }}" defer></script>{%- if template.name == 'index' -%}<script src="{{ 'melato-hero-video.js' | asset_url }}" defer></script>{%- endif -%}<script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script><script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script><script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script>{%- if template.name == 'product' -%}<script src="{{ 'melato-pdp-polish.js' | asset_url }}" defer></script>{%- endif -%}<script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script><script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>{%- if template.name == 'collection' -%}<script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>{%- endif -%}{% render 'melato-living-lookbook-loader' %}{% render 'melato-back-in-stock-loader' %}{% render 'melato-product-color-engine' %}
-  <script>(function(){var c=navigator.connection||navigator.mozConnection||navigator.webkitConnection;if(c&&(c.saveData||/2g/.test(c.effectiveType||'')))return;var seen=new Set(),budget=2,timer;function warm(a){if(!a||budget<1)return;var u;try{u=new URL(a.href,location.href)}catch(e){return}if(u.origin!==location.origin||!/\/products\//.test(u.pathname)||seen.has(u.href))return;seen.add(u.href);budget-=1;var l=document.createElement('link');l.rel='prefetch';l.as='document';l.href=u.href;document.head.appendChild(l)}document.addEventListener('pointerover',function(e){var a=e.target.closest&&e.target.closest('a[href*="/products/"]');if(!a)return;clearTimeout(timer);timer=setTimeout(function(){warm(a)},120)},{passive:true});document.addEventListener('focusin',function(e){var a=e.target.closest&&e.target.closest('a[href*="/products/"]');if(a)warm(a)});})();</script>
-  <script src="{{ 'theme.js' | asset_url }}" defer></script><script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script><script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script><script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script><script src="{{ 'melato-pdp-polish.js' | asset_url }}" defer></script><script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script><script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>{%- if template.name == 'collection' -%}<script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>{%- endif -%}{% render 'melato-living-lookbook-loader' %}{% render 'melato-back-in-stock-loader' %}{% render 'melato-product-color-engine' %}
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  <script src="{{ 'premium-enhancements.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-optimization-2026.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-audit-nav-collections.js' | asset_url }}" defer></script>
+  {%- if template.name == 'product' -%}<script src="{{ 'melato-pdp-polish.js' | asset_url }}" defer></script>{%- endif -%}
+  <script src="{{ 'melato-cart-drawer.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-august-2026-audit-fixes.js' | asset_url }}" defer></script>
+  {%- if template.name == 'collection' -%}<script src="{{ 'melato-collection-filters.js' | asset_url }}" defer></script>{%- endif -%}
+  {% render 'melato-living-lookbook-loader' %}{% render 'melato-back-in-stock-loader' %}{% render 'melato-product-color-engine' %}
+  <script>
+    (function () {
+      function initMelatoHeroVideo(scope) {
+        var root = scope && scope.querySelectorAll ? scope : document;
+        root.querySelectorAll('.melato-hero-video').forEach(function (section) {
+          var cue = section.querySelector('[data-melato-scroll-cue]');
+          if (cue && cue.dataset.melatoHeroBound !== 'true') {
+            cue.dataset.melatoHeroBound = 'true';
+            cue.addEventListener('click', function () {
+              var next = section.nextElementSibling;
+              if (next) next.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+          }
+
+          section.querySelectorAll('.melato-hero-video__asset').forEach(function (video) {
+            if (video.dataset.melatoAutoplayChecked === 'true') return;
+            video.dataset.melatoAutoplayChecked = 'true';
+            video.muted = true;
+            video.playsInline = true;
+            var playPromise = video.play && video.play();
+            if (playPromise && typeof playPromise.catch === 'function') {
+              playPromise.catch(function () { video.setAttribute('controls', 'controls'); });
+            }
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () { initMelatoHeroVideo(document); });
+      } else {
+        initMelatoHeroVideo(document);
+      }
+      document.addEventListener('shopify:section:load', function (event) { initMelatoHeroVideo(event.target); });
+    })();
+  </script>
+  <script>
+    (function () {
+      var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (connection && (connection.saveData || /2g/.test(connection.effectiveType || ''))) return;
+      var budget = 2;
+      var seen = new Set();
+      var timer;
+      function warm(anchor) {
+        if (!anchor || budget < 1) return;
+        var url;
+        try { url = new URL(anchor.href, window.location.href); } catch (error) { return; }
+        if (url.origin !== window.location.origin || !/\/products\//.test(url.pathname) || seen.has(url.href)) return;
+        seen.add(url.href);
+        budget -= 1;
+        var link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.as = 'document';
+        link.href = url.href;
+        document.head.appendChild(link);
+      }
+      document.addEventListener('pointerover', function (event) {
+        var anchor = event.target.closest && event.target.closest('a[href*="/products/"]');
+        if (!anchor) return;
+        clearTimeout(timer);
+        timer = setTimeout(function () { warm(anchor); }, 120);
+      }, { passive: true });
+      document.addEventListener('focusin', function (event) {
+        var anchor = event.target.closest && event.target.closest('a[href*="/products/"]');
+        if (anchor) warm(anchor);
+      });
+    })();
+  </script>
+  <script src="https://thehighbrid.github.io/melato-ai-concierge/embed/melato-concierge-widget.js" defer></script>
 </body>
 </html>

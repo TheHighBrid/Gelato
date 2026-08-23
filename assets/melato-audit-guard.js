@@ -27,9 +27,9 @@
     [/mohamed@melato\.ca|mahfoud@melato\.ca/gi, 'management@melato.ca'],
     [/Bundle\s+Inactive/gi, ''],
     [/bundle\s+inactive/gi, ''],
-    [/Exact fibre percentage is not published yet\./gi, ''],
+    [/\./gi, ''],
     [/Cut with intent \| 2026 Melato ©®/g, 'Cut with intent · © 2026 Melato'],
-    [/Designer apparel, edited with intention\. Built in Ottawa\. Worn anywhere\./g, 'Designer apparel, edited with intention. Worn anywhere.']
+    [/Designer apparel, cut with intention\.\.\./g, 'Designer apparel, cut with intention.']
   ];
 
   const frenchExact = new Map([
@@ -37,8 +37,8 @@
     ['Account', 'Compte'],
     ['Bag', 'Panier'],
     ['Melato / Navigation', 'Melato / Navigation'],
-    ['Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.', 'Vêtements de créateur, pensés avec intention. Portés partout.'],
-    ['Designer apparel, edited with intention. Worn anywhere.', 'Vêtements de créateur, pensés avec intention. Portés partout.'],
+    ['Designer apparel, cut with intention.', 'Vêtements de créateur, pensés avec intention.'],
+    ['Designer apparel, cut with intention.', 'Vêtements de créateur, pensés avec intention.'],
     ['Collection', 'Collection'],
     ['Home', 'Accueil'],
     ['Search the archive', 'Rechercher dans les archives'],

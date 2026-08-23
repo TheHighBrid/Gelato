@@ -1,16 +1,249 @@
 {%- comment -%}
-  MELATO CLEANUP MASTER LAYER / 2026-08-13
-  Consolidated storefront normalization layer.
-  Native Liquid/data is now preferred over duplicate DOM policy observers.
+  MELATO CLEANUP MASTER LAYER / 2026-08-18
+  Final storefront normalization layer.
+  Live sync marker: mobile header, collection cards, collection storytelling and bundle conversion.
 {%- endcomment -%}
-{{ 'melato-site-cleanup-20260811.css' | asset_url | stylesheet_tag }}
+{{ 'melato-mobile-collection-header-20260818.css' | asset_url | stylesheet_tag }}
 <style>
 .product-card__price{position:static!important;inset:auto!important;transform:none!important;width:100%!important;min-width:0!important;display:flex!important;justify-content:center!important;align-items:baseline!important;gap:8px!important;margin:0 auto!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;text-align:center!important}
 .product-card__price>span:not(.visually-hidden){position:static!important;inset:auto!important;transform:none!important;display:inline!important;width:auto!important;min-width:0!important;height:auto!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:inherit!important;text-align:center!important}
 .product-card__price>.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .product-card__price .product-card__compare{text-decoration:line-through!important;opacity:.62!important}
-.featured-collection .grid{row-gap:40px!important}.featured-collection .product-card__info{padding:14px 6px 8px!important;gap:8px!important}.featured-collection .product-card__price{margin:8px auto 0!important;line-height:1.35!important}.featured-collection .product-card__price .price{font-size:.9rem!important;font-weight:500!important;letter-spacing:.06em!important}
-.featured-collection .u-show-mobile .btn.btn--secondary{min-width:144px!important;background:var(--melato-offwhite,#f4ead8)!important;color:var(--melato-black,#050505)!important;border:1px solid var(--melato-offwhite,#f4ead8)!important;opacity:1!important;text-shadow:none!important}.featured-collection .u-show-mobile .btn.btn--secondary:hover,.featured-collection .u-show-mobile .btn.btn--secondary:focus-visible{background:var(--melato-offwhite-2,#fff8eb)!important;color:var(--melato-black,#050505)!important;border-color:var(--melato-offwhite-2,#fff8eb)!important}
-@media (max-width:768px){.featured-collection .grid{row-gap:36px!important}.featured-collection .product-card__price{margin-top:10px!important}}
+
+/* THE UNIFORM: make each product's title/price read as one unit and separate rows clearly. */
+.featured-collection .grid{row-gap:40px!important}
+.featured-collection .product-card__info{
+  padding:14px 6px 8px!important;
+  gap:8px!important;
+}
+.featured-collection .product-card__price{
+  margin:8px auto 0!important;
+  line-height:1.35!important;
+}
+.featured-collection .product-card__price .price{
+  font-size:.9rem!important;
+  font-weight:500!important;
+  letter-spacing:.06em!important;
+}
+
+/* THE UNIFORM mobile CTA: cream button with deliberate dark contrast. */
+.featured-collection .u-show-mobile .btn.btn--secondary{
+  min-width:144px!important;
+  background:var(--melato-offwhite,#f4ead8)!important;
+  color:var(--melato-black,#050505)!important;
+  border:1px solid var(--melato-offwhite,#f4ead8)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+.featured-collection .u-show-mobile .btn.btn--secondary:hover,
+.featured-collection .u-show-mobile .btn.btn--secondary:focus-visible{
+  background:var(--melato-offwhite-2,#fff8eb)!important;
+  color:var(--melato-black,#050505)!important;
+  border-color:var(--melato-offwhite-2,#fff8eb)!important;
+}
+
+/* PDP QA: construction/story and specification cards must share one surface treatment. */
+.melato-pdp-rebuild .pdp-story-tech{
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+.melato-pdp-rebuild .pdp-story-tech__grid{gap:12px!important}
+.melato-pdp-rebuild .pdp-mini-detail,
+.melato-pdp-rebuild .pdp-spec{
+  background:var(--pdp-surface)!important;
+  border:1px solid rgba(255,255,255,.095)!important;
+  border-radius:26px!important;
+  box-shadow:0 18px 50px rgba(0,0,0,.24)!important;
+}
+.melato-pdp-rebuild .pdp-mini-detail:only-child{grid-column:1/-1}
+.melato-pdp-rebuild .pdp-mini-detail[open],
+.melato-pdp-rebuild .pdp-spec[open]{background:var(--pdp-surface)!important}
+.melato-pdp-rebuild .pdp-mini-detail__content,
+.melato-pdp-rebuild .pdp-spec .pdp-rte{color:rgba(255,255,255,.78)!important}
+
+/* PDP QA 2026-08-21: prevent cramped two-column specification cards in the narrow right rail. */
+body.template-product .melato-pdp-rebuild .pdp-spec-grid{
+  grid-template-columns:1fr!important;
+  gap:10px!important;
+}
+body.template-product .melato-pdp-rebuild .pdp-spec summary{
+  min-height:48px!important;
+  display:flex!important;
+  align-items:center!important;
+}
+body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte{
+  max-width:62ch!important;
+  padding:0 18px 20px!important;
+  font-size:13px!important;
+  line-height:1.7!important;
+}
+body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte ul{
+  display:grid!important;
+  gap:7px!important;
+}
+
+/* PDP complete-the-set tags: clearer role labels, premium pill treatment. */
+.melato-pdp-rebuild .pdp-set-label{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  align-self:center!important;
+  gap:7px!important;
+  width:auto!important;
+  margin:0 0 2px!important;
+  padding:7px 11px!important;
+  border:1px solid rgba(211,167,74,.38)!important;
+  border-radius:999px!important;
+  background:rgba(211,167,74,.08)!important;
+  color:var(--pdp-title-accent,#d3a74a)!important;
+  font-size:9px!important;
+  font-weight:900!important;
+  letter-spacing:.16em!important;
+  line-height:1!important;
+  text-transform:uppercase!important;
+}
+.melato-pdp-rebuild .pdp-set-label::before{
+  content:"";
+  width:5px;
+  height:5px;
+  flex:0 0 5px;
+  border-radius:50%;
+  background:currentColor;
+  opacity:.9;
+}
+
+/* Full-set purchase must inherit the product palette instead of using a generic cream box. */
+.melato-pdp-rebuild .melato-full-set-action{width:100%!important}
+.melato-pdp-rebuild .melato-full-set-button{
+  width:100%!important;
+  min-width:0!important;
+  border-color:var(--pdp-accent,#d3a74a)!important;
+  background:var(--pdp-accent,#d3a74a)!important;
+  color:#fff!important;
+  border-radius:12px!important;
+  transition:filter .2s ease,transform .2s ease!important;
+}
+.melato-pdp-rebuild .melato-full-set-button:hover,
+.melato-pdp-rebuild .melato-full-set-button:focus-visible{
+  filter:brightness(1.08)!important;
+}
+
+/* Announcement badge remains readable even when the bar rotates through product palettes. */
+#melato-announcement-bar .melato-ann__badge{
+  background:#f7f1e8!important;
+  color:#120c08!important;
+  border-color:rgba(18,12,8,.22)!important;
+  text-shadow:none!important;
+  box-shadow:0 1px 0 rgba(0,0,0,.16)!important;
+}
+
+/* Collection pagination: make page navigation visible, touch-safe and intentional. */
+.melato-pagination{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  width:100%!important;
+  margin:0!important;
+  padding:28px min(5vw,60px) 34px!important;
+  border-top:1px solid rgba(255,255,255,.08)!important;
+  background:#080808!important;
+}
+.melato-pagination .page,
+.melato-pagination .next,
+.melato-pagination .prev{display:inline-flex!important;align-items:center!important}
+.melato-pagination a,
+.melato-pagination .current{
+  display:grid!important;
+  place-items:center!important;
+  min-width:44px!important;
+  height:44px!important;
+  padding:0 12px!important;
+  border:1px solid rgba(255,255,255,.18)!important;
+  border-radius:999px!important;
+  background:#111214!important;
+  color:#f5f1e8!important;
+  text-decoration:none!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  letter-spacing:.08em!important;
+  line-height:1!important;
+  text-transform:uppercase!important;
+}
+.melato-pagination .current{
+  border-color:#f4ead8!important;
+  background:#f4ead8!important;
+  color:#080808!important;
+}
+.melato-pagination .next a,
+.melato-pagination .prev a{min-width:74px!important;padding-inline:16px!important}
+.melato-pagination a:hover,
+.melato-pagination a:focus-visible{
+  border-color:#d3a74a!important;
+  color:#d3a74a!important;
+  outline:none!important;
+}
+
+@media (max-width:768px){
+  .featured-collection .grid{row-gap:36px!important}
+  .featured-collection .product-card__price{margin-top:10px!important}
+  .melato-pagination{gap:6px!important;padding:22px 12px 28px!important}
+  .melato-pagination a,.melato-pagination .current{min-width:42px!important;height:42px!important;padding:0 10px!important}
+  .melato-pagination .next a,.melato-pagination .prev a{min-width:64px!important;padding-inline:12px!important}
+}
 </style>
 <script src="{{ 'melato-site-cleanup-20260811.js' | asset_url }}" defer></script>
+<script src="{{ 'melato-content-policy-20260811.js' | asset_url }}" defer></script>
+<script src="{{ 'melato-audit-ui-20260818.js' | asset_url }}" defer></script>
+<script>
+(() => {
+  'use strict';
+
+  function normalize(value) {
+    return String(value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function cleanCompleteSetPresentation(root = document) {
+    root.querySelectorAll('.pdp-set-card').forEach((card) => {
+      const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT);
+      const stray = [];
+      while (walker.nextNode()) {
+        const value = normalize(walker.currentNode.nodeValue).toLowerCase();
+        if (/^,\s*(selected|matching) piece$/.test(value)) stray.push(walker.currentNode);
+      }
+      stray.forEach((node) => node.remove());
+    });
+
+    root.querySelectorAll('.pdp-set-label').forEach((label) => {
+      const value = normalize(label.textContent).toLowerCase();
+      if (value === 'selected piece') label.textContent = 'Current piece';
+      if (value === 'matching piece') label.textContent = 'Pair with';
+    });
+  }
+
+  function renameLivingBook(root = document) {
+    root.querySelectorAll('[data-lb-director] .mlbd__case-identity h2').forEach((heading) => {
+      if (normalize(heading.textContent).toUpperCase() === 'THE UNIFORM IN MOTION') {
+        heading.textContent = 'THE LIVING BOOK';
+      }
+    });
+  }
+
+  function run() {
+    cleanCompleteSetPresentation(document);
+    renameLivingBook(document);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once:true });
+  else run();
+
+  let timer;
+  new MutationObserver(() => {
+    clearTimeout(timer);
+    timer = window.setTimeout(run, 80);
+  }).observe(document.documentElement, { childList:true, subtree:true });
+})();
+</script>

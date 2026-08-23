@@ -1,6 +1,7 @@
 /*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
+ * Melato recommendation architecture: unified related-products rail.
  *
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
@@ -34,19 +35,19 @@
         "cta_text": "SHOP THE"
       }
     },
-    "tag_recommendations_gE6p6L": {
-      "type": "tag-recommendations",
-      "name": "You Might Also Like",
+    "related_products_gE6p6L": {
+      "type": "related-products",
+      "name": "Related products",
       "settings": {
-        "eyebrow": "YOU MIGHT ALSO LIKE",
-        "heading": "MORE FROM THE COLLECTION",
-        "max_products": 4
+        "eyebrow": "Continue shopping",
+        "heading": "You might also like",
+        "products_to_show": 4
       }
     }
   },
   "order": [
     "melato_luxury_product_page_zn3JqW",
     "complete_the_set_EHY3pF",
-    "tag_recommendations_gE6p6L"
+    "related_products_gE6p6L"
   ]
 }

@@ -1,7 +1,8 @@
 {% comment %}
   Universal Melato PDP continuation layer.
-  Priority: Shopify related recommendations, then same product type from New Arrivals,
-  then Best Sellers, then broader New Arrivals. Current and unavailable products are excluded.
+  Priority: explicit PDP curation, Shopify related recommendations, same product
+  type from New Arrivals, Best Sellers, then broader New Arrivals.
+  Current and unavailable products are excluded.
 {% endcomment %}
 
 {{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
@@ -11,6 +12,7 @@
   assign section_heading = section.settings.heading | default: 'You might also like'
   assign section_eyebrow = section.settings.eyebrow | default: 'Continue shopping'
   assign products_to_show = section.settings.products_to_show | default: 4 | plus: 0
+  assign curated_products = product.metafields.custom.pdp_recommendations.value
   if products_to_show < 1
     assign products_to_show = 4
   endif
@@ -51,74 +53,87 @@
         <h2 id="RelatedHeading-{{ section.id }}">{{ section_heading }}</h2>
       </div>
 
-      <product-recommendations
-        class="melato-recommendations"
-        data-section-id="{{ section.id }}"
-        data-source-product-id="{{ product.id }}"
-        data-limit="{{ products_to_show }}"
-        data-intent="related"
-        data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ products_to_show }}&intent=related">
+      {%- if curated_products != blank -%}
+        <div class="melato-grid melato-grid--cards" data-curated-recommendations>
+          {%- assign curated_shown = 0 -%}
+          {%- for recommendation in curated_products -%}
+            {%- if curated_shown >= products_to_show -%}{%- break -%}{%- endif -%}
+            {%- if recommendation.available and recommendation.id != product.id -%}
+              {% render 'melato-product-card-audit', card_product: recommendation %}
+              {%- assign curated_shown = curated_shown | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- else -%}
+        <product-recommendations
+          class="melato-recommendations"
+          data-section-id="{{ section.id }}"
+          data-source-product-id="{{ product.id }}"
+          data-limit="{{ products_to_show }}"
+          data-intent="related"
+          data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ products_to_show }}&intent=related">
 
-        {%- if recommendations.performed and recommendations.products_count > 0 -%}
-          <div class="melato-grid melato-grid--cards">
-            {%- for recommendation in recommendations.products limit: products_to_show -%}
-              {%- if recommendation.available -%}
-                {% render 'melato-product-card-audit', card_product: recommendation %}
+          {%- if recommendations.performed and recommendations.products_count > 0 -%}
+            <div class="melato-grid melato-grid--cards">
+              {%- for recommendation in recommendations.products limit: products_to_show -%}
+                {%- if recommendation.available -%}
+                  {% render 'melato-product-card-audit', card_product: recommendation %}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- else -%}
+            {%- liquid
+              assign shown = 0
+              assign shown_ids = '|' | append: product.id | append: '|'
+              assign new_arrivals = collections['new-arrivals']
+              assign best_sellers = collections['best-sellers']
+            -%}
+            <div class="melato-grid melato-grid--cards">
+              {%- if new_arrivals != blank -%}
+                {%- for fallback_product in new_arrivals.products -%}
+                  {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
+                  {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
+                  {%- if fallback_product.available and fallback_product.product_type == product.product_type and fallback_product.id != product.id -%}
+                    {%- unless shown_ids contains fallback_key -%}
+                      {% render 'melato-product-card-audit', card_product: fallback_product %}
+                      {%- assign shown = shown | plus: 1 -%}
+                      {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
+                    {%- endunless -%}
+                  {%- endif -%}
+                {%- endfor -%}
               {%- endif -%}
-            {%- endfor -%}
-          </div>
-        {%- else -%}
-          {%- liquid
-            assign shown = 0
-            assign shown_ids = '|' | append: product.id | append: '|'
-            assign new_arrivals = collections['new-arrivals']
-            assign best_sellers = collections['best-sellers']
-          -%}
-          <div class="melato-grid melato-grid--cards">
-            {%- if new_arrivals != blank -%}
-              {%- for fallback_product in new_arrivals.products -%}
-                {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
-                {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
-                {%- if fallback_product.available and fallback_product.product_type == product.product_type and fallback_product.id != product.id -%}
-                  {%- unless shown_ids contains fallback_key -%}
-                    {% render 'melato-product-card-audit', card_product: fallback_product %}
-                    {%- assign shown = shown | plus: 1 -%}
-                    {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
-                  {%- endunless -%}
-                {%- endif -%}
-              {%- endfor -%}
-            {%- endif -%}
 
-            {%- if shown < products_to_show and best_sellers != blank -%}
-              {%- for fallback_product in best_sellers.products -%}
-                {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
-                {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
-                {%- if fallback_product.available and fallback_product.id != product.id -%}
-                  {%- unless shown_ids contains fallback_key -%}
-                    {% render 'melato-product-card-audit', card_product: fallback_product %}
-                    {%- assign shown = shown | plus: 1 -%}
-                    {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
-                  {%- endunless -%}
-                {%- endif -%}
-              {%- endfor -%}
-            {%- endif -%}
+              {%- if shown < products_to_show and best_sellers != blank -%}
+                {%- for fallback_product in best_sellers.products -%}
+                  {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
+                  {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
+                  {%- if fallback_product.available and fallback_product.id != product.id -%}
+                    {%- unless shown_ids contains fallback_key -%}
+                      {% render 'melato-product-card-audit', card_product: fallback_product %}
+                      {%- assign shown = shown | plus: 1 -%}
+                      {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
+                    {%- endunless -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
 
-            {%- if shown < products_to_show and new_arrivals != blank -%}
-              {%- for fallback_product in new_arrivals.products -%}
-                {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
-                {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
-                {%- if fallback_product.available and fallback_product.id != product.id -%}
-                  {%- unless shown_ids contains fallback_key -%}
-                    {% render 'melato-product-card-audit', card_product: fallback_product %}
-                    {%- assign shown = shown | plus: 1 -%}
-                    {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
-                  {%- endunless -%}
-                {%- endif -%}
-              {%- endfor -%}
-            {%- endif -%}
-          </div>
-        {%- endif -%}
-      </product-recommendations>
+              {%- if shown < products_to_show and new_arrivals != blank -%}
+                {%- for fallback_product in new_arrivals.products -%}
+                  {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
+                  {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
+                  {%- if fallback_product.available and fallback_product.id != product.id -%}
+                    {%- unless shown_ids contains fallback_key -%}
+                      {% render 'melato-product-card-audit', card_product: fallback_product %}
+                      {%- assign shown = shown | plus: 1 -%}
+                      {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
+                    {%- endunless -%}
+                  {%- endif -%}
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        </product-recommendations>
+      {%- endif -%}
     </div>
   </section>
 {%- endif -%}
@@ -129,32 +144,10 @@
   "tag": "section",
   "class": "section melato-section",
   "settings": [
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Eyebrow",
-      "default": "Continue shopping"
-    },
-    {
-      "type": "text",
-      "id": "heading",
-      "label": "Heading",
-      "default": "You might also like"
-    },
-    {
-      "type": "range",
-      "id": "products_to_show",
-      "label": "Products to show",
-      "min": 2,
-      "max": 8,
-      "step": 1,
-      "default": 4
-    }
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Continue shopping"},
+    {"type":"text","id":"heading","label":"Heading","default":"You might also like"},
+    {"type":"range","id":"products_to_show","label":"Products to show","min":2,"max":8,"step":1,"default":4}
   ],
-  "presets": [
-    {
-      "name": "Related products"
-    }
-  ]
+  "presets": [{"name":"Related products"}]
 }
 {% endschema %}

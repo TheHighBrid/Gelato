@@ -1,0 +1,247 @@
+{% liquid
+  assign anchor = section.settings.section_anchor | default: 'living-book'
+  assign source = section.settings.archive_source | default: 'all'
+  assign season = section.settings.season | default: 'Season I'
+  assign shop_label = section.settings.shop_label | default: 'Shop this frame'
+%}
+
+{% capture manifest %}
+  {% if source == 'case02' %}
+    {% render 'melato-living-lookbook-evidence-data' %}~{% render 'melato-living-lookbook-evidence-case02-additions' %}
+  {% elsif source == 'case03' %}
+    {% render 'melato-living-lookbook-evidence-case03-data' %}
+  {% else %}
+    {% render 'melato-living-lookbook-evidence-data' %}~{% render 'melato-living-lookbook-evidence-case02-additions' %}~{% render 'melato-living-lookbook-evidence-case03-data' %}
+  {% endif %}
+{% endcapture %}
+{% assign records = manifest | strip | split: '~' %}
+
+<section id="{{ anchor | escape }}" class="mlb" data-melato-living-book>
+  <style>
+    #shopify-section-{{ section.id }}{background:#080706;color:#f5ecde}
+    #shopify-section-{{ section.id }} .mlb{--bone:#f5ecde;--paper:#deceb4;--line:rgba(245,236,222,.16);--gold:#b49a63;--ink:#080706;--cream:#f2e8d8;background:radial-gradient(circle at 12% 0,rgba(80,23,28,.5),transparent 34rem),linear-gradient(180deg,#080706,#17110d 52%,#080706);color:var(--bone);overflow:clip}
+    #shopify-section-{{ section.id }} .mlb-cover{min-height:82vh;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(18rem,.8fr);gap:clamp(2rem,5vw,5rem);align-items:end;padding:clamp(4rem,8vw,7rem) clamp(1rem,5vw,6rem);border-bottom:1px solid var(--line);position:relative}
+    #shopify-section-{{ section.id }} .mlb-cover:before{content:"";position:absolute;inset:1rem;border:1px solid rgba(245,236,222,.12);pointer-events:none}
+    #shopify-section-{{ section.id }} .mlb-eyebrow,#shopify-section-{{ section.id }} .mlb-small{display:block;text-transform:uppercase;letter-spacing:.22em;font-size:.68rem;color:var(--gold)}
+    #shopify-section-{{ section.id }} .mlb-title{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(4rem,12vw,11rem);line-height:.82;letter-spacing:-.07em;text-transform:uppercase;margin:.7rem 0 0}
+    #shopify-section-{{ section.id }} .mlb-season{display:block;margin-top:1rem;font:700 clamp(.9rem,1.6vw,1.25rem)/1.2 inherit;letter-spacing:.3em;color:var(--paper)}
+    #shopify-section-{{ section.id }} .mlb-copy{max-width:42rem;color:rgba(245,236,222,.68);font-size:clamp(1rem,1.4vw,1.18rem);line-height:1.7;margin:1.4rem 0 0}
+    #shopify-section-{{ section.id }} .mlb-panel{border:1px solid var(--line);background:rgba(245,236,222,.06);padding:clamp(1.1rem,3vw,2rem);backdrop-filter:blur(14px);position:relative;z-index:1}
+    #shopify-section-{{ section.id }} .mlb-panel p{line-height:1.7;color:var(--paper);margin:1rem 0 0}
+    #shopify-section-{{ section.id }} .mlb-link{display:inline-flex;margin-top:1.35rem;color:var(--bone);text-decoration:none;text-transform:uppercase;letter-spacing:.16em;font-size:.68rem;border-bottom:1px solid currentColor;padding-bottom:.35rem}
+    #shopify-section-{{ section.id }} .mlb-nav{position:sticky;top:0;z-index:5;display:flex;gap:.55rem;overflow-x:auto;padding:.8rem clamp(1rem,5vw,6rem);background:rgba(8,7,6,.88);border-bottom:1px solid var(--line);backdrop-filter:blur(16px);scrollbar-width:none}
+    #shopify-section-{{ section.id }} .mlb-nav::-webkit-scrollbar{display:none}
+    #shopify-section-{{ section.id }} .mlb-nav a{white-space:nowrap;text-decoration:none;color:var(--bone);border:1px solid var(--line);border-radius:999px;padding:.65rem .9rem;text-transform:uppercase;letter-spacing:.13em;font-size:.64rem}
+    #shopify-section-{{ section.id }} .mlb-chapter{padding:clamp(3rem,7vw,6rem) clamp(1rem,5vw,6rem);border-bottom:1px solid var(--line)}
+    #shopify-section-{{ section.id }} .mlb-chapter-head{max-width:70rem;margin:0 auto clamp(2rem,5vw,4rem);display:grid;grid-template-columns:.75fr 1fr;gap:clamp(1.5rem,4vw,4rem);align-items:end}
+    #shopify-section-{{ section.id }} .mlb-chapter-head h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(2.8rem,7vw,6.7rem);line-height:.86;letter-spacing:-.055em;text-transform:uppercase;margin:.6rem 0 0}
+    #shopify-section-{{ section.id }} .mlb-chapter-head p{color:rgba(245,236,222,.68);line-height:1.7;margin:0;max-width:40rem}
+    #shopify-section-{{ section.id }} .mlb-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:clamp(.8rem,1.7vw,1.3rem);align-items:start}
+    #shopify-section-{{ section.id }} .mlb-frame{grid-column:span 4;margin:0;min-width:0}
+    #shopify-section-{{ section.id }} .mlb-frame.is-hero{grid-column:span 7}#shopify-section-{{ section.id }} .mlb-frame.is-wide{grid-column:span 8}#shopify-section-{{ section.id }} .mlb-frame.is-tall{grid-column:span 5}#shopify-section-{{ section.id }} .mlb-frame.is-detail{grid-column:span 3}
+    #shopify-section-{{ section.id }} .mlb-media{position:relative;overflow:hidden;border:1px solid var(--line);background:#120f0c;box-shadow:0 1.5rem 4rem rgba(0,0,0,.32)}
+    #shopify-section-{{ section.id }} .mlb-media:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,.64));pointer-events:none}
+    #shopify-section-{{ section.id }} .mlb-media img{display:block;width:100%;height:auto;filter:saturate(.94) contrast(1.02);transition:transform .5s ease}
+    #shopify-section-{{ section.id }} .mlb-frame:hover img{transform:scale(1.024)}
+    #shopify-section-{{ section.id }} .mlb-caption{position:absolute;left:.8rem;right:.8rem;bottom:.8rem;z-index:2;display:flex;justify-content:space-between;gap:.8rem;align-items:end;pointer-events:none}
+    #shopify-section-{{ section.id }} .mlb-num{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(2rem,4vw,3.7rem);line-height:.8}#shopify-section-{{ section.id }} .mlb-kind{text-transform:uppercase;letter-spacing:.16em;font-size:.6rem;color:var(--paper);text-align:right}
+    #shopify-section-{{ section.id }} .mlb-shop{margin-top:.7rem;border:1px solid var(--line);background:rgba(245,236,222,.055)}
+    #shopify-section-{{ section.id }} .mlb-shop summary{cursor:pointer;list-style:none;padding:.85rem 1rem;text-transform:uppercase;letter-spacing:.15em;font-size:.66rem;color:var(--bone);display:flex;justify-content:space-between}
+    #shopify-section-{{ section.id }} .mlb-shop summary::-webkit-details-marker{display:none}#shopify-section-{{ section.id }} .mlb-shop summary:after{content:"↗";color:var(--gold)}
+    #shopify-section-{{ section.id }} .mlb-products{padding:0 1rem 1rem;display:grid;gap:.55rem}
+    #shopify-section-{{ section.id }} .mlb-product{display:grid;grid-template-columns:3.2rem minmax(0,1fr) auto;gap:.7rem;align-items:center;color:var(--bone);text-decoration:none;border-top:1px solid var(--line);padding-top:.65rem}
+    #shopify-section-{{ section.id }} .mlb-product img{width:3.2rem;height:4rem;object-fit:cover;border:1px solid var(--line)}
+    #shopify-section-{{ section.id }} .mlb-product strong{display:block;font-size:.86rem;line-height:1.18}#shopify-section-{{ section.id }} .mlb-price{display:block;margin-top:.18rem;color:rgba(245,236,222,.62);font-size:.72rem}#shopify-section-{{ section.id }} .mlb-cta{text-transform:uppercase;letter-spacing:.13em;font-size:.6rem;color:var(--gold);white-space:nowrap}
+    #shopify-section-{{ section.id }} .mlb-note{color:rgba(245,236,222,.52);text-transform:uppercase;letter-spacing:.12em;font-size:.62rem}
+    #shopify-section-{{ section.id }} .mlb-index{background:var(--cream);color:#111;padding:clamp(3rem,7vw,6rem) clamp(1rem,5vw,6rem)}
+    #shopify-section-{{ section.id }} .mlb-index-inner{max-width:72rem;margin:0 auto;display:grid;grid-template-columns:.75fr 1.25fr;gap:clamp(1.5rem,5vw,5rem)}
+    #shopify-section-{{ section.id }} .mlb-index h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:400;font-size:clamp(2.8rem,7vw,6.5rem);line-height:.86;letter-spacing:-.055em;text-transform:uppercase;margin:.6rem 0 1rem}
+    #shopify-section-{{ section.id }} .mlb-index p{color:rgba(17,17,17,.68);line-height:1.7}#shopify-section-{{ section.id }} .mlb-index-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem}#shopify-section-{{ section.id }} .mlb-index-link{min-height:7rem;display:flex;flex-direction:column;justify-content:space-between;color:#111;text-decoration:none;border:1px solid rgba(17,17,17,.16);padding:1rem;background:rgba(255,255,255,.35)}#shopify-section-{{ section.id }} .mlb-index-link small{text-transform:uppercase;letter-spacing:.14em;font-size:.62rem;color:rgba(17,17,17,.58)}
+    #shopify-section-{{ section.id }} .mlb-close{background:var(--cream);color:rgba(17,17,17,.62);display:flex;justify-content:space-between;gap:1rem;padding:2rem clamp(1rem,5vw,6rem);text-transform:uppercase;letter-spacing:.15em;font-size:.66rem;border-top:1px solid rgba(17,17,17,.12)}
+    @media(max-width:989px){#shopify-section-{{ section.id }} .mlb-cover,#shopify-section-{{ section.id }} .mlb-chapter-head,#shopify-section-{{ section.id }} .mlb-index-inner{grid-template-columns:1fr}#shopify-section-{{ section.id }} .mlb-grid{grid-template-columns:repeat(6,minmax(0,1fr))}#shopify-section-{{ section.id }} .mlb-frame,#shopify-section-{{ section.id }} .mlb-frame.is-hero,#shopify-section-{{ section.id }} .mlb-frame.is-wide,#shopify-section-{{ section.id }} .mlb-frame.is-tall{grid-column:span 3}#shopify-section-{{ section.id }} .mlb-frame.is-detail{grid-column:span 2}}
+    @media(max-width:640px){#shopify-section-{{ section.id }} .mlb-cover{min-height:74vh;padding-top:4rem}#shopify-section-{{ section.id }} .mlb-grid{display:block}#shopify-section-{{ section.id }} .mlb-frame{margin-bottom:1.1rem}#shopify-section-{{ section.id }} .mlb-index-grid{grid-template-columns:1fr}#shopify-section-{{ section.id }} .mlb-product{grid-template-columns:2.9rem minmax(0,1fr)}#shopify-section-{{ section.id }} .mlb-cta{grid-column:2}#shopify-section-{{ section.id }} .mlb-close{display:grid}}
+  </style>
+
+  <div class="mlb-cover">
+    <div>
+      <span class="mlb-eyebrow">{{ section.settings.eyebrow | escape }}</span>
+      <h1 class="mlb-title">{{ section.settings.title | escape }}<span class="mlb-season">{{ season | escape }}</span></h1>
+      <p class="mlb-copy">{{ section.settings.dek | escape }}</p>
+      <a class="mlb-link" href="#MLBChapter1-{{ section.id }}">Enter the book ↓</a>
+    </div>
+    <aside class="mlb-panel">
+      <span class="mlb-small">Digital wardrobe archive</span>
+      <p>{{ section.settings.cover_note | escape }}</p>
+      <a class="mlb-link" href="#MLBIndex-{{ section.id }}">Open wardrobe index ↗</a>
+    </aside>
+  </div>
+
+  <nav class="mlb-nav" aria-label="Living Book chapters">
+    <a href="#MLBChapter1-{{ section.id }}">01 The Uniform</a>
+    <a href="#MLBChapter2-{{ section.id }}">02 Eve's Wardrobe</a>
+    <a href="#MLBChapter3-{{ section.id }}">03 Objects of Use</a>
+    <a href="#MLBChapter4-{{ section.id }}">04 After Hours</a>
+    <a href="#MLBIndex-{{ section.id }}">Wardrobe Index</a>
+  </nav>
+
+  {% for chapter in (1..4) %}
+    {% liquid
+      if chapter == 1
+        assign start_frame = 1
+        assign end_frame = 12
+        assign chapter_title = section.settings.chapter_1_title
+        assign chapter_copy = section.settings.chapter_1_copy
+        assign chapter_label = 'Chapter 01'
+      elsif chapter == 2
+        assign start_frame = 13
+        assign end_frame = 30
+        assign chapter_title = section.settings.chapter_2_title
+        assign chapter_copy = section.settings.chapter_2_copy
+        assign chapter_label = 'Chapter 02'
+      elsif chapter == 3
+        assign start_frame = 31
+        assign end_frame = 48
+        assign chapter_title = section.settings.chapter_3_title
+        assign chapter_copy = section.settings.chapter_3_copy
+        assign chapter_label = 'Chapter 03'
+      else
+        assign start_frame = 49
+        assign end_frame = 999
+        assign chapter_title = section.settings.chapter_4_title
+        assign chapter_copy = section.settings.chapter_4_copy
+        assign chapter_label = 'Chapter 04'
+      endif
+    %}
+    <section id="MLBChapter{{ chapter }}-{{ section.id }}" class="mlb-chapter">
+      <header class="mlb-chapter-head">
+        <div><span class="mlb-small">{{ chapter_label }}</span><h2>{{ chapter_title | escape }}</h2></div>
+        <p>{{ chapter_copy | escape }}</p>
+      </header>
+
+      <div class="mlb-grid" role="list">
+        {% for record in records %}
+          {% assign fields = record | strip | split: '|' %}
+          {% assign image_url = fields[0] | strip %}
+          {% if image_url == blank %}{% continue %}{% endif %}
+          {% assign frame_number = forloop.index %}
+          {% if frame_number < start_frame or frame_number > end_frame %}{% continue %}{% endif %}
+
+          {% assign image_width = fields[1] | strip %}
+          {% assign image_height = fields[2] | strip %}
+          {% assign image_kind = fields[3] | strip | default: 'study' %}
+          {% assign p1 = blank %}{% assign p2 = blank %}{% assign p3 = blank %}{% assign frame_note = blank %}
+          {% for block in section.blocks %}
+            {% assign mapped_frame = block.settings.frame_number | plus: 0 %}
+            {% if mapped_frame == frame_number %}
+              {% assign p1 = block.settings.product_one %}
+              {% assign p2 = block.settings.product_two %}
+              {% assign p3 = block.settings.product_three %}
+              {% assign frame_note = block.settings.frame_note %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+
+          {% capture frame_code %}{% if frame_number < 10 %}0{% endif %}{{ frame_number }}{% endcapture %}
+          {% assign mod6 = frame_number | modulo: 6 %}
+          {% assign mod10 = frame_number | modulo: 10 %}
+          {% capture card_class %}mlb-frame{% if mod10 == 1 or mod10 == 7 %} is-hero{% elsif mod6 == 0 %} is-wide{% elsif mod6 == 3 %} is-tall{% elsif image_kind == 'fragment' %} is-detail{% endif %}{% endcapture %}
+
+          <figure class="{{ card_class | strip }}" role="listitem">
+            <div class="mlb-media">
+              <img src="{{ image_url | append: '&width=900' | escape }}" srcset="{{ image_url | append: '&width=520' | escape }} 520w, {{ image_url | append: '&width=900' | escape }} 900w, {{ image_url | append: '&width=1400' | escape }} 1400w" sizes="(min-width:1280px)34vw,(min-width:990px)42vw,(min-width:641px)48vw,100vw" width="{{ image_width }}" height="{{ image_height }}" alt="Melato Living Book {{ season | escape }} frame {{ frame_code | strip }}" {% if frame_number <= 3 %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+              <figcaption class="mlb-caption"><span class="mlb-num">{{ frame_code | strip }}</span><span class="mlb-kind">{% if image_kind == 'fragment' %}Detail frame{% elsif image_kind == 'master' %}Cover print{% else %}Living study{% endif %}</span></figcaption>
+            </div>
+
+            {% if p1 != blank or p2 != blank or p3 != blank %}
+              <details class="mlb-shop">
+                <summary>{{ shop_label | escape }}</summary>
+                <div class="mlb-products">
+                  {% if frame_note != blank %}<span class="mlb-note">{{ frame_note | escape }}</span>{% endif %}
+                  {% if p1 != blank %}<a class="mlb-product" href="{{ p1.url }}" aria-label="Shop {{ p1.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p1.featured_image %}<img src="{{ p1.featured_image | image_url: width: 150 }}" alt="{{ p1.title | escape }}" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p1.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p1.price | money }}</span>{% endif %}</span><span class="mlb-cta">View</span></a>{% endif %}
+                  {% if p2 != blank %}<a class="mlb-product" href="{{ p2.url }}" aria-label="Shop {{ p2.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p2.featured_image %}<img src="{{ p2.featured_image | image_url: width: 150 }}" alt="{{ p2.title | escape }}" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p2.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p2.price | money }}</span>{% endif %}</span><span class="mlb-cta">View</span></a>{% endif %}
+                  {% if p3 != blank %}<a class="mlb-product" href="{{ p3.url }}" aria-label="Shop {{ p3.title | escape }} from Living Book frame {{ frame_code | strip }}">{% if p3.featured_image %}<img src="{{ p3.featured_image | image_url: width: 150 }}" alt="{{ p3.title | escape }}" loading="lazy" width="150" height="190">{% endif %}<span><strong>{{ p3.title | escape }}</strong>{% if section.settings.show_prices %}<span class="mlb-price">{{ p3.price | money }}</span>{% endif %}</span><span class="mlb-cta">View</span></a>{% endif %}
+                </div>
+              </details>
+            {% elsif section.settings.show_unlinked_note %}
+              <p class="mlb-note">Editorial frame / no product assigned yet</p>
+            {% endif %}
+          </figure>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+
+  <section id="MLBIndex-{{ section.id }}" class="mlb-index">
+    <div class="mlb-index-inner">
+      <div><span class="mlb-small">Wardrobe index</span><h2>{{ section.settings.index_title | escape }}</h2><p>{{ section.settings.index_copy | escape }}</p></div>
+      <div class="mlb-index-grid">
+        {% assign indexed = '' %}
+        {% for block in section.blocks %}
+          {% assign p1 = block.settings.product_one %}{% assign p2 = block.settings.product_two %}{% assign p3 = block.settings.product_three %}
+          {% if p1 != blank %}{% assign token = '|' | append: p1.handle | append: '|' %}{% unless indexed contains token %}{% assign indexed = indexed | append: token %}<a class="mlb-index-link" href="{{ p1.url }}"><small>Frame {{ block.settings.frame_number }}</small><strong>{{ p1.title | escape }}</strong></a>{% endunless %}{% endif %}
+          {% if p2 != blank %}{% assign token = '|' | append: p2.handle | append: '|' %}{% unless indexed contains token %}{% assign indexed = indexed | append: token %}<a class="mlb-index-link" href="{{ p2.url }}"><small>Frame {{ block.settings.frame_number }}</small><strong>{{ p2.title | escape }}</strong></a>{% endunless %}{% endif %}
+          {% if p3 != blank %}{% assign token = '|' | append: p3.handle | append: '|' %}{% unless indexed contains token %}{% assign indexed = indexed | append: token %}<a class="mlb-index-link" href="{{ p3.url }}"><small>Frame {{ block.settings.frame_number }}</small><strong>{{ p3.title | escape }}</strong></a>{% endunless %}{% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <footer class="mlb-close"><span>Creative direction: Melato</span><span>{{ season | escape }} / {{ section.settings.title | escape }}</span><span>Receive the next chapter</span></footer>
+</section>
+
+{% schema %}
+{
+  "name": "Melato Living Book",
+  "tag": "section",
+  "class": "section-melato-living-book",
+  "settings": [
+    { "type": "text", "id": "section_anchor", "label": "Section anchor", "default": "living-book" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "MELATO / LIVING BOOK" },
+    { "type": "text", "id": "title", "label": "Title", "default": "The Living Book" },
+    { "type": "text", "id": "season", "label": "Season label", "default": "Season I" },
+    { "type": "textarea", "id": "dek", "label": "Cover copy", "default": "A cinematic wardrobe archive. Read the scene, inspect the garment, shop the piece." },
+    { "type": "textarea", "id": "cover_note", "label": "Cover side note", "default": "The lookbook becomes a digital fashion book: chaptered editorial pacing, verified product routing, and a wardrobe index that lets customers shop without breaking the cinematic mood." },
+    {
+      "type": "select",
+      "id": "archive_source",
+      "label": "Image archive source",
+      "default": "all",
+      "options": [
+        { "value": "all", "label": "All living archive frames" },
+        { "value": "case02", "label": "Case file 02 only" },
+        { "value": "case03", "label": "Case file 03 only" }
+      ]
+    },
+    { "type": "text", "id": "shop_label", "label": "Frame shopping label", "default": "Shop this frame" },
+    { "type": "checkbox", "id": "show_prices", "label": "Show prices in frame product cards", "default": true },
+    { "type": "checkbox", "id": "show_unlinked_note", "label": "Mark frames without assigned products", "default": false },
+    { "type": "text", "id": "chapter_1_title", "label": "Chapter 1 title", "default": "The Uniform" },
+    { "type": "textarea", "id": "chapter_1_copy", "label": "Chapter 1 copy", "default": "Tracksuits, repetition, identity and the pieces that make Melato instantly readable." },
+    { "type": "text", "id": "chapter_2_title", "label": "Chapter 2 title", "default": "Eve's Wardrobe" },
+    { "type": "textarea", "id": "chapter_2_copy", "label": "Chapter 2 copy", "default": "Fitted silhouettes, evening textures and the more intimate side of the wardrobe." },
+    { "type": "text", "id": "chapter_3_title", "label": "Chapter 3 title", "default": "Objects of Use" },
+    { "type": "textarea", "id": "chapter_3_copy", "label": "Chapter 3 copy", "default": "Bags, accessories, small details and the quiet items that finish a look." },
+    { "type": "text", "id": "chapter_4_title", "label": "Chapter 4 title", "default": "After Hours" },
+    { "type": "textarea", "id": "chapter_4_copy", "label": "Chapter 4 copy", "default": "The archive becomes darker, more cinematic and closer to memory than product photography." },
+    { "type": "text", "id": "index_title", "label": "Wardrobe index title", "default": "Shop the archive" },
+    { "type": "textarea", "id": "index_copy", "label": "Wardrobe index copy", "default": "Every verified garment assigned to a Living Book frame is collected here as a clean shopping exit after the editorial experience." }
+  ],
+  "blocks": [
+    {
+      "type": "wardrobe_frame",
+      "name": "Shoppable frame",
+      "settings": [
+        { "type": "range", "id": "frame_number", "label": "Frame number", "min": 1, "max": 150, "step": 1, "default": 1 },
+        { "type": "product", "id": "product_one", "label": "Primary product" },
+        { "type": "product", "id": "product_two", "label": "Secondary product" },
+        { "type": "product", "id": "product_three", "label": "Third product" },
+        { "type": "text", "id": "frame_note", "label": "Frame product note", "default": "Verified wardrobe" }
+      ]
+    }
+  ],
+  "max_blocks": 50,
+  "presets": [
+    { "name": "Melato Living Book" }
+  ]
+}
+{% endschema %}

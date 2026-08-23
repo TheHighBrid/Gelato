@@ -1,0 +1,175 @@
+{% comment %}
+  Curated Living Lookbook corrections from the August 18, 2026 visual review.
+  The replacement images already live in Shopify Files. This section only remaps
+  the explicitly rejected / duplicated evidence frames while preserving the
+  evidence viewer, numbering and responsive image behavior.
+{% endcomment %}
+
+<style>
+  /* The chapter interstitial copy was explicitly removed from the evidence board. */
+  #MelatoEvidenceArchive-evidence_20260714 .mea__chapter,
+  [data-evidence-archive][data-case-code="LL-02"] .mea__chapter {
+    display: none !important;
+  }
+</style>
+
+<script>
+(() => {
+  const replacements = {
+    '08': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_30.jpg?v=1787024184', width: 2244, height: 2804 },
+    '10': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_31.jpg?v=1787024130', width: 2244, height: 2804 },
+    '15': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_32.jpg?v=1787024051', width: 2046, height: 3074 },
+    '16': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_34.jpg?v=1787024272', width: 1122, height: 1392 },
+    '23': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_35.jpg?v=1787024354', width: 1108, height: 1394 },
+    '46': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_37.jpg?v=1787024376', width: 1104, height: 1392 },
+    '47': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_38.jpg?v=1787024394', width: 724, height: 1270 },
+    '55': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_39.jpg?v=1787024413', width: 2168, height: 2902 },
+    '56': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_40.jpg?v=1787024438', width: 2244, height: 2804 },
+    '59': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_41.jpg?v=1787024465', width: 1118, height: 1384 },
+    '62': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_43.jpg?v=1787024514', width: 3072, height: 2048 },
+    '63': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_44.jpg?v=1787024535', width: 2244, height: 2804 },
+    '69': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_45.jpg?v=1787024567', width: 2244, height: 2804 },
+    '71': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_46.jpg?v=1787024586', width: 2244, height: 2804 },
+    '77': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_47.jpg?v=1787024620', width: 2244, height: 2804 },
+    '89': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_48.jpg?v=1787024640', width: 684, height: 1104 },
+    '91': { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_49.jpg?v=1787024658', width: 2244, height: 2804 }
+  };
+
+  const oldGalleryReplacement = {
+    url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_50.jpg?v=1787024890',
+    width: 2630,
+    height: 2392
+  };
+  const oldGalleryBrokenToken = 'The_Living_Lookbook-Frame-02_5.jpg';
+
+  const sized = (url, width) => `${url}${url.includes('?') ? '&' : '?'}width=${width}`;
+
+  const clearProductBinding = (trigger) => {
+    if (!trigger) return;
+    delete trigger.dataset.productTitle;
+    delete trigger.dataset.productUrl;
+    delete trigger.dataset.productPrice;
+    const figure = trigger.closest('.mea__evidence');
+    figure?.querySelector('.mea__shop-tag')?.remove();
+  };
+
+  const replaceEvidence = (root) => {
+    if (!root) return;
+    root.querySelectorAll('[data-evidence-open][data-evidence-code]').forEach((trigger) => {
+      const replacement = replacements[trigger.dataset.evidenceCode];
+      if (!replacement) return;
+
+      const img = trigger.querySelector('.mea__image-well img');
+      if (!img) return;
+
+      img.src = sized(replacement.url, 760);
+      img.srcset = `${sized(replacement.url, 480)} 480w, ${sized(replacement.url, 760)} 760w, ${sized(replacement.url, 1100)} 1100w`;
+      img.width = replacement.width;
+      img.height = replacement.height;
+      img.alt = `Melato Living Lookbook curated evidence frame ${trigger.dataset.evidenceCode}`;
+      trigger.dataset.evidenceFull = sized(replacement.url, 2200);
+
+      /* Never carry a product link from the discarded photograph onto a new one. */
+      clearProductBinding(trigger);
+    });
+  };
+
+  const setOldGalleryLightbox = (gallery) => {
+    const lightboxImage = gallery?.querySelector('[data-lb-img]');
+    if (!lightboxImage) return;
+
+    const applyReplacementMetadata = () => {
+      const current = lightboxImage.getAttribute('src') || '';
+      if (!current.includes(oldGalleryBrokenToken)) return;
+
+      lightboxImage.src = oldGalleryReplacement.url;
+      const tag = gallery.querySelector('[data-lb-tag]');
+      const name = gallery.querySelector('[data-lb-name]');
+      const desc = gallery.querySelector('[data-lb-desc]');
+      const price = gallery.querySelector('[data-lb-price]');
+      const cta = gallery.querySelector('[data-lb-cta]');
+      if (tag) tag.textContent = 'Tracksuits';
+      if (name) name.textContent = 'The Uniform in Motion';
+      if (desc) desc.textContent = 'A new Melato Living Lookbook frame from the current editorial archive.';
+      if (price) price.style.display = 'none';
+      if (cta) {
+        cta.style.display = '';
+        cta.href = '/collections/tracksuits';
+        cta.textContent = 'Shop tracksuits →';
+      }
+    };
+
+    const observer = new MutationObserver(applyReplacementMetadata);
+    observer.observe(lightboxImage, { attributes: true, attributeFilter: ['src'] });
+    applyReplacementMetadata();
+  };
+
+  const replaceBrokenOldGalleryFrame = () => {
+    const gallery = document.getElementById('MelatoLivingLookbook');
+    if (!gallery) return;
+
+    const img = Array.from(gallery.querySelectorAll('.mlb-card img')).find((candidate) => {
+      const src = candidate.getAttribute('src') || '';
+      const alt = candidate.getAttribute('alt') || '';
+      return src.includes(oldGalleryBrokenToken) || /kitchen counter.*(red|rose) wine/i.test(alt);
+    });
+
+    if (img) {
+      const card = img.closest('.mlb-card');
+      img.src = oldGalleryReplacement.url;
+      img.removeAttribute('srcset');
+      img.width = oldGalleryReplacement.width;
+      img.height = oldGalleryReplacement.height;
+      img.alt = 'Melato Living Lookbook editorial frame 30';
+
+      if (card) {
+        card.dataset.cat = 'tracksuits velour';
+        const category = card.querySelector('.mlb-card-ov b');
+        const title = card.querySelector('.mlb-card-ov h3');
+        const price = card.querySelector('.mlb-card-ov p');
+        const cta = card.querySelector('.mlb-card-ov span');
+        if (category) category.textContent = 'Tracksuits';
+        if (title) title.textContent = 'The Uniform in Motion';
+        if (price) price.textContent = 'Current editorial frame';
+        if (cta) cta.textContent = 'Shop tracksuits →';
+      }
+    }
+
+    setOldGalleryLightbox(gallery);
+  };
+
+  const removeIncorrectFrameOneProduct = (root) => {
+    const trigger = root?.querySelector('[data-evidence-open][data-evidence-code="01"]');
+    clearProductBinding(trigger);
+  };
+
+  const apply = () => {
+    const case02 = document.querySelector('[data-evidence-archive][data-case-code="LL-02"]');
+    replaceEvidence(case02);
+    removeIncorrectFrameOneProduct(case02);
+    replaceBrokenOldGalleryFrame();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply, { once: true });
+  } else {
+    apply();
+  }
+
+  document.addEventListener('shopify:section:load', apply);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Lookbook curation fixes",
+  "tag": "section",
+  "class": "section-lookbook-curation-fixes",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Lookbook curation fixes"
+    }
+  ]
+}
+{% endschema %}

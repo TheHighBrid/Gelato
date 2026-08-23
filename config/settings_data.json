@@ -65,9 +65,9 @@
           "speed": 24,
           "font_size": 16,
           "badge_text": "POPUP CALENDAR",
-          "cta_text": "",
-          "cta_link": "",
-          "fallback_message": "· POPUP SHOW #5 AUGUST 20 · POPUP SHOW #6 SEPTEMBER 21 · POPUP SHOW #7 OCTOBER 21 · LOCATION ANNOUNCED 48 HOURS PRIOR · COMPLIMENTARY DELIVERY ON ALL ORDERS · \"LIKE NEVER CHANGE\"",
+          "cta_text": "NEWSLETTER",
+          "cta_link": "shopify://pages/newsletter",
+          "fallback_message": "COMPLIMENTARY DELIVERY ON ALL ORDERS · NEW ARRIVALS NOW LIVE · POPUP COORDINATES & DROP INTELLIGENCE VIA MELATO NOTES.",
           "fallback_micro": "Melato"
         }
       },
@@ -82,7 +82,7 @@
           "show_account": true,
           "bg_color": "#0a0a0a",
           "text_color": "#a6885d",
-          "accent_color": "#FFC371"
+          "accent_color": "#ffc371"
         }
       },
       "melato-footer": {

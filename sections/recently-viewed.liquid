@@ -1,6 +1,7 @@
 {% comment %}
   Recently viewed products for PDP continuity.
-  The hidden product marker supplies the existing theme tracker with complete product data.
+  This section owns its storage and rendering so generic theme product markers
+  cannot write incomplete records into the customer trail.
 {% endcomment %}
 
 {{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
@@ -8,23 +9,263 @@
 {%- if product != blank -%}
   <span
     hidden
-    data-product-id="{{ product.id }}"
-    data-product-title="{{ product.title | escape }}"
-    data-product-url="{{ product.url }}"
-    data-product-image="{% if product.featured_image %}{{ product.featured_image | image_url: width: 700 }}{% endif %}"
-    data-product-price="{{ product.price }}"
+    data-melato-recent-product
+    data-melato-product-id="{{ product.id }}"
+    data-melato-product-title="{{ product.title | escape }}"
+    data-melato-product-url="{{ product.url }}"
+    data-melato-product-image="{% if product.featured_image %}{{ product.featured_image | image_url: width: 700 }}{% endif %}"
+    data-melato-product-price="{{ product.price }}"
     aria-hidden="true"></span>
 {%- endif -%}
 
-<section class="melato-related melato-recently-viewed section-{{ section.id }}" data-recently-viewed aria-labelledby="RecentlyViewedHeading-{{ section.id }}">
+<section class="melato-related melato-recently-viewed section-{{ section.id }}" data-melato-recently-viewed aria-labelledby="RecentlyViewedHeading-{{ section.id }}" hidden>
   <div class="melato-section-wrap">
     <div class="melato-section-head">
       <p class="melato-eyebrow">Your trail</p>
       <h2 id="RecentlyViewedHeading-{{ section.id }}">{{ section.settings.heading | default: 'Recently viewed' }}</h2>
     </div>
-    <div class="melato-grid melato-grid--cards" data-recently-viewed-grid></div>
+    <div class="melato-grid melato-grid--cards" data-melato-recently-viewed-grid></div>
   </div>
 </section>
+
+<style>
+  .section-{{ section.id }} [data-melato-recently-viewed-grid] {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .section-{{ section.id }} .product-card { min-width: 0; }
+  .section-{{ section.id }} .product-card__media {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+  .section-{{ section.id }} .product-card__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  @media (min-width: 750px) {
+    .section-{{ section.id }} [data-melato-recently-viewed-grid] {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+  }
+</style>
+
+<script>
+(function() {
+  'use strict';
+
+  var storageKey = 'melato-recently-viewed-v2';
+  var legacyKey = 'drip-recently-viewed';
+  var maxStored = 8;
+  var maxRendered = 4;
+  var section = document.querySelector('.section-{{ section.id }}[data-melato-recently-viewed]');
+  var grid = section && section.querySelector('[data-melato-recently-viewed-grid]');
+  var marker = document.querySelector('[data-melato-recent-product]');
+  var currency = {{ shop.currency | json }};
+
+  if (!section || !grid || !marker) return;
+
+  function cleanString(value) {
+    var text = String(value == null ? '' : value).trim();
+    if (!text || text.toLowerCase() === 'undefined' || text.toLowerCase() === 'null') return '';
+    return text;
+  }
+
+  function safeProductUrl(value) {
+    var raw = cleanString(value);
+    if (!raw) return '';
+    try {
+      var parsed = new URL(raw, window.location.origin);
+      if (parsed.origin !== window.location.origin || !/\/products\/[^/?#]+/.test(parsed.pathname)) return '';
+      return parsed.pathname + parsed.search;
+    } catch (error) {
+      return '';
+    }
+  }
+
+  function safeImageUrl(value) {
+    var raw = cleanString(value);
+    if (!raw) return '';
+    try {
+      var parsed = new URL(raw, window.location.origin);
+      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return '';
+      return parsed.href;
+    } catch (error) {
+      return '';
+    }
+  }
+
+  function normalize(item) {
+    if (!item || typeof item !== 'object') return null;
+
+    var id = cleanString(item.id || item.productId || item.product_id);
+    var title = cleanString(item.title || item.productTitle || item.product_title);
+    var url = safeProductUrl(item.url || item.productUrl || item.product_url);
+    var image = safeImageUrl(item.img || item.image || item.productImage || item.product_image || item.featuredImage || item.featured_image);
+    var rawPrice = cleanString(item.price);
+    var parsedPrice = rawPrice ? Number(rawPrice) : NaN;
+
+    if (!id || !title || !url || !image) return null;
+
+    return {
+      id: id,
+      title: title,
+      url: url,
+      img: image,
+      price: Number.isFinite(parsedPrice) ? parsedPrice : null
+    };
+  }
+
+  function parseStorage(key) {
+    try {
+      var raw = JSON.parse(localStorage.getItem(key) || '[]');
+      return Array.isArray(raw) ? raw : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function dedupe(items) {
+    var seen = new Set();
+    return items.filter(function(item) {
+      if (!item || seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
+  }
+
+  function readViewed() {
+    var current = parseStorage(storageKey).map(normalize).filter(Boolean);
+    if (!current.length) {
+      current = parseStorage(legacyKey).map(normalize).filter(Boolean);
+    }
+    current = dedupe(current).slice(0, maxStored);
+    try { localStorage.setItem(storageKey, JSON.stringify(current)); } catch (error) {}
+    return current;
+  }
+
+  function writeViewed(items) {
+    try { localStorage.setItem(storageKey, JSON.stringify(dedupe(items).slice(0, maxStored))); } catch (error) {}
+  }
+
+  function currentProduct() {
+    return normalize({
+      id: marker.dataset.melatoProductId,
+      title: marker.dataset.melatoProductTitle,
+      url: marker.dataset.melatoProductUrl,
+      img: marker.dataset.melatoProductImage,
+      price: marker.dataset.melatoProductPrice
+    });
+  }
+
+  function trackCurrentProduct() {
+    var current = currentProduct();
+    if (!current) return null;
+    var viewed = readViewed().filter(function(item) { return item.id !== current.id; });
+    viewed.unshift(current);
+    writeViewed(viewed);
+    return current;
+  }
+
+  function formatPrice(cents) {
+    if (!Number.isFinite(Number(cents))) return '';
+    try {
+      return new Intl.NumberFormat(document.documentElement.lang || 'en', {
+        style: 'currency',
+        currency: currency
+      }).format(Number(cents) / 100);
+    } catch (error) {
+      return (Number(cents) / 100).toFixed(2);
+    }
+  }
+
+  function removeBrokenProduct(id, card) {
+    writeViewed(readViewed().filter(function(item) { return item.id !== id; }));
+    card.remove();
+    if (!grid.children.length) section.hidden = true;
+  }
+
+  function buildCard(item) {
+    var card = document.createElement('div');
+    card.className = 'product-card';
+
+    var media = document.createElement('div');
+    media.className = 'product-card__media';
+
+    var mediaLink = document.createElement('a');
+    mediaLink.href = item.url;
+    mediaLink.setAttribute('aria-label', item.title);
+
+    var image = document.createElement('img');
+    image.className = 'product-card__img product-card__img--primary product-card__img--only';
+    image.src = item.img;
+    image.alt = item.title;
+    image.loading = 'lazy';
+    image.width = 600;
+    image.height = 800;
+    image.addEventListener('error', function() { removeBrokenProduct(item.id, card); }, { once: true });
+
+    mediaLink.appendChild(image);
+    media.appendChild(mediaLink);
+
+    var info = document.createElement('div');
+    info.className = 'product-card__info';
+
+    var titleLink = document.createElement('a');
+    titleLink.href = item.url;
+    titleLink.className = 'product-card__title';
+    titleLink.textContent = item.title;
+    info.appendChild(titleLink);
+
+    var formatted = formatPrice(item.price);
+    if (formatted) {
+      var priceWrap = document.createElement('div');
+      priceWrap.className = 'product-card__price';
+      var price = document.createElement('span');
+      price.className = 'price';
+      price.textContent = formatted;
+      priceWrap.appendChild(price);
+      info.appendChild(priceWrap);
+    }
+
+    card.appendChild(media);
+    card.appendChild(info);
+    return card;
+  }
+
+  function render() {
+    var current = currentProduct();
+    var viewed = readViewed().filter(function(item) {
+      return !current || item.id !== current.id;
+    }).slice(0, maxRendered);
+
+    grid.replaceChildren();
+    if (!viewed.length) {
+      section.hidden = true;
+      return;
+    }
+
+    viewed.forEach(function(item) { grid.appendChild(buildCard(item)); });
+    section.hidden = false;
+  }
+
+  function boot() {
+    trackCurrentProduct();
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+
+  window.addEventListener('pageshow', render);
+})();
+</script>
 
 {% schema %}
 {

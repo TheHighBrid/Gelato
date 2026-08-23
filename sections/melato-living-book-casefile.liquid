@@ -1,210 +1,146 @@
 {% liquid
-  assign case_code = section.settings.case_code | default: 'LB-04'
+  assign case_code = section.settings.case_code | default: 'LB-INFINITE'
   assign case_title = section.settings.case_title | default: 'THE LIVING BOOK'
   assign case_subtitle = section.settings.case_subtitle | default: 'CASE FILE / UNRESOLVED'
-  assign frame_limit = section.settings.frame_limit | default: 54
 %}
 
 {{ 'melato-living-book-casefile.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'melato-living-book-casefile.js' | asset_url }}" defer></script>
 
-{% capture evidence_manifest %}
-  {% render 'melato-living-lookbook-evidence-data' %}~{% render 'melato-living-lookbook-evidence-case02-additions' %}{% if section.settings.include_case03 %}~{% render 'melato-living-lookbook-evidence-case03-data' %}{% endif %}
-{% endcapture %}
+{% capture evidence_manifest %}{% render 'melato-living-lookbook-legacy-data' %}~{% render 'melato-living-lookbook-evidence-data' %}~{% render 'melato-living-lookbook-evidence-case02-additions' %}{% if section.settings.include_case03 %}~{% render 'melato-living-lookbook-evidence-case03-data' %}{% endif %}{% endcapture %}
 {% assign evidence_items = evidence_manifest | strip | split: '~' %}
 {% assign displayed_count = evidence_items.size %}
-{% if displayed_count > frame_limit %}{% assign displayed_count = frame_limit %}{% endif %}
+{% assign act_1_boundary = displayed_count | times: 15 | divided_by: 100 %}
+{% if act_1_boundary < 8 %}{% assign act_1_boundary = 8 %}{% endif %}
+{% assign act_2_start = act_1_boundary | plus: 1 %}
+{% assign act_2_boundary = displayed_count | times: 50 | divided_by: 100 %}
+{% assign act_3_start = act_2_boundary | plus: 1 %}
+{% assign act_3_boundary = displayed_count | times: 85 | divided_by: 100 %}
+{% assign act_4_start = act_3_boundary | plus: 1 %}
 {% assign first_record = evidence_items | first | strip | split: '|' %}
 {% assign hero_url = first_record[0] | strip | append: '&width=2400' %}
 {% assign hero_width = first_record[1] | strip %}
 {% assign hero_height = first_record[2] | strip %}
 
-<section class="melato-living-book-casefile" data-living-book-casefile aria-labelledby="LivingBookTitle-{{ section.id }}">
-  <div class="lbk-noise" aria-hidden="true"></div>
-  <div class="lbk-progress" aria-hidden="true"></div>
+<section id="LivingBookV2-{{ section.id }}" class="melato-living-book-casefile lbv2" data-living-book-casefile data-lbv2-total="{{ displayed_count }}" aria-labelledby="LivingBookTitle-{{ section.id }}">
+  <div class="lbv2-intro" data-lbv2-intro aria-hidden="true">
+    <span class="lbv2-intro__case">CASE / {{ case_code | escape }}</span>
+    <div class="lbv2-intro__print" aria-hidden="true"></div>
+    <strong>THE LIVING BOOK</strong>
+    <span class="lbv2-intro__rule"></span>
+  </div>
+  <div class="lbv2-noise" aria-hidden="true"></div>
+  <div class="lbv2-progress" aria-hidden="true"><span></span></div>
 
-  <header class="lbk-masthead">
-    <div class="lbk-masthead__image" aria-hidden="true">
-      <img src="{{ hero_url | escape }}" width="{{ hero_width }}" height="{{ hero_height }}" alt="" fetchpriority="high" decoding="async">
-    </div>
-    <div class="lbk-masthead__veil" aria-hidden="true"></div>
-    <div class="lbk-masthead__scan" aria-hidden="true"></div>
+  <nav class="lbv2-rail" data-lbv2-rail aria-label="Living Book chapters">
+    <a href="#lbv2-act-1-{{ section.id }}" data-lbv2-rail-link="I" aria-label="Act I, The Scene"><span>I</span></a>
+    <a href="#lbv2-act-2-{{ section.id }}" data-lbv2-rail-link="II" aria-label="Act II, The Evidence"><span>II</span></a>
+    <a href="#lbv2-act-3-{{ section.id }}" data-lbv2-rail-link="III" aria-label="Act III, The Witnesses"><span>III</span></a>
+    <a href="#lbv2-act-4-{{ section.id }}" data-lbv2-rail-link="IV" aria-label="Act IV, The Dossier"><span>IV</span></a>
+    <a class="lbv2-rail__shop" href="{{ routes.all_products_collection_url }}"><span>SHOP</span></a>
+  </nav>
 
-    <div class="lbk-masthead__meta">
-      <span>MELATO / EDITORIAL DIVISION / {{ case_code | escape }}</span>
-      <span>{{ section.settings.filed_date | escape }}<br>AUTHORIZED VIEWING</span>
-    </div>
-
-    <div>
-      <p class="lbk-kicker">{{ case_subtitle | escape }}</p>
-      <h1 id="LivingBookTitle-{{ section.id }}" class="lbk-title">
-        {{ case_title | escape }}
-        <em>{{ section.settings.outline_title | default: 'EVIDENCE' | escape }}</em>
-      </h1>
-      <p class="lbk-deck">{{ section.settings.deck | escape }}</p>
+  <header class="lbv2-masthead">
+    <div class="lbv2-masthead__image" aria-hidden="true"><img src="{{ hero_url | escape }}" width="{{ hero_width }}" height="{{ hero_height }}" alt="" fetchpriority="high" decoding="async"></div>
+    <div class="lbv2-masthead__veil" aria-hidden="true"></div>
+    <div class="lbv2-masthead__scan" aria-hidden="true"></div>
+    <div class="lbv2-masthead__meta"><span>MELATO / EDITORIAL DIVISION / {{ case_code | escape }}</span><span>{{ section.settings.filed_date | escape }}<br>{{ displayed_count }} EXHIBITS / ACTIVE FILE</span></div>
+    <div class="lbv2-masthead__content">
+      <p class="lbv2-kicker">{{ case_subtitle | escape }}</p>
+      <h1 id="LivingBookTitle-{{ section.id }}" class="lbv2-title">{{ case_title | escape }}<em>{{ section.settings.outline_title | default: 'EVIDENCE' | escape }}</em></h1>
+      <p class="lbv2-deck">{{ section.settings.deck | escape }}</p>
+      <a class="lbv2-enter" href="#lbv2-act-1-{{ section.id }}">ENTER THE FILE <span aria-hidden="true">↓</span></a>
     </div>
   </header>
 
-  <section class="lbk-intake" aria-label="Case intake">
-    <p class="lbk-intake__statement">
-      The photograph arrived before the explanation. A body. A garment. A place. Nothing confessed. <span class="lbk-redact">Everything registered.</span>
-    </p>
-    <ul class="lbk-intake__registry">
+  <section class="lbv2-intake" aria-label="Case intake">
+    <p class="lbv2-intake__statement">The garment is the crime scene. The body is absent. <span class="lbv2-redact">The evidence speaks.</span></p>
+    <ul class="lbv2-intake__registry">
       <li><span>Case</span><strong>{{ case_code | escape }}</strong></li>
-      <li><span>Exhibits released</span><strong>{{ displayed_count }}</strong></li>
+      <li><span>Exhibits</span><strong>{{ displayed_count }}</strong></li>
+      <li><span>Architecture</span><strong>Dynamic / N frames</strong></li>
       <li><span>Classification</span><strong>Living evidence</strong></li>
-      <li><span>Condition</span><strong>Unresolved</strong></li>
       <li><span>Instruction</span><strong>Inspect, do not skim</strong></li>
     </ul>
   </section>
 
-  <main class="lbk-story">
-    <div class="lbk-board" role="list" aria-label="Living Book evidence sequence">
+  <main class="lbv2-story">
+    <div class="lbv2-board" role="list" aria-label="Living Book evidence sequence">
       {% for record in evidence_items %}
-        {% if forloop.index > frame_limit %}{% break %}{% endif %}
         {% assign fields = record | strip | split: '|' %}
         {% assign image_url = fields[0] | strip %}
         {% assign image_width = fields[1] | strip %}
         {% assign image_height = fields[2] | strip %}
         {% assign image_kind = fields[3] | strip %}
+        {% assign image_width_number = image_width | plus: 0 %}
+        {% assign image_height_number = image_height | plus: 0 %}
         {% assign evidence_number = forloop.index %}
-        {% assign mod_12 = evidence_number | modulo: 12 %}
-        {% assign mod_7 = evidence_number | modulo: 7 %}
-        {% assign mod_5 = evidence_number | modulo: 5 %}
 
         {% if evidence_number == 1 %}
-          <section class="lbk-chapter" role="listitem">
-            <span class="lbk-chapter__code">CHAPTER 01 / THE SIGHTING</span>
-            <div class="lbk-chapter__copy"><h2>A figure enters the frame.</h2><p>At first the subject appears to be wearing the clothes. Then the clothes begin wearing the scene. Posture, pavement, flash and fabric start producing the first reliable testimony.</p></div>
-          </section>
-        {% elsif evidence_number == 12 %}
-          <section class="lbk-chapter" role="listitem">
-            <span class="lbk-chapter__code">CHAPTER 02 / THE TRACE</span>
-            <div class="lbk-chapter__copy"><h2>Materials remember contact.</h2><p>Velour keeps pressure. Leather keeps fingerprints. Satin holds light like a witness who revised the story after midnight. The closer the crop gets, the less innocent the detail feels.</p></div>
-          </section>
-        {% elsif evidence_number == 25 %}
-          <section class="lbk-chapter" role="listitem">
-            <span class="lbk-chapter__code">CHAPTER 03 / THE PURSUIT</span>
-            <div class="lbk-chapter__copy"><h2>The evidence starts moving.</h2><p>The page stops behaving politely. Crops tighten. Angles break. Distance collapses. What looked composed begins to feel caught.</p></div>
-          </section>
-        {% elsif evidence_number == 38 %}
-          <section class="lbk-chapter" role="listitem">
-            <span class="lbk-chapter__code">CHAPTER 04 / THE INTERROGATION</span>
-            <div class="lbk-chapter__copy"><h2>Identity fractures into details.</h2><p>Zipper. Cuff. Mouth. Shadow. Chrome. Pavement. A wardrobe can reveal a person without ever giving a name.</p></div>
-          </section>
-        {% elsif evidence_number == 50 %}
-          <section class="lbk-chapter" role="listitem">
-            <span class="lbk-chapter__code">CHAPTER 05 / THE AFTERIMAGE</span>
-            <div class="lbk-chapter__copy"><h2>The frame ends. The feeling does not.</h2><p>The final evidence is not resolution. It is residue: the silhouette that remains in the eye after the screen has already gone black.</p></div>
-          </section>
+          <section id="lbv2-act-1-{{ section.id }}" class="lbv2-chapter" data-lbv2-chapter="I" role="listitem"><span class="lbv2-chapter__code">ACT I / THE SCENE</span><div class="lbv2-chapter__copy"><h2>Atmosphere becomes evidence.</h2><p>The first images establish place, pressure and absence. Nothing explains itself yet. The wardrobe enters as a trace.</p></div></section>
+        {% elsif evidence_number == act_2_start %}
+          <section id="lbv2-act-2-{{ section.id }}" class="lbv2-chapter" data-lbv2-chapter="II" role="listitem"><span class="lbv2-chapter__code">ACT II / THE EVIDENCE</span><div class="lbv2-chapter__copy"><h2>The product becomes the clue.</h2><p>Material, silhouette, hardware and detail are examined without turning the editorial into a catalogue.</p></div></section>
+        {% elsif evidence_number == act_3_start %}
+          <section id="lbv2-act-3-{{ section.id }}" class="lbv2-chapter" data-lbv2-chapter="III" role="listitem"><span class="lbv2-chapter__code">ACT III / THE WITNESSES</span><div class="lbv2-chapter__copy"><h2>The human element enters.</h2><p>Gesture and identity move through the archive. Faces can disappear. Posture, fabric and movement continue testifying.</p></div></section>
+        {% elsif evidence_number == act_4_start %}
+          <section id="lbv2-act-4-{{ section.id }}" class="lbv2-chapter" data-lbv2-chapter="IV" role="listitem"><span class="lbv2-chapter__code">ACT IV / THE DOSSIER</span><div class="lbv2-chapter__copy"><h2>The record reconstructs itself.</h2><p>The ending does not solve the file. It reorganizes what the viewer has already seen and leaves the case deliberately open.</p></div></section>
         {% endif %}
 
-        {% if evidence_number == 31 %}
-          <aside class="lbk-interruption" role="listitem">
-            <p>Witness statement: “I remember the <b>clothes</b> before I remember the face.”</p>
-          </aside>
-        {% endif %}
-
-        {% assign linked_product = blank %}
-        {% for block in section.blocks %}
-          {% assign mapped_frame = block.settings.frame_number | plus: 0 %}
-          {% if mapped_frame == evidence_number and block.settings.product != blank %}
-            {% assign linked_product = block.settings.product %}
-            {% break %}
-          {% endif %}
-        {% endfor %}
-
-        {% capture evidence_code %}{% if evidence_number < 10 %}0{% endif %}{{ evidence_number }}{% endcapture %}
+        {% assign frame_asset_key = image_url | split: '/' | last | handleize %}
+        {% capture frame_id %}LB-{{ frame_asset_key }}{% endcapture %}
+        {% assign frame_id = frame_id | strip %}
+        {% capture evidence_code %}{% if evidence_number < 10 %}00{% elsif evidence_number < 100 %}0{% endif %}{{ evidence_number }}{% endcapture %}
         {% assign evidence_code = evidence_code | strip %}
         {% assign image_520 = image_url | append: '&width=520' %}
         {% assign image_900 = image_url | append: '&width=900' %}
         {% assign image_1400 = image_url | append: '&width=1400' %}
         {% assign image_full = image_url | append: '&width=2400' %}
+        {% assign mod_11 = evidence_number | modulo: 11 %}
+        {% assign mod_7 = evidence_number | modulo: 7 %}
+        {% assign mod_5 = evidence_number | modulo: 5 %}
+        {% assign archetype = 'editorial' %}
+        {% assign motion_preset = 'drift' %}
+        {% if evidence_number == 1 %}{% assign archetype = 'hero' %}{% assign motion_preset = 'depth' %}
+        {% elsif image_kind == 'fragment' %}{% assign archetype = 'detail' %}{% assign motion_preset = 'magnify' %}
+        {% elsif image_width_number > image_height_number %}{% assign archetype = 'wide' %}{% assign motion_preset = 'depth' %}
+        {% elsif image_kind == 'master' or mod_11 == 0 %}{% assign archetype = 'cinema' %}{% assign motion_preset = 'depth' %}
+        {% elsif mod_7 == 0 %}{% assign archetype = 'tall' %}{% assign motion_preset = 'reveal' %}
+        {% elsif mod_5 == 0 %}{% assign archetype = 'quiet' %}{% assign motion_preset = 'still' %}{% endif %}
 
-        {% capture layout_class %}
-          {% if evidence_number == 1 %}lbk-frame--hero{% elsif image_kind == 'fragment' %}lbk-frame--fragment{% elsif mod_12 == 0 %}lbk-frame--wide{% elsif mod_7 == 0 %}lbk-frame--tall{% elsif mod_5 == 0 %}lbk-frame--small{% endif %}
-        {% endcapture %}
-
-        <figure class="lbk-frame {{ layout_class | strip }}" role="listitem" data-lbk-reveal style="--lb-ratio:{{ image_width }}/{{ image_height }}">
-          <button class="lbk-frame__open" type="button" data-lbk-open data-full="{{ image_full | escape }}" data-code="{{ evidence_code }}" aria-label="Inspect exhibit {{ evidence_code }}">
-            <span class="lbk-frame__photo">
-              <span class="lbk-frame__tape" aria-hidden="true"></span>
-              <img
-                src="{{ image_900 | escape }}"
-                srcset="{{ image_520 | escape }} 520w, {{ image_900 | escape }} 900w, {{ image_1400 | escape }} 1400w"
-                sizes="{% if evidence_number == 1 %}100vw{% elsif layout_class contains 'wide' %}(min-width: 900px) 66vw, 100vw{% else %}(min-width: 900px) 34vw, 100vw{% endif %}"
-                width="{{ image_width }}"
-                height="{{ image_height }}"
-                alt="Melato Living Book exhibit {{ evidence_code }}"
-                {% if evidence_number <= 3 %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
-                decoding="async"
-              >
-            </span>
+        <figure id="{{ frame_id | handleize }}-{{ evidence_number }}" class="lbv2-frame lbv2-frame--{{ archetype }}" role="listitem" data-lbv2-frame data-lbv2-frame-id="{{ frame_id | escape }}" data-lbv2-index="{{ forloop.index0 }}" data-archetype="{{ archetype }}" data-motion="{{ motion_preset }}" style="--lb-ratio:{{ image_width }}/{{ image_height }}">
+          <button class="lbv2-frame__open" type="button" data-lbv2-open data-full="{{ image_full | escape }}" data-code="{{ evidence_code }}" data-frame-id="{{ frame_id | escape }}" aria-label="Inspect exhibit {{ evidence_code }}">
+            <span class="lbv2-frame__photo"><span class="lbv2-frame__tape" aria-hidden="true"></span><img {% if evidence_number <= 3 %}src="{{ image_900 | escape }}" srcset="{{ image_520 | escape }} 520w, {{ image_900 | escape }} 900w, {{ image_1400 | escape }} 1400w" fetchpriority="{% if evidence_number == 1 %}high{% else %}auto{% endif %}"{% else %}data-lbv2-lazy data-src="{{ image_900 | escape }}" data-srcset="{{ image_520 | escape }} 520w, {{ image_900 | escape }} 900w, {{ image_1400 | escape }} 1400w"{% endif %} sizes="{% if archetype == 'hero' or archetype == 'wide' or archetype == 'cinema' %}(min-width: 900px) 74vw, 100vw{% elsif archetype == 'detail' %}(min-width: 900px) 22vw, 48vw{% else %}(min-width: 900px) 34vw, 100vw{% endif %}" width="{{ image_width }}" height="{{ image_height }}" alt="Melato Living Book exhibit {{ evidence_code }}" decoding="async"></span>
           </button>
-
-          <figcaption class="lbk-frame__caption">
-            <strong>EXHIBIT {{ evidence_code }}</strong>
-            <span>{% if image_kind == 'fragment' %}CONTACT FRAGMENT{% elsif image_kind == 'master' %}MASTER PRINT{% else %}FIELD IMAGE{% endif %}</span>
-            <span>{{ case_code | escape }} / {{ evidence_code }}</span>
-          </figcaption>
-
-          {% if linked_product != blank %}
-            <a class="lbk-frame__product" href="{{ linked_product.url }}" aria-label="View {{ linked_product.title | escape }} from exhibit {{ evidence_code }}">
-              <span>IDENTIFIED GARMENT</span>
-              <strong>{{ linked_product.title | escape }}</strong>
-              <em>VIEW ↗</em>
-            </a>
-          {% endif %}
+          <figcaption class="lbv2-frame__caption"><strong>EXHIBIT {{ evidence_code }}</strong><span>{{ archetype | upcase }}</span><span>{{ frame_id | escape }}</span></figcaption>
         </figure>
       {% endfor %}
     </div>
   </main>
 
-  <footer class="lbk-closing">
-    <div class="lbk-closing__inner">
-      <span class="lbk-closing__status">CASE STATUS / OPEN</span>
-      <h2>THE CULTURE<br>WEARS US.</h2>
-      <p>No verdict was reached. The garments remain in circulation. The images remain unstable. The record stays open because a living book should never end like a catalogue.</p>
-    </div>
-  </footer>
+  <footer class="lbv2-closing"><div class="lbv2-closing__fingerprint" aria-hidden="true"></div><div class="lbv2-closing__inner"><span class="lbv2-closing__status">CASE STATUS / OPEN</span><h2>THE CULTURE<br>WEARS US.</h2><p>No verdict was reached. The archive remains expandable, the sequence remains alive, and every new frame becomes another exhibit without rebuilding the system.</p><a href="{{ routes.all_products_collection_url }}">SHOP MELATO ↗</a></div></footer>
 
-  <div class="lbk-viewer" data-lbk-viewer role="dialog" aria-modal="true" aria-label="Living Book evidence viewer" aria-hidden="true" hidden>
-    <button class="lbk-viewer__close" type="button" data-lbk-close aria-label="Close viewer">×</button>
-    <button class="lbk-viewer__nav lbk-viewer__nav--prev" type="button" data-lbk-prev aria-label="Previous exhibit">←</button>
-    <figure class="lbk-viewer__figure">
-      <img data-lbk-viewer-image src="" alt="">
-      <figcaption class="lbk-viewer__caption"><span data-lbk-viewer-label>EXHIBIT 01</span><span data-lbk-viewer-counter>01 / {{ displayed_count }}</span></figcaption>
-    </figure>
-    <button class="lbk-viewer__nav lbk-viewer__nav--next" type="button" data-lbk-next aria-label="Next exhibit">→</button>
+  <div class="lbv2-viewer" data-lbv2-viewer role="dialog" aria-modal="true" aria-label="Living Book evidence viewer" aria-hidden="true" hidden>
+    <button class="lbv2-viewer__close" type="button" data-lbv2-close aria-label="Close viewer">×</button>
+    <button class="lbv2-viewer__nav lbv2-viewer__nav--prev" type="button" data-lbv2-prev aria-label="Previous exhibit">←</button>
+    <figure class="lbv2-viewer__figure"><img data-lbv2-viewer-image src="" alt=""><figcaption class="lbv2-viewer__caption"><span data-lbv2-viewer-label>EXHIBIT 001</span><span data-lbv2-viewer-counter>001 / {{ displayed_count }}</span></figcaption></figure>
+    <button class="lbv2-viewer__nav lbv2-viewer__nav--next" type="button" data-lbv2-next aria-label="Next exhibit">→</button>
   </div>
 </section>
 
 {% schema %}
 {
-  "name": "Living Book Casefile",
+  "name": "Living Book v2",
   "tag": "section",
-  "class": "section-living-book-casefile",
+  "class": "section-living-book-casefile-v2",
   "settings": [
-    { "type": "text", "id": "case_code", "label": "Case code", "default": "LB-04" },
+    { "type": "text", "id": "case_code", "label": "Case code", "default": "LB-INFINITE" },
     { "type": "text", "id": "case_subtitle", "label": "Case subtitle", "default": "CASE FILE / UNRESOLVED" },
     { "type": "text", "id": "case_title", "label": "Main title", "default": "THE LIVING BOOK" },
     { "type": "text", "id": "outline_title", "label": "Outline title", "default": "EVIDENCE" },
-    { "type": "textarea", "id": "deck", "label": "Opening statement", "default": "A fashion story reconstructed from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive." },
-    { "type": "text", "id": "filed_date", "label": "Filed date", "default": "10 AUG 2026" },
-    { "type": "range", "id": "frame_limit", "label": "Frames in narrative", "min": 12, "max": 108, "step": 1, "default": 54 },
-    { "type": "checkbox", "id": "include_case03", "label": "Include Case File 03 archive", "default": false }
+    { "type": "textarea", "id": "deck", "label": "Opening statement", "default": "A forensic fashion archive built from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive." },
+    { "type": "text", "id": "filed_date", "label": "Filed date", "default": "18 AUG 2026" },
+    { "type": "checkbox", "id": "include_case03", "label": "Include Case File 03 archive", "default": true }
   ],
-  "blocks": [
-    {
-      "type": "shoppable_frame",
-      "name": "Identified garment",
-      "settings": [
-        { "type": "range", "id": "frame_number", "label": "Exhibit number", "min": 1, "max": 108, "step": 1, "default": 1 },
-        { "type": "product", "id": "product", "label": "Product identified in frame" }
-      ]
-    }
-  ],
-  "max_blocks": 50,
-  "presets": [{ "name": "Living Book Casefile" }]
+  "presets": [{ "name": "Living Book v2" }]
 }
 {% endschema %}

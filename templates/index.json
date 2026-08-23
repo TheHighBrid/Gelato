@@ -7,7 +7,6 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-/* Melato homepage clean QA / 2026-08-13 */
 {
   "sections": {
     "melato_conversion_2026": {
@@ -16,18 +15,44 @@
         "eyebrow": "Melato",
         "heading": "THE CULTURE WEARS US",
         "copy": "Tailored for movement, cut with intent.",
+        "hero_image": "shopify://shop_images/Melato.ca-_EL_TLB_-FRAME_261.jpg",
         "featured_collection": "new-arrivals"
       }
     },
     "ticker": {
       "type": "ticker",
       "blocks": {
-        "item1": {"type":"item","settings":{"text":"THE CULTURE WEARS US"}},
-        "item2": {"type":"item","settings":{"text":"COMME NEVER CHANGE"}},
-        "item3": {"type":"item","settings":{"text":"COMPLIMENTARY DELIVERY"}},
-        "item4": {"type":"item","settings":{"text":"30 DAYS ON ELIGIBLE RETURNS"}}
+        "item1": {
+          "type": "item",
+          "settings": {
+            "text": "THE CULTURE WEARS US"
+          }
+        },
+        "item2": {
+          "type": "item",
+          "settings": {
+            "text": "COMME NEVER CHANGE"
+          }
+        },
+        "item3": {
+          "type": "item",
+          "settings": {
+            "text": "COMPLIMENTARY DELIVERY"
+          }
+        },
+        "item4": {
+          "type": "item",
+          "settings": {
+            "text": "30 DAYS ON ELIGIBLE RETURNS"
+          }
+        }
       },
-      "block_order": ["item1","item2","item3","item4"],
+      "block_order": [
+        "item1",
+        "item2",
+        "item3",
+        "item4"
+      ],
       "settings": {
         "accessible_label": "Melato information",
         "speed": 60,
@@ -93,5 +118,11 @@
       }
     }
   },
-  "order": ["melato_conversion_2026","ticker","featured_collection","reviews","brand_story","drop_signup_FMehUL"]
+  "order": [
+    "melato_conversion_2026",
+    "ticker",
+    "featured_collection",
+    "brand_story",
+    "drop_signup_FMehUL"
+  ]
 }

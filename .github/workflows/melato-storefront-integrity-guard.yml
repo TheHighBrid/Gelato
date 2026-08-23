@@ -46,6 +46,17 @@ jobs:
               if file.exists() and needle in file.read_text():
                   failures.append(f'{path}: forbidden {label or needle!r} returned')
 
+          # Every literal theme asset reference must resolve to a checked-in file.
+          # Scan every Liquid surface, including templates and blocks, so missing assets cannot hide outside sections/snippets.
+          for liquid_file in sorted(Path('.').rglob('*.liquid')):
+              if '.git' in liquid_file.parts:
+                  continue
+              source = liquid_file.read_text()
+              for match in re.finditer(r"['\"]([^'\"]+)['\"]\s*\|\s*asset_url", source):
+                  asset = Path('assets', match.group(1))
+                  if not asset.is_file():
+                      failures.append(f'{liquid_file}: referenced asset is missing: {asset}')
+
           # Retired duplicate concierge implementations stay retired.
           for filename in (
               'sections/melato-concierge-strip.liquid',
@@ -70,7 +81,6 @@ jobs:
               ('"gallery specs"', 'desktop spec placement'),
               ('grid-area: gallery !important;', 'gallery placement'),
               ('grid-area: specs !important;', 'spec placement'),
-              ('cursor: zoom-in;', 'interactive hero image affordance'),
           ):
               require('assets/melato-pdp-layout-2026.css', needle, label)
 
@@ -78,12 +88,18 @@ jobs:
           for needle, label in (
               ('class="pdp-gallery"', 'primary product gallery'),
               ("class: 'pdp-main-image'", 'primary product image'),
+              ('data-pdp-thumb', 'source-rendered gallery controls'),
+              ("mainImage.src=button.getAttribute('data-media-src')", 'source-rendered gallery switching'),
               ('<summary>Story</summary>', 'Story capsule'),
               ('<summary>Construction</summary>', 'Construction capsule'),
               ('<summary>Fit</summary>', 'Fit capsule'),
               ('<summary>Material</summary>', 'Material capsule'),
               ('<summary>Care</summary>', 'Care capsule'),
               ('<summary>Shipping &amp; returns</summary>', 'Shipping & returns capsule'),
+              ('class="pdp-proof-mini"', 'source-rendered purchase reassurance'),
+              ('product.metafields.custom.size_guide.value', 'product-specific size guide source'),
+              ('data-open-size-drawer', 'product-specific size guide trigger'),
+              ("render 'size-guide-drawer', product: product", 'product-specific size guide drawer'),
               ('product.metafields.custom.matching_product.value', 'matching product source'),
               ('product.metafields.custom.set_partner.value', 'set partner fallback'),
               ('class="pdp-panel pdp-set"', 'Complete the Set module'),
@@ -91,15 +107,41 @@ jobs:
               if needle not in pdp:
                   failures.append(f'sections/melato-product-page-rebuild.liquid: missing {label}')
 
+          # P0 stability contract: the retired polish layer stays disabled. Gallery,
+          # fit and reassurance behavior are validated above in the canonical section
+          # instead of reintroducing the observer-driven duplicate runtime.
           polish = text('assets/melato-pdp-polish.js')
-          for needle, label in (
-              ('ensureProductGallery(root);', 'gallery repair'),
-              ('bindMainImageZoom(root);', 'hero image zoom binding'),
-              ('ensurePurchaseReassurance(root);', 'purchase reassurance'),
-              ('ensureFitGuidance(root);', 'fit guidance handoff'),
+          if "melatoPdpPolishRuntime = 'disabled-p0'" not in polish:
+              failures.append('assets/melato-pdp-polish.js: P0 disabled runtime marker missing')
+          for forbidden, label in (
+              ('ensureProductGallery(', 'duplicate gallery runtime'),
+              ('bindMainImageZoom(', 'retired hero zoom runtime'),
+              ('ensurePurchaseReassurance(', 'client-side reassurance injection'),
+              ('ensureFitGuidance(', 'client-side fit injection'),
+              ('new MutationObserver', 'PDP mutation observer'),
           ):
-              if needle not in polish:
-                  failures.append(f'assets/melato-pdp-polish.js: missing {label}')
+              if forbidden in polish:
+                  failures.append(f'assets/melato-pdp-polish.js: forbidden {label} returned')
+
+          # PDP disclosure state belongs to the shopper. Product runtime code must not
+          # force-close Construction, Fit, Material, Care, or Shipping disclosures.
+          disclosure_close_patterns = (
+              re.compile(r"template-product.{0,240}details.{0,240}removeAttribute\(\s*['\"]open['\"]\s*\)", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}removeAttribute\(\s*['\"]open['\"]\s*\)", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}\.open\s*=\s*false", re.I | re.S),
+              re.compile(r"pdp-(?:spec|mini-detail).{0,240}toggleAttribute\(\s*['\"]open['\"]\s*,\s*false\s*\)", re.I | re.S),
+          )
+          for js_file in sorted(Path('assets').glob('*.js')):
+              source = js_file.read_text()
+              for pattern in disclosure_close_patterns:
+                  if pattern.search(source):
+                      failures.append(f'{js_file}: forbidden PDP force-close behavior detected')
+
+          cleanup = text('assets/melato-site-cleanup-20260811.js')
+          if 'PDP disclosure state is user-owned' not in cleanup:
+              failures.append('assets/melato-site-cleanup-20260811.js: PDP disclosure ownership contract is missing')
+          if "if(document.body.matches('.template-product'))return;" not in cleanup:
+              failures.append('assets/melato-site-cleanup-20260811.js: product pages must be excluded from the document-wide cleanup observer')
 
           # Default product template has exactly one Melato renderer and no review app embeds.
           product_template = text('templates/product.json')

@@ -1,6 +1,7 @@
 /*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
+ * Melato recommendation architecture: unified related-products rail.
  *
  * This file may be updated by the Shopify admin theme editor
  * or related systems. Please exercise caution as any changes
@@ -26,14 +27,14 @@
       "type": "melato-product-safe-accent",
       "settings": {}
     },
-    "tag_recommendations": {
-      "type": "tag-recommendations",
+    "related": {
+      "type": "related-products",
       "settings": {
-        "eyebrow": "FOR YOU",
-        "heading": "MOST WANTED",
-        "max_products": 4
+        "eyebrow": "Continue shopping",
+        "heading": "You might also like",
+        "products_to_show": 4
       }
     }
   },
-  "order": ["main_product", "safe_accent", "tag_recommendations"]
+  "order": ["main_product", "safe_accent", "related"]
 }

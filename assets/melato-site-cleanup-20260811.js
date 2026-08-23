@@ -23,11 +23,17 @@
   function cleanup(){
     document.querySelectorAll('.cart-upsell').forEach(x=>{if(!x.querySelector('.upsell-card,[data-upsell-track]>*'))x.remove()});
     document.querySelectorAll('#cart-drawer a[data-cart-close][href]').forEach(a=>a.removeAttribute('data-cart-close'));
-    document.querySelectorAll('body.template-product details').forEach(d=>d.removeAttribute('open'));
+    // PDP disclosure state is user-owned. Never force-close product <details> here.
     document.querySelectorAll('body.template-product .pdp-sticky-atc').forEach(s=>{if(s.querySelector('button[disabled],.pdp-atc--oos'))s.remove()});
   }
   function run(){header();cards();sync();cleanup();savedPage()}
-  document.addEventListener('click',e=>{const b=e.target.closest('[data-melato-save]');if(b){e.preventDefault();e.stopPropagation();const item=cardItem(b.closest('[data-product-card]'));if(item){const saved=read(),exists=saved.some(i=>i.handle===item.handle);write(exists?saved.filter(i=>i.handle!==item.handle):[item,...saved])}return}const r=e.target.closest('[data-remove-saved]');if(r){e.preventDefault();write(read().filter(i=>i.handle!==r.dataset.removeSaved));savedPage()}});
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run,{once:true});else run();
-  let t;new MutationObserver(()=>{clearTimeout(t);t=setTimeout(()=>{header();cards();sync();cleanup()},100)}).observe(document.documentElement,{childList:true,subtree:true});
+  function installObserver(){
+    // Product pages are server-rendered and interactive. Never run document-wide
+    // cleanup mutation cycles there, because user-owned disclosure state must persist.
+    if(document.body.matches('.template-product'))return;
+    let t;
+    new MutationObserver(()=>{clearTimeout(t);t=setTimeout(()=>{header();cards();sync();cleanup()},100)}).observe(document.documentElement,{childList:true,subtree:true});
+  }
+  function boot(){run();installObserver()}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
