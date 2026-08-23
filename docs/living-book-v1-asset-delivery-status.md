@@ -28,7 +28,7 @@ Four seamless background-loop masters were rendered locally for:
 - F21 `f21-corridor-loop.mp4` / `.webm`
 - F26 `f26-door-light.mp4` / `.webm`
 
-MP4 masters: 3840x2160. WebM fallbacks: 1920x1080. Current loop duration is 4 seconds with periodic motion designed for seamless repetition. This is implementation-ready but shorter than the blueprint's preferred 5-15 second loop range.
+MP4 masters: 3840x2160. WebM fallbacks: 1920x1080. Each loop is 8 seconds with periodic motion designed for seamless repetition, within the blueprint's required 5-15 second duration range.
 
 ## Audio
 
