@@ -5,53 +5,9 @@
 {%- endcomment -%}
 {{ 'melato-mobile-collection-header-20260818.css' | asset_url | stylesheet_tag }}
 <style>
-/* Preserve accessible price labels while preventing them from becoming visible UI. */
-.product-card__price{
-  position:static!important;
-  inset:auto!important;
-  transform:none!important;
-  width:100%!important;
-  min-width:0!important;
-  display:flex!important;
-  justify-content:center!important;
-  align-items:baseline!important;
-  gap:8px!important;
-  margin:0 auto!important;
-  padding:0!important;
-  background:transparent!important;
-  border:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
-  text-align:center!important;
-}
-.product-card__price>span:not(.visually-hidden){
-  position:static!important;
-  inset:auto!important;
-  transform:none!important;
-  display:inline!important;
-  width:auto!important;
-  min-width:0!important;
-  height:auto!important;
-  margin:0!important;
-  padding:0!important;
-  background:transparent!important;
-  border:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
-  color:inherit!important;
-  text-align:center!important;
-}
-.product-card__price>.visually-hidden{
-  position:absolute!important;
-  width:1px!important;
-  height:1px!important;
-  padding:0!important;
-  margin:-1px!important;
-  overflow:hidden!important;
-  clip:rect(0,0,0,0)!important;
-  white-space:nowrap!important;
-  border:0!important;
-}
+.product-card__price{position:static!important;inset:auto!important;transform:none!important;width:100%!important;min-width:0!important;display:flex!important;justify-content:center!important;align-items:baseline!important;gap:8px!important;margin:0 auto!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;text-align:center!important}
+.product-card__price>span:not(.visually-hidden){position:static!important;inset:auto!important;transform:none!important;display:inline!important;width:auto!important;min-width:0!important;height:auto!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;color:inherit!important;text-align:center!important}
+.product-card__price>.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .product-card__price .product-card__compare{text-decoration:line-through!important;opacity:.62!important}
 
 /* THE UNIFORM: make each product's title/price read as one unit and separate rows clearly. */
