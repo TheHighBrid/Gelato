@@ -59,7 +59,9 @@ Shopify GraphQL file inventory confirms all seven are `READY` at 4096x4096 with 
 
 ## Shopify media ingestion
 
-Direct attempts to send MP3/MP4 through the image-upload connector timed out and did not appear in the Shopify Files inventory. They are therefore not represented as uploaded. The seven texture uploads are the only Shopify-hosted production assets claimed here.
+Direct attempts to send MP3/MP4 through the image-upload connector timed out and did not appear in the Shopify Files inventory.
+
+The correct Admin GraphQL `stagedUploadsCreate` flow was then validated and a signed staged upload target was successfully issued for an MP3. The binary transfer itself could not execute because the current runtime cannot resolve `shopify-staged-uploads.storage.googleapis.com` (`curl: Could not resolve host`). Therefore no audio or video file is represented as Shopify-hosted. The seven texture uploads are the only Shopify-hosted production assets claimed here.
 
 ## Mapping integrity
 
