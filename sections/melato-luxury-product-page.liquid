@@ -59,7 +59,7 @@
               {%- assign media_alt = media.alt -%}
               {%- if media_alt == blank -%}{%- assign media_alt = product.title | append: ', product image ' | append: forloop.index -%}{%- endif -%}
               <button class="ml-thumb{% if media.id == featured_media.id %} is-active{% endif %}" type="button" data-media-src="{{ media | image_url: width: 1800 }}" data-media-alt="{{ media_alt | escape }}" aria-label="Show {{ media_alt | escape }}" role="listitem">
-                {{ media | image_url: width: 220 | image_tag: class: 'ml-thumb-image', loading: 'lazy', widths: '110, 160, 220', sizes: '110px', alt: '' }}
+                {{ media | image_url: width: 220 | image_tag: class: 'ml-thumb-image', loading: 'lazy', widths: '110, 160, 220', sizes: '110px', alt: media_alt }}
               </button>
             {%- endfor -%}
           </div>
