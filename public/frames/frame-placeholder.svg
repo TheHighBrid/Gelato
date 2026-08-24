@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Editorial image awaiting delivery">
+  <defs>
+    <radialGradient id="light" cx="50%" cy="42%" r="70%">
+      <stop offset="0" stop-color="#27232a"/>
+      <stop offset="1" stop-color="#0a0a0c"/>
+    </radialGradient>
+    <filter id="noise"><feTurbulence baseFrequency=".7" numOctaves="3"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .12 0"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#light)"/>
+  <rect width="1600" height="900" filter="url(#noise)" opacity=".32"/>
+  <g fill="none" stroke="#c41e3a" stroke-width="2" opacity=".8">
+    <path d="M660 290h280v280H660z" transform="rotate(45 800 430)"/>
+    <circle cx="800" cy="430" r="92"/>
+  </g>
+  <text x="800" y="690" fill="#e8e4dc" font-family="monospace" font-size="22" letter-spacing="8" text-anchor="middle">EVIDENCE PENDING</text>
+</svg>
