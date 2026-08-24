@@ -30,6 +30,9 @@ export interface FrameConfig {
   transition: 'cut' | 'fade' | 'wipe' | 'flash' | 'dissolve';
 }
 
+/** A repository-owned image used while the final editorial photography is delivered. */
+export const FRAME_FALLBACK_IMAGE = '/frames/frame-placeholder.svg';
+
 export const FRAMES: FrameConfig[] = [
   // === ACT I: THE SCENE (Frames 1–8) ===
   {
