@@ -81,6 +81,9 @@
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Refund policy</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Refund policy</p></div>'
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Terms of service</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Terms of service</p></div>'
       assign output = output | replace: '<div class="shopify-policy__title"><h1>Privacy policy</h1></div>', '<div class="shopify-policy__title" aria-hidden="true"><p>Privacy policy</p></div>'
+      assign output = output | replace: '<h1>Refund policy</h1>', '<p class="shopify-policy__generated-title" aria-hidden="true">Refund policy</p>'
+      assign output = output | replace: '<h1>Terms of service</h1>', '<p class="shopify-policy__generated-title" aria-hidden="true">Terms of service</p>'
+      assign output = output | replace: '<h1>Privacy policy</h1>', '<p class="shopify-policy__generated-title" aria-hidden="true">Privacy policy</p>'
 
       if request.path contains '/policies/refund-policy'
         assign old_shipping_paragraph = '<p>Unless the item arrived damaged, defective, or incorrect, customers may be responsible for return shipping costs. Original shipping fees may be non-refundable unless otherwise required by law or stated during a promotion.</p>'

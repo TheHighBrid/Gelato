@@ -1,68 +1,98 @@
 {% comment %}
   sections/ticker.liquid
-  Scrolling marquee with configurable items, speed, direction, and an accessible static summary.
+  Single-copy marquee. Announcement text exists once in server-rendered body copy;
+  the region's accessible name carries the complete announcement sequence.
 {% endcomment %}
 
 {%- if section.blocks.size > 0 -%}
-<div
-  class="ticker"
-  style="
-    --ticker-speed: {{ section.settings.speed | default: 30 }}s;
-    background: {{ section.settings.background_color }};
-    color: {{ section.settings.text_color }};
-    border-color: {{ section.settings.border_color }};
-    padding: {{ section.settings.padding }}px 0;
-  "
-  role="region"
-  aria-label="{{ section.settings.accessible_label | default: 'Melato announcements' | escape }}"
->
-  <p class="ticker__sr-only">
+  {%- capture ticker_accessible -%}
     {%- for block in section.blocks -%}
       {{ block.settings.text | strip | escape }}{% unless forloop.last %}. {% endunless %}
     {%- endfor -%}
-  </p>
+  {%- endcapture -%}
 
   <div
-    class="ticker__track"
-    data-ticker-track
-    aria-hidden="true"
-    inert
-    {% if section.settings.direction == 'right' %}style="animation-direction: reverse;"{% endif %}
+    class="ticker"
+    style="
+      --ticker-speed: {{ section.settings.speed | default: 30 }}s;
+      background: {{ section.settings.background_color }};
+      color: {{ section.settings.text_color }};
+      border-color: {{ section.settings.border_color }};
+      padding: {{ section.settings.padding }}px 0;
+    "
+    role="region"
+    aria-label="{{ ticker_accessible | strip }}"
   >
-    {%- comment -%} Render twice for a seamless visual loop. Assistive technology receives the static summary above once. {%- endcomment -%}
-    {%- for n in (1..2) -%}
-      {%- for block in section.blocks -%}
-        <span class="ticker__item"{% if n == 1 %} {{ block.shopify_attributes }}{% endif %}>
-          {{ block.settings.text | upcase | escape }}
-        </span>
-        <span class="ticker__separator" aria-hidden="true">
-          {{ section.settings.separator | default: '✦' | escape }}
-        </span>
-      {%- endfor -%}
-    {%- endfor -%}
+    <div
+      class="ticker__viewport"
+      aria-hidden="true"
+      inert
+    >
+      <div
+        class="ticker__track"
+        data-ticker-track
+        {% if section.settings.direction == 'right' %}data-direction="right"{% else %}data-direction="left"{% endif %}
+      >
+        {%- for block in section.blocks -%}
+          <span class="ticker__item" {{ block.shopify_attributes }}>
+            {{ block.settings.text | upcase | escape }}
+          </span>
+          {%- unless forloop.last -%}
+            <span class="ticker__separator" aria-hidden="true">
+              {{ section.settings.separator | default: '✦' | escape }}
+            </span>
+          {%- endunless -%}
+        {%- endfor -%}
+      </div>
+    </div>
   </div>
-</div>
 
-<style>
-  #shopify-section-{{ section.id }} .ticker__sr-only {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #shopify-section-{{ section.id }} .ticker__track {
-      animation: none !important;
-      transform: none !important;
+  <style>
+    #shopify-section-{{ section.id }} .ticker {
+      overflow: hidden;
+      border-block: 1px solid;
     }
-  }
-</style>
+
+    #shopify-section-{{ section.id }} .ticker__viewport {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    #shopify-section-{{ section.id }} .ticker__track {
+      display: flex;
+      align-items: center;
+      width: max-content;
+      gap: 1rem;
+      white-space: nowrap;
+      will-change: transform;
+      animation: ticker-scroll-left var(--ticker-speed) linear infinite;
+    }
+
+    #shopify-section-{{ section.id }} .ticker__track[data-direction='right'] {
+      animation-name: ticker-scroll-right;
+    }
+
+    @keyframes ticker-scroll-left {
+      from { transform: translateX(100vw); }
+      to { transform: translateX(-100%); }
+    }
+
+    @keyframes ticker-scroll-right {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(100vw); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ section.id }} .ticker__track {
+        animation: none !important;
+        transform: none !important;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        white-space: normal;
+      }
+    }
+  </style>
 {%- endif -%}
 
 {% schema %}
@@ -79,7 +109,7 @@
     }
   ],
   "settings": [
-    {"type":"text","id":"accessible_label","label":"Accessible label","default":"Melato announcements","info":"Read once by screen readers before the decorative moving text."},
+    {"type":"text","id":"accessible_label","label":"Accessible label","default":"Melato announcements","info":"Legacy setting retained for theme-editor compatibility. The accessible name is generated from the current ticker items."},
     {"type":"range","id":"speed","label":"Scroll speed","min":10,"max":80,"step":5,"default":30,"unit":"s","info":"Lower = faster"},
     {"type":"text","id":"separator","label":"Separator character","default":"✦"},
     {"type":"select","id":"direction","label":"Direction","options":[{"value":"left","label":"Left"},{"value":"right","label":"Right"}],"default":"left"},

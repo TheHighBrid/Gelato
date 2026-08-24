@@ -187,7 +187,7 @@
                 aria-label="Show {{ media_alt | escape }}"
                 role="listitem"
               >
-                {{ media | image_url: width: 220 | image_tag: class: 'pdp-thumb-image', loading: 'lazy', widths: '110, 160, 220', sizes: '110px', alt: '' }}
+                {{ media | image_url: width: 220 | image_tag: class: 'pdp-thumb-image', loading: 'lazy', widths: '110, 160, 220', sizes: '110px', alt: media_alt }}
               </button>
             {%- endfor -%}
           </div>
