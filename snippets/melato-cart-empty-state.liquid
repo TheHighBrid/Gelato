@@ -1,6 +1,7 @@
 {% comment %}
   Melato empty cart recovery rail.
   Uses available products from New Arrivals with a catalog-wide fallback.
+  Product title and price are emitted as distinct semantic phrases.
 {% endcomment %}
 {%- assign recovery_collection = collections['new-arrivals'] | default: collections.all -%}
 <div class="cart-drawer__empty">
@@ -20,7 +21,10 @@
               {%- assign recovery_alt = recovery_product.featured_image.alt | default: recovery_product.title -%}
               {{ recovery_product.featured_image | image_url: width: 360 | image_tag: class: 'cart-recovery__image', loading: 'lazy', widths: '160, 240, 360', sizes: '104px', alt: recovery_alt }}
             {%- endif -%}
-            <span class="cart-recovery__meta"><strong>{{ recovery_product.title }}</strong><span class="visually-hidden">, price </span><span>{{ recovery_product.price | money }}</span></span>
+            <span class="cart-recovery__meta">
+              <strong class="cart-recovery__title">{{ recovery_product.title }}</strong>
+              <span class="cart-recovery__price">Price {{ recovery_product.price | money }}</span>
+            </span>
           </a>
         {%- endif -%}
       {%- endfor -%}
