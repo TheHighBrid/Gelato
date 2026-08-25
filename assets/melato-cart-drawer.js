@@ -1,54 +1,31 @@
 (() => {
   'use strict';
-  const drawer=document.getElementById('cart-drawer')||document.querySelector('.cart-drawer');
-  const overlay=document.getElementById('drip-overlay')||document.querySelector('[data-overlay]');
-  const pendingForms=new WeakSet();
-  let lastFocused=null;
-  if(!drawer)return;
 
-  const locale=()=>document.documentElement.lang||navigator.language||'en-CA';
-  const formatMoney=(cents,currency)=>{
-    const amount=Number(cents||0)/100;
-    const code=String(currency||'').trim().toUpperCase();
-    if(code){
-      try{return new Intl.NumberFormat(locale(),{style:'currency',currency:code}).format(amount)}catch(error){console.warn('Melato currency format fallback:',error)}
+  const drawer = document.getElementById('cart-drawer') || document.querySelector('.cart-drawer');
+  if (!drawer) return;
+
+  const overlay = document.getElementById('drip-overlay') || document.querySelector('[data-overlay]');
+  const pendingForms = new WeakSet();
+  let lastFocused = null;
+
+  const locale = () => document.documentElement.lang || navigator.language || 'en-CA';
+  const currency = cart => String((cart && cart.currency) || window.DRIP?.shop?.currency || 'CAD').toUpperCase();
+  const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+  }[char]));
+
+  function formatMoney(cents, code) {
+    const amount = Number(cents || 0) / 100;
+    const currencyCode = String(code || window.DRIP?.shop?.currency || 'CAD').trim().toUpperCase();
+    try {
+      return new Intl.NumberFormat(locale(), { style:'currency', currency:currencyCode }).format(amount);
+    } catch (error) {
+      if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
+        return window.Shopify.formatMoney(Number(cents || 0), window.DRIP?.shop?.moneyFormat || '${{amount}}');
+      }
+      return `$${amount.toFixed(2)}`;
     }
-    if(window.Shopify&&typeof Shopify.formatMoney==='function')return Shopify.formatMoney(cents,window.DRIP?.shop?.moneyFormat||'${{amount}}');
-    return amount.toFixed(2);
-  };
-  const esc=value=>String(value||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-  function toast(message){const node=document.getElementById('drip-toast');if(!node)return;node.textContent=message;node.classList.add('is-visible');clearTimeout(toast.timer);toast.timer=setTimeout(()=>node.classList.remove('is-visible'),2200)}
-  function debounce(fn,wait){let t;return function(){const args=arguments;clearTimeout(t);t=setTimeout(()=>fn.apply(null,args),wait)}}
-  const fetchCart=()=>fetch('/cart.js',{headers:{Accept:'application/json'}}).then(r=>r.json());
-
-  function openCart(){lastFocused=document.activeElement;drawer.hidden=false;drawer.removeAttribute('inert');drawer.classList.add('is-open');drawer.setAttribute('aria-hidden','false');overlay?.classList.add('is-visible');document.body.style.overflow='hidden';const target=drawer.querySelector('[data-cart-close],button,a,input,textarea,select');if(target)setTimeout(()=>target.focus(),40)}
-  function closeCart(){drawer.classList.remove('is-open');drawer.setAttribute('aria-hidden','true');drawer.setAttribute('inert','');overlay?.classList.remove('is-visible');document.body.style.overflow='';if(lastFocused&&typeof lastFocused.focus==='function')lastFocused.focus()}
-  function trapTab(event){const nodes=Array.from(drawer.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),textarea:not([disabled]),select:not([disabled])'));if(!nodes.length)return;const first=nodes[0],last=nodes[nodes.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}}
-
-  function updateCounts(count){document.querySelectorAll('[data-cart-item-count],.cart-count,.mxh__bag-count').forEach(el=>el.textContent=String(count||0));document.querySelectorAll('.mxh__bag').forEach(el=>el.setAttribute('aria-label','Cart with '+String(count||0)+' '+((count||0)===1?'item':'items')))}
-  function updateSubtotal(total,currency){drawer.querySelectorAll('[data-cart-subtotal],.cart-subtotal__amount').forEach(el=>el.textContent=formatMoney(total||0,currency))}
-  function updateCheckout(count){drawer.querySelectorAll('[data-checkout-btn],button[name="checkout"]').forEach(button=>button.disabled=!count)}
-  const initialEmptyMarkup=drawer.querySelector('[data-cart-empty-template]')?.innerHTML.trim()||'<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>';
-  function renderItems(cart){const container=drawer.querySelector('[data-cart-items],.cart-drawer__items');if(!container)return;if(!cart.items?.length){container.innerHTML=initialEmptyMarkup;return}container.innerHTML=cart.items.map(item=>{const url=esc(item.url||'#'),image=esc(item.image||''),img=image?'<img class="cart-item__img" src="'+image+'" alt="'+esc(item.title)+'" width="88" height="110" loading="lazy">':'',variant=item.variant_title&&item.variant_title!=='Default Title'?'<span class="cart-item__variant">'+esc(item.variant_title)+'</span>':'';return'<div class="cart-item" role="listitem" data-line-key="'+esc(item.key)+'"><a href="'+url+'" class="cart-item__img-link" tabindex="-1" aria-hidden="true">'+img+'</a><div class="cart-item__info"><div class="cart-item__top"><a href="'+url+'" class="cart-item__title">'+esc(item.product_title)+'</a><button class="cart-item__remove" type="button" aria-label="Remove '+esc(item.product_title)+'" data-remove-line>×</button></div>'+variant+'<div class="cart-item__footer"><div class="qty-stepper" aria-label="Quantity for '+esc(item.product_title)+'"><button class="qty-stepper__btn" type="button" aria-label="Decrease quantity" data-qty-change="-1">−</button><input class="qty-stepper__value" type="number" value="'+item.quantity+'" min="0" aria-label="Quantity"><button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1">+</button></div><span class="price">'+formatMoney(item.final_line_price,cart.currency)+'</span></div></div></div>'}).join('')}
-  function renderCart(cart){if(!cart)return;renderItems(cart);updateCounts(cart.item_count);updateSubtotal(cart.total_price,cart.currency);updateCheckout(cart.item_count)}
-  function updateLine(key,quantity){if(!key)return;drawer.classList.add('is-updating');fetch('/cart/change.js',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({id:key,quantity})}).then(r=>r.json()).then(renderCart).catch(error=>{console.error('Melato cart update:',error);toast('Cart could not be updated.')}).finally(()=>drawer.classList.remove('is-updating'))}
-
-  function isProductAddForm(form){if(!form)return false;const action=form.getAttribute('action')||'',hasVariant=!!form.querySelector('[name="id"]'),hasAdd=!!form.querySelector('[name="add"],[data-pdp-atc],[data-atc-btn]');return action.includes('/cart/add')||form.matches('.pdp-form,.melato-clean-product__form,[data-product-form]')||(hasVariant&&hasAdd)}
-  function buttonLoading(button,on){if(!button)return;if(on){button.dataset.originalText=button.textContent||'';button.disabled=true;button.classList.add('is-loading');button.textContent='Adding'}else{button.disabled=false;button.classList.remove('is-loading');button.textContent=button.dataset.originalText||'Add to cart'}}
-  function addForm(form,submitter){if(pendingForms.has(form))return;const id=form.querySelector('[name="id"]');if(!id?.value){toast('Select an available option.');return}pendingForms.add(form);const button=submitter?.matches?.('button,input[type="submit"]')?submitter:form.querySelector('[name="add"],[data-pdp-atc],[data-atc-btn]');buttonLoading(button,true);const data=new FormData(form);if(!data.get('quantity'))data.set('quantity','1');fetch('/cart/add.js',{method:'POST',headers:{Accept:'application/json'},body:data}).then(async r=>{const payload=await r.json().catch(()=>({}));if(!r.ok)throw new Error(payload.description||payload.message||'Unable to add to cart.');return fetchCart()}).then(cart=>{renderCart(cart);openCart();toast('Added to cart')}).catch(error=>{console.error('Melato add to cart:',error);toast(error.message||'Unable to add to cart.')}).finally(()=>{pendingForms.delete(form);buttonLoading(button,false)})}
-
-  document.addEventListener('click',event=>{
-    const open=event.target.closest('[data-cart-open],[data-cart-toggle],.mxh__bag');
-    if(open&&!open.closest('.cart-drawer')){event.preventDefault();fetchCart().then(cart=>{renderCart(cart);openCart()});return}
-    const close=event.target.closest('[data-cart-close]');
-    if(close){const href=close.getAttribute('href');if(!href||href==='#'){event.preventDefault();closeCart();return}closeCart();return}
-    const qty=event.target.closest('[data-qty-change]');
-    if(qty?.closest('.cart-drawer')){event.preventDefault();const row=qty.closest('.cart-item'),input=row?.querySelector('.qty-stepper__value');updateLine(row?.dataset.lineKey,Math.max(0,Number(input?.value||0)+Number(qty.dataset.qtyChange||0)));return}
-    const remove=event.target.closest('[data-remove-line]');
-    if(remove?.closest('.cart-drawer')){event.preventDefault();const row=remove.closest('.cart-item');updateLine(row?.dataset.lineKey,0);return}
-    const toggle=event.target.closest('.cart-note-toggle');
-    if(toggle?.closest('.cart-drawer')){const field=drawer.querySelector('#cart-note-field'),expanded=toggle.getAttribute('aria-expanded')==='true';toggle.setAttribute('aria-expanded',String(!expanded));if(field){field.hidden=expanded;field.setAttribute('aria-hidden',String(expanded))}}
-  });
+  }
 
   function toast(message) {
     const node = document.getElementById('drip-toast');
@@ -56,7 +33,14 @@
     node.textContent = message;
     node.classList.add('is-visible');
     clearTimeout(toast.timer);
-    toast.timer = setTimeout(() => node.classList.remove('is-visible'), 2200);
+    toast.timer = window.setTimeout(() => node.classList.remove('is-visible'), 2200);
+  }
+
+  function fetchCart() {
+    return fetch('/cart.js', { headers: { Accept: 'application/json' } }).then(response => {
+      if (!response.ok) throw new Error('Cart could not be loaded.');
+      return response.json();
+    });
   }
 
   function openCart() {
@@ -66,8 +50,9 @@
     drawer.classList.add('is-open');
     drawer.setAttribute('aria-hidden', 'false');
     overlay?.classList.add('is-visible');
+    overlay?.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    setTimeout(() => drawer.querySelector('[data-cart-close],button,a,input,textarea,select')?.focus(), 40);
+    window.setTimeout(() => drawer.querySelector('[data-cart-close], button, a, input, textarea, select')?.focus(), 40);
   }
 
   function closeCart() {
@@ -75,30 +60,72 @@
     drawer.setAttribute('aria-hidden', 'true');
     drawer.setAttribute('inert', '');
     overlay?.classList.remove('is-visible');
+    overlay?.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
     if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
   }
 
   function updateChrome(cart) {
-    document.querySelectorAll('[data-cart-item-count],.cart-count,.mxh__bag-count').forEach(el => el.textContent = String(cart.item_count || 0));
-    document.querySelectorAll('.mxh__bag').forEach(el => el.setAttribute('aria-label', `Cart with ${cart.item_count || 0} ${(cart.item_count || 0) === 1 ? 'item' : 'items'}`));
-    drawer.querySelectorAll('[data-cart-subtotal],.cart-subtotal__amount').forEach(el => el.textContent = money(cart.total_price || 0));
-    drawer.querySelectorAll('[data-checkout-btn],button[name="checkout"]').forEach(button => button.disabled = !cart.item_count);
+    const count = Number(cart?.item_count || 0);
+    const code = currency(cart);
+    document.querySelectorAll('[data-cart-item-count], .cart-count, .mxh__bag-count').forEach(node => {
+      node.textContent = String(count);
+    });
+    document.querySelectorAll('.mxh__bag').forEach(node => {
+      node.setAttribute('aria-label', `Cart with ${count} ${count === 1 ? 'item' : 'items'}`);
+    });
+    drawer.querySelectorAll('[data-cart-subtotal], .cart-subtotal__amount').forEach(node => {
+      node.textContent = formatMoney(cart?.total_price || 0, code);
+    });
+    drawer.querySelectorAll('[data-checkout-btn], button[name="checkout"]').forEach(button => {
+      button.disabled = count === 0;
+    });
+    const countLabel = drawer.querySelector('[data-cart-count-label]');
+    if (countLabel) countLabel.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
   }
 
+  const emptyTemplate = drawer.querySelector('[data-cart-empty-template]');
+  const initialEmptyMarkup = emptyTemplate?.innerHTML.trim() || '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>';
+
   function renderItems(cart) {
-    if (!itemsHost) return;
-    if (!cart.items?.length) {
-      itemsHost.innerHTML = initialEmptyMarkup || '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>';
+    const host = drawer.querySelector('[data-cart-items], .cart-drawer__items');
+    if (!host) return;
+    if (!cart?.items?.length) {
+      host.innerHTML = initialEmptyMarkup;
       return;
     }
 
-    itemsHost.innerHTML = cart.items.map(item => {
-      const url = esc(item.url || '#');
-      const image = esc(item.image || item.featured_image?.url || '');
-      const imageMarkup = image ? `<img class="cart-item__img" src="${image}" alt="${esc(item.product_title || item.title)}" width="88" height="110" loading="lazy" decoding="async">` : '';
-      const variant = item.variant_title && item.variant_title !== 'Default Title' ? `<span class="cart-item__variant">${esc(item.variant_title)}</span>` : '';
-      return `<div class="cart-item" role="listitem" data-line-key="${esc(item.key)}"><a href="${url}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">${imageMarkup}</a><div class="cart-item__info"><div class="cart-item__top"><a href="${url}" class="cart-item__title">${esc(item.product_title)}</a><button class="cart-item__remove" type="button" aria-label="Remove ${esc(item.product_title)}" data-remove-line>×</button></div>${variant}<div class="cart-item__footer"><div class="qty-stepper" aria-label="Quantity for ${esc(item.product_title)}"><button class="qty-stepper__btn" type="button" aria-label="Decrease quantity" data-qty-change="-1">−</button><input class="qty-stepper__value" type="number" value="${Number(item.quantity || 0)}" min="0" aria-label="Quantity"><button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1">+</button></div><span class="price">${money(item.final_line_price)}</span></div></div></div>`;
+    const code = currency(cart);
+    host.innerHTML = cart.items.map(item => {
+      const title = escapeHtml(item.product_title || item.title || 'Product');
+      const url = escapeHtml(item.url || '#');
+      const imageUrl = escapeHtml(item.image || item.featured_image?.url || '');
+      const image = imageUrl
+        ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">`
+        : '';
+      const variant = item.variant_title && item.variant_title !== 'Default Title'
+        ? `<span class="cart-item__variant">${escapeHtml(item.variant_title)}</span>`
+        : '';
+      const key = escapeHtml(item.key || '');
+      const quantity = Math.max(0, Number(item.quantity || 0));
+      return `<div class="cart-item" role="listitem" data-line-key="${key}">
+        <a href="${url}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">${image}</a>
+        <div class="cart-item__info">
+          <div class="cart-item__top">
+            <a href="${url}" class="cart-item__title">${title}</a>
+            <button class="cart-item__remove" type="button" aria-label="Remove ${title}" data-remove-line="${key}">×</button>
+          </div>
+          ${variant}
+          <div class="cart-item__footer">
+            <div class="qty-stepper" aria-label="Quantity for ${title}">
+              <button class="qty-stepper__btn" type="button" aria-label="Decrease quantity" data-qty-change="-1" data-line-key="${key}">−</button>
+              <input class="qty-stepper__value" type="number" value="${quantity}" min="0" inputmode="numeric" aria-label="Quantity for ${title}" data-line-key="${key}">
+              <button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1" data-line-key="${key}">+</button>
+            </div>
+            <span class="price">${formatMoney(item.final_line_price, code)}</span>
+          </div>
+        </div>
+      </div>`;
     }).join('');
   }
 
@@ -107,94 +134,189 @@
     updateChrome(cart);
   }
 
-  function updateLine(key, quantity) {
+  async function updateLine(key, quantity) {
     if (!key) return;
     drawer.classList.add('is-updating');
-    fetch('/cart/change.js', {
-      method:'POST',
-      headers:{'Content-Type':'application/json', Accept:'application/json'},
-      body:JSON.stringify({id:key, quantity})
-    }).then(r => r.json()).then(renderCart).catch(error => {
+    try {
+      const response = await fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ id: key, quantity: Math.max(0, Number(quantity || 0)) })
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
+      renderCart(payload);
+    } catch (error) {
       console.error('Melato cart update:', error);
-      toast('Cart could not be updated.');
-    }).finally(() => drawer.classList.remove('is-updating'));
+      toast(error.message || 'Cart could not be updated.');
+      fetchCart().then(renderCart).catch(() => {});
+    } finally {
+      drawer.classList.remove('is-updating');
+    }
   }
 
   function isProductAddForm(form) {
     if (!form) return false;
     const action = form.getAttribute('action') || '';
-    return action.includes('/cart/add') || form.matches('.pdp-form,.melato-clean-product__form,[data-product-form]');
+    const hasVariant = Boolean(form.querySelector('[name="id"]'));
+    const hasAdd = Boolean(form.querySelector('[name="add"], [data-pdp-atc], [data-atc-btn]'));
+    return action.includes('/cart/add') || form.matches('.pdp-form, .melato-clean-product__form, [data-product-form]') || (hasVariant && hasAdd);
   }
 
-  function addForm(form, submitter) {
+  function setButtonLoading(button, loading) {
+    if (!button) return;
+    if (loading) {
+      button.dataset.melatoOriginalText = button.textContent || '';
+      button.dataset.melatoWasDisabled = button.disabled ? 'true' : 'false';
+      button.disabled = true;
+      button.classList.add('is-loading');
+      button.textContent = 'Adding';
+      return;
+    }
+    button.classList.remove('is-loading');
+    button.textContent = button.dataset.melatoOriginalText || 'Add to cart';
+    button.disabled = button.dataset.melatoWasDisabled === 'true';
+  }
+
+  async function addForm(form, submitter) {
     if (pendingForms.has(form)) return;
     const id = form.querySelector('[name="id"]');
-    if (!id?.value) return toast('Select an available option.');
+    if (!id?.value) {
+      toast('Select an available option.');
+      return;
+    }
+
     pendingForms.add(form);
-    const button = submitter?.matches?.('button,input[type="submit"]') ? submitter : form.querySelector('[name="add"],[data-pdp-atc],[data-atc-btn]');
-    const original = button?.textContent || '';
-    if (button) { button.disabled = true; button.classList.add('is-loading'); button.textContent = 'Adding'; }
-    const data = new FormData(form);
-    if (!data.get('quantity')) data.set('quantity', '1');
-    fetch('/cart/add.js', {method:'POST', headers:{Accept:'application/json'}, body:data})
-      .then(async r => { const payload = await r.json().catch(() => ({})); if (!r.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.'); return fetchCart(); })
-      .then(cart => { renderCart(cart); openCart(); toast('Added to cart'); })
-      .catch(error => { console.error('Melato add to cart:', error); toast(error.message || 'Unable to add to cart.'); })
-      .finally(() => { pendingForms.delete(form); if (button) { button.disabled = false; button.classList.remove('is-loading'); button.textContent = original || 'Add to cart'; } });
+    const button = submitter?.matches?.('button, input[type="submit"]')
+      ? submitter
+      : form.querySelector('[name="add"], [data-pdp-atc], [data-atc-btn]');
+    setButtonLoading(button, true);
+
+    try {
+      const data = new FormData(form);
+      if (!data.get('quantity')) data.set('quantity', '1');
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: data
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
+      const cart = await fetchCart();
+      renderCart(cart);
+      openCart();
+      toast('Added to cart');
+    } catch (error) {
+      console.error('Melato add to cart:', error);
+      toast(error.message || 'Unable to add to cart.');
+    } finally {
+      pendingForms.delete(form);
+      setButtonLoading(button, false);
+    }
   }
 
-  document.addEventListener('click', event => {
-    const opener = event.target.closest('[data-cart-open],[data-cart-toggle],.mxh__bag');
-    if (opener && !opener.closest('.cart-drawer')) {
+  function trapTab(event) {
+    const nodes = Array.from(drawer.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+      .filter(node => !node.hidden && node.offsetParent !== null);
+    if (!nodes.length) return;
+    const first = nodes[0];
+    const last = nodes[nodes.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
       event.preventDefault();
-      fetchCart().then(cart => { renderCart(cart); openCart(); }).catch(() => toast('Cart could not be loaded.'));
-      return;
-    }
-    if (event.target.closest('[data-cart-close]')) { event.preventDefault(); closeCart(); return; }
-    const qty = event.target.closest('[data-qty-change]');
-    if (qty?.closest('.cart-drawer')) {
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
       event.preventDefault();
-      const row = qty.closest('.cart-item');
-      const input = row?.querySelector('.qty-stepper__value');
-      updateLine(row?.dataset.lineKey, Math.max(0, Number(input?.value || 0) + Number(qty.dataset.qtyChange || 0)));
-      return;
+      first.focus();
     }
-    const remove = event.target.closest('[data-remove-line]');
-    if (remove?.closest('.cart-drawer')) { event.preventDefault(); updateLine(remove.closest('.cart-item')?.dataset.lineKey, 0); return; }
-    const toggle = event.target.closest('.cart-note-toggle');
-    if (toggle?.closest('.cart-drawer')) {
-      const field = drawer.querySelector('#cart-note-field');
-      const expanded = toggle.getAttribute('aria-expanded') === 'true';
-      toggle.setAttribute('aria-expanded', String(!expanded));
-      if (field) { field.hidden = expanded; field.setAttribute('aria-hidden', String(expanded)); }
-    }
-  });
-
-  document.addEventListener('change', event => {
-    const input = event.target.closest('.cart-drawer input[type="number"].qty-stepper__value');
-    if (input) updateLine(input.closest('.cart-item')?.dataset.lineKey, Math.max(0, Number(input.value || 0)));
-  });
+  }
 
   document.addEventListener('submit', event => {
-    const form = event.target.closest('form');
-    if (!isProductAddForm(form)) return;
+    const form = event.target;
+    if (!isProductAddForm(form) || event.defaultPrevented) return;
     const submitter = event.submitter || document.activeElement;
-    if (submitter?.closest('.shopify-payment-button,.shopify-payment-button__button')) return;
+    if (submitter?.closest?.('.shopify-payment-button, .shopify-payment-button__button')) return;
     event.preventDefault();
-    event.stopImmediatePropagation();
     addForm(form, submitter);
-  }, true);
-
-  overlay?.addEventListener('click', () => { if (drawer.classList.contains('is-open')) closeCart(); });
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && drawer.classList.contains('is-open')) closeCart();
-    if (event.key !== 'Tab' || !drawer.classList.contains('is-open')) return;
-    const nodes = Array.from(drawer.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),textarea:not([disabled]),select:not([disabled])'));
-    if (!nodes.length) return;
-    const first = nodes[0], last = nodes[nodes.length - 1];
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   });
 
-  updateChrome(window.DRIP?.cart || {item_count:0,total_price:0});
+  document.addEventListener('click', event => {
+    const opener = event.target.closest('[data-cart-open], [data-cart-toggle], .mxh__bag');
+    if (opener && !opener.closest('.cart-drawer')) {
+      event.preventDefault();
+      fetchCart().then(cart => {
+        renderCart(cart);
+        openCart();
+      }).catch(error => {
+        console.error('Melato cart open:', error);
+        toast('Cart could not be loaded.');
+      });
+      return;
+    }
+
+    if (event.target.closest('[data-cart-close]')) {
+      event.preventDefault();
+      closeCart();
+      return;
+    }
+
+    const quantityButton = event.target.closest('[data-qty-change]');
+    if (quantityButton?.closest('.cart-drawer')) {
+      event.preventDefault();
+      const row = quantityButton.closest('.cart-item');
+      const key = quantityButton.dataset.lineKey || row?.dataset.lineKey;
+      const input = row?.querySelector('.qty-stepper__value');
+      const next = Math.max(0, Number(input?.value || 0) + Number(quantityButton.dataset.qtyChange || 0));
+      updateLine(key, next);
+      return;
+    }
+
+    const removeButton = event.target.closest('[data-remove-line]');
+    if (removeButton?.closest('.cart-drawer')) {
+      event.preventDefault();
+      updateLine(removeButton.dataset.removeLine || removeButton.closest('[data-line-key]')?.dataset.lineKey, 0);
+      return;
+    }
+
+    const noteToggle = event.target.closest('.cart-note-toggle');
+    if (noteToggle?.closest('.cart-drawer')) {
+      const field = drawer.querySelector('#cart-note-field');
+      const expanded = noteToggle.getAttribute('aria-expanded') === 'true';
+      noteToggle.setAttribute('aria-expanded', String(!expanded));
+      if (field) {
+        field.hidden = expanded;
+        field.setAttribute('aria-hidden', String(expanded));
+      }
+    }
+  });
+
+  drawer.addEventListener('change', event => {
+    const quantityInput = event.target.closest('.qty-stepper__value[data-line-key]');
+    if (quantityInput) {
+      updateLine(quantityInput.dataset.lineKey, Number(quantityInput.value || 0));
+      return;
+    }
+    const note = event.target.closest('[data-note-input]');
+    if (note) {
+      const hidden = drawer.querySelector('[data-note-hidden]');
+      if (hidden) hidden.value = note.value;
+    }
+  });
+
+  drawer.addEventListener('input', event => {
+    const note = event.target.closest('[data-note-input]');
+    if (!note) return;
+    const hidden = drawer.querySelector('[data-note-hidden]');
+    if (hidden) hidden.value = note.value;
+  });
+
+  overlay?.addEventListener('click', closeCart);
+  document.addEventListener('keydown', event => {
+    if (!drawer.classList.contains('is-open')) return;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeCart();
+    } else if (event.key === 'Tab') {
+      trapTab(event);
+    }
+  });
 })();

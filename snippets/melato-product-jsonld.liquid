@@ -1,6 +1,7 @@
 {%- comment -%}
   Melato product JSON-LD.
   Outputs rich Product + Offer + Breadcrumb schema for PDP snippets.
+  Aggregate ratings are emitted only when a real Shopify review count exists.
 {%- endcomment -%}
 
 {%- if product != blank -%}
@@ -11,6 +12,8 @@
   {%- assign product_description = product.title | append: ' by ' | append: shop.name -%}
 {%- endif -%}
 {%- assign currency_code = cart.currency.iso_code | default: shop.currency -%}
+{%- assign review_count = product.metafields.reviews.rating_count.value | default: 0 -%}
+{%- assign review_rating = product.metafields.reviews.rating.value.rating -%}
 
 <script type="application/ld+json">
 {
@@ -30,9 +33,11 @@
       "mpn": {{ current_variant.barcode | default: current_variant.sku | default: current_variant.id | json }},
       "category": {{ product.type | default: product.product_type | default: 'Apparel' | json }}{% if product.featured_image != blank %},
       "image": [
+        {%- assign emitted_image = false -%}
         {%- for media in product.media limit: 8 -%}
           {%- if media.media_type == 'image' -%}
-            {{ media | image_url: width: 1400 | prepend: 'https:' | json }}{%- unless forloop.last -%},{%- endunless -%}
+            {%- if emitted_image -%},{%- endif -%}{{ media | image_url: width: 1400 | prepend: 'https:' | json }}
+            {%- assign emitted_image = true -%}
           {%- endif -%}
         {%- endfor -%}
       ]{% endif %},
@@ -54,7 +59,12 @@
             }
           }{%- unless forloop.last -%},{%- endunless -%}
         {%- endfor -%}
-      ]
+      ]{% if review_count > 0 and review_rating != blank %},
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": {{ review_rating | json }},
+        "reviewCount": {{ review_count | json }}
+      }{% endif %}
     },
     {
       "@type": "BreadcrumbList",

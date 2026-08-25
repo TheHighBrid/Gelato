@@ -155,6 +155,57 @@
         assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>', ''
       endif
 
+      # Add an above-the-fold trust and fit layer only from current policy and product data.
+      unless output contains 'pdp-conversion-assurances'
+        assign origin_copy = product.metafields.custom.made_in.value | default: product.metafields.custom.country_of_origin.value
+        if origin_copy == blank and product.metafields.custom.made_in_canada.value == true
+          assign origin_copy = 'Canada'
+        endif
+        assign fit_preview = product.metafields.melato.fit.value | default: product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit_notes.value | default: product.metafields.custom.fit.value
+        assign pdp_review_count = product.metafields.reviews.rating_count.value | default: 0
+        assign pdp_review_rating = product.metafields.reviews.rating.value.rating
+        capture pdp_conversion_markup
+          echo '<style>.pdp-conversion-assurances{margin:14px 0 0;padding:14px 0 0;border-top:1px solid color-mix(in srgb,currentColor 16%,transparent)}.pdp-conversion-assurances__trust{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0;padding:0;list-style:none;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.86}.pdp-conversion-assurances__facts{display:grid;gap:8px;margin-top:12px}.pdp-conversion-assurances__fact{display:grid;grid-template-columns:minmax(72px,auto) 1fr;gap:12px;font-size:12px;line-height:1.45}.pdp-conversion-assurances__fact strong{text-transform:uppercase;letter-spacing:.1em;font-size:10px}.pdp-conversion-assurances a{color:inherit;text-underline-offset:3px}</style>'
+          echo '<div class="pdp-conversion-assurances" aria-label="Purchase and product essentials">'
+          echo '<ul class="pdp-conversion-assurances__trust" role="list"><li>Complimentary standard delivery</li><li><a href="/policies/refund-policy">30-day eligible returns</a></li><li>Secure checkout</li></ul>'
+          echo '<div class="pdp-conversion-assurances__facts">'
+          if origin_copy != blank
+            echo '<div class="pdp-conversion-assurances__fact"><strong>Origin</strong><span>Made in '
+            echo origin_copy | escape
+            echo '</span></div>'
+          endif
+          if fit_preview != blank
+            echo '<div class="pdp-conversion-assurances__fact"><strong>Fit</strong><span>'
+            echo fit_preview | strip_html | strip_newlines | truncate: 170 | escape
+            echo '</span></div>'
+          endif
+          if size_guide_page != blank and has_specific_size_guide == false
+            echo '<div class="pdp-conversion-assurances__fact"><strong>Sizing</strong><span><a href="/pages/'
+            echo size_guide_handle | escape
+            echo '">Fit guidance</a> for products without approved garment measurements.</span></div>'
+          endif
+          if pdp_review_count > 0 and pdp_review_rating != blank
+            echo '<div class="pdp-conversion-assurances__fact"><strong>Reviews</strong><span>'
+            echo pdp_review_rating
+            echo '/5 from '
+            echo pdp_review_count
+            echo ' verified review'
+            if pdp_review_count != 1
+              echo 's'
+            endif
+            echo '.</span></div>'
+          endif
+          echo '</div></div>'
+        endcapture
+        assign product_form_end_with_conversion = '</form>' | append: pdp_conversion_markup
+        assign output = output | replace_first: '</form>', product_form_end_with_conversion
+      endunless
+
+      # Open the first specification panel by default so key fit/material data is not buried.
+      unless product_type_down contains 'fragrance' or product_type_down contains 'eau de' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum'
+        assign output = output | replace_first: '<details class="pdp-spec">', '<details class="pdp-spec" open>'
+      endunless
+
       assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
       assign new_assurances = '<ul class="product-assurances" role="list" aria-label="Purchase assurances"><li>Fast dispatch</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
       assign output = output | replace: old_assurances, new_assurances
