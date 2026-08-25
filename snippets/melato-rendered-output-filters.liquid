@@ -50,6 +50,13 @@
     assign output = output | replace: 'Client care is availableReplies are typically sent within one business day.', 'Client care is available. Replies are typically sent within one business day.'
     assign output = output | replace: 'You may request, correction of, or deletion of your personal information', 'You may request access to, correction of, or deletion of your personal information'
 
+    # The homepage hero file currently carries a generic asset alt of "Image".
+    # Give only that generic value useful campaign context without overwriting
+    # already descriptive image alternatives elsewhere on the homepage.
+    if template.name == 'index'
+      assign output = output | replace: 'alt="Image"', 'alt="Melato current collection campaign"'
+    endif
+
     if template.name == 'collection'
       if output contains '<aside class="melato-collection-service-strip"'
         assign service_parts = output | split: '<aside class="melato-collection-service-strip"'
@@ -152,6 +159,7 @@
       assign new_assurances = '<ul class="product-assurances" role="list" aria-label="Purchase assurances"><li>Fast dispatch</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
       assign output = output | replace: old_assurances, new_assurances
       assign output = output | replace: 'Customers rate us 5.0/5 based on 3 reviews.', 'MELATO STORE RATING 5.0/5 from 3 verified customer reviews.'
+      assign output = output | replace: 'Verified material information', 'Material details'
       assign output = output | replace: '</strong><span', '</strong> <span'
       assign output = output | replace: '</span><strong', '</span> <strong'
       assign output = output | replace: '</h3><p>', '</h3> <p>'
