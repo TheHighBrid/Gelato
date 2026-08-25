@@ -9,7 +9,7 @@
   let lastFocused = null;
 
   const locale = () => document.documentElement.lang || navigator.language || 'en-CA';
-  const currency = cart => String(cart?.currency || window.DRIP?.shop?.currency || 'CAD').toUpperCase();
+  const currency = cart => String((cart && cart.currency) || window.DRIP?.shop?.currency || 'CAD').toUpperCase();
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
   }[char]));
@@ -18,7 +18,7 @@
     const amount = Number(cents || 0) / 100;
     const currencyCode = String(code || window.DRIP?.shop?.currency || 'CAD').trim().toUpperCase();
     try {
-      return new Intl.NumberFormat(locale(), { style: 'currency', currency: currencyCode }).format(amount);
+      return new Intl.NumberFormat(locale(), { style:'currency', currency:currencyCode }).format(amount);
     } catch (error) {
       if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
         return window.Shopify.formatMoney(Number(cents || 0), window.DRIP?.shop?.moneyFormat || '${{amount}}');
