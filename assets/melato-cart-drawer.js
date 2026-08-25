@@ -233,8 +233,10 @@
   document.addEventListener('submit', event => {
     const form = event.target;
     if (!isProductAddForm(form) || event.defaultPrevented) return;
+    const submitter = event.submitter || document.activeElement;
+    if (submitter?.closest?.('.shopify-payment-button, .shopify-payment-button__button')) return;
     event.preventDefault();
-    addForm(form, event.submitter);
+    addForm(form, submitter);
   });
 
   document.addEventListener('click', event => {
@@ -260,7 +262,7 @@
     const quantityButton = event.target.closest('[data-qty-change]');
     if (quantityButton?.closest('.cart-drawer')) {
       event.preventDefault();
-      const row = quantityButton.closest('[data-line-key]');
+      const row = quantityButton.closest('.cart-item');
       const key = quantityButton.dataset.lineKey || row?.dataset.lineKey;
       const input = row?.querySelector('.qty-stepper__value');
       const next = Math.max(0, Number(input?.value || 0) + Number(quantityButton.dataset.qtyChange || 0));
