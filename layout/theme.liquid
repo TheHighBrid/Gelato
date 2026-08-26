@@ -58,10 +58,7 @@
   {{ 'melato-palette-v3.css' | asset_url | stylesheet_tag }}
   {{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
   {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
-  {{ 'melato-header-footer-fix.css' | asset_url | stylesheet_tag }}
-  {{ 'melato-optimization-2026.css' | asset_url | stylesheet_tag }}
-  {{ 'melato-hidden-ui-cleanup.css' | asset_url | stylesheet_tag }}
-  {{ 'melato-august-2026-audit-fixes.css' | asset_url | stylesheet_tag }}
+  {{ 'melato-storefront-tail.css' | asset_url | stylesheet_tag }}
   {%- if template.name == 'product' -%}{{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}{%- endif -%}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}{% render 'melato-global-polish' %}
@@ -81,7 +78,7 @@
     endif
   -%}
   {%- if melato_filter_main_output -%}{%- capture melato_main_output -%}{{ content_for_layout }}{%- endcapture -%}<main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html:melato_main_output, context:'main' %}</main>{%- else -%}<main id="main-content" class="main-content" role="main" tabindex="-1">{{ content_for_layout }}</main>{%- endif -%}
-  {%- if template.name == 'index' or template.name == 'product' -%}<section class="melato-trust-strip" aria-label="Shopping assurances"><span>Complimentary standard delivery</span><a href="/policies/refund-policy">30-day eligible returns</a><span>Secure checkout</span></section>{%- endif -%}
+  {%- if template.name == 'index' or template.name == 'product' -%}<section class="melato-trust-strip" aria-label="Shopping assurances"><span>Complimentary standard delivery</span><span>Prepared in 1–3 business days</span><a href="/policies/refund-policy">30-day eligible returns</a><span>Secure Shopify checkout</span></section>{%- endif -%}
   {%- section 'melato-footer' -%}
   {%- capture melato_cart_output -%}{%- render 'cart-drawer' -%}{%- endcapture -%}
   <div class="melato-utility-layer" aria-label="Store utilities"><div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>{% render 'melato-rendered-output-filters', html:melato_cart_output, context:'cart' %}{%- render 'search-drawer' -%}{%- render 'mobile-menu' -%}{%- render 'quick-view-modal' -%}<div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div></div>
