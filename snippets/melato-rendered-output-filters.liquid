@@ -209,10 +209,7 @@
         assign output = output | replace_first: '</form>', product_form_end_with_conversion
       endunless
 
-      # Open the first specification panel by default so key fit/material data is not buried.
-      unless product_type_down contains 'fragrance' or product_type_down contains 'eau de' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum'
-        assign output = output | replace_first: '<details class="pdp-spec">', '<details class="pdp-spec" open>'
-      endunless
+      # Specification panels intentionally render closed by default. Native details state belongs to the shopper.
 
       assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
       assign new_assurances = '<ul class="product-assurances" role="list" aria-label="Purchase assurances"><li>Prepared in 1–3 business days</li><li>Complimentary delivery on all orders</li><li>Secure Shopify checkout</li></ul>'
