@@ -32,7 +32,7 @@
     return root.endsWith('/') ? root : `${root}/`;
   };
   const route = path => `${rootPath()}${String(path || '').replace(/^\//, '')}`;
-  const currency = cart => String(cart?.currency || window.DRIP?.shop?.currency || 'CAD').toUpperCase();
+  const currency = cart => String((cart && cart.currency) || window.DRIP?.shop?.currency || 'CAD').toUpperCase();
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
   }[char]));
