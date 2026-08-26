@@ -55,16 +55,23 @@
     style.id = 'MelatoDiscoveryStyles';
     style.textContent = [
       '.mxh__desktop-nav{display:none}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__viewport{-webkit-mask-image:none!important;mask-image:none!important;overflow:hidden!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__track{animation:none!important;transform:none!important;width:100%!important;display:block!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__group{display:flex!important;width:100%!important;min-width:0!important;justify-content:center!important;align-items:center!important;gap:clamp(18px,3vw,42px)!important;padding-inline:18px!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__group[aria-hidden="true"]{display:none!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__item{flex:0 1 auto!important;white-space:nowrap!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__item:nth-child(n+3){display:none!important}',
+      '@media(max-width:749px){#melato-announcement-bar.is-melato-static .melato-ann__item:nth-child(n+2){display:none!important}}',
       '@media(min-width:1180px){',
       '.mxh__left{gap:16px!important}',
-      '.mxh__desktop-nav{display:flex;align-items:center;gap:clamp(10px,1.25vw,20px);min-width:0}',
-      '.mxh__desktop-nav a{position:relative;white-space:nowrap;font-family:var(--font-mono-family,monospace);font-size:10px;line-height:1;letter-spacing:.09em;text-transform:uppercase;opacity:.78;transition:opacity .2s ease}',
+      '.mxh__desktop-nav{display:flex;align-items:center;gap:clamp(9px,1.05vw,18px);min-width:0}',
+      '.mxh__desktop-nav a{position:relative;white-space:nowrap;font-family:var(--font-mono-family,monospace);font-size:10px;line-height:1;letter-spacing:.085em;text-transform:uppercase;opacity:.78;transition:opacity .2s ease}',
       '.mxh__desktop-nav a:hover,.mxh__desktop-nav a[aria-current="page"]{opacity:1}',
       '.mxh__desktop-nav a:after{content:"";position:absolute;left:0;right:100%;bottom:-7px;height:1px;background:currentColor;transition:right .22s ease}',
       '.mxh__desktop-nav a:hover:after,.mxh__desktop-nav a[aria-current="page"]:after{right:0}',
       '.mxh__menu-text{display:none}',
       '}',
-      '@media(min-width:1180px) and (max-width:1320px){.mxh__desktop-nav a:nth-child(n+4){display:none}}'
+      '@media(min-width:1180px) and (max-width:1320px){.mxh__desktop-nav a:nth-child(n+5){display:none}}'
     ].join('');
     document.head.appendChild(style);
   }
@@ -86,7 +93,7 @@
 
       var links = Array.from(header.querySelectorAll('.mxh__drawer .mxh__nav-item > .mxh__nav-link, .mxh__drawer .mxh__nav > .mxh__nav-link'))
         .filter(function (link) { return link.getAttribute('href'); })
-        .slice(0, 4);
+        .slice(0, 5);
       if (!links.length) return;
 
       var nav = document.createElement('nav');
@@ -105,14 +112,21 @@
     });
   }
 
-  function restoreAnnouncement(root) {
+  function stabilizeAnnouncement(root) {
     var scope = root && root.querySelector ? root : document;
     var bar = scope.querySelector('#melato-announcement-bar') || document.querySelector('#melato-announcement-bar');
     if (!bar) return;
     ensureStyles();
-    bar.classList.remove('is-melato-static');
-    bar.querySelectorAll('.melato-ann__secondary-message').forEach(function (item) {
-      item.classList.remove('melato-ann__secondary-message');
+    bar.classList.add('is-melato-static');
+    var groups = bar.querySelectorAll('.melato-ann__group');
+    groups.forEach(function (group, index) {
+      if (index === 0) {
+        group.setAttribute('aria-hidden', 'false');
+        group.removeAttribute('inert');
+      } else {
+        group.setAttribute('aria-hidden', 'true');
+        group.setAttribute('inert', '');
+      }
     });
   }
 
@@ -120,7 +134,7 @@
     window.requestAnimationFrame(function () {
       normalizeLinks(root || document);
       ensureDesktopNav(root || document);
-      restoreAnnouncement(root || document);
+      stabilizeAnnouncement(root || document);
     });
   }
 
