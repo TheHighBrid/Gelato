@@ -1,6 +1,6 @@
 {% comment %}
   sections/main-cart.liquid
-  Cart recovery and trust pass, 2026-08-17.
+  Cart recovery and trust pass, 2026-08-25.
 {% endcomment %}
 
 <section class="section-spacing">
@@ -48,7 +48,7 @@
               <span class="text-label">{{ 'cart.subtotal' | t }}</span>
               <span class="price">{{ cart.total_price | money }}</span>
             </div>
-            <p class="text-label" style="color:var(--color-muted);text-align:center;margin-bottom:20px;">Complimentary delivery · 30-day returns · Secure checkout</p>
+            <p class="text-label" style="color:var(--color-muted);text-align:center;margin-bottom:20px;">Complimentary delivery · prepared in 1–3 business days · 30-day eligible returns · secure Shopify checkout</p>
             <button type="submit" name="checkout" class="btn btn--primary btn--full btn--lg">{{ 'cart.checkout' | t }}</button>
             {%- if additional_checkout_buttons -%}
               <div class="additional-checkout-buttons" style="margin-top:12px;">{{ content_for_additional_checkout_buttons }}</div>
@@ -65,20 +65,28 @@
       -%}
       <div class="melato-empty-cart">
         <div class="melato-empty-cart__intro">
-          <p class="text-label">Your selection is open</p>
+          <p class="text-label">Your cart</p>
           <h2 class="heading-sm">{{ 'cart.empty' | t }}</h2>
-          <p>Return to the current Melato rotation, revisit a signature piece, or continue through the Living Lookbook.</p>
+          <p>Your cart is empty. Start with New Arrivals or revisit the Living Lookbook.</p>
           <div class="melato-empty-cart__actions">
-            <a href="{{ routes.all_products_collection_url }}" class="btn btn--primary">SHOP THE COLLECTION</a>
+            <a href="/collections/new-arrivals" class="btn btn--primary">SHOP NEW ARRIVALS</a>
             <a href="/pages/living-lookbook" class="btn btn--secondary">LIVING LOOKBOOK</a>
           </div>
         </div>
 
         <ul class="melato-empty-cart__trust" aria-label="Shopping assurances">
-          <li><strong>Complimentary delivery</strong><span>Included on every order.</span></li>
-          <li><strong>30-day returns</strong><span>Eligible unworn items follow the posted policy.</span></li>
-          <li><strong>Secure checkout</strong><span>Protected Shopify checkout.</span></li>
+          <li><strong>Complimentary delivery</strong><span>Standard delivery is included. Orders usually prepare within 1 to 3 business days.</span></li>
+          <li><strong>30-day eligible returns</strong><span>Start a return request at support@melato.ca. Return shipping may apply.</span></li>
+          <li><strong>Secure Shopify checkout</strong><span>Accepted payment methods are protected through Shopify checkout.</span></li>
         </ul>
+
+        {%- if shop.enabled_payment_types.size > 0 -%}
+          <div class="melato-empty-cart__payments" aria-label="Accepted payment methods">
+            {%- for type in shop.enabled_payment_types -%}
+              {{ type | payment_type_svg_tag }}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
 
         {%- if recovery_collection != blank and recovery_collection.products_count > 0 -%}
           <section class="melato-empty-cart__recovery" aria-labelledby="EmptyCartRecoveryTitle">
@@ -97,7 +105,7 @@
 </section>
 
 <style>
-  .melato-empty-cart{padding:36px 0 12px}.melato-empty-cart__intro{text-align:center;max-width:680px;margin:0 auto}.melato-empty-cart__intro .heading-sm{margin:12px 0 16px}.melato-empty-cart__intro>p:not(.text-label){max-width:560px;margin:0 auto;color:var(--color-muted);line-height:1.65}.melato-empty-cart__actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:26px}.melato-empty-cart__trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:44px 0;background:var(--color-border);border:1px solid var(--color-border)}.melato-empty-cart__trust li{background:var(--color-bg);padding:20px}.melato-empty-cart__trust strong,.melato-empty-cart__trust span{display:block}.melato-empty-cart__trust strong{font-family:var(--font-mono-family);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}.melato-empty-cart__trust span{margin-top:6px;color:var(--color-muted);font-size:.82rem;line-height:1.45}.melato-empty-cart__recovery{margin-top:52px}.melato-empty-cart__recovery>.text-label{margin-bottom:8px;color:var(--color-accent)}.melato-empty-cart__recovery>.heading-xs{margin-bottom:22px}.melato-empty-cart__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.melato-empty-cart__grid .product-card__title{font-size:.95rem}.melato-empty-cart__grid .product-card__media{aspect-ratio:3/4}
+  .melato-empty-cart{padding:36px 0 12px}.melato-empty-cart__intro{text-align:center;max-width:680px;margin:0 auto}.melato-empty-cart__intro .heading-sm{margin:12px 0 16px}.melato-empty-cart__intro>p:not(.text-label){max-width:560px;margin:0 auto;color:var(--color-muted);line-height:1.65}.melato-empty-cart__actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:26px}.melato-empty-cart__trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:44px 0 20px;background:var(--color-border);border:1px solid var(--color-border)}.melato-empty-cart__trust li{background:var(--color-bg);padding:20px}.melato-empty-cart__trust strong,.melato-empty-cart__trust span{display:block}.melato-empty-cart__trust strong{font-family:var(--font-mono-family);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}.melato-empty-cart__trust span{margin-top:6px;color:var(--color-muted);font-size:.82rem;line-height:1.45}.melato-empty-cart__payments{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin:0 auto 44px}.melato-empty-cart__payments svg{width:auto;height:24px;max-width:42px}.melato-empty-cart__recovery{margin-top:52px}.melato-empty-cart__recovery>.text-label{margin-bottom:8px;color:var(--color-accent)}.melato-empty-cart__recovery>.heading-xs{margin-bottom:22px}.melato-empty-cart__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.melato-empty-cart__grid .product-card__title{font-size:.95rem}.melato-empty-cart__grid .product-card__media{aspect-ratio:3/4}
   @media (max-width: 900px){.melato-empty-cart__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.melato-empty-cart__trust{grid-template-columns:1fr}}
   @media (max-width: 768px){.cart-page-grid{grid-template-columns:1fr !important}.melato-empty-cart{padding-top:12px}.melato-empty-cart__actions{display:grid}.melato-empty-cart__actions .btn{width:100%}}
 </style>
