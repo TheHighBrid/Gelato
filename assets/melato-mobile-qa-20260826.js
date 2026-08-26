@@ -138,28 +138,9 @@ body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__price
     });
   }
 
-  function normalizePdp(root = document) {
-    const pdp = root.querySelector('.melato-pdp-rebuild');
-    if (!pdp) return;
-
-    if (pdp.dataset.qaDefaultPanels !== 'closed') {
-      pdp.querySelectorAll('details.pdp-mini-detail[open], details.pdp-spec[open]').forEach((panel) => panel.removeAttribute('open'));
-      pdp.dataset.qaDefaultPanels = 'closed';
-    }
-
-    pdp.querySelectorAll('.pdp-set-card').forEach((card) => {
-      const image = card.querySelector('.pdp-set-image');
-      if (image) {
-        image.style.marginInline = 'auto';
-        image.style.objectPosition = '50% 50%';
-      }
-    });
-  }
-
   function run() {
     injectStyles();
     normalizeRecentlyViewed(document);
-    normalizePdp(document);
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run, { once:true });
