@@ -1,0 +1,75 @@
+{
+  "sections": {
+    "field_journal": {
+      "type": "melato-living-field-journal",
+      "settings": {
+        "cover_alt": "Melato Living Volume 01 portrait in a warm nocturnal interior",
+        "issue_title": "The Uniform in Motion",
+        "issue_volume": "Vol. 01",
+        "issue_deck": "A uniform made for the distance between a quiet room, the platform and last call.",
+        "cover_note": "A field journal of silhouette, transit and after-hours ritual—filed as a sequence rather than a catalogue.",
+        "issue_code": "Toronto / 2026 / 21:40",
+        "credits": "Melato Studio",
+        "chapter_1_title": "First Light",
+        "chapter_1_deck": "The first move is not an entrance. It is the decision to leave, measured in quiet rooms, brown tailoring and the small rituals that make a silhouette feel lived in.",
+        "chapter_2_title": "In Transit",
+        "chapter_2_deck": "The uniform meets the public. Platforms, pavement and passing light make the line more active without asking it to become louder.",
+        "chapter_3_title": "After Hours",
+        "chapter_3_deck": "Colour deepens, texture softens and a familiar shape learns the grammar of dinner, conversation and last call.",
+        "chapter_4_title": "Filed Under: Melato",
+        "chapter_4_deck": "Objects, gestures and residual light close the issue. The archive is not an answer; it is the material left in the room after the story.",
+        "archive_deck": "A finite contact sheet of outtakes, objects and afterimages. Select an exhibit for the record; the main story remains the primary route.",
+        "archive_note": "A recovered image from the edges of the issue: texture, gesture and a record of the time between scenes.",
+        "archive_initial_count": 12,
+        "shop_deck": "Complete looks first, then individual pieces. Product availability is live; archive items remain clearly identified.",
+        "close_note": "Save this issue, return to the archive, or wait for the next field note. The collection remains available whenever the scene calls for it."
+      },
+      "blocks": {
+        "look_04": {
+          "type": "look",
+          "settings": {
+            "frame_number": 4,
+            "product_one": "ojos-velour-track-jacket",
+            "product_two": "ojos-velour-track-pants",
+            "styling_note": "The jacket stays open to loosen the line; the pant preserves the silhouette."
+          }
+        },
+        "look_08": {
+          "type": "look",
+          "settings": {
+            "frame_number": 8,
+            "product_one": "noir-alibi-lace-corset-dress",
+            "styling_note": "A close, precise silhouette for the part of the night when texture does the talking."
+          }
+        },
+        "look_12": {
+          "type": "look",
+          "settings": {
+            "frame_number": 12,
+            "product_one": "conquista-velour-track-jacket",
+            "product_two": "conquista-velour-track-pant",
+            "styling_note": "The two pieces read as a complete uniform, but each can shift the proportion alone."
+          }
+        },
+        "look_15": {
+          "type": "look",
+          "settings": {
+            "frame_number": 15,
+            "product_one": "conquista-velour-track-jacket",
+            "product_two": "conquista-velour-track-pant",
+            "styling_note": "Filed as the final movement: a remembered proportion, a softened surface and one last exit."
+          }
+        }
+      },
+      "block_order": [
+        "look_04",
+        "look_08",
+        "look_12",
+        "look_15"
+      ]
+    }
+  },
+  "order": [
+    "field_journal"
+  ]
+}

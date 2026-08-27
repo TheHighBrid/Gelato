@@ -1,0 +1,517 @@
+{% liquid
+  assign issue_title = section.settings.issue_title | default: 'The Uniform in Motion'
+  assign issue_volume = section.settings.issue_volume | default: 'Vol. 01'
+  assign issue_deck = section.settings.issue_deck | default: 'A uniform made for the distance between a quiet room, the platform and last call.'
+  assign issue_code = section.settings.issue_code | default: 'Toronto / 2026 / 21:40'
+  assign archive_initial_count = section.settings.archive_initial_count | default: 12
+  assign archive_start = 17
+  assign archive_maximum = 24
+  assign archive_end = archive_start | plus: archive_maximum | minus: 1
+
+  capture journal_manifest
+    render 'melato-living-lookbook-evidence-data'
+    echo '~'
+    render 'melato-living-lookbook-evidence-case02-additions'
+    echo '~'
+    render 'melato-living-lookbook-evidence-case03-data'
+  endcapture
+  assign journal_records = journal_manifest | strip | split: '~'
+
+  assign first_record = journal_records.first | strip | split: '|'
+  assign fallback_cover_url = first_record[0] | strip
+%}
+
+{{ 'melato-living-field-journal.js' | asset_url | script_tag }}
+
+<section
+  id="FieldJournal-{{ section.id }}"
+  class="fj"
+  data-field-journal
+  aria-labelledby="FieldJournalTitle-{{ section.id }}"
+>
+  <style>
+    #shopify-section-{{ section.id }} { background: #0e0d0c; }
+    #shopify-section-{{ section.id }} .fj {
+      --fj-carbon: #0e0d0c;
+      --fj-ink: #171310;
+      --fj-bone: #f2ece2;
+      --fj-muted: rgba(242, 236, 226, .67);
+      --fj-line: rgba(242, 236, 226, .2);
+      --fj-brass: #c3a064;
+      --fj-oxblood: #5b2030;
+      --fj-paper: #e8ded0;
+      background: var(--fj-carbon);
+      color: var(--fj-bone);
+      overflow: clip;
+      font-family: var(--font-body-family, Arial, sans-serif);
+    }
+    #shopify-section-{{ section.id }} .fj *,
+    #shopify-section-{{ section.id }} .fj *::before,
+    #shopify-section-{{ section.id }} .fj *::after { box-sizing: border-box; }
+    #shopify-section-{{ section.id }} .fj a { color: inherit; }
+    #shopify-section-{{ section.id }} .fj button,
+    #shopify-section-{{ section.id }} .fj input { font: inherit; }
+    #shopify-section-{{ section.id }} .fj button { cursor: pointer; }
+    #shopify-section-{{ section.id }} .fj button:focus-visible,
+    #shopify-section-{{ section.id }} .fj a:focus-visible { outline: 2px solid var(--fj-brass); outline-offset: 4px; }
+    #shopify-section-{{ section.id }} .fj__masthead {
+      min-height: 48px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+      border-bottom: 1px solid var(--fj-line); padding: 0 clamp(16px, 4vw, 64px); position: relative; z-index: 2;
+      color: var(--fj-bone); text-transform: uppercase; letter-spacing: .13em; font-size: 10px;
+    }
+    #shopify-section-{{ section.id }} .fj__masthead a { text-decoration: none; }
+    #shopify-section-{{ section.id }} .fj__masthead-end { display: flex; justify-content: flex-end; gap: 18px; }
+    #shopify-section-{{ section.id }} .fj__wordmark { letter-spacing: .24em; font-weight: 700; font-size: 11px; }
+    #shopify-section-{{ section.id }} .fj__cover {
+      min-height: min(900px, calc(100svh - 48px)); position: relative; display: grid; align-items: end;
+      padding: clamp(88px, 13vw, 168px) clamp(16px, 5vw, 80px) clamp(40px, 5vw, 80px); isolation: isolate;
+      border-bottom: 1px solid var(--fj-line);
+    }
+    #shopify-section-{{ section.id }} .fj__cover-media,
+    #shopify-section-{{ section.id }} .fj__cover-media::after { position: absolute; inset: 0; }
+    #shopify-section-{{ section.id }} .fj__cover-media { z-index: -2; background: #1c1713; }
+    #shopify-section-{{ section.id }} .fj__cover-media::after { content: ''; z-index: 1; background: linear-gradient(90deg, rgba(14,13,12,.84) 0%, rgba(14,13,12,.3) 56%, rgba(14,13,12,.62) 100%), linear-gradient(0deg, rgba(14,13,12,.85), transparent 60%); }
+    #shopify-section-{{ section.id }} .fj__cover-media img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; filter: saturate(.82) contrast(1.05); }
+    #shopify-section-{{ section.id }} .fj__cover-grid { width: min(1440px, 100%); margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(248px, .6fr); gap: clamp(32px, 8vw, 160px); align-items: end; }
+    #shopify-section-{{ section.id }} .fj__eyebrow,
+    #shopify-section-{{ section.id }} .fj__kicker { color: var(--fj-brass); text-transform: uppercase; font-size: 11px; letter-spacing: .19em; line-height: 1.35; }
+    #shopify-section-{{ section.id }} .fj__issue-title,
+    #shopify-section-{{ section.id }} .fj__chapter-title,
+    #shopify-section-{{ section.id }} .fj__index-title { font-family: var(--font-heading-family, 'Arial Narrow', Arial, sans-serif); text-transform: uppercase; font-weight: 500; letter-spacing: -.06em; line-height: .8; margin: 18px 0 0; }
+    #shopify-section-{{ section.id }} .fj__issue-title { max-width: 1080px; font-size: clamp(64px, 12.5vw, 176px); }
+    #shopify-section-{{ section.id }} .fj__issue-title span { display: block; font-size: .29em; letter-spacing: .16em; line-height: 1.2; margin: 20px 0 0 5px; color: var(--fj-bone); }
+    #shopify-section-{{ section.id }} .fj__deck { max-width: 590px; margin: 26px 0 0; font-size: clamp(17px, 1.45vw, 22px); line-height: 1.42; }
+    #shopify-section-{{ section.id }} .fj__cover-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    #shopify-section-{{ section.id }} .fj__button,
+    #shopify-section-{{ section.id }} .fj__text-link { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border: 1px solid var(--fj-line); padding: 0 18px; text-transform: uppercase; letter-spacing: .15em; font-size: 10px; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+    #shopify-section-{{ section.id }} .fj__button--solid { background: var(--fj-bone); border-color: var(--fj-bone); color: var(--fj-carbon); }
+    #shopify-section-{{ section.id }} .fj__button--solid:hover { background: var(--fj-brass); border-color: var(--fj-brass); }
+    #shopify-section-{{ section.id }} .fj__button--ghost:hover,
+    #shopify-section-{{ section.id }} .fj__text-link:hover { border-color: var(--fj-brass); color: var(--fj-brass); }
+    #shopify-section-{{ section.id }} .fj__cover-notes { border-left: 1px solid var(--fj-line); padding-left: clamp(18px, 2.5vw, 38px); font-size: 12px; line-height: 1.6; color: var(--fj-muted); }
+    #shopify-section-{{ section.id }} .fj__cover-notes p { margin: 8px 0 28px; }
+    #shopify-section-{{ section.id }} .fj__cover-notes dl { margin: 0; display: grid; grid-template-columns: 1fr; gap: 14px; }
+    #shopify-section-{{ section.id }} .fj__cover-notes dt { color: var(--fj-brass); text-transform: uppercase; letter-spacing: .15em; font-size: 9px; }
+    #shopify-section-{{ section.id }} .fj__cover-notes dd { margin: 3px 0 0; color: var(--fj-bone); }
+    #shopify-section-{{ section.id }} .fj__index-rail { position: sticky; top: 0; z-index: 8; display: flex; gap: 0; overflow-x: auto; background: rgba(14,13,12,.93); border-bottom: 1px solid var(--fj-line); backdrop-filter: blur(16px); scrollbar-width: none; }
+    #shopify-section-{{ section.id }} .fj__index-rail::-webkit-scrollbar { display: none; }
+    #shopify-section-{{ section.id }} .fj__index-rail a { flex: 1 0 auto; color: var(--fj-muted); padding: 16px clamp(14px, 2vw, 30px); text-decoration: none; text-transform: uppercase; letter-spacing: .1em; font-size: 10px; border-right: 1px solid var(--fj-line); transition: color .2s ease, background .2s ease; }
+    #shopify-section-{{ section.id }} .fj__index-rail a:last-child { border-right: 0; }
+    #shopify-section-{{ section.id }} .fj__index-rail a[aria-current='true'],
+    #shopify-section-{{ section.id }} .fj__index-rail a:hover { background: var(--fj-oxblood); color: var(--fj-bone); }
+    #shopify-section-{{ section.id }} .fj__chapter { padding: clamp(72px, 10vw, 156px) clamp(16px, 5vw, 80px); border-bottom: 1px solid var(--fj-line); scroll-margin-top: 48px; }
+    #shopify-section-{{ section.id }} .fj__chapter-head { width: min(1280px, 100%); margin: 0 auto clamp(42px, 6vw, 90px); display: grid; grid-template-columns: minmax(0, .86fr) minmax(260px, .64fr); gap: clamp(30px, 9vw, 150px); align-items: end; }
+    #shopify-section-{{ section.id }} .fj__chapter-title { font-size: clamp(58px, 8vw, 128px); }
+    #shopify-section-{{ section.id }} .fj__chapter-deck { margin: 0; color: var(--fj-muted); font-size: clamp(16px, 1.4vw, 21px); line-height: 1.55; max-width: 500px; }
+    #shopify-section-{{ section.id }} .fj__spread-grid { width: min(1280px, 100%); margin: 0 auto; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: clamp(12px, 2vw, 28px); align-items: start; }
+    #shopify-section-{{ section.id }} .fj__spread { grid-column: span 5; margin: 0; min-width: 0; }
+    #shopify-section-{{ section.id }} .fj__spread:nth-child(4n + 1) { grid-column: span 7; }
+    #shopify-section-{{ section.id }} .fj__spread:nth-child(4n + 3) { grid-column: span 4; margin-top: clamp(28px, 8vw, 120px); }
+    #shopify-section-{{ section.id }} .fj__spread:nth-child(4n + 4) { grid-column: span 8; }
+    #shopify-section-{{ section.id }} .fj__image-wrap { position: relative; overflow: hidden; background: #211b16; aspect-ratio: 4 / 5; }
+    #shopify-section-{{ section.id }} .fj__spread:nth-child(4n + 1) .fj__image-wrap,
+    #shopify-section-{{ section.id }} .fj__spread:nth-child(4n + 4) .fj__image-wrap { aspect-ratio: 16 / 10; }
+    #shopify-section-{{ section.id }} .fj__image-wrap img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+    #shopify-section-{{ section.id }} .fj__spread:hover .fj__image-wrap img { transform: scale(1.025); }
+    #shopify-section-{{ section.id }} .fj__spread-caption { display: flex; justify-content: space-between; gap: 16px; margin-top: 12px; font-size: 10px; letter-spacing: .11em; text-transform: uppercase; color: var(--fj-muted); }
+    #shopify-section-{{ section.id }} .fj__spread-caption span:last-child { text-align: right; }
+    #shopify-section-{{ section.id }} .fj__look-action { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--fj-line); }
+    #shopify-section-{{ section.id }} .fj__look-action button { border: 0; padding: 0; color: var(--fj-brass); background: transparent; text-transform: uppercase; letter-spacing: .15em; font-size: 10px; }
+    #shopify-section-{{ section.id }} .fj__look-action a { color: var(--fj-muted); font-size: 11px; }
+    #shopify-section-{{ section.id }} .fj__look-action button:hover { color: var(--fj-bone); }
+    #shopify-section-{{ section.id }} .fj__archive { padding: clamp(72px, 9vw, 144px) clamp(16px, 5vw, 80px); background: var(--fj-paper); color: #1d1915; border-bottom: 1px solid #bfb4a4; scroll-margin-top: 48px; }
+    #shopify-section-{{ section.id }} .fj__archive-head,
+    #shopify-section-{{ section.id }} .fj__shop-head { width: min(1280px, 100%); margin: 0 auto clamp(38px, 6vw, 80px); display: grid; grid-template-columns: minmax(0, .9fr) minmax(250px, .6fr); gap: clamp(28px, 8vw, 130px); align-items: end; }
+    #shopify-section-{{ section.id }} .fj__archive .fj__kicker { color: var(--fj-oxblood); }
+    #shopify-section-{{ section.id }} .fj__archive h2,
+    #shopify-section-{{ section.id }} .fj__shop h2 { font-family: var(--font-heading-family, 'Arial Narrow', Arial, sans-serif); font-weight: 500; letter-spacing: -.055em; text-transform: uppercase; line-height: .84; font-size: clamp(54px, 7.5vw, 112px); margin: 16px 0 0; }
+    #shopify-section-{{ section.id }} .fj__archive-head p,
+    #shopify-section-{{ section.id }} .fj__shop-head p { margin: 0; color: rgba(29,25,21,.68); font-size: 16px; line-height: 1.55; max-width: 500px; }
+    #shopify-section-{{ section.id }} .fj__archive-grid { width: min(1280px, 100%); margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(15px, 2.2vw, 30px); }
+    #shopify-section-{{ section.id }} .fj__exhibit { margin: 0; }
+    #shopify-section-{{ section.id }} .fj__exhibit[hidden] { display: none; }
+    #shopify-section-{{ section.id }} .fj__exhibit button { width: 100%; border: 0; padding: 10px 10px 25px; background: #f6f0e7; box-shadow: 0 12px 28px rgba(44,35,24,.16); text-align: left; transform: rotate(var(--rotation, 0deg)); transition: transform .24s ease, box-shadow .24s ease; }
+    #shopify-section-{{ section.id }} .fj__exhibit:nth-child(3n + 1) { --rotation: -1.5deg; }
+    #shopify-section-{{ section.id }} .fj__exhibit:nth-child(3n + 2) { --rotation: .9deg; }
+    #shopify-section-{{ section.id }} .fj__exhibit:nth-child(3n) { --rotation: -.35deg; }
+    #shopify-section-{{ section.id }} .fj__exhibit button:hover { transform: translateY(-6px) rotate(0); box-shadow: 0 18px 32px rgba(44,35,24,.24); }
+    #shopify-section-{{ section.id }} .fj__exhibit img { display: block; width: 100%; aspect-ratio: 1 / 1.17; object-fit: cover; filter: sepia(.08) contrast(.98); }
+    #shopify-section-{{ section.id }} .fj__exhibit-label { display: flex; justify-content: space-between; gap: 6px; color: #312a23; margin-top: 10px; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    #shopify-section-{{ section.id }} .fj__archive-more { display: flex; justify-content: center; width: min(1280px, 100%); margin: 44px auto 0; }
+    #shopify-section-{{ section.id }} .fj__archive-more button { border: 1px solid rgba(29,25,21,.38); background: transparent; min-height: 46px; padding: 0 20px; color: #1d1915; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; }
+    #shopify-section-{{ section.id }} .fj__archive-more button:hover { background: #1d1915; color: var(--fj-paper); }
+    #shopify-section-{{ section.id }} .fj__shop { padding: clamp(72px, 9vw, 144px) clamp(16px, 5vw, 80px); background: #171310; color: var(--fj-bone); scroll-margin-top: 48px; }
+    #shopify-section-{{ section.id }} .fj__shop .fj__kicker { color: var(--fj-brass); }
+    #shopify-section-{{ section.id }} .fj__shop-head p { color: var(--fj-muted); }
+    #shopify-section-{{ section.id }} .fj__shop-filters { width: min(1280px, 100%); margin: 0 auto 32px; display: flex; flex-wrap: wrap; gap: 8px; }
+    #shopify-section-{{ section.id }} .fj__shop-filters button { min-height: 38px; border: 1px solid var(--fj-line); background: transparent; color: var(--fj-muted); padding: 0 13px; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; }
+    #shopify-section-{{ section.id }} .fj__shop-filters button[aria-pressed='true'],
+    #shopify-section-{{ section.id }} .fj__shop-filters button:hover { color: var(--fj-carbon); background: var(--fj-bone); border-color: var(--fj-bone); }
+    #shopify-section-{{ section.id }} .fj__shop-grid { width: min(1280px, 100%); margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--fj-line); border: 1px solid var(--fj-line); }
+    #shopify-section-{{ section.id }} .fj__shop-card { background: #171310; min-height: 100%; }
+    #shopify-section-{{ section.id }} .fj__shop-card[hidden] { display: none; }
+    #shopify-section-{{ section.id }} .fj__shop-card a { display: block; text-decoration: none; padding: 16px; }
+    #shopify-section-{{ section.id }} .fj__shop-card img { width: 100%; display: block; aspect-ratio: 4 / 5; object-fit: cover; background: #25201c; }
+    #shopify-section-{{ section.id }} .fj__shop-card-meta { display: grid; grid-template-columns: 1fr auto; gap: 14px; padding-top: 14px; }
+    #shopify-section-{{ section.id }} .fj__shop-card small { color: var(--fj-brass); text-transform: uppercase; letter-spacing: .13em; font-size: 9px; }
+    #shopify-section-{{ section.id }} .fj__shop-card strong { display: block; margin-top: 6px; font-size: 15px; font-weight: 500; line-height: 1.25; }
+    #shopify-section-{{ section.id }} .fj__shop-card span { color: var(--fj-muted); font-size: 12px; white-space: nowrap; }
+    #shopify-section-{{ section.id }} .fj__close { padding: clamp(45px, 6vw, 84px) clamp(16px, 5vw, 80px); background: var(--fj-oxblood); color: var(--fj-bone); }
+    #shopify-section-{{ section.id }} .fj__close-inner { width: min(1280px, 100%); margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; }
+    #shopify-section-{{ section.id }} .fj__close p { margin: 12px 0 0; color: rgba(242,236,226,.75); max-width: 560px; line-height: 1.55; }
+    #shopify-section-{{ section.id }} .fj__close-meta { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 14px 28px; color: rgba(242,236,226,.75); font-size: 10px; text-transform: uppercase; letter-spacing: .14em; }
+    #shopify-section-{{ section.id }} .fj__dialog { position: fixed; inset: 0; z-index: 1000; display: grid; background: rgba(10,9,8,.75); padding: max(16px, 4vw); overflow-y: auto; }
+    #shopify-section-{{ section.id }} .fj__dialog[hidden] { display: none; }
+    #shopify-section-{{ section.id }} .fj__drawer { justify-items: end; }
+    #shopify-section-{{ section.id }} .fj__drawer-panel { position: relative; width: min(100%, 540px); min-height: min(100%, 800px); background: var(--fj-bone); color: #1d1915; box-shadow: -16px 0 48px rgba(0,0,0,.35); padding: clamp(22px, 4vw, 40px); }
+    #shopify-section-{{ section.id }} .fj__viewer { place-items: center; }
+    #shopify-section-{{ section.id }} .fj__viewer-panel { position: relative; width: min(100%, 940px); background: var(--fj-paper); color: #1d1915; padding: clamp(20px, 3vw, 38px); box-shadow: 0 20px 64px rgba(0,0,0,.5); }
+    #shopify-section-{{ section.id }} .fj__dialog-close { position: absolute; top: 14px; right: 14px; z-index: 3; width: 42px; height: 42px; border: 1px solid currentColor; border-radius: 50%; background: transparent; color: inherit; font-size: 23px; line-height: 1; }
+    #shopify-section-{{ section.id }} .fj__drawer-content { padding-top: 38px; }
+    #shopify-section-{{ section.id }} .fj__drawer-label { color: var(--fj-oxblood); display: block; font-size: 10px; letter-spacing: .15em; text-transform: uppercase; }
+    #shopify-section-{{ section.id }} .fj__drawer-title { font-family: var(--font-heading-family, Arial, sans-serif); font-size: clamp(34px, 5vw, 56px); font-weight: 500; letter-spacing: -.05em; line-height: .88; text-transform: uppercase; margin: 10px 0 18px; }
+    #shopify-section-{{ section.id }} .fj__drawer-note { line-height: 1.55; color: rgba(29,25,21,.68); margin: 0 0 26px; }
+    #shopify-section-{{ section.id }} .fj__drawer-products { border-top: 1px solid rgba(29,25,21,.18); }
+    #shopify-section-{{ section.id }} .fj__drawer-product { display: grid; grid-template-columns: 72px 1fr; gap: 13px; align-items: center; padding: 14px 0; border-bottom: 1px solid rgba(29,25,21,.18); }
+    #shopify-section-{{ section.id }} .fj__drawer-product img { width: 72px; aspect-ratio: .78; object-fit: cover; background: #ded4c6; }
+    #shopify-section-{{ section.id }} .fj__drawer-product h3 { margin: 0; font-size: 14px; line-height: 1.22; }
+    #shopify-section-{{ section.id }} .fj__drawer-product p { font-size: 12px; color: rgba(29,25,21,.62); margin: 4px 0 10px; }
+    #shopify-section-{{ section.id }} .fj__drawer-product-links { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 14px; }
+    #shopify-section-{{ section.id }} .fj__drawer-product a { font-size: 11px; color: #1d1915; }
+    #shopify-section-{{ section.id }} .fj__drawer-product form { display: inline; }
+    #shopify-section-{{ section.id }} .fj__quick-add { border: 0; padding: 0; background: transparent; color: var(--fj-oxblood); font-size: 10px; text-transform: uppercase; letter-spacing: .13em; }
+    #shopify-section-{{ section.id }} .fj__quick-add:disabled { color: rgba(29,25,21,.42); cursor: not-allowed; }
+    #shopify-section-{{ section.id }} .fj__save-button { margin-top: 25px; border: 1px solid #1d1915; background: transparent; min-height: 46px; padding: 0 16px; color: #1d1915; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
+    #shopify-section-{{ section.id }} .fj__save-button:hover { color: var(--fj-bone); background: #1d1915; }
+    #shopify-section-{{ section.id }} .fj__viewer-content { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(220px, .45fr); gap: clamp(22px, 4vw, 52px); align-items: end; }
+    #shopify-section-{{ section.id }} .fj__viewer-content img { display: block; width: 100%; max-height: 72vh; object-fit: contain; background: #d7cbbb; }
+    #shopify-section-{{ section.id }} .fj__viewer-copy p { color: rgba(29,25,21,.72); line-height: 1.55; }
+    #shopify-section-{{ section.id }} .fj__viewer-navigation { display: flex; gap: 8px; margin-top: 26px; }
+    #shopify-section-{{ section.id }} .fj__viewer-navigation button { width: 44px; height: 44px; border: 1px solid rgba(29,25,21,.45); background: transparent; color: #1d1915; }
+    #shopify-section-{{ section.id }} .fj__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    @media (max-width: 749px) {
+      #shopify-section-{{ section.id }} .fj__masthead { grid-template-columns: 1fr auto; }
+      #shopify-section-{{ section.id }} .fj__masthead-end { display: none; }
+      #shopify-section-{{ section.id }} .fj__cover { min-height: calc(100svh - 48px); padding-top: 90px; }
+      #shopify-section-{{ section.id }} .fj__cover-media::after { background: linear-gradient(0deg, rgba(14,13,12,.93), rgba(14,13,12,.22) 74%), linear-gradient(90deg, rgba(14,13,12,.35), transparent); }
+      #shopify-section-{{ section.id }} .fj__cover-grid,
+      #shopify-section-{{ section.id }} .fj__chapter-head,
+      #shopify-section-{{ section.id }} .fj__archive-head,
+      #shopify-section-{{ section.id }} .fj__shop-head,
+      #shopify-section-{{ section.id }} .fj__close-inner,
+      #shopify-section-{{ section.id }} .fj__viewer-content { grid-template-columns: 1fr; }
+      #shopify-section-{{ section.id }} .fj__cover-notes { border-left: 0; border-top: 1px solid var(--fj-line); padding: 17px 0 0; margin-top: 16px; }
+      #shopify-section-{{ section.id }} .fj__issue-title { font-size: clamp(61px, 18vw, 96px); }
+      #shopify-section-{{ section.id }} .fj__index-rail { top: 0; }
+      #shopify-section-{{ section.id }} .fj__index-rail a { font-size: 9px; padding: 14px 16px; }
+      #shopify-section-{{ section.id }} .fj__spread-grid { display: block; }
+      #shopify-section-{{ section.id }} .fj__spread,
+      #shopify-section-{{ section.id }} .fj__spread:nth-child(n) { margin: 0 0 32px; }
+      #shopify-section-{{ section.id }} .fj__image-wrap,
+      #shopify-section-{{ section.id }} .fj__spread:nth-child(n) .fj__image-wrap { aspect-ratio: 4 / 5; }
+      #shopify-section-{{ section.id }} .fj__spread:nth-child(4n + 1) .fj__image-wrap { aspect-ratio: 3 / 4; }
+      #shopify-section-{{ section.id }} .fj__archive-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 13px; }
+      #shopify-section-{{ section.id }} .fj__shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      #shopify-section-{{ section.id }} .fj__shop-card a { padding: 10px; }
+      #shopify-section-{{ section.id }} .fj__shop-card strong { font-size: 13px; }
+      #shopify-section-{{ section.id }} .fj__close-meta { justify-content: flex-start; }
+      #shopify-section-{{ section.id }} .fj__drawer { align-items: end; padding: 0; }
+      #shopify-section-{{ section.id }} .fj__drawer-panel { width: 100%; min-height: 72svh; border-radius: 18px 18px 0 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      #shopify-section-{{ section.id }} .fj *,
+      #shopify-section-{{ section.id }} .fj *::before,
+      #shopify-section-{{ section.id }} .fj *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+
+  <header class="fj__masthead" aria-label="Melato Living issue header">
+    <a href="{{ routes.root_url }}">Menu</a>
+    <a class="fj__wordmark" href="{{ routes.root_url }}" aria-label="Melato home">Melato</a>
+    <div class="fj__masthead-end"><a href="{{ routes.search_url }}">Search</a><a href="{{ routes.cart_url }}">Bag ({{ cart.item_count }})</a></div>
+  </header>
+
+  <div class="fj__cover">
+    <div class="fj__cover-media">
+      {% if section.settings.cover_image != blank %}
+        {{ section.settings.cover_image | image_url: width: 2400 | image_tag: widths: '750, 1100, 1600, 2000, 2400', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: section.settings.cover_alt }}
+      {% elsif fallback_cover_url != blank %}
+        <img src="{{ fallback_cover_url | append: '&width=2000' | escape }}" srcset="{{ fallback_cover_url | append: '&width=750' | escape }} 750w, {{ fallback_cover_url | append: '&width=1200' | escape }} 1200w, {{ fallback_cover_url | append: '&width=2000' | escape }} 2000w" sizes="100vw" width="{{ first_record[1] | escape }}" height="{{ first_record[2] | escape }}" loading="eager" fetchpriority="high" alt="{{ section.settings.cover_alt | default: 'Melato Living Volume 01 editorial portrait' | escape }}">
+      {% endif %}
+    </div>
+    <div class="fj__cover-grid">
+      <div>
+        <span class="fj__eyebrow">Melato Living / {{ issue_volume | escape }}</span>
+        <h1 id="FieldJournalTitle-{{ section.id }}" class="fj__issue-title">{{ issue_title | escape }}<span>{{ issue_volume | escape }}</span></h1>
+        <p class="fj__deck">{{ issue_deck | escape }}</p>
+        <div class="fj__cover-actions">
+          <a class="fj__button fj__button--solid" href="#FieldJournalRead-{{ section.id }}">Read the issue</a>
+          <a class="fj__button fj__button--ghost" href="#FieldJournalShop-{{ section.id }}">Shop the issue</a>
+          <a class="fj__button fj__button--ghost" href="#FieldJournalArchive-{{ section.id }}">Open archive</a>
+        </div>
+      </div>
+      <aside class="fj__cover-notes" aria-label="Issue details">
+        <span class="fj__kicker">Issue note</span>
+        <p>{{ section.settings.cover_note | default: 'A field journal of silhouette, transit and after-hours ritual—filed as a sequence rather than a catalogue.' | escape }}</p>
+        <dl>
+          <div><dt>Filed</dt><dd>{{ issue_code | escape }}</dd></div>
+          <div><dt>Creative credits</dt><dd>{{ section.settings.credits | default: 'Melato Studio' | escape }}</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+
+  <nav class="fj__index-rail" aria-label="Issue chapters" data-chapter-navigation>
+    <a href="#FieldJournalRead-{{ section.id }}" data-chapter-link="1">01 / First Light</a>
+    <a href="#FieldJournalChapter2-{{ section.id }}" data-chapter-link="2">02 / In Transit</a>
+    <a href="#FieldJournalChapter3-{{ section.id }}" data-chapter-link="3">03 / After Hours</a>
+    <a href="#FieldJournalChapter4-{{ section.id }}" data-chapter-link="4">04 / Filed Under</a>
+    <a href="#FieldJournalShop-{{ section.id }}">Shop</a>
+  </nav>
+
+  {% for chapter in (1..4) %}
+    {% liquid
+      if chapter == 1
+        assign chapter_start = 1
+        assign chapter_end = 4
+        assign chapter_number = '01'
+        assign chapter_title = section.settings.chapter_1_title | default: 'First Light'
+        assign chapter_deck = section.settings.chapter_1_deck | default: 'The first move is not an entrance. It is the decision to leave, measured in quiet rooms, brown tailoring and the small rituals that make a silhouette feel lived in.'
+      elsif chapter == 2
+        assign chapter_start = 5
+        assign chapter_end = 8
+        assign chapter_number = '02'
+        assign chapter_title = section.settings.chapter_2_title | default: 'In Transit'
+        assign chapter_deck = section.settings.chapter_2_deck | default: 'The uniform meets the public. Platforms, pavement and passing light make the line more active without asking it to become louder.'
+      elsif chapter == 3
+        assign chapter_start = 9
+        assign chapter_end = 12
+        assign chapter_number = '03'
+        assign chapter_title = section.settings.chapter_3_title | default: 'After Hours'
+        assign chapter_deck = section.settings.chapter_3_deck | default: 'Colour deepens, texture softens and a familiar shape learns the grammar of dinner, conversation and last call.'
+      else
+        assign chapter_start = 13
+        assign chapter_end = 16
+        assign chapter_number = '04'
+        assign chapter_title = section.settings.chapter_4_title | default: 'Filed Under: Melato'
+        assign chapter_deck = section.settings.chapter_4_deck | default: 'Objects, gestures and residual light close the issue. The archive is not an answer; it is the material left in the room after the story.'
+      endif
+    %}
+    <section id="{% if chapter == 1 %}FieldJournalRead-{{ section.id }}{% else %}FieldJournalChapter{{ chapter }}-{{ section.id }}{% endif %}" class="fj__chapter" data-field-journal-chapter data-chapter-number="{{ chapter }}" aria-labelledby="FieldJournalChapterTitle-{{ chapter }}-{{ section.id }}">
+      <div class="fj__chapter-head">
+        <div><span class="fj__kicker">Chapter {{ chapter_number }}</span><h2 id="FieldJournalChapterTitle-{{ chapter }}-{{ section.id }}" class="fj__chapter-title">{{ chapter_title | escape }}</h2></div>
+        <p class="fj__chapter-deck">{{ chapter_deck | escape }}</p>
+      </div>
+      <div class="fj__spread-grid" role="list">
+        {% for record in journal_records %}
+          {% assign frame_number = forloop.index %}
+          {% if frame_number < chapter_start or frame_number > chapter_end %}{% continue %}{% endif %}
+          {% assign fields = record | strip | split: '|' %}
+          {% assign image_url = fields[0] | strip %}
+          {% assign image_width = fields[1] | strip %}
+          {% assign image_height = fields[2] | strip %}
+          {% assign image_kind = fields[3] | strip | default: 'editorial study' %}
+          {% assign first_product = blank %}{% assign second_product = blank %}{% assign third_product = blank %}{% assign styling_note = blank %}
+          {% for block in section.blocks %}
+            {% assign assigned_frame = block.settings.frame_number | plus: 0 %}
+            {% if assigned_frame == frame_number %}
+              {% assign first_product = block.settings.product_one %}
+              {% assign second_product = block.settings.product_two %}
+              {% assign third_product = block.settings.product_three %}
+              {% assign styling_note = block.settings.styling_note %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% capture frame_code %}{% if frame_number < 10 %}0{% endif %}{{ frame_number }}{% endcapture %}
+          <figure class="fj__spread" role="listitem">
+            <div class="fj__image-wrap">
+              <img src="{{ image_url | append: '&width=1000' | escape }}" srcset="{{ image_url | append: '&width=520' | escape }} 520w, {{ image_url | append: '&width=760' | escape }} 760w, {{ image_url | append: '&width=1000' | escape }} 1000w, {{ image_url | append: '&width=1400' | escape }} 1400w" sizes="(min-width: 990px) 54vw, 100vw" width="{{ image_width | escape }}" height="{{ image_height | escape }}" loading="lazy" decoding="async" alt="{{ section.settings.issue_title | default: 'Melato Living' | escape }} — {{ chapter_title | escape }}, frame {{ frame_code | strip }}">
+            </div>
+            <figcaption class="fj__spread-caption"><span>{{ chapter_number }} / {{ frame_code | strip }}</span><span>{{ image_kind | escape }}</span></figcaption>
+            {% if first_product != blank or second_product != blank or third_product != blank %}
+              <div class="fj__look-action">
+                <button type="button" data-look-open data-look-template="FieldJournalLook-{{ section.id }}-{{ frame_number }}" aria-controls="FieldJournalDrawer-{{ section.id }}">View the look +</button>
+                <a href="#FieldJournalShop-{{ section.id }}">Shop products</a>
+              </div>
+              <template id="FieldJournalLook-{{ section.id }}-{{ frame_number }}" data-look-template>
+                <div data-look-key="{{ section.id }}-{{ frame_number }}">
+                  <span class="fj__drawer-label">Look {{ frame_code | strip }} / {{ chapter_title | escape }}</span>
+                  <h2 class="fj__drawer-title">{{ styling_note | default: 'The issue uniform' | escape }}</h2>
+                  <p class="fj__drawer-note">{{ styling_note | default: 'Selected pieces are shown together to preserve the proportion, texture and mood of the frame.' | escape }}</p>
+                  <div class="fj__drawer-products">
+                    {% for product_item in (1..3) %}
+                      {% liquid
+                        if product_item == 1
+                          assign product = first_product
+                        elsif product_item == 2
+                          assign product = second_product
+                        else
+                          assign product = third_product
+                        endif
+                      %}
+                      {% if product != blank %}
+                        {% assign selected_variant = product.selected_or_first_available_variant %}
+                        <article class="fj__drawer-product">
+                          {% if product.featured_image %}<img src="{{ product.featured_image | image_url: width: 160 }}" alt="{{ product.title | escape }}" loading="lazy" width="160" height="200">{% endif %}
+                          <div>
+                            <h3>{{ product.title | escape }}</h3>
+                            <p>{{ product.price | money }}{% unless product.available %} · Currently unavailable{% endunless %}</p>
+                            <div class="fj__drawer-product-links">
+                              <a href="{{ product.url }}">View product</a>
+                              {% if selected_variant != blank %}
+                                <form action="{{ routes.cart_add_url }}" method="post">
+                                  <input type="hidden" name="id" value="{{ selected_variant.id }}">
+                                  <button class="fj__quick-add" type="submit"{% unless product.available %} disabled{% endunless %}>{% if product.available %}Quick add{% else %}Archived{% endif %}</button>
+                                </form>
+                              {% endif %}
+                            </div>
+                          </div>
+                        </article>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                  <button class="fj__save-button" type="button" data-look-save data-look-key="{{ section.id }}-{{ frame_number }}">Save this look</button>
+                </div>
+              </template>
+            {% endif %}
+          </figure>
+        {% endfor %}
+      </div>
+    </section>
+  {% endfor %}
+
+  <section id="FieldJournalArchive-{{ section.id }}" class="fj__archive" data-field-journal-archive aria-labelledby="FieldJournalArchiveTitle-{{ section.id }}">
+    <div class="fj__archive-head">
+      <div><span class="fj__kicker">Archive mode / selected exhibits</span><h2 id="FieldJournalArchiveTitle-{{ section.id }}">Filed after the issue</h2></div>
+      <p>{{ section.settings.archive_deck | default: 'A finite contact sheet of outtakes, objects and afterimages. Select an exhibit for the record; the main story remains the primary route.' | escape }}</p>
+    </div>
+    <div class="fj__archive-grid" role="list">
+      {% for record in journal_records %}
+        {% assign frame_number = forloop.index %}
+        {% if frame_number < archive_start or frame_number > archive_end %}{% continue %}{% endif %}
+        {% assign archive_position = frame_number | minus: archive_start | plus: 1 %}
+        {% assign fields = record | strip | split: '|' %}
+        {% assign image_url = fields[0] | strip %}
+        {% assign image_width = fields[1] | strip %}
+        {% assign image_height = fields[2] | strip %}
+        {% capture archive_code %}{% if frame_number < 10 %}0{% endif %}{{ frame_number }}{% endcapture %}
+        <figure class="fj__exhibit" data-archive-item{% if archive_position > archive_initial_count %} hidden{% endif %} role="listitem">
+          <button type="button" data-archive-open data-archive-template="FieldJournalArchiveItem-{{ section.id }}-{{ frame_number }}" data-archive-index="{{ archive_position | minus: 1 }}" aria-controls="FieldJournalViewer-{{ section.id }}">
+            <img src="{{ image_url | append: '&width=600' | escape }}" srcset="{{ image_url | append: '&width=360' | escape }} 360w, {{ image_url | append: '&width=600' | escape }} 600w, {{ image_url | append: '&width=900' | escape }} 900w" sizes="(min-width: 750px) 25vw, 48vw" width="{{ image_width | escape }}" height="{{ image_height | escape }}" loading="lazy" decoding="async" alt="Archive exhibit {{ archive_code | strip }} from {{ issue_title | escape }}">
+            <span class="fj__exhibit-label"><span>Exhibit {{ archive_code | strip }}</span><span>Filed</span></span>
+          </button>
+        </figure>
+        <template id="FieldJournalArchiveItem-{{ section.id }}-{{ frame_number }}">
+          <div class="fj__viewer-content">
+            <img src="{{ image_url | append: '&width=1600' | escape }}" width="{{ image_width | escape }}" height="{{ image_height | escape }}" alt="Archive exhibit {{ archive_code | strip }} from {{ issue_title | escape }}">
+            <div class="fj__viewer-copy"><span class="fj__drawer-label">Exhibit {{ archive_code | strip }} / Field record</span><h2 class="fj__drawer-title">Filed under: Melato</h2><p>{{ section.settings.archive_note | default: 'A recovered image from the edges of the issue: texture, gesture and a record of the time between scenes.' | escape }}</p><p><strong>Credit:</strong> {{ section.settings.credits | default: 'Melato Studio' | escape }}</p></div>
+          </div>
+        </template>
+      {% endfor %}
+    </div>
+    {% if journal_records.size > archive_initial_count %}
+      <div class="fj__archive-more"><button type="button" data-archive-load-more>Load more exhibits</button></div>
+    {% endif %}
+  </section>
+
+  <section id="FieldJournalShop-{{ section.id }}" class="fj__shop" aria-labelledby="FieldJournalShopTitle-{{ section.id }}">
+    <div class="fj__shop-head">
+      <div><span class="fj__kicker">Shop the issue</span><h2 id="FieldJournalShopTitle-{{ section.id }}">The product index</h2></div>
+      <p>{{ section.settings.shop_deck | default: 'Complete looks first, then individual pieces. Product availability is live; archive items remain clearly identified.' | escape }}</p>
+    </div>
+    <div class="fj__shop-filters" role="group" aria-label="Filter issue products">
+      <button type="button" data-shop-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-shop-filter="jackets" aria-pressed="false">Jackets</button>
+      <button type="button" data-shop-filter="pants" aria-pressed="false">Pants</button>
+      <button type="button" data-shop-filter="tracksuits" aria-pressed="false">Tracksuits</button>
+      <button type="button" data-shop-filter="dresses" aria-pressed="false">Dresses</button>
+      <button type="button" data-shop-filter="accessories" aria-pressed="false">Accessories</button>
+    </div>
+    <div class="fj__shop-grid" data-shop-grid>
+      {% assign indexed_products = '|' %}
+      {% for block in section.blocks %}
+        {% for product_slot in (1..3) %}
+          {% liquid
+            if product_slot == 1
+              assign index_product = block.settings.product_one
+            elsif product_slot == 2
+              assign index_product = block.settings.product_two
+            else
+              assign index_product = block.settings.product_three
+            endif
+          %}
+          {% if index_product != blank %}
+            {% capture indexed_token %}|{{ index_product.handle }}|{% endcapture %}
+            {% unless indexed_products contains indexed_token %}
+              {% assign indexed_products = indexed_products | append: index_product.handle | append: '|' %}
+              <article class="fj__shop-card" data-shop-card data-product-category="{{ index_product.type | handleize }} {{ index_product.tags | join: ' ' | handleize }}">
+                <a href="{{ index_product.url }}">
+                  {% if index_product.featured_image %}<img src="{{ index_product.featured_image | image_url: width: 720 }}" srcset="{{ index_product.featured_image | image_url: width: 360 }} 360w, {{ index_product.featured_image | image_url: width: 540 }} 540w, {{ index_product.featured_image | image_url: width: 720 }} 720w" sizes="(min-width: 750px) 33vw, 50vw" alt="{{ index_product.title | escape }}" loading="lazy" width="720" height="900">{% endif %}
+                  <div class="fj__shop-card-meta"><div><small>Look {{ block.settings.frame_number }}</small><strong>{{ index_product.title | escape }}</strong></div><span>{{ index_product.price | money }}</span></div>
+                </a>
+              </article>
+            {% endunless %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </section>
+
+  <footer class="fj__close">
+    <div class="fj__close-inner"><div><span class="fj__kicker" style="color: var(--fj-brass)">End of issue</span><p>{{ section.settings.close_note | default: 'Save this issue, return to the archive, or wait for the next field note. The collection remains available whenever the scene calls for it.' | escape }}</p></div><div class="fj__close-meta"><span>{{ issue_volume | escape }}</span><span>{{ issue_code | escape }}</span><a href="#FieldJournalShop-{{ section.id }}">Shop the issue</a></div></div>
+  </footer>
+
+  <div id="FieldJournalDrawer-{{ section.id }}" class="fj__dialog fj__drawer" data-field-journal-drawer role="dialog" aria-modal="true" aria-labelledby="FieldJournalDrawerLabel-{{ section.id }}" aria-hidden="true" hidden>
+    <div class="fj__drawer-panel"><button class="fj__dialog-close" type="button" data-dialog-close aria-label="Close look details">×</button><span id="FieldJournalDrawerLabel-{{ section.id }}" class="fj__live">Look details</span><div class="fj__drawer-content" data-drawer-content></div></div>
+  </div>
+  <div id="FieldJournalViewer-{{ section.id }}" class="fj__dialog fj__viewer" data-field-journal-viewer role="dialog" aria-modal="true" aria-labelledby="FieldJournalViewerLabel-{{ section.id }}" aria-hidden="true" hidden>
+    <div class="fj__viewer-panel"><button class="fj__dialog-close" type="button" data-dialog-close aria-label="Close archive exhibit">×</button><span id="FieldJournalViewerLabel-{{ section.id }}" class="fj__live">Archive exhibit viewer</span><div data-viewer-content></div><div class="fj__viewer-navigation"><button type="button" data-archive-previous aria-label="Previous archive exhibit">←</button><button type="button" data-archive-next aria-label="Next archive exhibit">→</button></div></div>
+  </div>
+  <p class="fj__live" data-field-journal-live aria-live="polite"></p>
+</section>
+
+{% schema %}
+{
+  "name": "Melato Living Field Journal",
+  "tag": "section",
+  "class": "section-melato-living-field-journal",
+  "settings": [
+    { "type": "image_picker", "id": "cover_image", "label": "Cover image" },
+    { "type": "text", "id": "cover_alt", "label": "Cover image alt text", "default": "Melato Living Volume 01 editorial portrait" },
+    { "type": "text", "id": "issue_title", "label": "Issue title", "default": "The Uniform in Motion" },
+    { "type": "text", "id": "issue_volume", "label": "Volume", "default": "Vol. 01" },
+    { "type": "textarea", "id": "issue_deck", "label": "Issue deck", "default": "A uniform made for the distance between a quiet room, the platform and last call." },
+    { "type": "textarea", "id": "cover_note", "label": "Cover note", "default": "A field journal of silhouette, transit and after-hours ritual—filed as a sequence rather than a catalogue." },
+    { "type": "text", "id": "issue_code", "label": "Time and location code", "default": "Toronto / 2026 / 21:40" },
+    { "type": "text", "id": "credits", "label": "Credits", "default": "Melato Studio" },
+    { "type": "text", "id": "chapter_1_title", "label": "Chapter 1 title", "default": "First Light" },
+    { "type": "textarea", "id": "chapter_1_deck", "label": "Chapter 1 deck", "default": "The first move is not an entrance. It is the decision to leave, measured in quiet rooms, brown tailoring and the small rituals that make a silhouette feel lived in." },
+    { "type": "text", "id": "chapter_2_title", "label": "Chapter 2 title", "default": "In Transit" },
+    { "type": "textarea", "id": "chapter_2_deck", "label": "Chapter 2 deck", "default": "The uniform meets the public. Platforms, pavement and passing light make the line more active without asking it to become louder." },
+    { "type": "text", "id": "chapter_3_title", "label": "Chapter 3 title", "default": "After Hours" },
+    { "type": "textarea", "id": "chapter_3_deck", "label": "Chapter 3 deck", "default": "Colour deepens, texture softens and a familiar shape learns the grammar of dinner, conversation and last call." },
+    { "type": "text", "id": "chapter_4_title", "label": "Chapter 4 title", "default": "Filed Under: Melato" },
+    { "type": "textarea", "id": "chapter_4_deck", "label": "Chapter 4 deck", "default": "Objects, gestures and residual light close the issue. The archive is not an answer; it is the material left in the room after the story." },
+    { "type": "textarea", "id": "archive_deck", "label": "Archive introduction", "default": "A finite contact sheet of outtakes, objects and afterimages. Select an exhibit for the record; the main story remains the primary route." },
+    { "type": "textarea", "id": "archive_note", "label": "Archive exhibit note", "default": "A recovered image from the edges of the issue: texture, gesture and a record of the time between scenes." },
+    { "type": "range", "id": "archive_initial_count", "label": "Initial archive exhibits", "min": 12, "max": 24, "step": 1, "default": 12 },
+    { "type": "textarea", "id": "shop_deck", "label": "Shop index introduction", "default": "Complete looks first, then individual pieces. Product availability is live; archive items remain clearly identified." },
+    { "type": "textarea", "id": "close_note", "label": "Issue close note", "default": "Save this issue, return to the archive, or wait for the next field note. The collection remains available whenever the scene calls for it." }
+  ],
+  "blocks": [
+    {
+      "type": "look",
+      "name": "Shoppable look",
+      "settings": [
+        { "type": "range", "id": "frame_number", "label": "Archive frame number", "min": 1, "max": 16, "step": 1, "default": 1 },
+        { "type": "product", "id": "product_one", "label": "Primary product" },
+        { "type": "product", "id": "product_two", "label": "Secondary product" },
+        { "type": "product", "id": "product_three", "label": "Third product" },
+        { "type": "textarea", "id": "styling_note", "label": "Styling note", "default": "Selected pieces are shown together to preserve the proportion, texture and mood of the frame." }
+      ]
+    }
+  ],
+  "max_blocks": 16,
+  "presets": [{ "name": "Melato Living Field Journal" }]
+}
+{% endschema %}
