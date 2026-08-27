@@ -2,8 +2,10 @@
 Melato Living progressive enhancement loader.
 The editorial page remains fully navigable without JavaScript. On the Living Lookbook route,
 verified server-rendered product links are progressively upgraded into one shared look drawer.
+The compatibility enhancer only upgrades legacy frames that already expose an exact product URL.
 {%- endcomment -%}
 {%- if template.suffix == 'living-lookbook' or request.path == '/pages/living-lookbook' -%}
   {{ 'melato-living-look-drawer.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'melato-living-look-drawer.js' | asset_url }}" defer></script>
+  <script src="{{ 'melato-living-look-drawer-legacy.js' | asset_url }}" defer></script>
 {%- endif -%}
