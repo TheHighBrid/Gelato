@@ -12,15 +12,16 @@ function parseJsonTemplate(file) {
   return JSON.parse(source);
 }
 
-test('Living Lookbook template only orders defined sections and blocks', () => {
+test('Living Lookbook production template only orders defined sections and blocks', () => {
   const template = parseJsonTemplate('templates/page.living-lookbook.json');
   const sectionIds = new Set(Object.keys(template.sections));
   for (const sectionId of template.order) assert.ok(sectionIds.has(sectionId), `Missing ordered section: ${sectionId}`);
 
-  const livingBook = template.sections.living_book;
-  const blockIds = new Set(Object.keys(livingBook.blocks || {}));
-  for (const blockId of livingBook.block_order || []) assert.ok(blockIds.has(blockId), `Missing ordered block: ${blockId}`);
-  for (const block of Object.values(livingBook.blocks || {})) assert.equal(block.type, 'wardrobe_frame');
+  assert.equal(template.sections.main?.type, 'melato-living-lookbook-old');
+  const evidence = template.sections.evidence_20260714;
+  assert.equal(evidence?.type, 'melato-living-lookbook-evidence');
+  const blockIds = new Set(Object.keys(evidence?.blocks || {}));
+  for (const blockId of evidence?.block_order || []) assert.ok(blockIds.has(blockId), `Missing ordered block: ${blockId}`);
 });
 
 test('Living Look drawer is route-scoped and progressively enhanced', () => {
