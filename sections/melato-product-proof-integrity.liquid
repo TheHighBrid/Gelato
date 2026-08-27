@@ -1,0 +1,88 @@
+{% comment %}
+  Melato PDP proof-integrity guard.
+
+  Products tagged specification_pending can carry provisional admin copy while
+  factory/supplier evidence is still being collected. This section prevents
+  those provisional technical fields from being presented as verified product
+  proof on the storefront.
+
+  The main PDP remains the source of truth for verified products. This guard is
+  intentionally small and removable once the main renderer consumes the
+  structured custom.product_specification record directly.
+{% endcomment %}
+
+{%- liquid
+  assign specification_pending = false
+  for tag in product.tags
+    assign proof_tag = tag | downcase | strip
+    if proof_tag == 'specification_pending'
+      assign specification_pending = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if specification_pending -%}
+  <style data-melato-proof-integrity-fallback>
+    /* No-JS safety: never expose provisional technical claims as verified. */
+    .melato-pdp-rebuild .pdp-story-tech,
+    .melato-pdp-rebuild .pdp-proof-mini {
+      display: none;
+    }
+
+    .melato-pdp-rebuild .pdp-spec-grid > .pdp-spec:not(:last-child) {
+      display: none;
+    }
+
+    .melato-pdp-rebuild.pdp-proof-integrity-ready .pdp-story-tech {
+      display: block;
+    }
+
+    .melato-pdp-rebuild.pdp-proof-integrity-ready .pdp-proof-mini {
+      display: grid;
+    }
+
+    .melato-pdp-rebuild.pdp-proof-integrity-ready .pdp-spec-grid > .pdp-spec {
+      display: block;
+    }
+  </style>
+
+  <script data-melato-proof-integrity>
+    (function () {
+      var root = document.querySelector('.melato-pdp-rebuild');
+      if (!root) return;
+
+      function summaryText(details) {
+        var summary = details.querySelector(':scope > summary');
+        return summary ? summary.textContent.trim().toLowerCase() : '';
+      }
+
+      root.querySelectorAll('.pdp-mini-detail').forEach(function (details) {
+        if (summaryText(details) === 'construction') details.remove();
+      });
+
+      root.querySelectorAll('.pdp-spec').forEach(function (details) {
+        var label = summaryText(details);
+        if (label === 'fit' || label === 'material' || label === 'care') details.remove();
+      });
+
+      root.querySelectorAll('.pdp-proof-mini > div').forEach(function (item) {
+        var label = item.querySelector('strong');
+        if (label && label.textContent.trim().toLowerCase() === 'verified material information') {
+          item.remove();
+        }
+      });
+
+      root.classList.add('pdp-proof-integrity-ready');
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product proof integrity",
+  "tag": "section",
+  "class": "section-product-proof-integrity",
+  "settings": []
+}
+{% endschema %}
