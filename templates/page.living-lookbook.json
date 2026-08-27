@@ -19,7 +19,7 @@
         "dek": "A cinematic wardrobe archive. Read the scene, inspect the garment, shop the piece.",
         "cover_note": "The lookbook becomes a digital fashion book: chaptered editorial pacing, verified product routing, and a wardrobe index that lets customers shop without breaking the cinematic mood.",
         "archive_source": "all",
-        "shop_label": "Shop this frame",
+        "shop_label": "View the Look",
         "show_prices": true,
         "show_unlinked_note": false,
         "chapter_1_title": "The Uniform",
@@ -35,7 +35,7 @@
       },
       "blocks": {
         "shop_04": {
-          "type": "shoppable_frame",
+          "type": "wardrobe_frame",
           "settings": {
             "frame_number": 4,
             "product_one": "ojos-velour-track-jacket",
@@ -43,16 +43,16 @@
             "frame_note": "Verified uniform"
           }
         },
-        "shop_18": {
-          "type": "shoppable_frame",
+        "shop_09": {
+          "type": "wardrobe_frame",
           "settings": {
             "frame_number": 9,
             "product_one": "noir-alibi-lace-corset-dress",
             "frame_note": "Verified wardrobe"
           }
         },
-        "shop_18b": {
-          "type": "shoppable_frame",
+        "shop_18": {
+          "type": "wardrobe_frame",
           "settings": {
             "frame_number": 18,
             "product_one": "conquista-velour-track-jacket",
@@ -60,7 +60,7 @@
             "frame_note": "Verified full set"
           }
         },
-        "shop_024": {
+        "shop_24": {
           "type": "wardrobe_frame",
           "settings": {
             "frame_number": 24,
@@ -72,9 +72,9 @@
       },
       "block_order": [
         "shop_04",
+        "shop_09",
         "shop_18",
-        "shop_18b",
-        "shop_24b"
+        "shop_24"
       ]
     },
     "evidence_case03": {
@@ -93,9 +93,7 @@
     }
   },
   "order": [
-    "case_director",
-    "main",
-    "evidence_20260714",
+    "living_book",
     "evidence_case03",
     "curation_fixes"
   ]
