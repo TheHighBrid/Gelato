@@ -22,6 +22,10 @@
         "accent_2": "#d3a74a"
       }
     },
+    "proof_integrity": {
+      "type": "melato-product-proof-integrity",
+      "settings": {}
+    },
     "safe_accent": {
       "type": "melato-product-safe-accent",
       "settings": {}
@@ -41,5 +45,5 @@
       }
     }
   },
-  "order": ["main_product", "safe_accent", "related", "recently_viewed"]
+  "order": ["main_product", "proof_integrity", "safe_accent", "related", "recently_viewed"]
 }
