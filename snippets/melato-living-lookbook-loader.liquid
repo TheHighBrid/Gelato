@@ -1,4 +1,9 @@
 {%- comment -%}
-Living Lookbook auto-naming and shoppable overlay script disabled on Copy of Gelato v4.9.
-Reason: previous JS mapping caused incorrect product names. Rebuild must be done from the actual lookbook card source with verified card-by-card data.
+Melato Living progressive enhancement loader.
+The editorial page remains fully navigable without JavaScript. On the Living Lookbook route,
+verified server-rendered product links are progressively upgraded into one shared look drawer.
 {%- endcomment -%}
+{%- if template.suffix == 'living-lookbook' or request.path == '/pages/living-lookbook' -%}
+  {{ 'melato-living-look-drawer.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'melato-living-look-drawer.js' | asset_url }}" defer></script>
+{%- endif -%}
