@@ -10,7 +10,7 @@
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__Editorial_Lookbok_The_Living_Book_FRAME_9.jpg?v=1786713204', width: 656, height: 1008 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__Editorial_Lookbok_The_Living_Book_FRAME_10.jpg?v=1786713321', width: 1478, height: 1836 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_ORIGINS26_-DRESS_TLB_CASABLANCA_001.jpg?v=1787782387', width: 2458, height: 3072 },
-    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__Editorial_Lookbok_The_Living_Book_FRAME_12.jpg?v=1786713506', width: 796, height: 944 },
+    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_ORIGINS26_DRESS-CODE-VIOLATION-RIBBED-POLO-MINI-DRESS_TLB_NOBU_MARRAKECH_001.jpg?v=1787782174', width: 796, height: 944 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_c3f8a453-e89f-49bb-a921-fd36edf5beed.png?v=1786713773', width: 4599, height: 3078 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_5a36f772-2803-477b-bd9a-694c865fa988.png?v=1786713773', width: 3069, height: 4611 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_50.jpg?v=1787024890', width: 3366, height: 4206 },
