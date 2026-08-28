@@ -1,0 +1,271 @@
+{% comment %}
+  Melato PDP unification layer.
+
+  This section owns presentation consistency only. It does not invent product
+  specifications. Product facts remain sourced by melato-product-page-rebuild.
+  It normalizes disclosure spacing/alignment, fragrance labels, the universal
+  sizing entry point, and Complete the Set contrast on every default PDP.
+{% endcomment %}
+
+{%- liquid
+  assign product_type_down = product.product_type | downcase
+  assign is_fragrance = false
+  if product_type_down contains 'fragrance' or product_type_down contains 'perfume' or product_type_down contains 'eau de parfum' or product_type_down contains 'eau de toilette'
+    assign is_fragrance = true
+  endif
+-%}
+
+<style data-melato-pdp-unification>
+  body.template-product .melato-pdp-rebuild .pdp-content-stack {
+    gap: 12px !important;
+    margin-top: 28px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-story-tech,
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid {
+    margin: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-story-tech {
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-story-tech__grid,
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail,
+  body.template-product .melato-pdp-rebuild .pdp-spec {
+    width: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    border: 1px solid rgba(255,255,255,.095) !important;
+    border-radius: 18px !important;
+    background: #111214 !important;
+    box-shadow: none !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail[open],
+  body.template-product .melato-pdp-rebuild .pdp-spec[open] {
+    background: #141517 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail summary,
+  body.template-product .melato-pdp-rebuild .pdp-spec summary {
+    min-height: 58px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 18px !important;
+    margin: 0 !important;
+    padding: 0 24px !important;
+    color: var(--pdp-title-accent, #d3a74a) !important;
+    font-size: 12px !important;
+    font-weight: 900 !important;
+    line-height: 1.2 !important;
+    letter-spacing: .12em !important;
+    text-transform: uppercase !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail__content,
+  body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 24px 22px !important;
+    color: rgba(245,241,232,.78) !important;
+    font-size: 15px !important;
+    line-height: 1.72 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail__content p,
+  body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte p,
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail__content ul,
+  body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte ul {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail__content ul,
+  body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte ul {
+    padding-left: 19px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-mini-detail__content li + li,
+  body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte li + li,
+  body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte p + p {
+    margin-top: 9px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set {
+    padding: 24px !important;
+    background: #111214 !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-grid {
+    gap: 16px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-card {
+    gap: 12px !important;
+    padding: 20px !important;
+    background: #0c0d0f !important;
+    border-radius: 20px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-image {
+    display: block !important;
+    width: min(360px, 100%) !important;
+    height: auto !important;
+    margin-inline: auto !important;
+    padding: 8px !important;
+    background: #f5f1e8 !important;
+    border-radius: 18px !important;
+    object-fit: contain !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .pdp-set-total {
+    margin-top: 20px !important;
+    padding-top: 20px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .melato-full-set-action {
+    width: 100% !important;
+    margin-top: 18px !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .melato-full-set-button {
+    width: 100% !important;
+    min-height: 58px !important;
+    padding: 0 20px !important;
+    border: 1px solid #f4ead8 !important;
+    border-radius: 14px !important;
+    background: #f4ead8 !important;
+    color: #080808 !important;
+    opacity: 1 !important;
+    text-shadow: none !important;
+    font-weight: 900 !important;
+    letter-spacing: .1em !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .melato-full-set-button:disabled {
+    opacity: .62 !important;
+    cursor: wait !important;
+  }
+
+  body.template-product .melato-pdp-rebuild .melato-sizing-fallback {
+    display: inline-flex !important;
+    align-items: center !important;
+    min-height: 34px !important;
+    padding: 0 12px !important;
+    border: 1px solid rgba(211,167,74,.42) !important;
+    border-radius: 999px !important;
+    color: var(--pdp-title-accent, #d3a74a) !important;
+    text-decoration: none !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .1em !important;
+    line-height: 1 !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+  }
+
+  @media (max-width: 749px) {
+    body.template-product .melato-pdp-rebuild .pdp-content-stack {
+      gap: 12px !important;
+      margin-top: 24px !important;
+    }
+
+    body.template-product .melato-pdp-rebuild .pdp-mini-detail summary,
+    body.template-product .melato-pdp-rebuild .pdp-spec summary {
+      min-height: 72px !important;
+      padding: 0 24px !important;
+    }
+
+    body.template-product .melato-pdp-rebuild .pdp-mini-detail__content,
+    body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte {
+      padding: 0 24px 24px !important;
+      font-size: 15px !important;
+      line-height: 1.75 !important;
+    }
+
+    body.template-product .melato-pdp-rebuild .pdp-set {
+      padding: 20px !important;
+    }
+
+    body.template-product .melato-pdp-rebuild .pdp-set-grid {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
+<script data-melato-pdp-unification-script>
+(function () {
+  'use strict';
+
+  var isFragrance = {{ is_fragrance | json }};
+
+  function cleanText(node) {
+    return node ? String(node.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase() : '';
+  }
+
+  function normalizePdp() {
+    var root = document.querySelector('.melato-pdp-rebuild');
+    if (!root || root.dataset.melatoUnified === 'true') return;
+
+    if (isFragrance) {
+      root.querySelectorAll('.pdp-mini-detail').forEach(function (details) {
+        var summary = details.querySelector(':scope > summary');
+        if (cleanText(summary) === 'construction') summary.textContent = 'Fragrance details';
+      });
+
+      root.querySelectorAll('.pdp-spec').forEach(function (details) {
+        var summary = details.querySelector(':scope > summary');
+        if (cleanText(summary) === 'material') details.remove();
+      });
+    }
+
+    root.querySelectorAll('.pdp-option').forEach(function (fieldset) {
+      var legend = fieldset.querySelector('legend');
+      var optionName = cleanText(legend);
+      if (optionName !== 'size' && optionName !== 'taille') return;
+
+      var header = fieldset.querySelector('.pdp-option__header');
+      if (!header || header.querySelector('[data-open-size-drawer], .melato-sizing-fallback')) return;
+
+      var sizingLink = document.createElement('a');
+      sizingLink.className = 'melato-sizing-fallback';
+      sizingLink.href = '/pages/size-guide';
+      sizingLink.textContent = 'Product measurements';
+      sizingLink.setAttribute('aria-label', 'Product measurements and fit guidance');
+      header.appendChild(sizingLink);
+    });
+
+    root.dataset.melatoUnified = 'true';
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', normalizePdp, { once: true });
+  } else {
+    normalizePdp();
+  }
+
+  document.addEventListener('shopify:section:load', normalizePdp);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "PDP unification",
+  "tag": "section",
+  "class": "section-pdp-unification",
+  "settings": []
+}
+{% endschema %}
