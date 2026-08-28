@@ -10,10 +10,12 @@ function parseJsonTemplate(path) {
   return JSON.parse(read(path).replace(/^\s*\/\*[\s\S]*?\*\/\s*/, ''));
 }
 
-test('default product template runs proof integrity immediately after the PDP', () => {
+test('default product template keeps one canonical PDP and loads the unification layer', () => {
   const template = parseJsonTemplate('templates/product.json');
+  assert.equal(template.sections.main_product.type, 'melato-product-page-rebuild');
   assert.equal(template.sections.proof_integrity.type, 'melato-product-proof-integrity');
-  assert.deepEqual(template.order.slice(0, 2), ['main_product', 'proof_integrity']);
+  assert.equal(template.sections.pdp_unification.type, 'melato-pdp-unification');
+  assert.deepEqual(template.order.slice(0, 3), ['main_product', 'proof_integrity', 'pdp_unification']);
 });
 
 test('pending product proof fails safe without JavaScript', () => {
@@ -24,28 +26,40 @@ test('pending product proof fails safe without JavaScript', () => {
   assert.match(guard, /pdp-spec-grid\s*>\s*\.pdp-spec:not\(:last-child\)/);
 });
 
+test('storefront-ready status overrides stale pending metadata', () => {
+  const guard = read('sections/melato-product-proof-integrity.liquid');
+  assert.match(guard, /product\.metafields\.custom\.material_spec_status\.value/);
+  assert.match(guard, /material_spec_status contains 'ready'/);
+  assert.match(guard, /proof_tag == 'specification_pending' and material_spec_ready == false/);
+});
+
 test('pending product proof removes provisional technical claims but preserves commerce', () => {
   const guard = read('sections/melato-product-proof-integrity.liquid');
-  for (const label of ['construction', 'fit', 'material', 'care']) {
+  for (const label of ['story', 'construction', 'fit', 'material', 'care', 'application', 'scent profile']) {
     assert.match(guard, new RegExp(`['\"]${label}['\"]`));
   }
-  assert.match(guard, /verified material information/);
   assert.doesNotMatch(guard, /shipping\s*&\s*returns.*remove/i);
   assert.doesNotMatch(guard, /pdp-atc.*remove/i);
 });
 
-test('complete structured specification has a storefront graduation path', () => {
+test('proof guard never renders a second visible Product Specification panel', () => {
   const guard = read('sections/melato-product-proof-integrity.liquid');
-  assert.match(guard, /product\.metafields\.custom\.product_specification\.value/);
-  assert.match(guard, /product_specification\.specification_gaps\.value/);
-  assert.match(guard, /complete_specification/);
-  assert.match(guard, /complete_specification and has_structured_proof and specification_pending == false/);
-  assert.match(guard, /product_specification\.construction\.value/);
-  assert.match(guard, /product_specification\.main_composition\.value/);
-  assert.match(guard, /product_specification\.fit_notes\.value/);
-  assert.match(guard, /product_specification\.care\.value/);
-  assert.match(guard, /Product specification/);
-  assert.doesNotMatch(guard, /product\.description/);
+  assert.doesNotMatch(guard, /melato-structured-proof/);
+  assert.doesNotMatch(guard, />Product specification</i);
+  assert.doesNotMatch(guard, /Construction, material, fit and care/i);
+});
+
+test('PDP unification normalizes disclosures, fragrance semantics, sizing and set contrast', () => {
+  const layer = read('sections/melato-pdp-unification.liquid');
+  assert.match(layer, /pdp-content-stack/);
+  assert.match(layer, /pdp-mini-detail__content/);
+  assert.match(layer, /pdp-spec \.pdp-rte/);
+  assert.match(layer, /Fragrance details/);
+  assert.match(layer, /cleanText\(summary\) === 'material'/);
+  assert.match(layer, /Product measurements/);
+  assert.match(layer, /\/pages\/size-guide/);
+  assert.match(layer, /melato-full-set-button/);
+  assert.match(layer, /color: #080808 !important/);
 });
 
 test('existing PDP still keeps first product media high priority', () => {

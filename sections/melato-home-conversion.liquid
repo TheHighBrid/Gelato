@@ -15,16 +15,6 @@
   if hero_image == blank and home_collection != blank and home_collection.products_count > 0
     assign hero_image = home_collection.products.first.featured_image
   endif
-
-  assign hero_from_price = blank
-  if home_collection != blank and home_collection.products_count > 0
-    for hero_product in home_collection.products
-      assign candidate_price = hero_product.price_min | default: hero_product.price
-      if hero_from_price == blank or candidate_price < hero_from_price
-        assign hero_from_price = candidate_price
-      endif
-    endfor
-  endif
 -%}
 <section class="melato-home-clean" id="MelatoHomeClean-{{ section.id }}">
   <div class="melato-home-clean__hero">
@@ -49,7 +39,6 @@
         <a class="melato-home-clean__cta melato-home-clean__cta--primary" href="{{ home_collection.url | default: '/collections/new-arrivals' }}">Shop the drop</a>
         <a class="melato-home-clean__cta" href="/pages/living-lookbook">Living Lookbook</a>
       </div>
-      {%- if hero_from_price != blank -%}<p class="melato-home-clean__price">From {{ hero_from_price | money }}</p>{%- endif -%}
     </header>
   </div>
 
@@ -62,7 +51,20 @@
   {%- endif -%}
 </section>
 <style>
-#MelatoHomeClean-{{ section.id }}{background:#080808;color:#f5f1e8}#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero{position:relative;min-height:clamp(610px,82svh,940px);display:grid;align-items:end;overflow:hidden}#MelatoHomeClean-{{ section.id }} .melato-home-clean__media,#MelatoHomeClean-{{ section.id }} .melato-home-clean__shade{position:absolute;inset:0}#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero-image{width:100%;height:100%;object-fit:cover;object-position:50% 45%;display:block}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shade{background:linear-gradient(180deg,rgba(8,8,8,.08) 10%,rgba(8,8,8,.24) 48%,rgba(8,8,8,.90) 100%),linear-gradient(90deg,rgba(8,8,8,.45),transparent 62%)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__header{position:relative;z-index:1;width:min(1360px,calc(100% - 40px));margin:0 auto;padding:clamp(54px,8vw,100px) 0;text-align:left;background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}#MelatoHomeClean-{{ section.id }} .melato-home-clean__eyebrow{margin:0 0 14px;color:#f5f1e8;font:700 10px/1.2 var(--font-mono-family,monospace);letter-spacing:.2em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} h1{max-width:980px;margin:0;font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:clamp(72px,13vw,190px);line-height:.77;letter-spacing:-.025em;text-transform:uppercase;text-wrap:balance}#MelatoHomeClean-{{ section.id }} .melato-home-clean__copy{max-width:560px;margin:24px 0 0;color:rgba(245,241,232,.84);font-size:clamp(16px,2vw,20px);line-height:1.5}#MelatoHomeClean-{{ section.id }} .melato-home-clean__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta{display:inline-flex;min-height:46px;align-items:center;padding:0 20px;border:1px solid rgba(245,241,232,.55);border-radius:999px;color:#f5f1e8;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;backdrop-filter:blur(8px)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta--primary{background:#f5f1e8;color:#080808;border-color:#f5f1e8}#MelatoHomeClean-{{ section.id }} .melato-home-clean__price{margin:12px 0 0;color:rgba(245,241,232,.82);font:600 11px/1.4 var(--font-mono-family,monospace);letter-spacing:.12em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:min(1360px,calc(100% - 32px));margin:auto;padding:34px 0 48px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}@media(max-width:900px){#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}@media(max-width:520px){#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero{min-height:72svh}#MelatoHomeClean-{{ section.id }} .melato-home-clean__header{width:calc(100% - 28px);padding-bottom:48px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:calc(100% - 24px)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__actions{display:grid;grid-template-columns:1fr}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta{justify-content:center}}
+#MelatoHomeClean-{{ section.id }}{background:#080808;color:#f5f1e8}#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero{position:relative;min-height:clamp(610px,82svh,940px);display:grid;align-items:end;overflow:hidden}#MelatoHomeClean-{{ section.id }} .melato-home-clean__media,#MelatoHomeClean-{{ section.id }} .melato-home-clean__shade{position:absolute;inset:0}#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero-image{width:100%;height:100%;object-fit:cover;object-position:50% 45%;display:block}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shade{background:linear-gradient(180deg,rgba(8,8,8,.08) 10%,rgba(8,8,8,.24) 48%,rgba(8,8,8,.90) 100%),linear-gradient(90deg,rgba(8,8,8,.45),transparent 62%)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__header{position:relative;z-index:1;width:min(1360px,calc(100% - 40px));margin:0 auto;padding:clamp(54px,8vw,100px) 0;text-align:left;background:transparent!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}#MelatoHomeClean-{{ section.id }} .melato-home-clean__eyebrow{margin:0 0 14px;color:#f5f1e8;font:700 10px/1.2 var(--font-mono-family,monospace);letter-spacing:.2em;text-transform:uppercase}#MelatoHomeClean-{{ section.id }} h1{max-width:980px;margin:0;font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:clamp(72px,13vw,190px);line-height:.77;letter-spacing:-.025em;text-transform:uppercase;text-wrap:balance}#MelatoHomeClean-{{ section.id }} .melato-home-clean__copy{max-width:560px;margin:24px 0 0;color:rgba(245,241,232,.84);font-size:clamp(16px,2vw,20px);line-height:1.5}#MelatoHomeClean-{{ section.id }} .melato-home-clean__actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta{display:inline-flex;min-height:46px;align-items:center;padding:0 20px;border:1px solid rgba(245,241,232,.55);border-radius:999px;color:#f5f1e8;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;backdrop-filter:blur(8px)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta--primary{background:#f5f1e8;color:#080808;border-color:#f5f1e8}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:min(1360px,calc(100% - 32px));margin:auto;padding:34px 0 48px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}@media(max-width:900px){#MelatoHomeClean-{{ section.id }} .melato-home-clean__products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}@media(max-width:520px){#MelatoHomeClean-{{ section.id }} .melato-home-clean__hero{min-height:72svh}#MelatoHomeClean-{{ section.id }} .melato-home-clean__header{width:calc(100% - 28px);padding-bottom:48px}#MelatoHomeClean-{{ section.id }} .melato-home-clean__shell{width:calc(100% - 24px)}#MelatoHomeClean-{{ section.id }} .melato-home-clean__actions{display:grid;grid-template-columns:1fr}#MelatoHomeClean-{{ section.id }} .melato-home-clean__cta{justify-content:center}}
+
+/* Mobile announcement repair: one centered source message, no duplicated clone,
+   no empty lead/trailing space from the marquee loop. */
+@media(max-width:749px){
+  #melato-announcement-bar{height:auto!important;min-height:48px!important;padding:0 14px!important}
+  #melato-announcement-bar .melato-ann__viewport{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;overflow:visible!important;mask-image:none!important;-webkit-mask-image:none!important}
+  #melato-announcement-bar .melato-ann__track{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;animation:none!important;transform:none!important}
+  #melato-announcement-bar .melato-ann__group{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;gap:0!important;padding:0!important}
+  #melato-announcement-bar .melato-ann__group[aria-hidden="true"]{display:none!important}
+  #melato-announcement-bar .melato-ann__item{display:none!important}
+  #melato-announcement-bar .melato-ann__group:not([aria-hidden="true"]) .melato-ann__item:first-child{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;max-width:100%!important;padding:8px 0!important;text-align:center!important;white-space:normal!important;font-size:11px!important;line-height:1.25!important;letter-spacing:.11em!important}
+  #melato-announcement-bar .melato-ann__dot{display:none!important}
+}
 </style>
 {% schema %}
 {

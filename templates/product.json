@@ -26,6 +26,10 @@
       "type": "melato-product-proof-integrity",
       "settings": {}
     },
+    "pdp_unification": {
+      "type": "melato-pdp-unification",
+      "settings": {}
+    },
     "safe_accent": {
       "type": "melato-product-safe-accent",
       "settings": {}
@@ -45,5 +49,5 @@
       }
     }
   },
-  "order": ["main_product", "proof_integrity", "safe_accent", "related", "recently_viewed"]
+  "order": ["main_product", "proof_integrity", "pdp_unification", "safe_accent", "related", "recently_viewed"]
 }
