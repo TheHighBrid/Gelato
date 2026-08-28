@@ -27,7 +27,7 @@ test('trust and returns copy is explicit and parser-clean', () => {
   assert.match(cart, /<strong>Secure checkout<\/strong>/);
   assert.ok(cart.includes(returnsPolicy));
   assert.ok(filters.includes(returnsPolicy));
-  assert.match(index, /ELIGIBLE RETURNS WITHIN 30 DAYS · RETURN SHIPPING PAID BY CUSTOMER/);
+  assert.ok(index.includes(returnsPolicy));
 });
 
 test('all product and cart recovery prices omit the parsed Price prefix', () => {
