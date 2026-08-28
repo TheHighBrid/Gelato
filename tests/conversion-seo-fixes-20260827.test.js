@@ -9,12 +9,19 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const returnsPolicy = 'Eligible unworn items may be returned within 30 days; customers pay return shipping unless the item arrived damaged, defective, or incorrect.';
 const allProductsMeta = 'Shop Melato tracksuits, denim, dresses, tops, accessories and fragrance, designed in Ottawa with limited-run intent and refined construction';
 
-test('homepage hero exposes a dynamic collection entry price below its CTAs', () => {
+test('homepage hero keeps the CTAs clear without an unexplained collection minimum price', () => {
   const hero = read('sections/melato-home-conversion.liquid');
-  assert.match(hero, /assign hero_from_price = blank/);
-  assert.match(hero, /candidate_price = hero_product\.price_min/);
-  assert.match(hero, /From \{\{ hero_from_price \| money \}\}/);
-  assert.match(hero, /melato-home-clean__price/);
+  assert.doesNotMatch(hero, /assign hero_from_price = blank/);
+  assert.doesNotMatch(hero, /candidate_price = hero_product\.price_min/);
+  assert.doesNotMatch(hero, /From \{\{ hero_from_price \| money \}\}/);
+  assert.doesNotMatch(hero, /melato-home-clean__price/);
+});
+
+test('homepage mobile announcement is centered without the duplicated marquee clone', () => {
+  const hero = read('sections/melato-home-conversion.liquid');
+  assert.match(hero, /melato-ann__group\[aria-hidden="true"\]\{display:none!important\}/);
+  assert.match(hero, /animation:none!important/);
+  assert.match(hero, /text-align:center!important/);
 });
 
 test('trust and returns copy is explicit and parser-clean', () => {
