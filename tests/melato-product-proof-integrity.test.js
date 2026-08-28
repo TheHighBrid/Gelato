@@ -56,6 +56,7 @@ test('PDP unification normalizes disclosures, fragrance semantics, sizing and se
   assert.match(layer, /pdp-spec \.pdp-rte/);
   assert.match(layer, /Fragrance details/);
   assert.match(layer, /cleanText\(summary\) === 'material'/);
+  assert.match(layer, /if \(!isFragrance\)/);
   assert.match(layer, /Product measurements/);
   assert.match(layer, /\/pages\/size-guide/);
   assert.match(layer, /melato-full-set-button/);
