@@ -30,11 +30,17 @@ test('trust and returns copy is explicit and parser-clean', () => {
   assert.match(index, /ELIGIBLE RETURNS WITHIN 30 DAYS · RETURN SHIPPING PAID BY CUSTOMER/);
 });
 
-test('product cards do not emit a parsed Price prefix', () => {
+test('all product and cart recovery prices omit the parsed Price prefix', () => {
   const card = read('snippets/product-card.liquid');
+  const emptyDrawer = read('snippets/melato-cart-empty-state.liquid');
+  const drawer = read('snippets/cart-drawer.liquid');
+
   assert.doesNotMatch(card, /visually-hidden">Price:/);
   assert.doesNotMatch(card, /aria-label="Price"/);
   assert.match(card, /card_price_label/);
+  assert.doesNotMatch(emptyDrawer, />Price \{\{ recovery_product\.price \| money \}\}</);
+  assert.doesNotMatch(emptyDrawer, /, price \{\{ recovery_product\.price/);
+  assert.doesNotMatch(drawer, /aria-label="Price \{\{ item\.final_line_price/);
 });
 
 test('All Products and cart metadata are purpose-built', () => {

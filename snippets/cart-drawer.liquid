@@ -36,7 +36,7 @@
                 <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" aria-label="Quantity" data-line-key="{{ item.key }}">
                 <button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1" data-line-key="{{ item.key }}">+</button>
               </div>
-              <span class="price" data-line-price="{{ item.key }}" aria-label="Price {{ item.final_line_price | money | strip_html | escape }}">{{ item.final_line_price | money }}</span>
+              <span class="price" data-line-price="{{ item.key }}" aria-label="{{ item.final_line_price | money | strip_html | escape }}">{{ item.final_line_price | money }}</span>
             </div>
           </div>
         </div>
