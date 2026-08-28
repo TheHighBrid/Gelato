@@ -7,6 +7,9 @@
 {%- liquid
   assign output = html
   assign output = output | replace: 'orders@melato.ca', 'support@melato.ca'
+  assign output = output | replace: 'secure checkout', 'Secure checkout'
+  assign output = output | replace: 'Return shipping may apply.', 'Customers pay return shipping unless the item arrived damaged, defective, or incorrect.'
+  assign output = output | replace: 'Unless the item arrived damaged, defective, or incorrect, customers may be responsible for return shipping costs.', 'Customers pay return shipping unless the item arrived damaged, defective, or incorrect.'
 
   if context == 'announcement'
     assign output = output | replace: 'POPUP SHOW #4 · JULY 21 · POPUP SHOW #5 · AUGUST 20', 'POPUP SHOW #5 · AUGUST 20'
@@ -95,7 +98,7 @@
       if request.path contains '/policies/refund-policy'
         assign old_shipping_paragraph = '<p>Unless the item arrived damaged, defective, or incorrect, customers may be responsible for return shipping costs. Original shipping fees may be non-refundable unless otherwise required by law or stated during a promotion.</p>'
         capture new_shipping_paragraphs
-          echo '<p>Unless the item arrived damaged, defective, or incorrect, customers may be responsible for return shipping costs.</p>'
+          echo '<p>Eligible unworn items may be returned within 30 days; customers pay return shipping unless the item arrived damaged, defective, or incorrect.</p>'
           echo '<p>Standard delivery is complimentary and has no original standard-delivery fee to refund. If a paid expedited, special-service, or international carrier option is selected at checkout, that service fee may be non-refundable unless required by law.</p>'
         endcapture
         assign output = output | replace: old_shipping_paragraph, new_shipping_paragraphs
@@ -168,7 +171,7 @@
         capture pdp_conversion_markup
           echo '<style>.pdp-conversion-assurances{margin:14px 0 0;padding:14px 0 0;border-top:1px solid color-mix(in srgb,currentColor 16%,transparent)}.pdp-conversion-assurances__trust{display:flex;flex-wrap:wrap;gap:8px 16px;margin:0;padding:0;list-style:none;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.9}.pdp-conversion-assurances__facts{display:grid;gap:8px;margin-top:12px}.pdp-conversion-assurances__fact{display:grid;grid-template-columns:minmax(72px,auto) 1fr;gap:12px;font-size:12px;line-height:1.45}.pdp-conversion-assurances__fact strong{text-transform:uppercase;letter-spacing:.1em;font-size:10px}.pdp-conversion-assurances a{color:inherit;text-underline-offset:3px}.pdp-conversion-assurances__payments{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:12px}.pdp-conversion-assurances__payments svg{width:auto;height:22px;max-width:40px}</style>'
           echo '<div class="pdp-conversion-assurances" aria-label="Purchase and product essentials">'
-          echo '<ul class="pdp-conversion-assurances__trust" role="list"><li>Complimentary standard delivery</li><li>Prepared in 1–3 business days</li><li><a href="/policies/refund-policy">30-day eligible returns</a></li><li>secure checkout</li></ul>'
+          echo '<ul class="pdp-conversion-assurances__trust" role="list"><li>Complimentary standard delivery</li><li>Prepared in 1–3 business days</li><li><a href="/policies/refund-policy">30-day eligible returns</a></li><li>Secure checkout</li></ul>'
           echo '<div class="pdp-conversion-assurances__facts">'
           if origin_copy != blank
             echo '<div class="pdp-conversion-assurances__fact"><strong>Origin</strong><span>Made in '
@@ -183,7 +186,7 @@
           if product_has_size_option and has_specific_size_guide == false
             echo '<div class="pdp-conversion-assurances__fact"><strong>Sizing</strong><span><a href="/pages/size-guide">Fit guidance</a> for products without approved garment measurements.</span></div>'
           endif
-          echo '<div class="pdp-conversion-assurances__fact"><strong>Returns</strong><span>Request within 30 days at support@melato.ca. Return shipping may apply.</span></div>'
+          echo '<div class="pdp-conversion-assurances__fact"><strong>Returns</strong><span>Eligible unworn items may be returned within 30 days; customers pay return shipping unless the item arrived damaged, defective, or incorrect.</span></div>'
           if pdp_review_count > 0 and pdp_review_rating != blank
             echo '<div class="pdp-conversion-assurances__fact"><strong>Reviews</strong><span>'
             echo pdp_review_rating
@@ -212,7 +215,7 @@
       # Specification panels intentionally render closed by default. Native details state belongs to the shopper.
 
       assign old_assurances = '<div class="pdp-trust-row" aria-label="Payment and shipping trust"><span>Fast dispatch</span><span>Complimentary delivery on all orders</span><span>Secure checkout</span></div>'
-      assign new_assurances = '<ul class="product-assurances" role="list" aria-label="Purchase assurances"><li>Prepared in 1–3 business days</li><li>Complimentary delivery on all orders</li><li>secure checkout</li></ul>'
+      assign new_assurances = '<ul class="product-assurances" role="list" aria-label="Purchase assurances"><li>Prepared in 1–3 business days</li><li>Complimentary delivery on all orders</li><li>Secure checkout</li></ul>'
       assign output = output | replace: old_assurances, new_assurances
       assign output = output | replace: 'Customers rate us 5.0/5 based on 3 reviews.', 'MELATO STORE RATING 5.0/5 from 3 verified customer reviews.'
       assign output = output | replace: 'Verified material information', 'Material details'

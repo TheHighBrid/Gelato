@@ -46,6 +46,7 @@
     endif
   endfor
 -%}
+{%- capture card_price_label -%}{{ card_price | money }}{%- if on_sale -%}, previously {{ card_compare_at_price | money }}{%- endif -%}{%- endcapture -%}
 <article class="product-card product-card--{{ card_image_ratio }}{% if sold_out %} product-card--sold-out{% endif %}" data-product-card data-product-handle="{{ product.handle }}" data-product-price="{{ card_price }}" data-product-colour-count="{{ card_color_count }}">
   <div class="product-card__media">
     <a href="{{ product.url }}" aria-label="View {{ product.title | escape }}" tabindex="-1">
@@ -61,7 +62,7 @@
   <div class="product-card__info">
     {%- if settings.card_show_vendor and product.vendor != blank -%}<p class="product-card__vendor">{{ product.vendor }}</p>{%- endif -%}
     <h3 class="product-card__heading"><a href="{{ product.url }}" class="product-card__title">{{ product.title }}</a></h3>
-    <div class="product-card__price" aria-label="Price"><span class="visually-hidden">Price: </span>{%- if on_sale -%}<span class="price price--sale">{{ card_price | money }}</span><span class="visually-hidden">Previously </span><span class="price price--was">{{ card_compare_at_price | money }}</span>{%- else -%}<span class="price{% if sold_out %} price--muted{% endif %}">{{ card_price | money }}</span>{%- endif -%}</div>
+    <div class="product-card__price" aria-label="{{ card_price_label | strip | escape }}">{%- if on_sale -%}<span class="price price--sale">{{ card_price | money }}</span><span class="visually-hidden">Previously </span><span class="price price--was">{{ card_compare_at_price | money }}</span>{%- else -%}<span class="price{% if sold_out %} price--muted{% endif %}">{{ card_price | money }}</span>{%- endif -%}</div>
     {%- if swatch_style != 'none' and color_option -%}<div class="product-card__swatches" aria-label="Available colors">{%- for value in color_option.values limit:6 -%}<span class="swatch swatch--{{ swatch_style }}" style="background-color:{{ value | handle }}" title="{{ value }}" aria-label="{{ value }}"></span>{%- endfor -%}{%- if color_option.values.size > 6 -%}<span class="text-label" style="line-height:18px">+{{ color_option.values.size | minus: 6 }}</span>{%- endif -%}</div>{%- endif -%}
     {%- if show_rating and product.metafields.reviews.rating.value != blank -%}<div class="product-card__rating"><span aria-hidden="true">★★★★★</span><span class="text-label">({{ product.metafields.reviews.rating_count.value }})</span></div>{%- endif -%}
   </div>

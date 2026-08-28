@@ -13,7 +13,10 @@
       assign melato_meta_description = 'Limited-run Melato apparel, accessories and fragrance, tailored for movement and cut with deliberate intent.'
     elsif template.name == 'collection' and collection.handle == 'all'
       assign melato_meta_title = 'All Products'
-      assign melato_meta_description = 'Shop the complete Melato catalogue.'
+      assign melato_meta_description = 'Shop Melato tracksuits, denim, dresses, tops, accessories and fragrance, designed in Ottawa with limited-run intent and refined construction'
+    elsif template.name == 'cart'
+      assign melato_meta_title = 'Your bag'
+      assign melato_meta_description = 'Review your Melato bag, update quantities, and continue securely to checkout.'
     elsif template.name == 'page' and page.handle == 'contact'
       assign melato_meta_title = page.title | default: 'Contact'
       assign melato_meta_description = 'Contact Melato for order support, sizing, delivery, returns and general inquiries.'
@@ -78,7 +81,7 @@
     endif
   -%}
   {%- if melato_filter_main_output -%}{%- capture melato_main_output -%}{{ content_for_layout }}{%- endcapture -%}<main id="main-content" class="main-content" role="main" tabindex="-1">{% render 'melato-rendered-output-filters', html:melato_main_output, context:'main' %}</main>{%- else -%}<main id="main-content" class="main-content" role="main" tabindex="-1">{{ content_for_layout }}</main>{%- endif -%}
-  {%- if template.name == 'index' or template.name == 'product' -%}<section class="melato-trust-strip" aria-label="Shopping assurances"><span>Complimentary standard delivery</span><span>Prepared in 1–3 business days</span><a href="/policies/refund-policy">30-day eligible returns</a><span>secure checkout</span></section>{%- endif -%}
+  {%- if template.name == 'index' or template.name == 'product' -%}<section class="melato-trust-strip" aria-label="Shopping assurances"><span>Complimentary standard delivery</span><span>Prepared in 1–3 business days</span><a href="/policies/refund-policy">30-day eligible returns</a><span>Secure checkout</span></section>{%- endif -%}
   {%- section 'melato-footer' -%}
   {%- capture melato_cart_output -%}{%- render 'cart-drawer' -%}{%- endcapture -%}
   <div class="melato-utility-layer" aria-label="Store utilities"><div id="drip-overlay" class="drip-overlay" aria-hidden="true" data-overlay></div>{% render 'melato-rendered-output-filters', html:melato_cart_output, context:'cart' %}{%- render 'search-drawer' -%}{%- render 'mobile-menu' -%}{%- render 'quick-view-modal' -%}<div id="drip-toast" class="drip-toast" role="status" aria-live="polite" aria-atomic="true"></div></div>
