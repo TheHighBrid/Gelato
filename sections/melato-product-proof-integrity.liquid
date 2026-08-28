@@ -1,54 +1,37 @@
 {% comment %}
-  Melato PDP proof-integrity layer.
+  Melato PDP proof-integrity guard.
 
-  1. Products tagged specification_pending can carry provisional admin copy
-     while factory/supplier evidence is still being collected. Pending technical
-     claims are therefore suppressed on the storefront.
-  2. A linked custom.product_specification record with an empty
-     specification_gaps list is treated as complete structured proof and can be
-     rendered directly without copying values into loose product metafields.
+  The canonical customer-facing specification UI lives in
+  melato-product-page-rebuild. This section is deliberately safety-only so a
+  second Product Specification panel can never duplicate Construction, Fit,
+  Material, or Care below the PDP.
+
+  specification_pending remains fail-safe for products whose technical claims
+  are still under review. A storefront-ready status overrides a stale pending
+  tag so approved details cannot disappear because of old catalogue metadata.
 {% endcomment %}
 
 {%- liquid
   assign specification_pending = false
+  assign material_spec_status = product.metafields.custom.material_spec_status.value | downcase | strip
+  assign material_spec_ready = false
+  if material_spec_status contains 'ready'
+    assign material_spec_ready = true
+  endif
+
   for tag in product.tags
     assign proof_tag = tag | downcase | strip
-    if proof_tag == 'specification_pending'
+    if proof_tag == 'specification_pending' and material_spec_ready == false
       assign specification_pending = true
       break
     endif
   endfor
-
-  assign product_specification = product.metafields.custom.product_specification.value
-  assign complete_specification = false
-  if product_specification != blank
-    assign specification_gaps = product_specification.specification_gaps.value
-    if specification_gaps == blank
-      assign complete_specification = true
-    endif
-  endif
-
-  if complete_specification
-    assign spec_construction = product_specification.construction.value
-    assign spec_main_fabric = product_specification.main_fabric.value
-    assign spec_main_composition = product_specification.main_composition.value
-    assign spec_contrast_fabric = product_specification.contrast_fabric.value
-    assign spec_contrast_composition = product_specification.contrast_composition.value
-    assign spec_trim_materials = product_specification.trim_materials.value
-    assign spec_fit = product_specification.fit.value
-    assign spec_fit_notes = product_specification.fit_notes.value
-    assign spec_care = product_specification.care.value
-
-    assign has_structured_proof = false
-    if spec_construction != blank or spec_main_fabric != blank or spec_main_composition != blank or spec_contrast_fabric != blank or spec_contrast_composition != blank or spec_trim_materials != blank or spec_fit != blank or spec_fit_notes != blank or spec_care != blank
-      assign has_structured_proof = true
-    endif
-  endif
 -%}
 
 {%- if specification_pending -%}
   <style data-melato-proof-integrity-fallback>
-    /* No-JS safety: never expose provisional technical claims as verified. */
+    /* No-JS safety: provisional technical claims remain hidden. Commerce and
+       Shipping & Returns stay available. */
     .melato-pdp-rebuild .pdp-story-tech,
     .melato-pdp-rebuild .pdp-proof-mini {
       display: none;
@@ -82,12 +65,13 @@
       }
 
       root.querySelectorAll('.pdp-mini-detail').forEach(function (details) {
-        if (summaryText(details) === 'construction') details.remove();
+        var label = summaryText(details);
+        if (label === 'story' || label === 'construction') details.remove();
       });
 
       root.querySelectorAll('.pdp-spec').forEach(function (details) {
         var label = summaryText(details);
-        if (label === 'fit' || label === 'material' || label === 'care') details.remove();
+        if (label === 'fit' || label === 'material' || label === 'care' || label === 'application' || label === 'scent profile') details.remove();
       });
 
       root.querySelectorAll('.pdp-proof-mini > div').forEach(function (item) {
@@ -100,184 +84,6 @@
       root.classList.add('pdp-proof-integrity-ready');
     })();
   </script>
-{%- endif -%}
-
-{%- if complete_specification and has_structured_proof and specification_pending == false -%}
-  <section
-    class="melato-structured-proof"
-    aria-labelledby="MelatoStructuredProof-{{ section.id }}"
-    data-product-specification="{{ product_specification.system.handle | escape }}"
-  >
-    <div class="melato-structured-proof__shell">
-      <header class="melato-structured-proof__header">
-        <p>Product specification</p>
-        <h2 id="MelatoStructuredProof-{{ section.id }}">Construction, material, fit and care</h2>
-      </header>
-
-      <div class="melato-structured-proof__grid">
-        {%- if spec_construction != blank -%}
-          <article class="melato-structured-proof__card">
-            <h3>Construction</h3>
-            <ul>
-              {%- for detail in spec_construction -%}<li>{{ detail }}</li>{%- endfor -%}
-            </ul>
-          </article>
-        {%- endif -%}
-
-        {%- if spec_main_fabric != blank or spec_main_composition != blank or spec_contrast_fabric != blank or spec_contrast_composition != blank or spec_trim_materials != blank -%}
-          <article class="melato-structured-proof__card">
-            <h3>Material</h3>
-            <div class="melato-structured-proof__material">
-              {%- if spec_main_fabric != blank or spec_main_composition != blank -%}
-                <p><strong>Main</strong><span>{{ spec_main_fabric }}{% if spec_main_fabric != blank and spec_main_composition != blank %} · {% endif %}{{ spec_main_composition }}</span></p>
-              {%- endif -%}
-              {%- if spec_contrast_fabric != blank or spec_contrast_composition != blank -%}
-                <p><strong>Contrast</strong><span>{{ spec_contrast_fabric }}{% if spec_contrast_fabric != blank and spec_contrast_composition != blank %} · {% endif %}{{ spec_contrast_composition }}</span></p>
-              {%- endif -%}
-              {%- if spec_trim_materials != blank -%}
-                <strong>Trim</strong>
-                <ul>{%- for item in spec_trim_materials -%}<li>{{ item }}</li>{%- endfor -%}</ul>
-              {%- endif -%}
-            </div>
-          </article>
-        {%- endif -%}
-
-        {%- if spec_fit != blank or spec_fit_notes != blank -%}
-          <article class="melato-structured-proof__card">
-            <h3>Fit</h3>
-            {%- if spec_fit != blank -%}<p>{{ spec_fit }}</p>{%- endif -%}
-            {%- if spec_fit_notes != blank -%}<ul>{%- for item in spec_fit_notes -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- endif -%}
-          </article>
-        {%- endif -%}
-
-        {%- if spec_care != blank -%}
-          <article class="melato-structured-proof__card">
-            <h3>Care</h3>
-            <ul>{%- for item in spec_care -%}<li>{{ item }}</li>{%- endfor -%}</ul>
-          </article>
-        {%- endif -%}
-      </div>
-    </div>
-  </section>
-
-  <style data-melato-structured-proof-style>
-    .melato-structured-proof {
-      --proof-bg: #080808;
-      --proof-surface: #111214;
-      --proof-text: #f5f1e8;
-      --proof-muted: #b8b2a8;
-      --proof-accent: #d3a74a;
-      background: var(--proof-bg);
-      color: var(--proof-text);
-      padding: 0 0 30px;
-    }
-
-    .melato-structured-proof * {
-      box-sizing: border-box;
-    }
-
-    .melato-structured-proof__shell {
-      width: min(1440px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 30px;
-      border: 1px solid rgba(255, 255, 255, .095);
-      border-radius: 26px;
-      background: var(--proof-surface);
-      box-shadow: 0 18px 50px rgba(0, 0, 0, .24);
-    }
-
-    .melato-structured-proof__header p,
-    .melato-structured-proof__card h3 {
-      margin: 0;
-      color: var(--proof-accent);
-      font-size: 11px;
-      font-weight: 900;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-    }
-
-    .melato-structured-proof__header h2 {
-      margin: 8px 0 20px;
-      max-width: 22ch;
-      font-size: clamp(24px, 3vw, 40px);
-      line-height: 1;
-      text-transform: uppercase;
-    }
-
-    .melato-structured-proof__grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .melato-structured-proof__card {
-      min-width: 0;
-      padding: 18px;
-      border: 1px solid rgba(255, 255, 255, .09);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, .025);
-      color: var(--proof-muted);
-      line-height: 1.65;
-    }
-
-    .melato-structured-proof__card h3 {
-      margin-bottom: 12px;
-    }
-
-    .melato-structured-proof__card p,
-    .melato-structured-proof__card ul {
-      margin: 0;
-    }
-
-    .melato-structured-proof__card ul {
-      padding-left: 18px;
-    }
-
-    .melato-structured-proof__card li + li,
-    .melato-structured-proof__material p + p {
-      margin-top: 7px;
-    }
-
-    .melato-structured-proof__material > strong,
-    .melato-structured-proof__material p strong {
-      display: block;
-      margin-top: 10px;
-      color: var(--proof-text);
-      font-size: 11px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .melato-structured-proof__material p:first-child strong {
-      margin-top: 0;
-    }
-
-    .melato-structured-proof__material span {
-      display: block;
-    }
-
-    @media (max-width: 1000px) {
-      .melato-structured-proof__grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 749px) {
-      .melato-structured-proof {
-        padding-bottom: 18px;
-      }
-
-      .melato-structured-proof__shell {
-        width: min(100% - 24px, 1440px);
-        padding: 20px;
-        border-radius: 22px;
-      }
-
-      .melato-structured-proof__grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
 {%- endif -%}
 
 {% schema %}
