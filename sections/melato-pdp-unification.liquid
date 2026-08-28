@@ -232,21 +232,23 @@
       });
     }
 
-    root.querySelectorAll('.pdp-option').forEach(function (fieldset) {
-      var legend = fieldset.querySelector('legend');
-      var optionName = cleanText(legend);
-      if (optionName !== 'size' && optionName !== 'taille') return;
+    if (!isFragrance) {
+      root.querySelectorAll('.pdp-option').forEach(function (fieldset) {
+        var legend = fieldset.querySelector('legend');
+        var optionName = cleanText(legend);
+        if (optionName !== 'size' && optionName !== 'taille') return;
 
-      var header = fieldset.querySelector('.pdp-option__header');
-      if (!header || header.querySelector('[data-open-size-drawer], .melato-sizing-fallback')) return;
+        var header = fieldset.querySelector('.pdp-option__header');
+        if (!header || header.querySelector('[data-open-size-drawer], .melato-sizing-fallback')) return;
 
-      var sizingLink = document.createElement('a');
-      sizingLink.className = 'melato-sizing-fallback';
-      sizingLink.href = '/pages/size-guide';
-      sizingLink.textContent = 'Product measurements';
-      sizingLink.setAttribute('aria-label', 'Product measurements and fit guidance');
-      header.appendChild(sizingLink);
-    });
+        var sizingLink = document.createElement('a');
+        sizingLink.className = 'melato-sizing-fallback';
+        sizingLink.href = '/pages/size-guide';
+        sizingLink.textContent = 'Product measurements';
+        sizingLink.setAttribute('aria-label', 'Product measurements and fit guidance');
+        header.appendChild(sizingLink);
+      });
+    }
 
     root.dataset.melatoUnified = 'true';
   }
