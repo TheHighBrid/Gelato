@@ -6,7 +6,7 @@ const path = require('node:path');
 const root = path.resolve(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 
-const returnsPolicy = 'Eligible unworn items may be returned within 30 days; customers pay return shipping unless the item arrived damaged, defective, or incorrect.';
+const freeReturnsPolicy = 'Approved eligible returns include free standard return shipping through the Melato return method.';
 const allProductsMeta = 'Shop Melato tracksuits, denim, dresses, tops, accessories and fragrance, designed in Ottawa with limited-run intent and refined construction';
 
 test('homepage hero keeps the CTAs clear without an unexplained collection minimum price', () => {
@@ -24,7 +24,7 @@ test('homepage mobile announcement is centered without the duplicated marquee cl
   assert.match(hero, /text-align:center!important/);
 });
 
-test('trust and returns copy is explicit and parser-clean', () => {
+test('trust and returns copy advertises complimentary delivery and protected free returns', () => {
   const layout = read('layout/theme.liquid');
   const cart = read('sections/main-cart.liquid');
   const filters = read('snippets/melato-rendered-output-filters.liquid');
@@ -32,9 +32,15 @@ test('trust and returns copy is explicit and parser-clean', () => {
 
   assert.match(layout, /<span>Secure checkout<\/span>/);
   assert.match(cart, /<strong>Secure checkout<\/strong>/);
-  assert.ok(cart.includes(returnsPolicy));
-  assert.ok(filters.includes(returnsPolicy));
-  assert.ok(index.includes(returnsPolicy));
+  assert.ok(cart.includes('free returns within 30 days'));
+  assert.ok(cart.includes(freeReturnsPolicy));
+  assert.ok(filters.includes(freeReturnsPolicy));
+  assert.ok(filters.includes('Fair Use &amp; Return Protection'));
+  assert.ok(filters.includes('This protection does not limit rights that cannot be excluded under applicable consumer law'));
+  assert.ok(index.includes('COMPLIMENTARY STANDARD DELIVERY'));
+  assert.ok(index.includes('FREE RETURNS WITHIN 30 DAYS'));
+  assert.doesNotMatch(cart, /customer-paid return shipping/i);
+  assert.doesNotMatch(index, /customers pay return shipping/i);
 });
 
 test('all product and cart recovery prices omit the parsed Price prefix', () => {
