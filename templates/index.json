@@ -37,13 +37,13 @@
         "item3": {
           "type": "item",
           "settings": {
-            "text": "COMPLIMENTARY DELIVERY"
+            "text": "COMPLIMENTARY STANDARD DELIVERY"
           }
         },
         "item4": {
           "type": "item",
           "settings": {
-            "text": "Eligible unworn items may be returned within 30 days; customers pay return shipping unless the item arrived damaged, defective, or incorrect."
+            "text": "FREE RETURNS WITHIN 30 DAYS"
           }
         }
       },
