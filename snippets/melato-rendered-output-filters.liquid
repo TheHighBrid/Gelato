@@ -25,7 +25,7 @@
   assign output = output | replace: legacy_refund_shipping_paragraph, protected_free_returns_policy
 
   # Normalize remaining legacy storefront fragments that can appear outside the legal policy page.
-  assign output = output | replace: 'eligible returns within 30 days · customer-paid return shipping', 'free returns within 30 days'
+  assign output = output | replace: 'eligible returns within 30 days · customer-paid return shipping', 'free returns on eligible items within 30 days'
   assign output = output | replace: 'Return shipping may apply.', 'Free returns are available on approved eligible items using the Melato return method.'
   assign output = output | replace: 'Eligible unworn items may be returned within 30 days; customers pay return shipping unless the item arrived damaged, defective, or incorrect.', 'Eligible unworn items may be returned within 30 days with free return shipping through the Melato return method.'
   assign output = output | replace: 'Unless the item arrived damaged, defective, or incorrect, customers may be responsible for return shipping costs.', 'Free returns are available on approved eligible items using the Melato return method.'
@@ -296,6 +296,11 @@
       endif
     endif
   endif
+
+  # Final claim-precision guard. Keep all storefront return reassurance aligned with the posted eligibility terms.
+  assign output = output | replace: 'FREE RETURNS WITHIN 30 DAYS', 'FREE RETURNS ON ELIGIBLE ITEMS WITHIN 30 DAYS'
+  assign output = output | replace: 'Free returns within 30 days', 'Free returns on eligible items within 30 days'
+  assign output = output | replace: 'free returns within 30 days', 'free returns on eligible items within 30 days'
 -%}
 
 {{- output -}}
