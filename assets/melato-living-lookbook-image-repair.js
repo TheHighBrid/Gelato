@@ -13,7 +13,7 @@
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_ORIGINS26_DRESS-CODE-VIOLATION-RIBBED-POLO-MINI-DRESS_TLB_NOBU_MARRAKECH_001.jpg?v=1787782174', width: 796, height: 944 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_c3f8a453-e89f-49bb-a921-fd36edf5beed.png?v=1786713773', width: 4599, height: 3078 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_68.jpg?v=1787222251', width: 3069, height: 4611 },
-    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_50.jpg?v=1787024890', width: 3366, height: 4206 },
+    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_REDLIGHT26_TLL_OTTAWA_001.png?v=1788382746', width: 3366, height: 4206 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_58f42586-0d0f-4b45-9dba-348e896257d3.jpg?v=1786713771', width: 3366, height: 4206 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_7aa850a5-3d91-4325-9498-b0d5c77c6b84.png?v=1786713770', width: 1122, height: 1402 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_02f9a006-5424-44f5-b423-5ce4b7f81e8e.png?v=1786713770', width: 1122, height: 1402 },
