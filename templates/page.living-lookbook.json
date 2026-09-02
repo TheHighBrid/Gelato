@@ -69,6 +69,10 @@
         "archive_source": "case03"
       }
     },
+    "evidence_20260901": {
+      "type": "melato-living-lookbook-20260901",
+      "settings": {}
+    },
     "curation_fixes": {
       "type": "melato-living-lookbook-curation-fixes",
       "settings": {}
@@ -78,6 +82,7 @@
     "main",
     "evidence_20260714",
     "evidence_case03",
+    "evidence_20260901",
     "curation_fixes"
   ]
 }
