@@ -36,7 +36,7 @@
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_63bb7395-6847-49b7-b869-283c92931394.jpg?v=1786713770', width: 2244, height: 2804 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_0319befe-44f4-47d7-9fa7-379ce50b98b3.jpg?v=1786713770', width: 1006, height: 1008 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_45a7370d-a8f6-404f-bc76-7b95185bfe6f.jpg?v=1786713770', width: 2244, height: 2804 },
-    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_3ddb1074-e917-45e1-b2ba-f3eccb2e7ad9.jpg?v=1786713770', width: 1140, height: 894 },
+    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_ARNIBAL26_TLL_OTTAWA_001.png?v=1788386238', width: 1140, height: 894 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_928214d3-7fef-4c98-8eda-c8b6c902db9e.jpg?v=1786713770', width: 2244, height: 2804 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_53.jpg?v=1787150205', width: 2048, height: 3072 }
   ];
