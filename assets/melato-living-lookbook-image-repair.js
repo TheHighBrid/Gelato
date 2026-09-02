@@ -30,7 +30,7 @@
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_67.jpg?v=1787152248', width: 712, height: 912 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_b58a1244-8d27-49a7-92b8-37928ae8ce32.jpg?v=1786713770', width: 2172, height: 2896 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_e477d527-dd80-4e58-9355-e1c0d7d6249e.jpg?v=1786713771', width: 2172, height: 2896 },
-    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_2df65aca-9aed-4ac3-872d-31a59060cc56.jpg?v=1786713770', width: 1132, height: 884 },
+    { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_96.png?v=1787222561', width: 1132, height: 884 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/Melato.ca__EL_TLL_FRAME_67.jpg?v=1787152248', width: 1012, height: 1008 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_534a4bfd-6490-4cc3-885f-989ff499e6a2.jpg?v=1786713770', width: 1064, height: 1008 },
     { url: 'https://cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_63bb7395-6847-49b7-b869-283c92931394.jpg?v=1786713770', width: 2244, height: 2804 },
