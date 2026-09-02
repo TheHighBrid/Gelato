@@ -1,0 +1,157 @@
+{{ 'melato-living-lookbook-evidence.css' | asset_url | stylesheet_tag }}
+
+{% capture evidence_manifest %}
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_ORIGINS26_TLB_RABAT_001.jpg?v=1788317165|3072|5504|master|A woman wearing a black velvet zip-up tracksuit with red side stripes, posing on a stone balcony with columns and a blue sky in the background.~
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_ORIGINS26_TLB_MEKNES_003.jpg?v=1788317464|3072|5504|master|A woman sits on a patterned lounge bench in a Moroccan-style room with wooden ceilings, a large hanging lantern, and an arched window behind her. She is wearing a dark navy short-sleeve zip-up athletic dress with a small white logo on the chest.~
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_ORIGINS26_TLB_MEKNES_006.jpg?v=1788317447|3072|5504|master|A woman sits on a patterned cushioned bench in a Moroccan-style room with an arched window, wooden ceiling, and brass lanterns.~
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_TAWAKAL26_TLB_OTTAWA_001.jpg?v=1788317043|1536|2752|living|A man and a woman modeling matching black velour tracksuits with coral pink sleeves and side panels, featuring a stylized orange M logo on the chest. The woman is in the foreground and the man stands behind her against a neutral curtain backdrop.~
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_TAWAKAL26_TLB_OTTAWA_002.jpg?v=1788317085|3072|5504|master|A man and a woman modeling matching black velour tracksuits with coral pink sleeves and side panels, featuring a stylized letter M logo on the chest, posed in front of a white curtain backdrop.~
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_TAWAKAL26_TLB_OTTAWA_003.png?v=1788317198|558|697|fragment|Two women modeling matching black tracksuits with pink side panels and pink zipper details, posed on a black leather couch in front of beige curtains.~
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_CIAO26_TLB_TORONTO_001.png?v=1788317256|800|1000|fragment|A man stands on a city street at dusk wearing a beige and maroon short-sleeve shirt with Melato written across the back, a cream bucket hat, and light blue jeans, while pulling a brown suitcase.~
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_CASINO26_TLB_MONTREAL_001.png?v=1788317285|800|1000|fragment|A model in a black high-neck long-sleeve top and matching wide-leg trousers stands on an escalator in a modern indoor setting with glass walls and curved architectural elements.~
+https://cdn.shopify.com/s/files/1/0809/3358/5151/files/MELATO_BONJOUR26_TLB_MONTREAL_001.png?v=1788316983|800|1422|fragment|A woman posing in a night city setting wearing a beige sleeveless maxi dress with a tie waist, holding a dark red monogram handbag.
+{% endcapture %}
+{% assign evidence_items = evidence_manifest | strip | split: '~' %}
+
+<section
+  id="MelatoEvidenceArchive-{{ section.id }}"
+  class="mea"
+  data-evidence-archive
+  data-case-code="LL-04"
+  aria-labelledby="MelatoEvidenceTitle-{{ section.id }}"
+>
+  <div class="mea__masthead">
+    <div class="mea__masthead-rule" aria-hidden="true"></div>
+    <div class="mea__masthead-grid">
+      <div class="mea__identity">
+        <p class="mea__eyebrow">MELATO / LIVING LOOKBOOK</p>
+        <h2 id="MelatoEvidenceTitle-{{ section.id }}" class="mea__title">
+          <span>CASE FILE 04</span>
+          SEPTEMBER SIGHTINGS
+        </h2>
+      </div>
+      <div class="mea__brief">
+        <p>Nine newly filed living studies from Meknes, Rabat, Ottawa, Toronto and Montreal.</p>
+        <dl class="mea__registry">
+          <div><dt>Filed</dt><dd>01 SEP 2026</dd></div>
+          <div><dt>Volume</dt><dd>{{ evidence_items.size }} FRAMES</dd></div>
+          <div><dt>Status</dt><dd>AUTHORIZED VIEWING</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="mea__custody">
+      <span>ARCHIVE 2026</span>
+      <span>CASE / LL-04</span>
+      <span>CLICK ANY EXHIBIT TO INSPECT</span>
+    </div>
+  </div>
+
+  <div class="mea__board-shell">
+    <aside class="mea__case-note" aria-label="Case narrative">
+      <span>INVESTIGATOR'S NOTE / LL-04</span>
+      <p>Five cities, nine sightings. The record moves from interiors to streets, from velour to evening silhouettes, without leaving the Melato frame.</p>
+    </aside>
+
+    <div class="mea__board" role="list" aria-label="Case File 04 Living Lookbook evidence archive">
+      {% for record in evidence_items %}
+        {% assign fields = record | strip | split: '|' %}
+        {% assign image_url = fields[0] | strip %}
+        {% assign image_width = fields[1] | strip %}
+        {% assign image_height = fields[2] | strip %}
+        {% assign image_kind = fields[3] | strip %}
+        {% assign image_alt = fields[4] | strip %}
+        {% assign evidence_number = forloop.index %}
+
+        {% if evidence_number == 1 %}
+          <div class="mea__chapter" role="listitem">
+            <span>CHAPTER 01 / NEW FILES</span>
+            <h3>The archive crosses cities.</h3>
+            <p>Frames added and renamed on September 1, 2026, filed as one controlled Living Lookbook batch.</p>
+          </div>
+        {% endif %}
+
+        {% capture evidence_code %}{% if evidence_number < 10 %}0{% endif %}{{ evidence_number }}{% endcapture %}
+        {% assign evidence_code = evidence_code | strip %}
+        {% assign image_480 = image_url | append: '&width=480' %}
+        {% assign image_760 = image_url | append: '&width=760' %}
+        {% assign image_1100 = image_url | append: '&width=1100' %}
+        {% assign image_full = image_url | append: '&width=2200' %}
+
+        <figure class="mea__evidence mea__evidence--{{ image_kind }} mea__evidence--pattern-{{ forloop.index | modulo: 9 }}" role="listitem">
+          <button
+            type="button"
+            class="mea__open"
+            data-evidence-open
+            data-evidence-index="{{ forloop.index0 }}"
+            data-evidence-full="{{ image_full | escape }}"
+            data-evidence-code="{{ evidence_code }}"
+            aria-label="Inspect Case File 04 evidence frame {{ evidence_code }}"
+          >
+            <span class="mea__mount mea__mount--top" aria-hidden="true"></span>
+            <span class="mea__mount mea__mount--side" aria-hidden="true"></span>
+            <span class="mea__image-well">
+              <img
+                src="{{ image_760 | escape }}"
+                srcset="{{ image_480 | escape }} 480w, {{ image_760 | escape }} 760w, {{ image_1100 | escape }} 1100w"
+                sizes="(min-width: 1280px) 22vw, (min-width: 900px) 29vw, (min-width: 600px) 44vw, 88vw"
+                width="{{ image_width }}"
+                height="{{ image_height }}"
+                alt="{{ image_alt | escape }}"
+                loading="lazy"
+                decoding="async"
+              >
+            </span>
+          </button>
+
+          <figcaption class="mea__caption">
+            <span class="mea__caption-primary">EXHIBIT {{ evidence_code }}</span>
+            <span class="mea__caption-secondary">
+              {% if image_kind == 'fragment' %}CONTACT FRAGMENT{% elsif image_kind == 'master' %}MASTER PRINT{% else %}LIVING STUDY{% endif %}
+            </span>
+            <span class="mea__caption-code">LL-04 / {{ evidence_code }}</span>
+          </figcaption>
+
+          <span class="mea__stamp" aria-hidden="true">FILED</span>
+        </figure>
+      {% endfor %}
+    </div>
+  </div>
+
+  <footer class="mea__footer">
+    <p>THE LIVING LOOKBOOK / DOCUMENTING GARMENTS IN MOTION, MEMORY AND PLACE.</p>
+    <p>END OF CASE FILE 04 / LL-04 / {{ evidence_items.size }} EXHIBITS</p>
+  </footer>
+
+  <div
+    class="mea__viewer"
+    data-evidence-viewer
+    role="dialog"
+    aria-modal="true"
+    aria-label="Case File 04 evidence image viewer"
+    aria-hidden="true"
+    hidden
+  >
+    <button type="button" class="mea__viewer-close" data-evidence-close aria-label="Close evidence viewer"><span aria-hidden="true">×</span></button>
+    <button type="button" class="mea__viewer-nav mea__viewer-nav--previous" data-evidence-previous aria-label="Previous evidence frame"><span aria-hidden="true">←</span></button>
+    <figure class="mea__viewer-figure">
+      <div class="mea__viewer-mat"><img data-evidence-viewer-image src="" alt=""></div>
+      <figcaption class="mea__viewer-caption"><span data-evidence-viewer-label>EXHIBIT 01</span><span>CASE / LL-04</span></figcaption>
+    </figure>
+    <button type="button" class="mea__viewer-nav mea__viewer-nav--next" data-evidence-next aria-label="Next evidence frame"><span aria-hidden="true">→</span></button>
+    <p class="mea__viewer-counter" data-evidence-counter>01 / {{ evidence_items.size }}</p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Living Lookbook Sep 01",
+  "tag": "section",
+  "class": "section-living-lookbook-evidence",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Living Lookbook Sep 01"
+    }
+  ]
+}
+{% endschema %}
