@@ -72,7 +72,7 @@
   endif
 
   assign size_guide_page = product.metafields.custom.size_guide.value
-  assign size_guide_url = '/pages/fit-guide'
+  assign size_guide_url = '/pages/size-guide'
   if size_guide_page != blank
     assign size_guide_url = size_guide_page.url
   endif
@@ -168,7 +168,11 @@
                   <legend>{{ option.name }}</legend>
                   {%- assign option_name_down = option.name | downcase -%}
                   {%- if option_name_down == 'size' and family == 'apparel' or option_name_down == 'size' and family == 'denim' or option_name_down == 'size' and family == 'footwear' -%}
-                    <a class="size-guide-trigger" href="{{ size_guide_url }}">Fit guide</a>
+                    {%- if size_guide_page != blank -%}
+                      <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>
+                    {%- else -%}
+                      <a class="size-guide-trigger" href="{{ size_guide_url }}">Fit guide</a>
+                    {%- endif -%}
                   {%- endif -%}
                 </div>
                 <div class="pdp-option-grid">
@@ -203,7 +207,6 @@
               {% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}
             </button>
           </div>
-          <div class="pdp-dynamic-checkout">{{ form | payment_button }}</div>
         {% endform %}
 
         {% render 'back-in-stock-form', product: product %}
@@ -223,30 +226,30 @@
       <section class="pdp-spec-grid" aria-label="Product specifications">
         {%- if family == 'fragrance' -%}
           {%- if ingredients_copy != blank -%}
-            <details class="pdp-spec"><summary class="melato-pdp-bible-section-title">Ingredients</summary><div class="pdp-rte">{{ ingredients_copy }}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Ingredients</summary><div class="pdp-rte">{{ ingredients_copy }}</div></details>
           {%- endif -%}
           {%- if use_copy != blank -%}
-            <details class="pdp-spec"><summary class="melato-pdp-bible-section-title">Use</summary><div class="pdp-rte">{{ use_copy }}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Use</summary><div class="pdp-rte">{{ use_copy }}</div></details>
           {%- endif -%}
         {%- else -%}
           {%- if material_details != blank or material_copy != blank -%}
-            <details class="pdp-spec"><summary class="melato-pdp-bible-section-title">Material</summary><div class="pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Material</summary><div class="pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div></details>
           {%- endif -%}
 
           {%- if care_details != blank or care_copy != blank -%}
-            <details class="pdp-spec"><summary class="melato-pdp-bible-section-title">Care</summary><div class="pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Care</summary><div class="pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div></details>
           {%- endif -%}
 
           {%- if fit_details != blank or fit_copy != blank -%}
-            <details class="pdp-spec"><summary class="melato-pdp-bible-section-title">Fit</summary><div class="pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">Melato Fit Guide</a></p></div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Fit</summary><div class="pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">Melato Fit Guide</a></p></div></details>
           {%- endif -%}
 
           {%- if construction_details != blank or construction_paragraph != blank -%}
-            <details class="pdp-spec"><summary class="melato-pdp-bible-section-title">Construction</summary><div class="pdp-rte">{%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail }}</li>{%- endfor -%}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph }}</p>{%- endif -%}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail }}</li>{%- endfor -%}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph }}</p>{%- endif -%}</div></details>
           {%- endif -%}
 
           {%- if use_copy != blank and family == 'bags' or use_copy != blank and family == 'accessories' -%}
-            <details class="pdp-spec"><summary class="melato-pdp-bible-section-title">Use</summary><div class="pdp-rte">{{ use_copy }}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Use</summary><div class="pdp-rte">{{ use_copy }}</div></details>
           {%- endif -%}
         {%- endif -%}
       </section>
@@ -281,6 +284,8 @@
 
   <script type="application/json" id="PDPVariants-{{ section.id }}">{{ product.variants | json }}</script>
 </section>
+
+{% render 'size-guide-drawer', product: product %}
 
 <script>
 (function(){
@@ -364,7 +369,7 @@
 #MelatoPDP-{{ section.id }} .pdp-option{margin:0 0 18px;padding:0;border:0}
 #MelatoPDP-{{ section.id }} .pdp-option__header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:9px}
 #MelatoPDP-{{ section.id }} .pdp-option legend{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--melato-pdp-section-title)}
-#MelatoPDP-{{ section.id }} .size-guide-trigger{color:var(--melato-pdp-section-title);font-size:10px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid currentColor}
+#MelatoPDP-{{ section.id }} .size-guide-trigger{appearance:none;background:none;padding:0;border:0;border-bottom:1px solid currentColor;color:var(--melato-pdp-section-title);font:inherit;font-size:10px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:pointer}
 #MelatoPDP-{{ section.id }} .pdp-option-grid{display:flex;gap:8px;flex-wrap:wrap}
 #MelatoPDP-{{ section.id }} .pdp-choice input{position:absolute;opacity:0}
 #MelatoPDP-{{ section.id }} .pdp-choice span{display:block;min-width:54px;padding:13px 15px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);text-align:center;cursor:pointer;font-weight:800}
@@ -376,7 +381,6 @@
 #MelatoPDP-{{ section.id }} .pdp-qty{background:rgba(255,255,255,.05);color:var(--pdp-text);border:1px solid rgba(255,255,255,.13);text-align:center}
 #MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{background:var(--pdp-accent);color:#fff;font-weight:900;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 #MelatoPDP-{{ section.id }} .pdp-atc--oos{background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.45)!important;border:1px solid rgba(255,255,255,.12)}
-#MelatoPDP-{{ section.id }} .pdp-dynamic-checkout{margin-top:12px}
 #MelatoPDP-{{ section.id }} .pdp-shipping-returns{margin:18px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;line-height:1.55;color:color-mix(in srgb,var(--pdp-text) 72%,transparent)}
 #MelatoPDP-{{ section.id }} .pdp-content-stack{display:grid;gap:18px;margin-top:28px}
 #MelatoPDP-{{ section.id }} .pdp-panel{padding:30px}
@@ -387,7 +391,8 @@
 #MelatoPDP-{{ section.id }} .pdp-spec summary{padding:17px;cursor:pointer;font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
 #MelatoPDP-{{ section.id }} .pdp-spec .pdp-rte{padding:0 17px 17px}
 #MelatoPDP-{{ section.id }} .pdp-spec ul{margin:0;padding-left:18px}
-#MelatoPDP-{{ section.id }} .pdp-inline-link{margin:14px 0 0}#MelatoPDP-{{ section.id }} .pdp-inline-link a{color:var(--melato-pdp-section-title)}
+#MelatoPDP-{{ section.id }} .pdp-inline-link{margin:14px 0 0}
+#MelatoPDP-{{ section.id }} .pdp-inline-link a{color:var(--melato-pdp-section-title)}
 #MelatoPDP-{{ section.id }} .pdp-set-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 #MelatoPDP-{{ section.id }} .pdp-set-card{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:18px;color:var(--pdp-text)}
 #MelatoPDP-{{ section.id }} .pdp-set-image{display:block;width:min(250px,100%);height:auto;border-radius:18px}
