@@ -11,6 +11,7 @@
     "minimumDistinctPhotoStyles": 2,
     "maxContextualMerchandisingModules": 2,
     "relatedProductsLimit": 4,
+    "fitGuideFallbackUrl": "/pages/size-guide",
     "descriptionWordTarget": {"min": 35, "max": 80, "hardMaxWithoutOwnerApproval": 110},
     "pdpBibleVersionMetafieldValue": "1.0.0"
   },
