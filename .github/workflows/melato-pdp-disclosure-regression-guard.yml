@@ -28,9 +28,19 @@ jobs:
               failures.append('Canonical PDP section is missing.')
           else:
               source = pdp.read_text()
-              for label in ('Construction', 'Fit', 'Material', 'Care', 'Shipping &amp; returns'):
+              for label in ('Construction', 'Fit', 'Material', 'Care'):
                   if f'<summary>{label}</summary>' not in source:
                       failures.append(f'Canonical PDP is missing the {label} disclosure.')
+
+              canonical_shipping = (
+                  'Ships in 1 to 3 business days. Complimentary delivery on all orders. '
+                  'Returns accepted on eligible unworn items under the posted return policy.'
+              )
+              if canonical_shipping not in source:
+                  failures.append('Canonical PDP Shipping & Returns microcopy is missing or changed.')
+
+              if '<summary>Shipping &amp; returns</summary>' in source or '<summary>Shipping & returns</summary>' in source:
+                  failures.append('Duplicate Shipping & Returns disclosure returned. Bible requires one concise PDP microcopy source.')
 
           # The native <details> open state belongs to the shopper. No global cleanup,
           # observer, audit patch, or enhancement runtime may force-close PDP disclosures.
