@@ -14,6 +14,8 @@
 /config/melato-product-page-bible.json @TheHighBrid
 /scripts/validate-melato-product-page-bible.mjs @TheHighBrid
 /.github/workflows/melato-product-page-bible-guard.yml @TheHighBrid
+/.github/workflows/melato-pdp-disclosure-regression-guard.yml @TheHighBrid
+/.github/workflows/melato-storefront-integrity-guard.yml @TheHighBrid
 
 # Product Page Bible storefront implementation
 /templates/product.json @TheHighBrid
