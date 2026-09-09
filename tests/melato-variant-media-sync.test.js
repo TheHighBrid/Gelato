@@ -33,8 +33,8 @@ test('variant media sync is generic and does not hard-code a product handle', ()
   assert.doesNotMatch(section, /product\.handle\s*==/);
 });
 
-test('variant media sync keeps Complete the Set language aligned with the selected color', () => {
+test('variant media sync keeps Complete the Set language aligned across color changes', () => {
   const section = read('sections/melato-variant-media-sync.liquid');
-  assert.match(section, /multiple colorways/i);
+  assert.match(section, /\^full\\s\/i/);
   assert.match(section, /'Full ' \+ colorInput\.value \+ ' uniform'/);
 });
