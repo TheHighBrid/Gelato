@@ -1,10 +1,28 @@
 # MELATO owner-protected systems.
-# These files control the product-aware announcement color contract.
+# These files control product architecture, product-aware color behavior, and mandatory PDP policy.
 # Any functional change requires explicit review/authorization from the repository owner.
 
+# Dynamic product color architecture
 /sections/melato-announcement-bar.liquid @TheHighBrid
 /snippets/melato-product-color-engine.liquid @TheHighBrid
 /assets/melato-ann-color.js @TheHighBrid
 /assets/melato-dynamic-bar.js @TheHighBrid
+
+# Product Page Bible governance
+/AGENTS.md @TheHighBrid
+/docs/MELATO_PRODUCT_PAGE_BIBLE.md @TheHighBrid
+/config/melato-product-page-bible.json @TheHighBrid
+/scripts/validate-melato-product-page-bible.mjs @TheHighBrid
+/.github/workflows/melato-product-page-bible-guard.yml @TheHighBrid
+
+# Product Page Bible storefront implementation
+/templates/product.json @TheHighBrid
+/sections/melato-product-page-rebuild.liquid @TheHighBrid
+/sections/related-products.liquid @TheHighBrid
+/sections/melato-pdp-contextual-merchandising.liquid @TheHighBrid
+
+# Existing policy-layer guard
 /.github/workflows/melato-brand-policy-guard.yml @TheHighBrid
+
+# Protect this ownership map itself
 /.github/CODEOWNERS @TheHighBrid
