@@ -1,0 +1,153 @@
+{
+  "schemaVersion": "1.0.0",
+  "adopted": "2026-09-08",
+  "status": "MANDATORY",
+  "authority": "docs/MELATO_PRODUCT_PAGE_BIBLE.md",
+  "vendor": "Melato",
+  "defaults": {
+    "inventoryPerSellableVariantWhenUnspecified": 7,
+    "inventoryTrackingForPhysicalProducts": true,
+    "publishToAllEligiblePublications": true,
+    "minimumDistinctPhotoStyles": 2,
+    "maxContextualMerchandisingModules": 2,
+    "relatedProductsLimit": 4,
+    "descriptionWordTarget": {"min": 35, "max": 80, "hardMaxWithoutOwnerApproval": 110},
+    "pdpBibleVersionMetafieldValue": "1.0.0"
+  },
+  "canonicalProductMetafields": {
+    "subtitle": "single_line_text_field",
+    "background_hex_color_code": "color",
+    "foreground_hex_color_code": "color",
+    "palette_1": "color",
+    "palette_2": "color",
+    "palette_3": "color",
+    "fit_notes": "multi_line_text_field",
+    "material_composition": "multi_line_text_field",
+    "care_instructions": "multi_line_text_field",
+    "construction": "list.single_line_text_field",
+    "ingredients": "multi_line_text_field",
+    "use": "multi_line_text_field",
+    "made_in": "single_line_text_field",
+    "size_guide": "page_reference",
+    "companion_product": "product_reference",
+    "related_products": "list.product_reference",
+    "material_profile": "single_line_text_field",
+    "product_specification": "metaobject_reference",
+    "pdp_bible_version": "single_line_text_field"
+  },
+  "legacyAliasesReadOnly": [
+    "fit",
+    "care",
+    "care_notes",
+    "composition",
+    "fabric_composition",
+    "matching_product",
+    "matching_piece",
+    "set_partner",
+    "bar_bg",
+    "bar_fg"
+  ],
+  "legacyWritePolicy": "FORBIDDEN",
+  "dataOwnership": {
+    "taxonomyFacts": "shopify_product_category_and_category_metafields",
+    "verifiedTechnicalEvidence": "melato_product_specification",
+    "pdpPresentationAndRelationships": "product_metafields_custom_namespace"
+  },
+  "photoStyles": ["Front", "Back", "Macro / Close-up", "Side", "Inside Look", "Model Posing"],
+  "altTextPattern": "[Product Name] - [View Type] - [Colorway]",
+  "sizes": {
+    "alphaApparel": ["XS", "S", "M", "L", "XL", "XXL"],
+    "waist": ["28", "29", "30", "31", "32", "34", "36", "38", "40"],
+    "footwear": ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12"],
+    "universal": ["ONE SIZE"],
+    "volume": ["10 mL", "30 mL", "50 mL", "100 mL"]
+  },
+  "optionNames": ["Size", "Color", "Volume"],
+  "pdpOrder": [
+    "media",
+    "name",
+    "price",
+    "variants",
+    "purchase_controls",
+    "shipping_returns",
+    "story",
+    "technical_sections",
+    "complete_the_set",
+    "you_might_also_like",
+    "recently_viewed",
+    "contextual_merchandising",
+    "footer"
+  ],
+  "categoryMatrix": {
+    "apparel": {"required": ["Material", "Care", "Fit"], "conditional": ["Construction", "Complete the Set"]},
+    "denim": {"required": ["Material", "Care", "Fit", "Construction"], "conditional": ["Complete the Set"]},
+    "footwear": {"required": ["Material", "Care", "Fit", "Construction"], "conditional": ["Complete the Set"]},
+    "bags": {"required": ["Material", "Care"], "conditional": ["Construction", "Use"]},
+    "accessories": {"required": ["Material", "Care"], "conditional": ["Construction", "Fit", "Use"]},
+    "fragrance": {"required": ["Ingredients", "Use"], "conditional": []},
+    "other": {"required": [], "conditional": ["Material", "Care", "Fit", "Construction", "Use"]}
+  },
+  "recommendations": {
+    "heading": "You might also like",
+    "priority": ["custom.related_products", "shopify_recommendations"],
+    "limit": 4
+  },
+  "recentlyViewed": {"heading": "Recently viewed", "required": true},
+  "completeTheSet": {"canonicalRelationship": "custom.companion_product"},
+  "contextualMerchandising": {
+    "approved": ["New Arrivals", "Accessories", "Fragrance", "Bags", "Denim", "The Uniform"],
+    "densityRule": {"fourOrMoreEnrichmentSections": 1, "threeOrFewerEnrichmentSections": 2},
+    "selection": {
+      "fragrance": ["New Arrivals", "Accessories"],
+      "bags": ["New Arrivals", "The Uniform"],
+      "accessories": ["New Arrivals", "The Uniform"],
+      "denim": ["New Arrivals", "The Uniform"],
+      "uniform": ["New Arrivals", "Accessories"],
+      "apparel": ["New Arrivals", "Accessories"],
+      "footwear": ["New Arrivals", "The Uniform"],
+      "other": ["New Arrivals", "Accessories"]
+    },
+    "fallback": ["New Arrivals", "Accessories", "The Uniform", "Denim", "Bags", "Fragrance"],
+    "collectionHandles": {
+      "New Arrivals": "new-arrivals",
+      "Accessories": "accessories",
+      "Fragrance": "fragrance",
+      "Bags": "bags",
+      "Denim": "denim",
+      "The Uniform": "tracksuits"
+    }
+  },
+  "colorContract": {
+    "background": "custom.background_hex_color_code",
+    "foreground": "custom.foreground_hex_color_code",
+    "palette": ["custom.palette_1", "custom.palette_2", "custom.palette_3"],
+    "minimumTextContrast": 4.5,
+    "rotationIntervalMs": 4200,
+    "reducedMotionDisablesRotation": true,
+    "consumers": ["announcement_bar", "sticky_header_tint", "pdp_section_titles"]
+  },
+  "shippingReturnsCopy": "Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.",
+  "prohibitedDuplicateClaims": ["secure checkout", "complimentary delivery", "returns accepted"],
+  "qualityCopy": {
+    "allowedSparingly": ["premium", "refined", "distinctive", "high-quality", "sculpted", "structured", "soft", "dense", "lightweight", "limited"],
+    "prohibitedUnsubstantiated": ["best", "perfect", "top shelf", "world-class", "unmatched", "ultimate"]
+  },
+  "seo": {
+    "titlePattern": "[Product Name] | [Product Type] | Melato",
+    "preferredTitleMaxCharacters": 60,
+    "metaDescriptionCharacters": {"min": 140, "max": 160}
+  },
+  "soldOutVariantPolicy": "VISIBLE_DISABLED",
+  "mediaPolicy": {"collages": "FORBIDDEN", "ghostMannequinDefault": "FORBIDDEN"},
+  "qa": {
+    "requiresCategory": true,
+    "requiresCollection": true,
+    "requiresPrice": true,
+    "requiresSeo": true,
+    "requiresBibleStamp": true,
+    "requiresAllEligiblePublications": true,
+    "requiresMinimumDistinctPhotoStyles": true,
+    "forbidsInventedFacts": true,
+    "forbidsNewLegacyWrites": true
+  }
+}
