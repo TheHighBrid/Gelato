@@ -33,6 +33,10 @@
       "type": "melato-product-safe-accent",
       "settings": {}
     },
+    "variant_media_sync": {
+      "type": "melato-variant-media-sync",
+      "settings": {}
+    },
     "related": {
       "type": "related-products",
       "settings": {
@@ -52,5 +56,5 @@
       "settings": {}
     }
   },
-  "order": ["main_product", "proof_integrity", "pdp_unification", "safe_accent", "related", "recently_viewed", "contextual_merchandising"]
+  "order": ["main_product", "proof_integrity", "pdp_unification", "safe_accent", "variant_media_sync", "related", "recently_viewed", "contextual_merchandising"]
 }
