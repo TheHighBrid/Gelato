@@ -42,6 +42,7 @@ if (contract) {
   if (contract.defaults?.inventoryPerSellableVariantWhenUnspecified !== 7) fail('unspecified inventory default must be 7');
   if (contract.defaults?.minimumDistinctPhotoStyles !== 2) fail('minimum distinct photo styles must be 2');
   if (contract.defaults?.maxContextualMerchandisingModules !== 2) fail('contextual merchandising maximum must be 2');
+  if (contract.defaults?.fitGuideFallbackUrl !== '/pages/size-guide') fail('fit guide fallback must remain /pages/size-guide');
   if (contract.soldOutVariantPolicy !== 'VISIBLE_DISABLED') fail('sold-out variants must remain visible and disabled');
   if (contract.mediaPolicy?.collages !== 'FORBIDDEN') fail('collages must remain forbidden');
   if (contract.mediaPolicy?.ghostMannequinDefault !== 'FORBIDDEN') fail('ghost mannequin default must remain forbidden');
@@ -96,6 +97,15 @@ for (const field of ['fit_notes', 'material_composition', 'care_instructions', '
 requireText(pdp, 'melato-pdp-bible-section-title', pdpPath);
 requireText(pdp, 'Ships in 1 to 3 business days.', pdpPath);
 requireText(pdp, 'Complimentary delivery on all orders.', pdpPath);
+requireText(pdp, '/pages/size-guide', pdpPath);
+requireText(pdp, 'data-open-size-drawer', pdpPath);
+requireText(pdp, "render 'size-guide-drawer', product: product", pdpPath);
+requireText(pdp, '<summary>Fit</summary>', pdpPath);
+requireText(pdp, '<summary>Material</summary>', pdpPath);
+requireText(pdp, '<summary>Care</summary>', pdpPath);
+requireText(pdp, '<summary>Construction</summary>', pdpPath);
+forbidText(pdp, 'payment_button', pdpPath);
+forbidText(pdp, 'content_for_additional_checkout_buttons', pdpPath);
 
 const merch = read(merchPath);
 for (const handle of ['new-arrivals', 'accessories', 'fragrance', 'bags', 'denim', 'tracksuits']) {
@@ -118,7 +128,8 @@ for (const protectedPath of [
   '/sections/melato-product-page-rebuild.liquid',
   '/sections/melato-pdp-contextual-merchandising.liquid',
   '/scripts/validate-melato-product-page-bible.mjs',
-  '/.github/workflows/melato-product-page-bible-guard.yml'
+  '/.github/workflows/melato-product-page-bible-guard.yml',
+  '/.github/workflows/melato-pdp-disclosure-regression-guard.yml'
 ]) {
   requireText(codeowners, protectedPath, codeownersPath);
 }
