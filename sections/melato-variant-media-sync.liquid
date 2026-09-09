@@ -1,0 +1,153 @@
+{% comment %}
+  Melato variant media sync.
+
+  Generic enhancement for products with appearance-changing Color variants.
+  Product media can opt into variant scoping by using this alt format:
+  <product title>, <Color option value>, <view label>
+
+  The canonical PDP still owns variant selection, price, inventory and the main
+  product form. This section only scopes gallery thumbnails to the selected
+  Color and keeps Complete the Set color language aligned with that selection.
+  Products without structured color media remain unchanged.
+{% endcomment %}
+
+<div id="MelatoVariantMediaSync-{{ section.id }}" hidden>
+  <template data-melato-variant-media-template>
+    {%- for media in product.media -%}
+      {%- if media.media_type == 'image' -%}
+        {%- liquid
+          assign media_alt = media.alt | strip
+          assign media_color = blank
+          assign alt_parts = media_alt | split: ', '
+          if alt_parts.size >= 3 and alt_parts[0] == product.title
+            assign media_color = alt_parts[1] | strip
+          endif
+        -%}
+        {%- if media_color != blank -%}
+          <button
+            class="pdp-thumb"
+            type="button"
+            data-melato-variant-media-source
+            data-color-key="{{ media_color | handleize }}"
+            data-media-src="{{ media | image_url: width: 1800 }}"
+            data-media-alt="{{ media_alt | escape }}"
+            aria-label="Show {{ media_alt | escape }}"
+            role="listitem"
+          >
+            {{ media | image_url: width: 220 | image_tag:
+              class: 'pdp-thumb-image',
+              loading: 'lazy',
+              widths: '110, 160, 220',
+              sizes: '110px',
+              alt: media_alt
+            }}
+          </button>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </template>
+</div>
+
+<script data-melato-variant-media-sync>
+(function () {
+  var host = document.getElementById('MelatoVariantMediaSync-{{ section.id }}');
+  var root = document.querySelector('.melato-pdp-rebuild');
+  if (!host || !root) return;
+
+  var template = host.querySelector('[data-melato-variant-media-template]');
+  var thumbs = root.querySelector('.pdp-thumbs');
+  var mainImage = root.querySelector('.pdp-main-image');
+  if (!template || !thumbs || !mainImage) return;
+
+  function normalize(value) {
+    return String(value || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  }
+
+  function selectedColorInput() {
+    var fieldsets = root.querySelectorAll('.pdp-option');
+    for (var i = 0; i < fieldsets.length; i += 1) {
+      var legend = fieldsets[i].querySelector('legend');
+      var label = legend ? legend.textContent.trim().toLowerCase() : '';
+      if (label === 'color' || label === 'colour' || label === 'couleur') {
+        return fieldsets[i].querySelector('input:checked');
+      }
+    }
+    return null;
+  }
+
+  function bindThumb(button) {
+    button.addEventListener('click', function () {
+      thumbs.querySelectorAll('[data-pdp-thumb]').forEach(function (item) {
+        item.classList.remove('is-active');
+      });
+      button.classList.add('is-active');
+      mainImage.src = button.getAttribute('data-media-src');
+      mainImage.alt = button.getAttribute('data-media-alt') || mainImage.alt;
+      mainImage.removeAttribute('srcset');
+    });
+  }
+
+  function syncVariantMedia() {
+    var colorInput = selectedColorInput();
+    if (!colorInput) return;
+
+    var colorKey = normalize(colorInput.value);
+    var sources = Array.prototype.filter.call(
+      template.content.querySelectorAll('[data-melato-variant-media-source]'),
+      function (item) { return item.getAttribute('data-color-key') === colorKey; }
+    );
+
+    if (!sources.length) return;
+
+    thumbs.innerHTML = '';
+    sources.forEach(function (source, index) {
+      var button = source.cloneNode(true);
+      button.setAttribute('data-pdp-thumb', '');
+      if (index === 0) button.classList.add('is-active');
+      bindThumb(button);
+      thumbs.appendChild(button);
+    });
+    thumbs.setAttribute('data-variant-media-scoped', 'true');
+
+    var first = sources[0];
+    if (first) {
+      mainImage.src = first.getAttribute('data-media-src');
+      mainImage.alt = first.getAttribute('data-media-alt') || mainImage.alt;
+      mainImage.removeAttribute('srcset');
+    }
+
+    var setHeading = root.querySelector('[id^="PDPSet-"]');
+    if (setHeading && /multiple colorways/i.test(setHeading.textContent || '')) {
+      setHeading.textContent = 'Full ' + colorInput.value + ' uniform';
+    }
+  }
+
+  document.addEventListener('variant:change', syncVariantMedia);
+  root.querySelectorAll('.pdp-option input').forEach(function (input) {
+    input.addEventListener('change', function () {
+      window.requestAnimationFrame(syncVariantMedia);
+    });
+  });
+
+  syncVariantMedia();
+})();
+</script>
+
+<style>
+  .melato-pdp-rebuild .pdp-thumbs[data-variant-media-scoped="true"] {
+    grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Variant media sync",
+  "tag": "section",
+  "class": "section-melato-variant-media-sync",
+  "settings": []
+}
+{% endschema %}
