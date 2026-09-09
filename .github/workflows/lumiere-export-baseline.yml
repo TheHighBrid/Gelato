@@ -1,0 +1,42 @@
+name: Lumière private baseline export
+
+on:
+  push:
+    branches:
+      - lumiere/export-baseline
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-theme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout pinned Gelato source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Build private baseline package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git ls-files \
+            | grep -Ev '\.(zip|docx|mht)$' \
+            | grep -v '^\.github/workflows/lumiere-export-baseline\.yml$' \
+            > /tmp/lumiere-files.txt
+          tar -czf /tmp/gelato-lumiere-baseline.tar.gz -T /tmp/lumiere-files.txt
+          sha256sum /tmp/gelato-lumiere-baseline.tar.gz | tee /tmp/gelato-lumiere-baseline.sha256
+          printf 'SOURCE_COMMIT=%s\n' "$GITHUB_SHA" > /tmp/gelato-lumiere-source.env
+
+      - name: Upload private baseline
+        uses: actions/upload-artifact@v4
+        with:
+          name: gelato-lumiere-private-baseline
+          path: |
+            /tmp/gelato-lumiere-baseline.tar.gz
+            /tmp/gelato-lumiere-baseline.sha256
+            /tmp/gelato-lumiere-source.env
+          if-no-files-found: error
+          retention-days: 1
