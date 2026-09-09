@@ -1,0 +1,47 @@
+name: Melato Product Page Bible Guard
+
+on:
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - 'docs/MELATO_PRODUCT_PAGE_BIBLE.md'
+      - 'config/melato-product-page-bible.json'
+      - 'templates/product*.json'
+      - 'sections/melato-product-page-rebuild.liquid'
+      - 'sections/melato-pdp-contextual-merchandising.liquid'
+      - 'sections/melato-announcement-bar.liquid'
+      - 'snippets/melato-product-color-engine.liquid'
+      - 'scripts/validate-melato-product-page-bible.mjs'
+      - '.github/CODEOWNERS'
+      - '.github/workflows/melato-product-page-bible-guard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'AGENTS.md'
+      - 'docs/MELATO_PRODUCT_PAGE_BIBLE.md'
+      - 'config/melato-product-page-bible.json'
+      - 'templates/product*.json'
+      - 'sections/melato-product-page-rebuild.liquid'
+      - 'sections/melato-pdp-contextual-merchandising.liquid'
+      - 'sections/melato-announcement-bar.liquid'
+      - 'snippets/melato-product-color-engine.liquid'
+      - 'scripts/validate-melato-product-page-bible.mjs'
+      - '.github/CODEOWNERS'
+      - '.github/workflows/melato-product-page-bible-guard.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  product-page-bible:
+    name: Product Page Bible compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate canonical Melato PDP contract
+        run: node scripts/validate-melato-product-page-bible.mjs
