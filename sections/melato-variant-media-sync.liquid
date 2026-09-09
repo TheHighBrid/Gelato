@@ -121,7 +121,8 @@
     }
 
     var setHeading = root.querySelector('[id^="PDPSet-"]');
-    if (setHeading && /multiple colorways/i.test(setHeading.textContent || '')) {
+    var setHeadingText = setHeading ? (setHeading.textContent || '').trim() : '';
+    if (setHeading && /^full\s/i.test(setHeadingText)) {
       setHeading.textContent = 'Full ' + colorInput.value + ' uniform';
     }
   }
