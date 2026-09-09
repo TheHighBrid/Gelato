@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const read = (p) => fs.readFileSync(path.join(root, p), 'utf8');
+const parseShopifyJson = (content) => JSON.parse(content.replace(/\/\*[\s\S]*?\*\//g, '').trim());
 const fail = (message) => {
   console.error(`PRODUCT PAGE BIBLE VIOLATION: ${message}`);
   process.exitCode = 1;
@@ -68,7 +69,12 @@ requireText(agents, biblePath, agentsPath);
 requireText(agents, contractPath, agentsPath);
 requireText(agents, 'Legacy fields are migration inputs only', agentsPath);
 
-const template = JSON.parse(read(templatePath));
+let template = {};
+try {
+  template = parseShopifyJson(read(templatePath));
+} catch (error) {
+  fail(`${templatePath} is not valid Shopify JSON: ${error.message}`);
+}
 const order = template.order || [];
 const expectedSequence = ['main_product', 'related', 'recently_viewed', 'contextual_merchandising'];
 let cursor = -1;
