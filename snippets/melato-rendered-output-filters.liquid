@@ -1,7 +1,7 @@
 {% comment %}
-  Melato PDP precision cleanup, Sep 8 2026.
-  Runs the preserved base storefront filter first, then removes only confirmed
-  duplicated or category-inappropriate PDP reassurance rows.
+  Melato PDP precision cleanup, Sep 10 2026.
+  Runs the preserved base storefront filter first, then closes confirmed
+  PDP copy, sizing and Complete-the-Set regressions at the final server-render layer.
 {% endcomment %}
 
 {%- capture melato_base_output -%}
@@ -12,46 +12,74 @@
   assign output = melato_base_output
 
   if context == 'main' and template.name == 'product' and product
-    # This fallback exposes an internal missing-measurements state and is wrong
-    # for fragrance/eyewear. If approved measurements exist, the dedicated
-    # product Fit/size-guide content remains available elsewhere on the PDP.
-    assign generic_sizing_row = '<div class="pdp-conversion-assurances__fact"><strong>Sizing</strong><span><a href="/pages/size-guide">Fit guidance</a> for products without approved garment measurements.</span></div>'
-    assign output = output | replace: generic_sizing_row, ''
+    assign product_title_down = product.title | downcase
+    assign size_guide_page = product.metafields.custom.size_guide.value
+    assign size_guide_handle = size_guide_page.handle | default: '' | downcase
+    assign has_specific_size_guide = false
+    if size_guide_page != blank and size_guide_handle != blank and size_guide_handle != 'size-guide' and size_guide_handle != 'melato-size-guide' and size_guide_handle != 'sizing-guide' and size_guide_handle != 'fit-guide'
+      assign has_specific_size_guide = true
+    endif
+
+    # The base layer normalizes </strong><span> to </strong> <span>.
+    # Match the normalized server HTML, not the pre-normalization source string.
+    assign generic_sizing_row = '<div class="pdp-conversion-assurances__fact"><strong>Sizing</strong> <span><a href="/pages/size-guide">Fit guidance</a> for products without approved garment measurements.</span></div>'
+    assign legacy_generic_sizing_row = '<div class="pdp-conversion-assurances__fact"><strong>Sizing</strong><span><a href="/pages/size-guide">Fit guidance</a> for products without approved garment measurements.</span></div>'
+    assign output = output | replace: generic_sizing_row, '' | replace: legacy_generic_sizing_row, ''
 
     # Keep the concise trust-list return promise and the full Shipping & returns
-    # section. Remove intermediary rows that repeat the same policy.
-    assign conversion_returns_row = '<div class="pdp-conversion-assurances__fact"><strong>Returns</strong><span>Approved eligible returns include free standard return shipping through the Melato return method.</span></div>'
-    assign proof_returns_row = '<div><strong>Returns</strong><span>Eligible unused products follow the posted Melato return policy.</span></div>'
-    assign proof_fragrance_returns_row = '<div><strong>Returns</strong><span>Unopened fragrance products follow the posted Melato return policy.</span></div>'
-    assign output = output | replace: conversion_returns_row, '' | replace: proof_returns_row, '' | replace: proof_fragrance_returns_row, ''
+    # content. Remove the intermediary metadata row that repeats the policy.
+    assign conversion_returns_row = '<div class="pdp-conversion-assurances__fact"><strong>Returns</strong> <span>Approved eligible returns include free standard return shipping through the Melato return method.</span></div>'
+    assign legacy_conversion_returns_row = '<div class="pdp-conversion-assurances__fact"><strong>Returns</strong><span>Approved eligible returns include free standard return shipping through the Melato return method.</span></div>'
+    assign proof_returns_row = '<div><strong>Returns</strong> <span>Eligible unused products follow the posted Melato return policy.</span></div>'
+    assign legacy_proof_returns_row = '<div><strong>Returns</strong><span>Eligible unused products follow the posted Melato return policy.</span></div>'
+    assign proof_fragrance_returns_row = '<div><strong>Returns</strong> <span>Unopened fragrance products follow the posted Melato return policy.</span></div>'
+    assign legacy_proof_fragrance_returns_row = '<div><strong>Returns</strong><span>Unopened fragrance products follow the posted Melato return policy.</span></div>'
+    assign output = output | replace: conversion_returns_row, '' | replace: legacy_conversion_returns_row, '' | replace: proof_returns_row, '' | replace: legacy_proof_returns_row, '' | replace: proof_fragrance_returns_row, '' | replace: legacy_proof_fragrance_returns_row, ''
 
-    # The detailed Fit section is the authoritative fit content. Remove the
-    # automatically repeated above-fold copy rather than changing product data.
+    # The detailed Fit section remains authoritative. Remove the automatically
+    # repeated above-fold fact when the same product fit copy was injected there.
     assign fit_preview = product.metafields.melato.fit.value | default: product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit_notes.value | default: product.metafields.custom.fit.value
     if fit_preview != blank
       capture fit_row
+        echo '<div class="pdp-conversion-assurances__fact"><strong>Fit</strong> <span>'
+        echo fit_preview | strip_html | strip_newlines | truncate: 170 | escape
+        echo '</span></div>'
+      endcapture
+      capture legacy_fit_row
         echo '<div class="pdp-conversion-assurances__fact"><strong>Fit</strong><span>'
         echo fit_preview | strip_html | strip_newlines | truncate: 170 | escape
         echo '</span></div>'
       endcapture
-      assign output = output | replace: fit_row, ''
+      assign output = output | replace: fit_row, '' | replace: legacy_fit_row, ''
     endif
+
+    # A generic fit drawer must never claim to be product measurements.
+    unless has_specific_size_guide
+      assign product_measurements_heading = product.title | append: ' measurements'
+      assign output = output | replace: product_measurements_heading, 'Melato Fit Guide'
+      assign output = output | replace: '>Product measurements</button>', '>Fit guide</button>'
+    endunless
 
     # Never present design provenance as manufacturing origin.
     assign origin_copy = product.metafields.custom.made_in.value | default: product.metafields.custom.country_of_origin.value
     if origin_copy != blank and origin_copy contains 'Designed in'
       capture malformed_origin_row
+        echo '<div class="pdp-conversion-assurances__fact"><strong>Origin</strong> <span>Made in '
+        echo origin_copy | escape
+        echo '</span></div>'
+      endcapture
+      capture legacy_malformed_origin_row
         echo '<div class="pdp-conversion-assurances__fact"><strong>Origin</strong><span>Made in '
         echo origin_copy | escape
         echo '</span></div>'
       endcapture
-      assign output = output | replace: malformed_origin_row, ''
+      assign output = output | replace: malformed_origin_row, '' | replace: legacy_malformed_origin_row, ''
     endif
 
     assign design_origin = product.metafields.custom.design_origin.value
     if design_origin != blank
       capture design_markup
-        echo '<div class="pdp-conversion-assurances__fact"><strong>Design</strong><span>'
+        echo '<div class="pdp-conversion-assurances__fact"><strong>Design</strong> <span>'
         echo design_origin | escape
         echo '</span></div>'
       endcapture
@@ -60,6 +88,108 @@
         assign facts_with_design = facts_open | append: design_markup
         assign output = output | replace_first: facts_open, facts_with_design
       endunless
+    endif
+
+    # Resolve the companion product from the same canonical metafield chain as
+    # the PDP section and replace the passive cross-link with a real two-item add.
+    assign matching_product = product.metafields.custom.companion_product.value
+    if matching_product == blank
+      assign matching_product = product.metafields.custom.matching_product.value | default: product.metafields.custom.matching_piece.value | default: product.metafields.custom.set_partner.value
+    endif
+
+    if matching_product != blank
+      assign current_variant = product.selected_or_first_available_variant
+      assign matching_variant = matching_product.selected_or_first_available_variant
+      assign current_label = 'Jacket size'
+      assign matching_label = 'Pant size'
+      if product_title_down contains 'pant'
+        assign current_label = 'Pant size'
+        assign matching_label = 'Jacket size'
+      endif
+      assign can_add_full_set = true
+      if current_variant == blank or matching_variant == blank
+        assign can_add_full_set = false
+      endif
+
+      capture legacy_set_link
+        echo '<a class="pdp-set-cta" href="'
+        echo matching_product.url
+        echo '">View matching piece</a>'
+      endcapture
+
+      capture full_set_markup
+        echo '<div class="melato-full-set-action melato-full-set-action--server" data-melato-server-full-set data-currency="'
+        echo shop.currency | escape
+        echo '">'
+        echo '<span data-melato-full-set hidden aria-hidden="true"></span>'
+        echo '<div class="melato-full-set-selectors">'
+        echo '<label class="melato-full-set-selector"><span>'
+        echo current_label
+        echo '</span><select data-melato-set-current aria-label="'
+        echo current_label
+        echo '">'
+        for variant in product.variants
+          if variant.available
+            echo '<option value="'
+            echo variant.id
+            echo '" data-price="'
+            echo variant.price
+            echo '"'
+            if current_variant != blank and variant.id == current_variant.id
+              echo ' selected'
+            endif
+            echo '>'
+            echo variant.title | escape
+            echo '</option>'
+          endif
+        endfor
+        echo '</select></label>'
+        echo '<label class="melato-full-set-selector"><span>'
+        echo matching_label
+        echo '</span><select data-melato-set-matching aria-label="'
+        echo matching_label
+        echo '">'
+        for variant in matching_product.variants
+          if variant.available
+            echo '<option value="'
+            echo variant.id
+            echo '" data-price="'
+            echo variant.price
+            echo '"'
+            if matching_variant != blank and variant.id == matching_variant.id
+              echo ' selected'
+            endif
+            echo '>'
+            echo variant.title | escape
+            echo '</option>'
+          endif
+        endfor
+        echo '</select></label>'
+        echo '</div>'
+        echo '<p class="melato-full-set-price"><span>Full set</span><strong data-melato-set-total>'
+        if current_variant != blank and matching_variant != blank
+          echo current_variant.price | plus: matching_variant.price | money_with_currency
+        else
+          echo 'Unavailable'
+        endif
+        echo '</strong></p>'
+        echo '<button type="button" class="melato-full-set-button" data-melato-set-add'
+        unless can_add_full_set
+          echo ' disabled'
+        endunless
+        echo '>ADD FULL SET</button>'
+        echo '<p class="melato-full-set-status" data-melato-set-status role="status" aria-live="polite"></p>'
+        echo '<a class="pdp-set-cta" href="'
+        echo matching_product.url
+        echo '">View matching piece</a>'
+        echo '</div>'
+        echo '<style>.melato-full-set-action--server{display:grid;gap:12px;margin-top:14px}.melato-full-set-selectors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.melato-full-set-selector{display:grid;gap:6px}.melato-full-set-selector>span{font-size:10px;line-height:1.2;letter-spacing:.12em;text-transform:uppercase}.melato-full-set-selector select{width:100%;min-height:44px;border:1px solid rgba(8,8,8,.22);border-radius:0;background:transparent;color:inherit;padding:0 12px;font:inherit}.melato-full-set-price{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0;font-size:12px}.melato-full-set-price span{text-transform:uppercase;letter-spacing:.1em;font-size:10px}.melato-full-set-action--server .pdp-set-cta{display:inline-flex;width:max-content}.melato-full-set-status{min-height:1.2em;margin:0;font-size:11px}@media(max-width:560px){.melato-full-set-selectors{grid-template-columns:1fr}}</style>'
+        echo '<script>(function(){if(window.__melatoServerFullSetBound)return;window.__melatoServerFullSetBound=true;function money(cents,currency){try{return new Intl.NumberFormat(document.documentElement.lang||"en-CA",{style:"currency",currency:currency||"CAD"}).format((Number(cents)||0)/100)}catch(e){return "$"+((Number(cents)||0)/100).toFixed(2)}}function refresh(root){var a=root.querySelector("[data-melato-set-current]");var b=root.querySelector("[data-melato-set-matching]");var total=root.querySelector("[data-melato-set-total]");if(!a||!b||!total)return;var ap=a.options[a.selectedIndex];var bp=b.options[b.selectedIndex];total.textContent=money((Number(ap&&ap.dataset.price)||0)+(Number(bp&&bp.dataset.price)||0),root.dataset.currency)}document.addEventListener("change",function(e){var root=e.target.closest&&e.target.closest("[data-melato-server-full-set]");if(root&&(e.target.matches("[data-melato-set-current]")||e.target.matches("[data-melato-set-matching]")))refresh(root)});document.addEventListener("click",async function(e){var button=e.target.closest&&e.target.closest("[data-melato-set-add]");if(!button)return;var root=button.closest("[data-melato-server-full-set]");var a=root&&root.querySelector("[data-melato-set-current]");var b=root&&root.querySelector("[data-melato-set-matching]");var status=root&&root.querySelector("[data-melato-set-status]");if(!a||!b)return;button.disabled=true;button.textContent="ADDING SET...";if(status)status.textContent="";try{var response=await fetch("/cart/add.js",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({items:[{id:Number(a.value),quantity:1},{id:Number(b.value),quantity:1}]})});if(!response.ok){var payload=await response.json().catch(function(){return{}});throw new Error(payload.description||payload.message||"Unable to add the full set.")}button.textContent="SET ADDED";if(status)status.textContent="Both pieces were added to your cart.";window.dispatchEvent(new CustomEvent("cart:updated"));window.location.assign("/cart")}catch(error){button.disabled=false;button.textContent="ADD FULL SET";if(status)status.textContent=error&&error.message?error.message:"Unable to add the full set. Please try again.";}});document.querySelectorAll("[data-melato-server-full-set]").forEach(refresh)})();</script>'
+      endcapture
+
+      if output contains legacy_set_link
+        assign output = output | replace_first: legacy_set_link, full_set_markup
+      endif
     endif
   endif
 -%}
