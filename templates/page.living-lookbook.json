@@ -76,6 +76,10 @@
     "curation_fixes": {
       "type": "melato-living-lookbook-curation-fixes",
       "settings": {}
+    },
+    "frame_blocklist_b58a": {
+      "type": "melato-living-lookbook-frame-blocklist",
+      "settings": {}
     }
   },
   "order": [
@@ -83,6 +87,7 @@
     "evidence_20260714",
     "evidence_case03",
     "evidence_20260901",
-    "curation_fixes"
+    "curation_fixes",
+    "frame_blocklist_b58a"
   ]
 }
