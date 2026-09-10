@@ -2,9 +2,8 @@
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
  *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
+ * MELATO PRODUCT PAGE BIBLE 1.0.0 governs the product template.
+ * Product-system changes must preserve the canonical section order.
  * ------------------------------------------------------------
  */
 {
@@ -51,7 +50,11 @@
       "settings": {
         "heading": "Recently viewed"
       }
+    },
+    "contextual_merchandising": {
+      "type": "melato-pdp-contextual-merchandising",
+      "settings": {}
     }
   },
-  "order": ["main_product", "proof_integrity", "pdp_unification", "safe_accent", "variant_media_sync", "related", "recently_viewed"]
+  "order": ["main_product", "proof_integrity", "pdp_unification", "safe_accent", "variant_media_sync", "related", "recently_viewed", "contextual_merchandising"]
 }

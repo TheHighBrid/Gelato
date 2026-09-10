@@ -129,18 +129,24 @@ jobs:
               require('assets/melato-cart-drawer.js', needle)
           ban('assets/melato-cart-drawer.js', '"$"+(Number(cents||0)/100)', 'hard-coded dollar fallback')
 
-          # The consolidated PDP owns source-rendered trust/returns and fit handoff.
-          # The former polish runtime is intentionally disabled after the P0 freeze
-          # incident and must not regain observer-driven gallery/zoom/UI mutation.
+          # The Product Page Bible owns one Shipping & Returns microcopy source and a
+          # product-specific size drawer with the global size guide as fallback.
           for needle in (
-              'class="pdp-proof-mini"',
-              '<strong>Returns</strong>',
-              '<summary>Shipping &amp; returns</summary>',
+              'Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.',
+              "assign size_guide_url = '/pages/size-guide'",
               'product.metafields.custom.size_guide.value',
               'data-open-size-drawer',
               "render 'size-guide-drawer', product: product",
           ):
-              require('sections/melato-product-page-rebuild.liquid', needle, 'source-rendered PDP trust/fit contract')
+              require('sections/melato-product-page-rebuild.liquid', needle, 'Product Page Bible trust/fit contract')
+          for needle in (
+              'class="pdp-proof-mini"',
+              '<summary>Shipping &amp; returns</summary>',
+              '<summary>Shipping & returns</summary>',
+              'payment_button',
+              'content_for_additional_checkout_buttons',
+          ):
+              ban('sections/melato-product-page-rebuild.liquid', needle, 'retired or duplicate PDP commerce surface')
 
           require('assets/melato-pdp-polish.js', "melatoPdpPolishRuntime = 'disabled-p0'", 'P0 disabled PDP polish marker')
           for needle in (

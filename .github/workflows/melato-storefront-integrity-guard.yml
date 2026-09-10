@@ -90,13 +90,12 @@ jobs:
               ("class: 'pdp-main-image'", 'primary product image'),
               ('data-pdp-thumb', 'source-rendered gallery controls'),
               ("mainImage.src=button.getAttribute('data-media-src')", 'source-rendered gallery switching'),
-              ('<summary>Story</summary>', 'Story capsule'),
+              ('class="pdp-panel pdp-story"', 'Story section'),
               ('<summary>Construction</summary>', 'Construction capsule'),
               ('<summary>Fit</summary>', 'Fit capsule'),
               ('<summary>Material</summary>', 'Material capsule'),
               ('<summary>Care</summary>', 'Care capsule'),
-              ('<summary>Shipping &amp; returns</summary>', 'Shipping & returns capsule'),
-              ('class="pdp-proof-mini"', 'source-rendered purchase reassurance'),
+              ('Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.', 'canonical Shipping & Returns microcopy'),
               ('product.metafields.custom.size_guide.value', 'product-specific size guide source'),
               ('data-open-size-drawer', 'product-specific size guide trigger'),
               ("render 'size-guide-drawer', product: product", 'product-specific size guide drawer'),
@@ -107,9 +106,21 @@ jobs:
               if needle not in pdp:
                   failures.append(f'sections/melato-product-page-rebuild.liquid: missing {label}')
 
+          # Product Page Bible v1 keeps Shipping & Returns as one microcopy source and
+          # keeps accelerated checkout and legacy duplicate reassurance surfaces retired.
+          for forbidden, label in (
+              ('<summary>Shipping &amp; returns</summary>', 'duplicate Shipping & Returns disclosure'),
+              ('<summary>Shipping & returns</summary>', 'duplicate Shipping & Returns disclosure'),
+              ('class="pdp-proof-mini"', 'retired purchase reassurance block'),
+              ('payment_button', 'accelerated checkout surface'),
+              ('content_for_additional_checkout_buttons', 'accelerated checkout surface'),
+          ):
+              if forbidden in pdp:
+                  failures.append(f'sections/melato-product-page-rebuild.liquid: forbidden {label} returned')
+
           # P0 stability contract: the retired polish layer stays disabled. Gallery,
-          # fit and reassurance behavior are validated above in the canonical section
-          # instead of reintroducing the observer-driven duplicate runtime.
+          # fit and canonical shipping behavior are validated above in the canonical
+          # section instead of reintroducing the observer-driven duplicate runtime.
           polish = text('assets/melato-pdp-polish.js')
           if "melatoPdpPolishRuntime = 'disabled-p0'" not in polish:
               failures.append('assets/melato-pdp-polish.js: P0 disabled runtime marker missing')

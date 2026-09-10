@@ -1,47 +1,28 @@
 {% comment %}
-  Universal Melato PDP continuation layer.
-  Priority: explicit PDP curation, Shopify related recommendations, same product
-  type from New Arrivals, Best Sellers, then broader New Arrivals.
-  Current and unavailable products are excluded.
+  MELATO PRODUCT PAGE BIBLE 1.0.0
+  Universal PDP continuation layer.
+  Canonical priority: custom.related_products, legacy custom.pdp_recommendations,
+  Shopify related recommendations, same product type from New Arrivals,
+  Best Sellers, then broader New Arrivals.
+  Heading is intentionally fixed to avoid category-by-category language drift.
 {% endcomment %}
 
 {{ 'melato-audit-upgrades.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'melato-audit-upgrades.js' | asset_url }}" defer></script>
 
 {%- liquid
-  assign section_heading = section.settings.heading | default: 'You might also like'
+  assign section_heading = 'You might also like'
   assign section_eyebrow = section.settings.eyebrow | default: 'Continue shopping'
   assign products_to_show = section.settings.products_to_show | default: 4 | plus: 0
-  assign curated_products = product.metafields.custom.pdp_recommendations.value
+  assign curated_products = product.metafields.custom.related_products.value
+  if curated_products == blank
+    assign curated_products = product.metafields.custom.pdp_recommendations.value
+  endif
   if products_to_show < 1
     assign products_to_show = 4
   endif
-  if products_to_show > 8
-    assign products_to_show = 8
-  endif
-
-  assign product_type_down = product.product_type | downcase
-  if product_type_down contains 'sunglass' or product_type_down contains 'eyewear'
-    assign section_heading = 'More eyewear'
-    assign section_eyebrow = 'Try another frame'
-  elsif product_type_down contains 'jean' or product_type_down contains 'denim' or product_type_down contains 'pant' or product_type_down contains 'trouser'
-    assign section_heading = 'Another cut'
-    assign section_eyebrow = 'Continue the silhouette'
-  elsif product_type_down contains 'bag' or product_type_down contains 'wallet' or product_type_down contains 'suspender' or product_type_down contains 'tie'
-    assign section_heading = 'More accessories'
-    assign section_eyebrow = 'Finish the look'
-  elsif product_type_down contains 'shirt' or product_type_down contains 'top' or product_type_down contains 'tee' or product_type_down contains 'polo'
-    assign section_heading = 'Another layer'
-    assign section_eyebrow = 'Continue the look'
-  elsif product_type_down contains 'jacket' or product_type_down contains 'outerwear' or product_type_down contains 'vest'
-    assign section_heading = 'More outerwear'
-    assign section_eyebrow = 'Continue the look'
-  elsif product_type_down contains 'dress' or product_type_down contains 'skirt' or product_type_down contains 'bodysuit'
-    assign section_heading = 'More from Eve’s Wardrobe'
-    assign section_eyebrow = 'Continue the look'
-  elsif product_type_down contains 'fragrance' or product_type_down contains 'eau de'
-    assign section_heading = 'Explore another scent'
-    assign section_eyebrow = 'Continue the ritual'
+  if products_to_show > 4
+    assign products_to_show = 4
   endif
 -%}
 
@@ -50,7 +31,7 @@
     <div class="melato-section-wrap">
       <div class="melato-section-head">
         <p class="melato-eyebrow">{{ section_eyebrow }}</p>
-        <h2 id="RelatedHeading-{{ section.id }}">{{ section_heading }}</h2>
+        <h2 id="RelatedHeading-{{ section.id }}" class="melato-pdp-bible-section-title">{{ section_heading }}</h2>
       </div>
 
       {%- if curated_products != blank -%}
@@ -76,7 +57,7 @@
           {%- if recommendations.performed and recommendations.products_count > 0 -%}
             <div class="melato-grid melato-grid--cards">
               {%- for recommendation in recommendations.products limit: products_to_show -%}
-                {%- if recommendation.available -%}
+                {%- if recommendation.available and recommendation.id != product.id -%}
                   {% render 'melato-product-card-audit', card_product: recommendation %}
                 {%- endif -%}
               {%- endfor -%}
@@ -145,8 +126,8 @@
   "class": "section melato-section",
   "settings": [
     {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Continue shopping"},
-    {"type":"text","id":"heading","label":"Heading","default":"You might also like"},
-    {"type":"range","id":"products_to_show","label":"Products to show","min":2,"max":8,"step":1,"default":4}
+    {"type":"text","id":"heading","label":"Heading","default":"You might also like","info":"Bible-governed. Renderer always uses the canonical heading."},
+    {"type":"range","id":"products_to_show","label":"Products to show","min":2,"max":4,"step":1,"default":4}
   ],
   "presets": [{"name":"Related products"}]
 }
