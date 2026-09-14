@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money_without_trailing_zeros, shop: shop.name }}</title>
+  <title>{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money_without_trailing_zeros: shop: shop.name }}</title>
 
   {{ 'gift-card.css' | global_asset_url | stylesheet_tag }}
 
@@ -215,3 +215,15 @@
 
 </body>
 </html>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money_without_trailing_zeros,
+    shop: shop.name }}"
+  to: "{{ 'gift_cards.issued.title' | t: value: gift_card.initial_value | money_without_trailing_zeros:
+    shop: shop.name }}"
+  position: 174..289
+{% endcomment %}
