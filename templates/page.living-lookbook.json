@@ -10,84 +10,13 @@
 {
   "sections": {
     "main": {
-      "type": "melato-living-lookbook-old",
-      "settings": {}
-    },
-    "evidence_20260714": {
-      "type": "melato-living-lookbook-evidence",
+      "type": "melato-living-book-vol01",
       "settings": {
-        "archive_label": "CASE FILE 02",
-        "archive_title": "NEW EVIDENCE",
-        "archive_note": "Ninety-one living-study photographs, expanded with thirty-five newly filed frames and presented as a continuous evidence archive.",
-        "case_code": "LL-02",
-        "archive_source": "case02"
-      },
-      "blocks": {
-        "shop_04": {
-          "type": "shoppable_frame",
-          "settings": {
-            "frame_number": 4,
-            "product": "ojos-velour-track-jacket"
-          }
-        },
-        "shop_18": {
-          "type": "shoppable_frame",
-          "settings": {
-            "frame_number": 9,
-            "product": "the-noir-alibi-lace-corset-dress"
-          }
-        },
-        "shop_18b": {
-          "type": "shoppable_frame",
-          "settings": {
-            "frame_number": 18,
-            "product": "the-conquista-premium-velour-track-jacket-by-melato"
-          }
-        },
-        "shop_24b": {
-          "type": "shoppable_frame",
-          "settings": {
-            "frame_number": 24,
-            "product": "the-conquista-premium-velour-track-jacket-by-melato"
-          }
-        }
-      },
-      "block_order": [
-        "shop_04",
-        "shop_18",
-        "shop_18b",
-        "shop_24b"
-      ]
-    },
-    "evidence_case03": {
-      "type": "melato-living-lookbook-evidence",
-      "settings": {
-        "archive_label": "CASE FILE 03",
-        "archive_title": "AFTERIMAGE RECORD",
-        "archive_note": "Seventeen newly isolated photographs form a third case, filed as peripheral sightings, movements and afterimages.",
-        "case_code": "LL-03",
-        "archive_source": "case03"
+        "hide_store_chrome": true
       }
-    },
-    "evidence_20260901": {
-      "type": "melato-living-lookbook-20260901",
-      "settings": {}
-    },
-    "curation_fixes": {
-      "type": "melato-living-lookbook-curation-fixes",
-      "settings": {}
-    },
-    "frame_blocklist_b58a": {
-      "type": "melato-living-lookbook-frame-blocklist",
-      "settings": {}
     }
   },
   "order": [
-    "main",
-    "evidence_20260714",
-    "evidence_case03",
-    "evidence_20260901",
-    "curation_fixes",
-    "frame_blocklist_b58a"
+    "main"
   ]
 }
