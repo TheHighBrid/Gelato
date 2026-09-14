@@ -1,10 +1,10 @@
 {%- comment -%}
 Melato Living progressive enhancement loader.
-The editorial page remains fully navigable without JavaScript. On the Living Lookbook route,
-verified server-rendered product links are progressively upgraded into one shared look drawer.
-The compatibility enhancer only upgrades legacy frames that already expose an exact product URL.
+Living Book Vol. 01 replaced the scroll-gallery lookbook on /pages/living-lookbook.
+The shoppable look drawer remains available for any remaining legacy templates
+that still render .mlb-product frames.
 {%- endcomment -%}
-{%- if template.suffix == 'living-lookbook' or request.path == '/pages/living-lookbook' -%}
+{%- if template.suffix == 'living-lookbook-archive' or request.path == '/pages/living-lookbook-archive' -%}
   {{ 'melato-living-look-drawer.css' | asset_url | stylesheet_tag }}
   <script src="{{ 'melato-living-look-drawer.js' | asset_url }}" defer></script>
   <script src="{{ 'melato-living-look-drawer-legacy.js' | asset_url }}" defer></script>
