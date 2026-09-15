@@ -35,6 +35,8 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
   assert.match(css, /100dvh/);
   assert.match(css, /\.lbv-spread\.is-current/);
   assert.match(css, /\.lbv-enter/);
+  assert.match(css, /\.lbv-reader\[hidden\]/);
+  assert.match(css, /\.lbv-toc:not\(\[hidden\]\)/);
   assert.doesNotMatch(css, /rotateY/);
   assert.doesNotMatch(css, /filter:\s*blur/);
   assert.doesNotMatch(css, /animation-fill-mode:\s*both/);
