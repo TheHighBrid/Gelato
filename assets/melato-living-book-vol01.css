@@ -910,9 +910,15 @@ body.template-page--living-lookbook .shopify-section:has(.lbv) {
   inset: 0;
   z-index: 50;
   background: rgba(4, 4, 4, 0.96);
-  display: flex;
+  display: none;
   flex-direction: column;
   padding: 72px 20px 40px;
+}
+.lbv-toc:not([hidden]) { display: flex; }
+.lbv-toc[hidden],
+.lbv-reader[hidden] {
+  display: none !important;
+  pointer-events: none !important;
 }
 .lbv-toc-head {
   display: flex;
@@ -977,9 +983,10 @@ body.template-page--living-lookbook .shopify-section:has(.lbv) {
   inset: 0;
   z-index: 60;
   background: rgba(4, 4, 4, 0.96);
-  display: grid;
+  display: none;
   grid-template-rows: minmax(0, 1fr) auto;
 }
+.lbv-reader:not([hidden]) { display: grid; }
 .lbv-reader-img {
   min-height: 0;
   height: 58dvh;
