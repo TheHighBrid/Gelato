@@ -7,6 +7,20 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Barlow+Condensed:wght@300;400;500;600&display=swap">
 {{ 'melato-living-book-vol01.css' | asset_url | stylesheet_tag }}
 
+<script type="application/json" data-lbv-assets>
+{
+  "goldFront": {{ 'lbv-goldset-front.jpg' | asset_url | json }},
+  "goldBack": {{ 'lbv-goldset-back.jpg' | asset_url | json }},
+  "sideTape": {{ 'lbv-sidetape-back.jpg' | asset_url | json }},
+  "divididosCast": {{ 'lbv-divididos-cast.jpg' | asset_url | json }},
+  "divididosExit": {{ 'lbv-divididos-exit.jpg' | asset_url | json }},
+  "waqaaFront": {{ 'lbv-waqaa-front.jpg' | asset_url | json }},
+  "astroFront": {{ 'lbv-astro-front.jpg' | asset_url | json }},
+  "astroProfile": {{ 'lbv-astro-profile.jpg' | asset_url | json }},
+  "suitBack": {{ 'lbv-suit-back.jpg' | asset_url | json }}
+}
+</script>
+
 <section
   id="LivingBookVol01-{{ section.id }}"
   class="lbv"

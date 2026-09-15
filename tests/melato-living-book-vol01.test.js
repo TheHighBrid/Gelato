@@ -50,9 +50,36 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
   assert.match(engine, /is-arming/);
   assert.match(engine, /Enter the book/);
   assert.match(engine, /mountSpread\(0, 'is-current'\)/);
+  assert.match(engine, /divididos-velour-track-jacket-view-03/);
+  assert.match(engine, /Split on purpose/);
+  assert.match(engine, /Je devais voir Anne-So/);
+  assert.match(engine, /rex-x-fur-jacket-view-05/);
+  assert.match(engine, /blush-ledger-satin-shirt-view-01/);
+  assert.match(engine, /@divididosCast/);
+  assert.match(engine, /data-lbv-assets/);
   assert.doesNotMatch(engine, /The_Living_Lookbook-Frame-02_5/);
   assert.doesNotMatch(engine, /The_Living_Lookbook-Frame-0_10/);
   assert.doesNotThrow(() => new vm.Script(engine));
+
+  assert.match(section, /data-lbv-assets/);
+  assert.match(section, /lbv-goldset-front\.jpg/);
+  assert.match(section, /lbv-divididos-cast\.jpg/);
+  assert.match(section, /lbv-waqaa-front\.jpg/);
+  assert.match(section, /lbv-astro-front\.jpg/);
+  assert.match(section, /lbv-suit-back\.jpg/);
+  for (const file of [
+    'lbv-goldset-front.jpg',
+    'lbv-goldset-back.jpg',
+    'lbv-sidetape-back.jpg',
+    'lbv-divididos-cast.jpg',
+    'lbv-divididos-exit.jpg',
+    'lbv-waqaa-front.jpg',
+    'lbv-astro-front.jpg',
+    'lbv-astro-profile.jpg',
+    'lbv-suit-back.jpg'
+  ]) {
+    assert.ok(fs.existsSync(path.join(repo, 'assets', file)), 'missing theme frame ' + file);
+  }
 });
 
 test('House living book route points at the editorial page', () => {
