@@ -16,6 +16,14 @@
 -%}
 
 <style data-melato-pdp-unification>
+  /* Deliberately suppress the redundant PDP copy surfaces flagged in production.
+     JavaScript removes the same nodes from the live DOM; these rules prevent flash. */
+  body.template-product .melato-pdp-rebuild .pdp-shipping-returns,
+  body.template-product .melato-pdp-rebuild .pdp-story,
+  body.template-product .melato-pdp-rebuild .pdp-spec-grid {
+    display: none !important;
+  }
+
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
     gap: 12px !important;
     margin-top: 28px !important;
@@ -219,6 +227,17 @@
   function normalizePdp() {
     var root = document.querySelector('.melato-pdp-rebuild');
     if (!root || root.dataset.melatoUnified === 'true') return;
+
+    /* Remove the duplicate trust/story/specification surfaces from every PDP.
+       Complete the Set, recommendations, recently viewed, variants and ATC remain. */
+    root.querySelectorAll('.pdp-shipping-returns, .pdp-story, .pdp-spec-grid').forEach(function (node) {
+      node.remove();
+    });
+
+    var contentStack = root.querySelector('.pdp-content-stack');
+    if (contentStack && !contentStack.querySelector('.pdp-set')) {
+      contentStack.remove();
+    }
 
     if (isFragrance) {
       root.querySelectorAll('.pdp-mini-detail').forEach(function (details) {

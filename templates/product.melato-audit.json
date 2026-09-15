@@ -23,6 +23,10 @@
         "accent_2": "#d3a74a"
       }
     },
+    "pdp_unification": {
+      "type": "melato-pdp-unification",
+      "settings": {}
+    },
     "safe_accent": {
       "type": "melato-product-safe-accent",
       "settings": {}
@@ -36,5 +40,5 @@
       }
     }
   },
-  "order": ["main_product", "safe_accent", "related"]
+  "order": ["main_product", "pdp_unification", "safe_accent", "related"]
 }
