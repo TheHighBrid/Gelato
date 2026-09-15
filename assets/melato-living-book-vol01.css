@@ -1,13 +1,14 @@
 /* Melato Living Book Vol. 01 — full-page editorial reader */
 body.template-page--living-lookbook {
-  overflow: hidden;
   background: #040404;
 }
 body.template-page--living-lookbook.lbv-hide-chrome > a.skip-to-content,
 body.template-page--living-lookbook.lbv-hide-chrome #shopify-section-melato-announcement-bar,
 body.template-page--living-lookbook.lbv-hide-chrome #shopify-section-melato-header,
 body.template-page--living-lookbook.lbv-hide-chrome #shopify-section-melato-footer,
-body.template-page--living-lookbook.lbv-hide-chrome .melato-trust-strip {
+body.template-page--living-lookbook.lbv-hide-chrome .melato-trust-strip,
+body.template-page--living-lookbook.lbv-hide-chrome .melato-utility-layer,
+body.template-page--living-lookbook.lbv-hide-chrome #drip-overlay {
   display: none !important;
 }
 body.template-page--living-lookbook #main-content,
@@ -16,7 +17,7 @@ body.template-page--living-lookbook .main-content {
   margin: 0 !important;
   max-width: none !important;
   width: 100%;
-  min-height: 100dvh;
+  min-height: 100svh;
 }
 body.template-page--living-lookbook .shopify-section:has(.lbv) {
   margin: 0;
@@ -210,6 +211,25 @@ body.template-page--living-lookbook .shopify-section:has(.lbv) {
   line-height: 1.55;
   margin: 0;
 }
+.lbv-enter {
+  margin-top: 8px;
+  min-height: 48px;
+  padding: 12px 22px;
+  background: var(--gold);
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  border: 0;
+  z-index: 3;
+  position: relative;
+}
+.lbv-enter:active { transform: scale(0.97); }
+.lbv-img.is-missing {
+  background: var(--card);
+  min-height: 120px;
+}
 .lbv-down {
   margin-top: 20px;
   display: flex;
@@ -271,42 +291,57 @@ body.template-page--living-lookbook .shopify-section:has(.lbv) {
 
 /* book */
 .lbv-book {
-  height: 100dvh;
-  width: 100%;
-  overflow: hidden;
   position: relative;
+  width: 100%;
+  min-height: 100svh;
+  height: 100svh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--ink);
+}
+.lbv-book.is-arming {
+  pointer-events: none;
 }
 .lbv-stage {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  background: var(--ink);
 }
 .lbv-spread {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  will-change: transform, opacity;
+  background: var(--ink);
+  color: var(--paper);
+  opacity: 1;
 }
-.lbv-spread.enter { animation: lbvIn 520ms var(--ease-page) both; }
-.lbv-spread.exit { animation: lbvOut 280ms var(--ease-page) both; }
+.lbv-spread.is-current {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  animation: none;
+}
+.lbv-spread.enter { animation: lbvIn 420ms var(--ease-page); }
+.lbv-spread.exit { animation: lbvOut 240ms var(--ease-page); }
 .lbv-spread.enter.dir-back { animation-name: lbvInBack; }
 .lbv-spread.exit.dir-back { animation-name: lbvOutBack; }
 @keyframes lbvIn {
-  from { opacity: 0; transform: translateX(7%) rotateY(-4deg); filter: blur(3px); }
-  to { opacity: 1; transform: none; filter: none; }
+  from { transform: translate3d(28px, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
 }
 @keyframes lbvOut {
-  from { opacity: 1; transform: none; }
-  to { opacity: 0; transform: translateX(-6%) rotateY(3deg); filter: blur(2px); }
+  from { opacity: 1; transform: translate3d(0, 0, 0); }
+  to { opacity: 0; transform: translate3d(-24px, 0, 0); }
 }
 @keyframes lbvInBack {
-  from { opacity: 0; transform: translateX(-7%) rotateY(4deg); filter: blur(3px); }
-  to { opacity: 1; transform: none; filter: none; }
+  from { transform: translate3d(-28px, 0, 0); }
+  to { transform: translate3d(0, 0, 0); }
 }
 @keyframes lbvOutBack {
-  from { opacity: 1; }
-  to { opacity: 0; transform: translateX(6%) rotateY(-3deg); filter: blur(2px); }
+  from { opacity: 1; transform: translate3d(0, 0, 0); }
+  to { opacity: 0; transform: translate3d(24px, 0, 0); }
 }
 
 .lbv-chrome-top,
@@ -314,7 +349,7 @@ body.template-page--living-lookbook .shopify-section:has(.lbv) {
   position: absolute;
   left: 0;
   right: 0;
-  z-index: 30;
+  z-index: 40;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -1111,6 +1146,15 @@ body.template-page--living-lookbook .shopify-section:has(.lbv) {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .lbv-spread,
+  .lbv-spread.enter,
+  .lbv-spread.exit,
+  .lbv-spread.is-current {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
   .lbv *,
   .lbv *::before,
   .lbv *::after {
