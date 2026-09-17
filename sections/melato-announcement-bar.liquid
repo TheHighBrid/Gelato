@@ -323,7 +323,7 @@
               {%- endif -%}
             {%- endfor -%}
           {%- else -%}
-            <span class="melato-ann__item"><span class="melato-ann__dot" aria-hidden="true"></span><span>{{ section.settings.fallback_message }}</span>{%- if section.settings.fallback_micro != blank -%}<small>{{ section.settings.fallback_micro }}</small>{%- endif -%}</span>
+            <span class="melato-ann__item"><span class="melato-ann__dot" aria-hidden="true"></span><span>{{ section.settings.fallback_message }}</span>{% if section.settings.fallback_micro != blank %} <small aria-hidden="true">{{ section.settings.fallback_micro }}</small>{% endif %}</span>
           {%- endif -%}
         </div>
       </div>
