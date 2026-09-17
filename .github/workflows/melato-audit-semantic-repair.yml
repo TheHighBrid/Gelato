@@ -68,3 +68,5 @@ jobs:
           git add layout/theme.liquid sections/main-collection.liquid sections/melato-announcement-bar.liquid
           git commit -m 'fix: close September 17 storefront audit defects'
           git push origin HEAD:main
+
+# trigger: 2026-09-17
