@@ -212,6 +212,61 @@
         {% render 'back-in-stock-form', product: product %}
 
         <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.</p>
+
+        {%- comment -%}
+          Bible v1.0: purchase-decision facts belong in the buybox.
+          Non-fragrance PDPs expose Materials, Fit and Care here.
+          Fragrance uses category-appropriate Ingredients, Use and Care.
+        {%- endcomment -%}
+        {%- if family == 'fragrance' -%}
+          {%- if ingredients_copy != blank or use_copy != blank or care_details != blank or care_copy != blank -%}
+            <div class="pdp-buybox-specs" aria-label="Product details">
+              <p class="pdp-buybox-specs__eyebrow">Product details</p>
+              {%- if ingredients_copy != blank -%}
+                <details class="pdp-buybox-spec">
+                  <summary><span>Ingredients</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <div class="pdp-buybox-spec__body pdp-rte">{{ ingredients_copy }}</div>
+                </details>
+              {%- endif -%}
+              {%- if use_copy != blank -%}
+                <details class="pdp-buybox-spec">
+                  <summary><span>Use</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <div class="pdp-buybox-spec__body pdp-rte">{{ use_copy }}</div>
+                </details>
+              {%- endif -%}
+              {%- if care_details != blank or care_copy != blank -%}
+                <details class="pdp-buybox-spec">
+                  <summary><span>Care</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
+                </details>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          {%- if material_details != blank or material_copy != blank or fit_details != blank or fit_copy != blank or care_details != blank or care_copy != blank -%}
+            <div class="pdp-buybox-specs" aria-label="Product details">
+              <p class="pdp-buybox-specs__eyebrow">Product details</p>
+              {%- if material_details != blank or material_copy != blank -%}
+                <details class="pdp-buybox-spec">
+                  <summary><span>Materials</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div>
+                </details>
+              {%- endif -%}
+              {%- if fit_details != blank or fit_copy != blank -%}
+                <details class="pdp-buybox-spec">
+                  <summary><span>Fit</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">Melato Fit Guide</a></p></div>
+                </details>
+              {%- endif -%}
+              {%- if care_details != blank or care_copy != blank -%}
+                <details class="pdp-buybox-spec">
+                  <summary><span>Care</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
+                </details>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
       </div>
     </div>
 
@@ -225,25 +280,8 @@
 
       <section class="pdp-spec-grid" aria-label="Product specifications">
         {%- if family == 'fragrance' -%}
-          {%- if ingredients_copy != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Ingredients</summary><div class="pdp-rte">{{ ingredients_copy }}</div></details>
-          {%- endif -%}
-          {%- if use_copy != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Use</summary><div class="pdp-rte">{{ use_copy }}</div></details>
-          {%- endif -%}
+          {%- comment -%}Fragrance purchase-decision specs are surfaced in the buybox above.{%- endcomment -%}
         {%- else -%}
-          {%- if material_details != blank or material_copy != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Material</summary><div class="pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div></details>
-          {%- endif -%}
-
-          {%- if care_details != blank or care_copy != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Care</summary><div class="pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div></details>
-          {%- endif -%}
-
-          {%- if fit_details != blank or fit_copy != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Fit</summary><div class="pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">Melato Fit Guide</a></p></div></details>
-          {%- endif -%}
-
           {%- if construction_details != blank or construction_paragraph != blank -%}
             <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail }}</li>{%- endfor -%}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph }}</p>{%- endif -%}</div></details>
           {%- endif -%}
@@ -382,6 +420,15 @@
 #MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{background:var(--pdp-accent);color:#fff;font-weight:900;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 #MelatoPDP-{{ section.id }} .pdp-atc--oos{background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.45)!important;border:1px solid rgba(255,255,255,.12)}
 #MelatoPDP-{{ section.id }} .pdp-shipping-returns{margin:18px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;line-height:1.55;color:color-mix(in srgb,var(--pdp-text) 72%,transparent)}
+#MelatoPDP-{{ section.id }} .pdp-buybox-specs{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}
+#MelatoPDP-{{ section.id }} .pdp-buybox-specs__eyebrow{margin:0 0 4px;color:var(--melato-pdp-section-title);font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;transition:color .8s ease}
+#MelatoPDP-{{ section.id }} .pdp-buybox-spec{border-bottom:1px solid rgba(255,255,255,.1)}
+#MelatoPDP-{{ section.id }} .pdp-buybox-spec summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;cursor:pointer;color:var(--melato-pdp-section-title);font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;transition:color .8s ease}
+#MelatoPDP-{{ section.id }} .pdp-buybox-spec summary::-webkit-details-marker{display:none}
+#MelatoPDP-{{ section.id }} .pdp-buybox-spec__icon{color:currentColor;font-size:18px;font-weight:400;line-height:1;transition:transform .2s ease,color .8s ease}
+#MelatoPDP-{{ section.id }} .pdp-buybox-spec[open] .pdp-buybox-spec__icon{transform:rotate(45deg)}
+#MelatoPDP-{{ section.id }} .pdp-buybox-spec__body{padding:0 0 15px;font-size:13px;line-height:1.58}
+#MelatoPDP-{{ section.id }} .pdp-buybox-spec__body ul{margin:0;padding-left:18px}
 #MelatoPDP-{{ section.id }} .pdp-content-stack{display:grid;gap:18px;margin-top:28px}
 #MelatoPDP-{{ section.id }} .pdp-panel{padding:30px}
 #MelatoPDP-{{ section.id }} .pdp-section-head h2,#MelatoPDP-{{ section.id }} .melato-pdp-bible-section-title{color:var(--melato-pdp-section-title);transition:color .8s ease}

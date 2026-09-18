@@ -403,14 +403,14 @@
 #melato-announcement-bar .melato-ann__badge{justify-self:start;border:1px solid var(--ab-border)!important;color:var(--ab-fg)!important;background:color-mix(in srgb,var(--ab-fg) 7%,transparent)}
 #melato-announcement-bar .melato-ann__cta{justify-self:end;background:var(--ab-btn-bg)!important;color:var(--ab-btn-fg)!important}
 #melato-announcement-bar .melato-ann__viewport{width:100%;overflow:hidden;mask-image:linear-gradient(90deg,transparent,black 8%,black 92%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent 0,black 8%,black 92%,transparent 100%)}
-#melato-announcement-bar .melato-ann__track{display:flex;width:max-content;align-items:center;animation:melato-ann-scroll var(--ab-speed) linear infinite;will-change:transform}
+#melato-announcement-bar .melato-ann__track{display:flex;width:max-content;align-items:center;animation:melato-ann-scroll var(--ab-speed) linear infinite!important;animation-play-state:running!important;will-change:transform}
 #melato-announcement-bar .melato-ann__group{display:inline-flex;align-items:center;gap:clamp(24px,4vw,56px);padding-right:clamp(24px,4vw,56px)}
 #melato-announcement-bar .melato-ann__item{display:inline-flex;align-items:center;gap:12px;color:var(--ab-fg)!important;font-size:var(--ab-fs);font-weight:800;letter-spacing:.12em;text-decoration:none;text-transform:uppercase;white-space:nowrap}
 #melato-announcement-bar .melato-ann__item *{color:inherit!important;border-color:currentColor!important}
 #melato-announcement-bar .melato-ann__item small{color:color-mix(in srgb,var(--ab-fg) 72%,transparent)!important;font-size:.78em}
 #melato-announcement-bar .melato-ann__dot{width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.72}
 @keyframes melato-ann-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){#melato-announcement-bar .melato-ann__track{animation:none}#melato-announcement-bar .melato-ann__group[aria-hidden="true"]{display:none}}
+@media(prefers-reduced-motion:reduce){#melato-announcement-bar .melato-ann__track{animation:melato-ann-scroll 60s linear infinite!important}}
 @media(max-width:749px){#melato-announcement-bar{grid-template-columns:1fr;min-height:max(48px,calc(var(--ab-h) - 8px));padding:0 14px}#melato-announcement-bar .melato-ann__badge,#melato-announcement-bar .melato-ann__cta{display:none}#melato-announcement-bar .melato-ann__item{font-size:max(11px,calc(var(--ab-fs) - 1px))}}
 </style>
 
