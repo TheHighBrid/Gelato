@@ -179,7 +179,7 @@
         if origin_copy == blank and product.metafields.custom.made_in_canada.value == true
           assign origin_copy = 'Canada'
         endif
-        assign fit_preview = product.metafields.melato.fit.value | default: product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit_notes.value | default: product.metafields.custom.fit.value
+        assign fit_preview = product.metafields.custom.fit_notes.value | default: product.metafields.melato.fit.value | default: product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit.value
         assign pdp_review_count = product.metafields.reviews.rating_count.value | default: 0
         assign pdp_review_rating = product.metafields.reviews.rating.value.rating
         capture pdp_conversion_markup
@@ -237,15 +237,8 @@
       assign output = output | replace: '</span><strong', '</span> <strong'
       assign output = output | replace: '</h3><p>', '</h3> <p>'
 
-      assign escaped_product_title = product.title | escape
-      assign generic_product_alt = 'alt="' | append: escaped_product_title | append: '"'
-      for image_number in (1..18)
-        capture numbered_product_alt
-          echo 'alt="' | append: escaped_product_title | append: ', product image ' | append: image_number | append: '"'
-        endcapture
-        assign numbered_product_alt = numbered_product_alt | strip
-        assign output = output | replace_first: generic_product_alt, numbered_product_alt
-      endfor
+      # Preserve descriptive media alt text from Shopify and the canonical PDP renderer.
+      # Do not replace approved alt text with generic numbered labels.
 
       if product.handle == 'protective-custody'
         assign output = output | replace: 'A premium Melato piece built with clean construction, controlled proportion, and everyday presence.', ''
