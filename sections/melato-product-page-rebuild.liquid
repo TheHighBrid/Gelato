@@ -297,13 +297,13 @@
           <header class="pdp-section-head"><h2 id="PDPSet-{{ section.id }}" class="melato-pdp-bible-section-title">Complete the Set</h2></header>
           <div class="pdp-set-grid" role="list">
             <article class="pdp-set-card" role="listitem">
-              {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: product.title | append: ' - Selected piece' }}{%- endif -%}
+              {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               <h3 class="purchase-summary__title">{{ product.title }}</h3>
               <p class="purchase-summary__price">{{ product.price | money }}</p>
             </article>
             <article class="pdp-set-card" role="listitem">
               <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
-                {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: matching_product.title | append: ' - Matching piece' }}{%- endif -%}
+                {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               </a>
               <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
               <p class="purchase-summary__price">{{ matching_product.price | money }}</p>

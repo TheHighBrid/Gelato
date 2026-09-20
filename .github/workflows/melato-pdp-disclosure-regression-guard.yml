@@ -28,8 +28,14 @@ jobs:
               failures.append('Canonical PDP section is missing.')
           else:
               source = pdp.read_text()
-              for label in ('Construction', 'Fit', 'Material', 'Care'):
-                  if f'<summary>{label}</summary>' not in source:
+              disclosure_contracts = {
+                  'Construction': '<summary>Construction</summary>',
+                  'Fit': '<summary><span>Fit</span>',
+                  'Material': '<summary><span>Materials</span>',
+                  'Care': '<summary><span>Care</span>',
+              }
+              for label, needle in disclosure_contracts.items():
+                  if needle not in source:
                       failures.append(f'Canonical PDP is missing the {label} disclosure.')
 
               canonical_shipping = (
