@@ -52,7 +52,7 @@ jobs:
               'product.metafields.custom.size_guide.value',
               'data-open-size-drawer',
               "render 'size-guide-drawer', product: product",
-              '<summary>Fit</summary>',
+              '<summary><span>Fit</span>',
           ):
               if required not in pdp:
                   failures.append(f'sections/melato-product-page-rebuild.liquid: PDP fit contract missing: {required!r}')
