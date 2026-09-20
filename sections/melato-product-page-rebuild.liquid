@@ -63,6 +63,7 @@
   assign made_in = product.metafields.custom.made_in.value
   assign material_profile = product.metafields.custom.material_profile.value
   assign product_specification = product.metafields.custom.product_specification.value
+  assign warranty_copy = product.metafields.custom.warranty_maintenance.value
   assign related_products = product.metafields.custom.related_products.value
   assign pdp_bible_version = product.metafields.custom.pdp_bible_version.value
 
@@ -82,7 +83,10 @@
   assign palette_1 = product.metafields.custom.palette_1.value | default: section.settings.accent_2
   assign palette_2 = product.metafields.custom.palette_2.value | default: section.settings.accent
   assign palette_3 = product.metafields.custom.palette_3.value | default: fg_seed
-  assign product_button_accent = current_variant.metafields.custom.theme_accent.value | default: palette_1 | default: section.settings.accent
+  assign product_button_accent = current_variant.metafields.custom.theme_accent.value | default: product.metafields.custom.theme_cta.value | default: product.metafields.custom.ui_accent.value | default: palette_1 | default: section.settings.accent
+  assign section_title_accent = product.metafields.custom.theme_eyebrow.value | default: palette_1
+  assign label_background = product.metafields.custom.theme_label_background.value
+  assign label_text = product.metafields.custom.theme_label_text.value | default: fg_seed
 
   assign is_fur = false
   if product_type_down contains 'fur' or product_title_down contains 'fur'
@@ -114,8 +118,9 @@
 <section
   id="MelatoPDP-{{ section.id }}"
   class="melato-pdp-rebuild"
-  style="--pdp-bg:{{ bg_seed }};--pdp-surface:{{ section.settings.surface }};--pdp-text:{{ fg_seed }};--pdp-muted:{{ section.settings.muted }};--pdp-accent:{{ product_button_accent }};--pdp-title-accent:{{ palette_1 }};--melato-pdp-section-title:{{ palette_1 }}"
+  style="--pdp-bg:{{ bg_seed }};--pdp-surface:{{ section.settings.surface }};--pdp-text:{{ fg_seed }};--pdp-muted:{{ section.settings.muted }};--pdp-accent:{{ product_button_accent }};--pdp-accent-text:{{ label_text }};--pdp-title-accent:{{ section_title_accent }};--melato-pdp-section-title:{{ section_title_accent }};--pdp-label-bg:{{ label_background | default: 'transparent' }};--pdp-label-text:{{ label_text }}"
   data-product-section
+  data-pdp-label-chips="{% if label_background != blank %}true{% else %}false{% endif %}"
   data-pdp-family="{{ family }}"
   data-pdp-bible-version="{{ pdp_bible_version | default: 'legacy-unmigrated' | escape }}"
   data-palette-1="{{ palette_1 }}"
@@ -262,6 +267,12 @@
                 <details class="pdp-buybox-spec">
                   <summary><span>Care</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
                   <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
+                </details>
+              {%- endif -%}
+              {%- if warranty_copy != blank and family == 'accessories' -%}
+                <details class="pdp-buybox-spec">
+                  <summary><span>Warranty &amp; Maintenance</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <div class="pdp-buybox-spec__body pdp-rte">{{ warranty_copy | newline_to_br }}</div>
                 </details>
               {%- endif -%}
             </div>
@@ -411,13 +422,13 @@
 #MelatoPDP-{{ section.id }} .pdp-option-grid{display:flex;gap:8px;flex-wrap:wrap}
 #MelatoPDP-{{ section.id }} .pdp-choice input{position:absolute;opacity:0}
 #MelatoPDP-{{ section.id }} .pdp-choice span{display:block;min-width:54px;padding:13px 15px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);text-align:center;cursor:pointer;font-weight:800}
-#MelatoPDP-{{ section.id }} .pdp-choice.is-selected span{border-color:var(--melato-pdp-section-title);box-shadow:0 0 0 1px var(--melato-pdp-section-title);background:rgba(255,255,255,.11)}
+#MelatoPDP-{{ section.id }} .pdp-choice.is-selected span{border-color:var(--pdp-accent);box-shadow:0 0 0 1px var(--pdp-accent);background:var(--pdp-accent);color:var(--pdp-accent-text)}
 #MelatoPDP-{{ section.id }} .pdp-choice.is-sold-out span{opacity:.38;text-decoration:line-through;cursor:not-allowed}
 #MelatoPDP-{{ section.id }} .pdp-choice input:focus-visible+span{outline:2px solid var(--melato-pdp-section-title);outline-offset:2px}
 #MelatoPDP-{{ section.id }} .pdp-atc-row{display:grid;grid-template-columns:86px 1fr;gap:10px;margin-top:22px}
 #MelatoPDP-{{ section.id }} .pdp-qty,#MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{min-height:56px;border-radius:16px;border:0}
 #MelatoPDP-{{ section.id }} .pdp-qty{background:rgba(255,255,255,.05);color:var(--pdp-text);border:1px solid rgba(255,255,255,.13);text-align:center}
-#MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{background:var(--pdp-accent);color:#fff;font-weight:900;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+#MelatoPDP-{{ section.id }} .pdp-atc,#MelatoPDP-{{ section.id }} .pdp-sticky-atc button{background:var(--pdp-accent);color:var(--pdp-accent-text);font-weight:900;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
 #MelatoPDP-{{ section.id }} .pdp-atc--oos{background:rgba(255,255,255,.07)!important;color:rgba(255,255,255,.45)!important;border:1px solid rgba(255,255,255,.12)}
 #MelatoPDP-{{ section.id }} .pdp-shipping-returns{margin:18px 0 0;padding-top:16px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;line-height:1.55;color:color-mix(in srgb,var(--pdp-text) 72%,transparent)}
 #MelatoPDP-{{ section.id }} .pdp-buybox-specs{margin-top:18px;padding-top:14px;border-top:1px solid rgba(255,255,255,.1)}
@@ -429,6 +440,14 @@
 #MelatoPDP-{{ section.id }} .pdp-buybox-spec[open] .pdp-buybox-spec__icon{transform:rotate(45deg)}
 #MelatoPDP-{{ section.id }} .pdp-buybox-spec__body{padding:0 0 15px;font-size:13px;line-height:1.58}
 #MelatoPDP-{{ section.id }} .pdp-buybox-spec__body ul{margin:0;padding-left:18px}
+#MelatoPDP-{{ section.id }}[data-pdp-label-chips="true"] .pdp-eyebrow,
+#MelatoPDP-{{ section.id }}[data-pdp-label-chips="true"] .pdp-option legend,
+#MelatoPDP-{{ section.id }}[data-pdp-label-chips="true"] .pdp-buybox-specs__eyebrow,
+#MelatoPDP-{{ section.id }}[data-pdp-label-chips="true"] .pdp-buybox-spec summary>span:first-child,
+#MelatoPDP-{{ section.id }}[data-pdp-label-chips="true"] .size-guide-trigger{display:inline-block;width:max-content;max-width:100%;padding:6px 10px;border:1px solid rgba(255,255,255,.08);border-radius:999px;background:var(--pdp-label-bg);color:var(--pdp-label-text)!important;text-decoration:none;line-height:1.2}
+#MelatoPDP-{{ section.id }}[data-pdp-label-chips="true"] .pdp-buybox-spec summary{color:var(--pdp-label-text)}
+#MelatoPDP-{{ section.id }}[data-pdp-label-chips="true"] .pdp-buybox-spec__icon{color:var(--pdp-label-text)}
+#MelatoPDP-{{ section.id }}[data-pdp-label-chips="true"] .pdp-inline-link a{color:var(--pdp-text);text-decoration-color:var(--pdp-label-bg);text-underline-offset:3px}
 #MelatoPDP-{{ section.id }} .pdp-content-stack{display:grid;gap:18px;margin-top:28px}
 #MelatoPDP-{{ section.id }} .pdp-panel{padding:30px}
 #MelatoPDP-{{ section.id }} .pdp-section-head h2,#MelatoPDP-{{ section.id }} .melato-pdp-bible-section-title{color:var(--melato-pdp-section-title);transition:color .8s ease}
