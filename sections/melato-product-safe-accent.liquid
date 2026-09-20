@@ -8,6 +8,7 @@
   assign title_down = product.title | downcase
   assign tags_down = product.tags | join: ' ' | downcase
   assign raw_accent = product.metafields.custom.ui_accent.value
+  assign readable_accent = product.metafields.custom.theme_eyebrow.value | default: product.metafields.custom.foreground_hex_color_code.value
 
   if raw_accent == blank
     if tags_down contains 'colorway_divididos' or title_down contains 'divididos'
@@ -42,18 +43,23 @@
       assign raw_accent = '#D3A74A'
     endif
   endif
+
+  if readable_accent == blank
+    assign readable_accent = raw_accent
+  endif
 -%}
 
 <style id="melato-product-safe-accent-{{ section.id }}">
   body.template-product,
   body[class*="template-product"]{
     --melato-product-safe-accent: {{ raw_accent }};
+    --melato-product-safe-accent-text: {{ readable_accent }};
     --melato-product-accent: {{ raw_accent }};
   }
 
   body.template-product .melato-pdp-rebuild,
   body[class*="template-product"] .melato-pdp-rebuild{
-    --pdp-title-accent: {{ raw_accent }} !important;
+    --pdp-title-accent: {{ readable_accent }} !important;
     --pdp-accent-2: {{ raw_accent }} !important;
   }
 
@@ -74,7 +80,7 @@
   body[class*="template-product"] .melato-pdp-rebuild .pdp-set-label,
   body[class*="template-product"] .melato-pdp-rebuild .pdp-sticky-atc span,
   body[class*="template-product"] .melato-pdp-rebuild .pdp-section-head .pdp-kicker{
-    color: {{ raw_accent }} !important;
+    color: {{ readable_accent }} !important;
   }
 
   /* Big headings: always white and bold */
@@ -111,7 +117,7 @@
   body[class*="template-product"] .announcement-bar *,
   body[class*="template-product"] [class*="announcement"],
   body[class*="template-product"] [class*="announcement"] *{
-    color: {{ raw_accent }} !important;
+    color: {{ readable_accent }} !important;
     border-color: color-mix(in srgb, {{ raw_accent }} 50%, transparent) !important;
   }
 </style>
