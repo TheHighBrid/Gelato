@@ -22,9 +22,12 @@ const templatePath = 'templates/product.json';
 const pdpPath = 'sections/melato-product-page-rebuild.liquid';
 const merchPath = 'sections/melato-pdp-contextual-merchandising.liquid';
 const announcementPath = 'sections/melato-announcement-bar.liquid';
+const collectionPath = 'sections/main-collection.liquid';
+const collectionScriptPath = 'assets/melato-collection-filters.js';
+const productJsonLdPath = 'snippets/melato-product-jsonld.liquid';
 const codeownersPath = '.github/CODEOWNERS';
 
-for (const requiredPath of [biblePath, contractPath, agentsPath, templatePath, pdpPath, merchPath, announcementPath, codeownersPath]) {
+for (const requiredPath of [biblePath, contractPath, agentsPath, templatePath, pdpPath, merchPath, announcementPath, collectionPath, collectionScriptPath, productJsonLdPath, codeownersPath]) {
   if (!fs.existsSync(path.join(root, requiredPath))) fail(`required file is missing: ${requiredPath}`);
 }
 
@@ -104,6 +107,9 @@ requireText(pdp, '<summary>Fit</summary>', pdpPath);
 requireText(pdp, '<summary>Material</summary>', pdpPath);
 requireText(pdp, '<summary>Care</summary>', pdpPath);
 requireText(pdp, '<summary>Construction</summary>', pdpPath);
+requireText(pdp, 'Complete the Set', pdpPath);
+requireText(pdp, "class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: ''", pdpPath);
+requireText(pdp, "render 'melato-product-jsonld', product: product", pdpPath);
 forbidText(pdp, 'payment_button', pdpPath);
 forbidText(pdp, 'content_for_additional_checkout_buttons', pdpPath);
 
@@ -119,6 +125,27 @@ requireText(announcement, 'foreground_hex_color_code', announcementPath);
 requireText(announcement, 'palette_1', announcementPath);
 requireText(announcement, 'palette_2', announcementPath);
 requireText(announcement, 'palette_3', announcementPath);
+requireText(announcement, 'fallback_micro', announcementPath);
+requireText(announcement, 'aria-hidden="true"', announcementPath);
+
+const collection = read(collectionPath);
+requireText(collection, "collection.handle == 'best-sellers'", collectionPath);
+requireText(collection, 'if product.available', collectionPath);
+requireText(collection, 'unless product.available', collectionPath);
+requireText(collection, "collection.handle == 'new-arrivals' and paginate.next", collectionPath);
+requireText(collection, 'data-progressive-pagination', collectionPath);
+requireText(collection, 'data-load-more', collectionPath);
+requireText(collection, 'data-native-pagination', collectionPath);
+
+const collectionScript = read(collectionScriptPath);
+requireText(collectionScript, 'function enhanceProgressivePagination()', collectionScriptPath);
+requireText(collectionScript, 'function loadMore(url, button)', collectionScriptPath);
+requireText(collectionScript, "window.location.assign(url)", collectionScriptPath);
+
+const productJsonLd = read(productJsonLdPath);
+requireText(productJsonLd, '"@type": "Product"', productJsonLdPath);
+requireText(productJsonLd, '"@type": "BreadcrumbList"', productJsonLdPath);
+requireText(productJsonLd, '"availability": "https://schema.org/', productJsonLdPath);
 
 const codeowners = read(codeownersPath);
 for (const protectedPath of [
