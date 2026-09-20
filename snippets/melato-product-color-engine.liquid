@@ -100,6 +100,47 @@
   html.melato-product-palette-ready body.template-product .melato-product-soft-border {
     border-color: var(--melato-product-accent) !important;
   }
+
+  /* Site-wide product-matched PDP accents. Large product names stay cream for hierarchy. */
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-eyebrow,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-option legend,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .size-guide-trigger,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-buybox-specs__eyebrow,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-buybox-spec summary,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-buybox-spec__icon,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-inline-link a {
+    color: var(--melato-product-accent-readable) !important;
+    border-color: currentColor !important;
+  }
+
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-choice.is-selected span {
+    background: var(--melato-product-accent) !important;
+    border-color: var(--melato-product-accent) !important;
+    box-shadow: 0 0 0 1px var(--melato-product-accent) !important;
+    color: var(--melato-product-accent-foreground) !important;
+  }
+
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-thumb.is-active {
+    border-color: var(--melato-product-accent) !important;
+    box-shadow: 0 0 0 1px var(--melato-product-accent) !important;
+  }
+
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-atc,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-sticky-atc button,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-set-cta {
+    background: var(--melato-product-accent) !important;
+    border-color: var(--melato-product-accent) !important;
+    color: var(--melato-product-accent-foreground) !important;
+  }
+
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-atc--oos,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-atc:disabled,
+  html.melato-product-palette-ready body.template-product .melato-pdp-rebuild .pdp-sticky-atc button:disabled {
+    background: rgba(255,255,255,.07) !important;
+    color: rgba(255,255,255,.45) !important;
+    border-color: rgba(255,255,255,.12) !important;
+  }
+
 </style>
 
 <script id="melato-product-color-engine-js">
@@ -136,6 +177,105 @@
   };
 
 const productPalettes = [
+  {
+    keys: ["reasonable doubt", "reasonable-doubt"],
+    palette: {
+      name: "reasonable-doubt",
+      bar: ["#A1CBED", "#F5F1E8", "#1D3344"],
+      accent: "#A1CBED",
+      accent2: "#D8EAF8",
+      title: "#F5F1E8",
+      eyebrow: "#A1CBED",
+      cta: "#A1CBED",
+      darkText: "#111214",
+      lightText: "#FFFFFF"
+    }
+  },
+  {
+    keys: ["cho velour", "chō velour", "cho-velour"],
+    palette: {
+      name: "cho-velour",
+      bar: ["#6A34A3", "#111214", "#E6D7F6"],
+      accent: "#6A34A3",
+      accent2: "#B98CE3",
+      title: "#F5F1E8",
+      eyebrow: "#6A34A3",
+      cta: "#6A34A3",
+      darkText: "#111214",
+      lightText: "#FFFFFF"
+    }
+  },
+  {
+    keys: ["tinted testimony", "tinted-testimony"],
+    palette: {
+      name: "tinted-testimony",
+      bar: ["#6B2329", "#111214", "#E7C8CB"],
+      accent: "#6B2329",
+      accent2: "#CF7E84",
+      title: "#F5F1E8",
+      eyebrow: "#6B2329",
+      cta: "#6B2329",
+      darkText: "#111214",
+      lightText: "#FFFFFF"
+    }
+  },
+  {
+    keys: ["blush ledger", "blush-ledger"],
+    palette: {
+      name: "blush-ledger",
+      bar: ["#F1939E", "#FFF0F2", "#5B2F36"],
+      accent: "#F1939E",
+      accent2: "#F7C5CB",
+      title: "#F5F1E8",
+      eyebrow: "#F1939E",
+      cta: "#F1939E",
+      darkText: "#111214",
+      lightText: "#FFFFFF"
+    }
+  },
+  {
+    keys: ["merlot sunglasses", "merlot-sunglasses"],
+    palette: {
+      name: "merlot-sunglasses",
+      bar: ["#7D465E", "#111214", "#E5CCD7"],
+      accent: "#7D465E",
+      accent2: "#C98BA5",
+      title: "#F5F1E8",
+      eyebrow: "#7D465E",
+      cta: "#7D465E",
+      darkText: "#111214",
+      lightText: "#FFFFFF"
+    }
+  },
+  {
+    keys: ["brow sunglasses", "brow-sunglasses"],
+    palette: {
+      name: "brow-sunglasses",
+      bar: ["#72441D", "#111214", "#E4C7A9"],
+      accent: "#72441D",
+      accent2: "#C9996E",
+      title: "#F5F1E8",
+      eyebrow: "#72441D",
+      cta: "#72441D",
+      darkText: "#111214",
+      lightText: "#FFFFFF"
+    }
+  },
+  {
+    keys: ["pinkognito", "pinkognito-sunglasses"],
+    palette: {
+      name: "pinkognito",
+      bar: ["#F7DDD8", "#111214", "#B97F88"],
+      accent: "#F7DDD8",
+      accent2: "#FBEDEB",
+      title: "#F5F1E8",
+      eyebrow: "#F7DDD8",
+      cta: "#F7DDD8",
+      darkText: "#111214",
+      lightText: "#FFFFFF"
+    }
+  },
+
     {
         keys: ["divididos", "divididos velour", "divididos track"],
             palette: {
@@ -434,6 +574,144 @@ const productPalettes = [
       : palette.lightText || "#fff7ea";
   };
 
+  const contrastRatio = (a, b) => {
+    const l1 = luminance(a);
+    const l2 = luminance(b);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  };
+
+  const mixHex = (from, to, amount) => {
+    const a = hexToRgb(from);
+    const b = hexToRgb(to);
+    const channel = (start, end) => Math.round(start + (end - start) * amount);
+    return "#" + [channel(a.r, b.r), channel(a.g, b.g), channel(a.b, b.b)]
+      .map((value) => value.toString(16).padStart(2, "0"))
+      .join("");
+  };
+
+  const readableAccent = (accent) => {
+    const safe = cleanHex(accent) || fallbackPalette.accent;
+    if (contrastRatio(safe, "#111214") >= 4.5) return safe;
+    for (let amount = 0.12; amount <= 0.76; amount += 0.08) {
+      const candidate = mixHex(safe, "#ffffff", amount);
+      if (contrastRatio(candidate, "#111214") >= 4.5) return candidate;
+    }
+    return "#f5f1e8";
+  };
+
+  const keywordAccent = (text) => {
+    const rules = [
+      [["pink", "blush", "rose", "rosetta"], "#E991A7"],
+      [["burgundy", "barolo", "merlot", "wine", "red"], "#9E465A"],
+      [["blue", "navy", "azure", "sky", "cobalt"], "#7EA9D6"],
+      [["green", "mint", "olive", "emerald", "forest"], "#79A982"],
+      [["brown", "cognac", "caramel", "taupe", "cocoa"], "#A47750"],
+      [["purple", "violet", "lavender", "plum"], "#8D6AB8"],
+      [["orange", "magma", "rust"], "#C96A32"],
+      [["yellow", "gold", "midas"], "#D3A74A"],
+      [["cream", "bone", "ivory", "alabaster", "off white"], "#D8C7AD"],
+      [["grey", "gray", "smoke", "silver"], "#9BA0A4"],
+      [["black", "noir", "obsidian"], "#8E8172"]
+    ];
+    for (const rule of rules) {
+      if (rule[0].some((word) => text.includes(word))) return rule[1];
+    }
+    return "";
+  };
+
+  const sampleProductAccent = async () => {
+    const image = document.querySelector(
+      ".melato-pdp-rebuild .pdp-main-image, .product__media img, .ml-main-image, [data-product-media] img"
+    );
+    if (!image) return "";
+
+    const source = image.currentSrc || image.src;
+    if (!source) return "";
+
+    try {
+      const url = new URL(source, window.location.href);
+      if (/shopify|cdn\.shopify/i.test(url.hostname)) url.searchParams.set("width", "180");
+
+      const response = await fetch(url.toString(), {
+        mode: "cors",
+        credentials: "omit",
+        cache: "force-cache"
+      });
+      if (!response.ok) return "";
+
+      const blob = await response.blob();
+      const bitmap = await createImageBitmap(blob);
+      const canvas = document.createElement("canvas");
+      const size = 56;
+      canvas.width = size;
+      canvas.height = size;
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      if (!context) return "";
+
+      context.drawImage(bitmap, 0, 0, size, size);
+      if (bitmap.close) bitmap.close();
+
+      const pixels = context.getImageData(0, 0, size, size).data;
+      const bins = new Map();
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (pixels[i + 3] < 220) continue;
+
+        const r = pixels[i];
+        const g = pixels[i + 1];
+        const b = pixels[i + 2];
+        const max = Math.max(r, g, b) / 255;
+        const min = Math.min(r, g, b) / 255;
+        const lightness = (max + min) / 2;
+        const delta = max - min;
+        const saturation = delta === 0 ? 0 : delta / (1 - Math.abs(2 * lightness - 1));
+
+        if (r > 242 && g > 242 && b > 238) continue;
+        if (lightness > 0.94 && saturation < 0.30) continue;
+        if (lightness < 0.025) continue;
+
+        const key = [
+          Math.round(r / 24) * 24,
+          Math.round(g / 24) * 24,
+          Math.round(b / 24) * 24
+        ].join(",");
+
+        const entry = bins.get(key) || {
+          count: 0, r: 0, g: 0, b: 0, saturation: 0, lightness: 0
+        };
+        entry.count += 1;
+        entry.r += r;
+        entry.g += g;
+        entry.b += b;
+        entry.saturation += saturation;
+        entry.lightness += lightness;
+        bins.set(key, entry);
+      }
+
+      let best = null;
+      let bestScore = -1;
+      bins.forEach((entry) => {
+        const saturation = entry.saturation / entry.count;
+        const lightness = entry.lightness / entry.count;
+        const middle = 1 - Math.min(1, Math.abs(lightness - 0.52) / 0.52);
+        let score = entry.count * (0.72 + saturation * 1.75) * (0.78 + middle * 0.92);
+        if (lightness < 0.10) score *= 0.42;
+        if (lightness > 0.88 && saturation < 0.22) score *= 0.25;
+        if (score > bestScore) {
+          bestScore = score;
+          best = entry;
+        }
+      });
+
+      if (!best) return "";
+      const values = [best.r / best.count, best.g / best.count, best.b / best.count]
+        .map((value) => Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, "0"));
+      return "#" + values.join("");
+    } catch (error) {
+      return "";
+    }
+  };
+
   const productType = {{ product.type | json }};
 const productTags = {{ product.tags | join: ' ' | json }};
 const productVendor = {{ product.vendor | json }};
@@ -451,6 +729,20 @@ const haystack = normalize([
   });
 
   let palette = matched ? { ...fallbackPalette, ...matched.palette } : { ...fallbackPalette };
+  if (!matched) {
+    const titleBasedAccent = keywordAccent(haystack);
+    if (titleBasedAccent) {
+      palette = {
+        ...palette,
+        name: "keyword-" + titleBasedAccent.slice(1).toLowerCase(),
+        accent: titleBasedAccent,
+        accent2: titleBasedAccent,
+        eyebrow: titleBasedAccent,
+        cta: titleBasedAccent,
+        bar: [titleBasedAccent, "#111214", "#f5f1e8"]
+      };
+    }
+  }
 
   const metaHasValues =
     metafieldPalette.bar.length ||
@@ -492,6 +784,8 @@ const haystack = normalize([
     root.style.setProperty("--melato-product-eyebrow", palette.eyebrow);
     root.style.setProperty("--melato-product-cta", palette.cta);
     root.style.setProperty("--melato-product-cta-text", readableText(palette.cta, palette));
+    root.style.setProperty("--melato-product-accent-readable", readableAccent(palette.accent));
+    root.style.setProperty("--melato-product-accent-foreground", readableText(palette.accent, palette));
     document.body.setAttribute("data-melato-product-palette", palette.name);
   };
 
@@ -629,11 +923,36 @@ const haystack = normalize([
     });
   };
 
+  let autoSampleToken = 0;
+  const refreshAutoAccent = async () => {
+    if (matched || metaHasValues) return;
+    const token = ++autoSampleToken;
+    const sampled = await sampleProductAccent();
+    if (!sampled || token !== autoSampleToken) return;
+
+    palette = {
+      ...palette,
+      name: "image-sampled",
+      accent: sampled,
+      accent2: sampled,
+      eyebrow: sampled,
+      cta: sampled,
+      bar: [sampled, mixHex(sampled, "#111214", 0.58), "#f5f1e8"]
+    };
+    setRootVariables();
+    accentProductTitles();
+  };
+
   const init = () => {
     setRootVariables();
     paintAnnouncementBars();
     accentProductTitles();
+    refreshAutoAccent();
   };
+
+  document.addEventListener("variant:change", () => {
+    if (!matched && !metaHasValues) window.setTimeout(refreshAutoAccent, 90);
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
