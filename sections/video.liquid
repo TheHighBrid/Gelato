@@ -2,7 +2,7 @@
   sections/video.liquid
 {% endcomment %}
 
-<section class="section-spacing">
+<section id="MelatoVideo-{{ section.id }}" class="section-spacing">
   <div class="{% if section.settings.full_width %}container--full{% else %}container{% endif %}">
 
     {%- if section.settings.heading != blank -%}
@@ -12,8 +12,9 @@
     {%- endif -%}
 
     <div
-      class="drip-reveal drip-reveal--delay-1"
+      class="drip-reveal drip-reveal--delay-1 melato-video-frame"
       style="position:relative;overflow:hidden;aspect-ratio:{{ section.settings.aspect_ratio | default: '16/9' }};"
+      data-melato-video-frame
     >
       {%- if section.settings.video_url != blank -%}
         <video
@@ -23,9 +24,32 @@
           style="width:100%;height:100%;object-fit:cover;"
           aria-label="{{ section.settings.heading | default: 'Video' | escape }}"
           preload="metadata"
+          data-melato-video
         >
           Your browser does not support the video tag.
         </video>
+
+        {%- if section.settings.autoplay -%}
+          <button
+            class="melato-video-sound-toggle"
+            type="button"
+            aria-label="Turn sound on"
+            aria-pressed="false"
+            data-melato-sound-toggle
+          >
+            <span class="visually-hidden" data-melato-sound-label>Turn sound on</span>
+
+            <svg class="melato-video-sound-toggle__icon" data-melato-icon-muted width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M11 5 6.8 8.5H3.5v7h3.3L11 19V5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="m16 9 5 5M21 9l-5 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+
+            <svg class="melato-video-sound-toggle__icon" data-melato-icon-sound width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" hidden>
+              <path d="M11 5 6.8 8.5H3.5v7h3.3L11 19V5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M15.2 9.2a4 4 0 0 1 0 5.6M18 6.7a7.4 7.4 0 0 1 0 10.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+        {%- endif -%}
       {%- elsif section.settings.cover_image != blank -%}
         <img
           src="{{ section.settings.cover_image | image_url: width: 1600 }}"
@@ -45,6 +69,107 @@
 
   </div>
 </section>
+
+<style>
+  #MelatoVideo-{{ section.id }} .melato-video-sound-toggle {
+    position: absolute;
+    right: clamp(14px, 2vw, 26px);
+    bottom: clamp(14px, 2vw, 26px);
+    z-index: 3;
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgba(255,255,255,0.42);
+    border-radius: 999px;
+    background: rgba(5,5,5,0.48);
+    color: #fff;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.22);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    transition: background 160ms ease, border-color 160ms ease, transform 160ms ease;
+  }
+
+  #MelatoVideo-{{ section.id }} .melato-video-sound-toggle:hover {
+    background: rgba(5,5,5,0.7);
+    border-color: rgba(255,255,255,0.72);
+    transform: translateY(-1px);
+  }
+
+  #MelatoVideo-{{ section.id }} .melato-video-sound-toggle:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+  }
+
+  #MelatoVideo-{{ section.id }} .melato-video-sound-toggle__icon {
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 749px) {
+    #MelatoVideo-{{ section.id }} .melato-video-sound-toggle {
+      width: 44px;
+      height: 44px;
+      right: 14px;
+      bottom: 14px;
+    }
+  }
+</style>
+
+{%- if section.settings.video_url != blank and section.settings.autoplay -%}
+  <script>
+    (() => {
+      const section = document.getElementById('MelatoVideo-{{ section.id }}');
+      if (!section) return;
+
+      const video = section.querySelector('[data-melato-video]');
+      const button = section.querySelector('[data-melato-sound-toggle]');
+      const label = section.querySelector('[data-melato-sound-label]');
+      const mutedIcon = section.querySelector('[data-melato-icon-muted]');
+      const soundIcon = section.querySelector('[data-melato-icon-sound]');
+
+      if (!video || !button) return;
+
+      const syncSoundState = () => {
+        const isMuted = video.muted || video.volume === 0;
+        const nextLabel = isMuted ? 'Turn sound on' : 'Mute video';
+
+        button.setAttribute('aria-label', nextLabel);
+        button.setAttribute('aria-pressed', String(!isMuted));
+
+        if (label) label.textContent = nextLabel;
+        if (mutedIcon) mutedIcon.hidden = !isMuted;
+        if (soundIcon) soundIcon.hidden = isMuted;
+      };
+
+      button.addEventListener('click', async () => {
+        const shouldUnmute = video.muted || video.volume === 0;
+
+        if (shouldUnmute) {
+          video.volume = 1;
+          video.muted = false;
+
+          try {
+            await video.play();
+          } catch (error) {
+            video.muted = true;
+          }
+        } else {
+          video.muted = true;
+        }
+
+        syncSoundState();
+      });
+
+      video.addEventListener('volumechange', syncSoundState);
+      syncSoundState();
+    })();
+  </script>
+{%- endif -%}
 
 {% schema %}
 {
