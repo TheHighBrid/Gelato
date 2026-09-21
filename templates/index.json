@@ -9,6 +9,19 @@
  */
 {
   "sections": {
+    "video_Hm6knQ": {
+      "type": "video",
+      "name": "Video",
+      "settings": {
+        "heading": "THUNDERSTORM AMBER ALERT",
+        "center_heading": true,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
+        "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
+        "autoplay": true,
+        "full_width": true,
+        "aspect_ratio": "4/3"
+      }
+    },
     "melato_conversion_2026": {
       "type": "melato-home-conversion",
       "settings": {
@@ -77,44 +90,6 @@
         "view_all_label": "View all"
       }
     },
-    "video_Hm6knQ": {
-      "type": "video",
-      "name": "Video",
-      "settings": {
-        "heading": "THUNDERSTORM AMBER ALERT",
-        "center_heading": true,
-        "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
-        "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
-        "autoplay": true,
-        "full_width": true,
-        "aspect_ratio": "4/3"
-      }
-    },
-    "brand_story": {
-      "type": "brand-story",
-      "settings": {
-        "eyebrow": "About",
-        "heading": "MELATO, IN CONTEXT",
-        "body": "The references, process and decisions behind the work.",
-        "cta_label": "Our Story",
-        "cta_url": "/pages/our-story",
-        "image_position": "left"
-      }
-    },
-    "drop_signup_FMehUL": {
-      "type": "drop-signup",
-      "settings": {
-        "eyebrow": "Email",
-        "heading": "MELATO NOTES",
-        "subtext": "Product updates and restocks.",
-        "placeholder": "Email address",
-        "btn_label": "Join",
-        "show_divider_lines": false,
-        "bg_color": "#0a0a0a",
-        "text_color": "#f5f1e8",
-        "accent_color": "#f5f1e8"
-      }
-    },
     "hero_video_wLntL4": {
       "type": "hero-video",
       "name": "Melato - cinematic video hero",
@@ -153,6 +128,32 @@
         "accent_color": "#FFC954"
       }
     },
+    "brand_story": {
+      "type": "brand-story",
+      "settings": {
+        "image": "shopify://shop_images/The_Living_Lookbook-Frame-0_8.jpg",
+        "eyebrow": "About",
+        "heading": "MELATO, IN CONTEXT",
+        "body": "The references, process and decisions behind the work.",
+        "cta_label": "Our Story",
+        "cta_url": "/pages/our-story",
+        "image_position": "left"
+      }
+    },
+    "drop_signup_FMehUL": {
+      "type": "drop-signup",
+      "settings": {
+        "eyebrow": "Email",
+        "heading": "MELATO NOTES",
+        "subtext": "Product updates and restocks.",
+        "placeholder": "Email address",
+        "btn_label": "Join",
+        "show_divider_lines": true,
+        "bg_color": "#0a0a0a",
+        "text_color": "#f5f1e8",
+        "accent_color": "#f5f1e8"
+      }
+    },
     "concierge_strip_74pEae": {
       "type": "concierge-strip",
       "name": "Client Services Nav",
@@ -164,14 +165,14 @@
     }
   },
   "order": [
+    "video_Hm6knQ",
     "melato_conversion_2026",
     "ticker",
     "featured_collection",
-    "video_Hm6knQ",
-    "brand_story",
-    "drop_signup_FMehUL",
     "hero_video_wLntL4",
     "announcement_marquee_VfV9At",
+    "brand_story",
+    "drop_signup_FMehUL",
     "concierge_strip_74pEae"
   ]
 }
