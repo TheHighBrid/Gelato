@@ -101,13 +101,77 @@
         "text_color": "#f5f1e8",
         "accent_color": "#f5f1e8"
       }
+    },
+    "hero_video_wLntL4": {
+      "type": "hero-video",
+      "name": "Melato - cinematic video hero",
+      "settings": {
+        "shopify_video": "shopify://files/videos/Hero.mp4",
+        "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
+        "poster_image": "shopify://shop_images/rn-image_picker_lib_temp_2b5e94fa-a763-49a2-a495-8203a4e667d2.png",
+        "loop_video": true,
+        "hero_height": "full",
+        "custom_height": 1100,
+        "overlay_opacity": 65,
+        "enable_texture": true,
+        "content_position": "left",
+        "content_width": 920,
+        "kicker": "THE MELATO STANDARD",
+        "heading_line_1": "THE   Culture",
+        "heading_line_2": "WEARS US",
+        "body": "<p>    -        comme never change</p>",
+        "primary_label": "SHOP THE DROP",
+        "primary_link": "shopify://collections/frontpage",
+        "secondary_label": "OUR STORY",
+        "secondary_link": "shopify://pages/our-story",
+        "show_scroll_cue": true
+      }
+    },
+    "announcement_marquee_VfV9At": {
+      "type": "announcement-marquee",
+      "name": "Announcement Marquee",
+      "settings": {
+        "ticker_text": "SHOULD YOU WISH TO PREVIEW OUR SELECTION IN PERSON, PLEASE CONTACT US TO SCHEDULE AN APPOINTMENT AT 8555 CAMPEAU DRIVE, UNIT #370, TANGER OUTLETS OTTAWA.",
+        "divider_char": "✦",
+        "scroll_speed": 60,
+        "bar_height": 38,
+        "bg_color": "#0A0A0A",
+        "text_color": "#B9B9B9",
+        "accent_color": "#FFC954"
+      }
+    },
+    "concierge_strip_74pEae": {
+      "type": "concierge-strip",
+      "name": "Client Services Nav",
+      "settings": {
+        "current_pillar": "order-support",
+        "contextual_copy": "<p>Need help with an order? Email <a href=\"mailto:support@melato.ca\">support@melato.ca</a> and include your order number.</p>",
+        "show_contextual": true
+      }
+    },
+    "video_Hm6knQ": {
+      "type": "video",
+      "name": "Video",
+      "settings": {
+        "heading": "THUNDERSTORM AMBER ALERT",
+        "center_heading": true,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
+        "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
+        "autoplay": true,
+        "full_width": true,
+        "aspect_ratio": "16/9"
+      }
     }
   },
   "order": [
     "melato_conversion_2026",
     "ticker",
     "featured_collection",
+    "video_Hm6knQ",
     "brand_story",
-    "drop_signup_FMehUL"
+    "drop_signup_FMehUL",
+    "hero_video_wLntL4",
+    "announcement_marquee_VfV9At",
+    "concierge_strip_74pEae"
   ]
 }
