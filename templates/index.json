@@ -22,19 +22,6 @@
         "aspect_ratio": "4/3"
       }
     },
-    "video_YBN7Uc": {
-      "type": "video",
-      "name": "Video",
-      "settings": {
-        "heading": "HENDRIX BLUE MAGIC",
-        "center_heading": true,
-        "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
-        "cover_image": "shopify://shop_images/hendrix-flare-jean-view-07.png",
-        "autoplay": false,
-        "full_width": true,
-        "aspect_ratio": "4/3"
-      }
-    },
     "melato_conversion_2026": {
       "type": "melato-home-conversion",
       "settings": {
@@ -128,6 +115,20 @@
         "show_scroll_cue": true
       }
     },
+    "video_YBN7Uc": {
+      "type": "video",
+      "disabled": true,
+      "name": "Video",
+      "settings": {
+        "heading": "HENDRIX BLUE MAGIC",
+        "center_heading": true,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
+        "cover_image": "shopify://shop_images/hendrix-flare-jean-view-07.png",
+        "autoplay": false,
+        "full_width": true,
+        "aspect_ratio": "4/3"
+      }
+    },
     "announcement_marquee_VfV9At": {
       "type": "announcement-marquee",
       "name": "Announcement Marquee",
@@ -179,11 +180,11 @@
   },
   "order": [
     "video_Hm6knQ",
-    "video_YBN7Uc",
     "melato_conversion_2026",
     "ticker",
     "featured_collection",
     "hero_video_wLntL4",
+    "video_YBN7Uc",
     "announcement_marquee_VfV9At",
     "brand_story",
     "drop_signup_FMehUL",
