@@ -15,9 +15,22 @@
       "settings": {
         "heading": "THUNDERSTORM AMBER ALERT",
         "center_heading": true,
-        "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
+        "video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.SD-480p-1.5Mbps-95096030.mp4",
         "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
         "autoplay": true,
+        "full_width": true,
+        "aspect_ratio": "4/3"
+      }
+    },
+    "video_YBN7Uc": {
+      "type": "video",
+      "name": "Video",
+      "settings": {
+        "heading": "HENDRIX BLUE MAGIC",
+        "center_heading": true,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
+        "cover_image": "shopify://shop_images/hendrix-flare-jean-view-07.png",
+        "autoplay": false,
         "full_width": true,
         "aspect_ratio": "4/3"
       }
@@ -162,23 +175,11 @@
         "contextual_copy": "<p>Need help with an order? Email <a href=\"mailto:support@melato.ca\">support@melato.ca</a> and include your order number.</p>",
         "show_contextual": true
       }
-    },
-    "video_YBN7Uc": {
-      "type": "video",
-      "name": "Video",
-      "settings": {
-        "heading": "HENDRIX BLUE MAGIC",
-        "center_heading": true,
-        "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
-        "cover_image": "shopify://shop_images/hendrix-flare-jean-view-07.png",
-        "autoplay": false,
-        "full_width": true,
-        "aspect_ratio": "4/3"
-      }
     }
   },
   "order": [
     "video_Hm6knQ",
+    "video_YBN7Uc",
     "melato_conversion_2026",
     "ticker",
     "featured_collection",
@@ -186,7 +187,6 @@
     "announcement_marquee_VfV9At",
     "brand_story",
     "drop_signup_FMehUL",
-    "concierge_strip_74pEae",
-    "video_YBN7Uc"
+    "concierge_strip_74pEae"
   ]
 }
