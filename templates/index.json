@@ -77,6 +77,19 @@
         "view_all_label": "View all"
       }
     },
+    "video_Hm6knQ": {
+      "type": "video",
+      "name": "Video",
+      "settings": {
+        "heading": "THUNDERSTORM AMBER ALERT",
+        "center_heading": true,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
+        "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
+        "autoplay": true,
+        "full_width": true,
+        "aspect_ratio": "4/3"
+      }
+    },
     "brand_story": {
       "type": "brand-story",
       "settings": {
@@ -147,19 +160,6 @@
         "current_pillar": "order-support",
         "contextual_copy": "<p>Need help with an order? Email <a href=\"mailto:support@melato.ca\">support@melato.ca</a> and include your order number.</p>",
         "show_contextual": true
-      }
-    },
-    "video_Hm6knQ": {
-      "type": "video",
-      "name": "Video",
-      "settings": {
-        "heading": "THUNDERSTORM AMBER ALERT",
-        "center_heading": true,
-        "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
-        "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
-        "autoplay": true,
-        "full_width": true,
-        "aspect_ratio": "16/9"
       }
     }
   },
