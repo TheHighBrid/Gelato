@@ -165,6 +165,7 @@
     },
     "melato_living_book_casefile_JphCbR": {
       "type": "melato-living-book-casefile",
+      "disabled": true,
       "name": "Living Book v2",
       "settings": {
         "case_code": "LB-INFINITE",
