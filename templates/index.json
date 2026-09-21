@@ -123,9 +123,9 @@
         "divider_char": "✦",
         "scroll_speed": 60,
         "bar_height": 38,
-        "bg_color": "#0A0A0A",
-        "text_color": "#B9B9B9",
-        "accent_color": "#FFC954"
+        "bg_color": "#0a0a0a",
+        "text_color": "#b9b9b9",
+        "accent_color": "#ffc954"
       }
     },
     "brand_story": {
@@ -162,6 +162,19 @@
         "contextual_copy": "<p>Need help with an order? Email <a href=\"mailto:support@melato.ca\">support@melato.ca</a> and include your order number.</p>",
         "show_contextual": true
       }
+    },
+    "melato_living_book_casefile_JphCbR": {
+      "type": "melato-living-book-casefile",
+      "name": "Living Book v2",
+      "settings": {
+        "case_code": "LB-INFINITE",
+        "case_subtitle": "CASE FILE / UNRESOLVED",
+        "case_title": "THE LIVING BOOK",
+        "outline_title": "EVIDENCE",
+        "deck": "A forensic fashion archive built from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive.",
+        "filed_date": "18 AUG 2026",
+        "include_case03": true
+      }
     }
   },
   "order": [
@@ -173,6 +186,7 @@
     "announcement_marquee_VfV9At",
     "brand_story",
     "drop_signup_FMehUL",
-    "concierge_strip_74pEae"
+    "concierge_strip_74pEae",
+    "melato_living_book_casefile_JphCbR"
   ]
 }
