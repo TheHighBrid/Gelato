@@ -163,18 +163,17 @@
         "show_contextual": true
       }
     },
-    "melato_living_book_casefile_JphCbR": {
-      "type": "melato-living-book-casefile",
-      "disabled": true,
-      "name": "Living Book v2",
+    "video_YBN7Uc": {
+      "type": "video",
+      "name": "Video",
       "settings": {
-        "case_code": "LB-INFINITE",
-        "case_subtitle": "CASE FILE / UNRESOLVED",
-        "case_title": "THE LIVING BOOK",
-        "outline_title": "EVIDENCE",
-        "deck": "A forensic fashion archive built from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive.",
-        "filed_date": "18 AUG 2026",
-        "include_case03": true
+        "heading": "",
+        "center_heading": true,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
+        "cover_image": "shopify://shop_images/hendrix-flare-jean-view-07.png",
+        "autoplay": false,
+        "full_width": true,
+        "aspect_ratio": "4/3"
       }
     }
   },
@@ -188,6 +187,6 @@
     "brand_story",
     "drop_signup_FMehUL",
     "concierge_strip_74pEae",
-    "melato_living_book_casefile_JphCbR"
+    "video_YBN7Uc"
   ]
 }
