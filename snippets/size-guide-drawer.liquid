@@ -1,15 +1,20 @@
 {% comment %}
   Product-specific sizing drawer.
-  The drawer renders only when product.metafields.custom.size_guide is assigned.
+  The drawer renders only when product.metafields.custom.size_guide points to a product-specific page.
 {% endcomment %}
 
 {%- liquid
   assign size_guide_page = product.metafields.custom.size_guide.value
+  assign size_guide_handle = size_guide_page.handle | default: '' | downcase
+  assign is_generic_fit_guide = false
+  if size_guide_handle == 'size-guide' or size_guide_handle == 'melato-size-guide' or size_guide_handle == 'sizing-guide' or size_guide_handle == 'fit-guide'
+    assign is_generic_fit_guide = true
+  endif
   assign drawer_id = 'SizeGuideDrawer-' | append: product.id
   assign drawer_title_id = 'SizeGuideTitle-' | append: product.id
 -%}
 
-{%- if size_guide_page != blank -%}
+{%- if size_guide_page != blank and is_generic_fit_guide == false -%}
   <div id="{{ drawer_id }}" class="melato-size-drawer" aria-hidden="true" data-size-drawer>
     <button class="melato-size-drawer__overlay" type="button" data-close-size-drawer tabindex="-1" aria-label="Close size guide"></button>
     <aside class="melato-size-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="{{ drawer_title_id }}" tabindex="-1">
@@ -75,4 +80,4 @@
   </script>
 {%- endif -%}
 
-{% comment %} Sync revision 2026-08-07 product-specific only {% endcomment %}
+{% comment %} Sync revision 2026-09-24 product-specific only {% endcomment %}
