@@ -1,0 +1,157 @@
+{% comment %}
+  Melato theme audit hotfix, Sep 24 2026.
+  Final server-render pass for Product Page Bible details that cannot safely live in product data.
+{% endcomment %}
+
+{%- liquid
+  assign output = html
+
+  if context == 'announcement'
+    assign output = output | replace: 'MELATO NOTES.Melato', 'MELATO NOTES · Melato'
+    assign output = output | replace: 'MELATO NOTES. Melato', 'MELATO NOTES · Melato'
+    assign output = output | replace: 'MELATO NOTES . Melato', 'MELATO NOTES · Melato'
+  endif
+
+  if context == 'main' and template.name == 'index'
+    capture homepage_hotfix
+      echo '<style data-melato-home-audit-hotfix>.melato-home-uniform .melato-home-section-head{max-width:760px}.melato-home-uniform .melato-home-section-head p{max-width:58ch}.melato-home-uniform [class*="grid"]{gap:clamp(14px,2vw,24px)}.melato-hero-video__sound{position:absolute;right:clamp(16px,3vw,34px);bottom:clamp(18px,3vw,34px);z-index:5;min-height:42px;padding:0 16px;border:1px solid rgba(244,234,216,.36);border-radius:999px;background:rgba(5,5,5,.56);color:#f4ead8;font:700 11px/1 var(--font-body-family,Arial,sans-serif);letter-spacing:.16em;text-transform:uppercase;backdrop-filter:blur(12px);cursor:pointer}.melato-hero-video__sound:hover{background:rgba(244,234,216,.12)}</style>'
+      echo '<script data-melato-hero-sound>(function(){function bind(){document.querySelectorAll(".melato-hero-video").forEach(function(section){if(section.dataset.melatoSoundReady==="true")return;var video=section.querySelector(".melato-hero-video__asset");if(!video)return;section.dataset.melatoSoundReady="true";var button=document.createElement("button");button.type="button";button.className="melato-hero-video__sound";button.setAttribute("aria-pressed","false");button.textContent="Sound on";button.addEventListener("click",function(){var shouldUnmute=video.muted||video.hasAttribute("muted");if(shouldUnmute){video.muted=false;video.removeAttribute("muted");video.volume=1;video.play&&video.play().catch(function(){video.setAttribute("controls","controls")});button.setAttribute("aria-pressed","true");button.textContent="Sound off";}else{video.muted=true;video.setAttribute("muted","");button.setAttribute("aria-pressed","false");button.textContent="Sound on";}});section.appendChild(button);});}if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",bind)}else{bind()}window.addEventListener("load",function(){setTimeout(bind,250)});document.addEventListener("shopify:section:load",function(event){setTimeout(function(){bind(event.target)},100)});})();</script>'
+    endcapture
+    unless output contains 'data-melato-hero-sound'
+      assign output = output | append: homepage_hotfix
+    endunless
+  endif
+
+  if context == 'main' and template.name == 'product' and product
+    assign current_variant = product.selected_or_first_available_variant
+    assign matching_product = product.metafields.custom.companion_product.value
+    if matching_product == blank
+      assign matching_product = product.metafields.custom.matching_product.value | default: product.metafields.custom.matching_piece.value | default: product.metafields.custom.set_partner.value
+    endif
+
+    if current_variant != blank
+      capture price_plain
+        echo '<span class="pdp-price">'
+        echo current_variant.price | money
+        echo '</span>'
+      endcapture
+      capture price_currency
+        echo '<span class="pdp-price">'
+        echo current_variant.price | money_with_currency
+        echo '</span>'
+      endcapture
+      assign output = output | replace: price_plain, price_currency
+
+      capture sticky_plain
+        echo '<span class="purchase-summary__price" id="PDPStickyPrice-'
+      endcapture
+      if output contains sticky_plain
+        capture current_money_plain
+          echo current_variant.price | money
+        endcapture
+        capture current_money_currency
+          echo current_variant.price | money_with_currency
+        endcapture
+        assign output = output | replace: current_money_plain, current_money_currency
+      endif
+
+      if current_variant.compare_at_price > current_variant.price
+        capture compare_plain
+          echo '<s class="pdp-compare">'
+          echo current_variant.compare_at_price | money
+          echo '</s>'
+        endcapture
+        capture compare_currency
+          echo '<s class="pdp-compare">'
+          echo current_variant.compare_at_price | money_with_currency
+          echo '</s>'
+        endcapture
+        assign output = output | replace: compare_plain, compare_currency
+      endif
+    endif
+
+    capture product_card_price_plain
+      echo '<p class="purchase-summary__price">'
+      echo product.price | money
+      echo '</p>'
+    endcapture
+    capture product_card_price_currency
+      echo '<p class="purchase-summary__price">'
+      echo product.price | money_with_currency
+      echo '</p>'
+    endcapture
+    assign output = output | replace: product_card_price_plain, product_card_price_currency
+
+    if matching_product != blank
+      capture matching_card_price_plain
+        echo '<p class="purchase-summary__price">'
+        echo matching_product.price | money
+        echo '</p>'
+      endcapture
+      capture matching_card_price_currency
+        echo '<p class="purchase-summary__price">'
+        echo matching_product.price | money_with_currency
+        echo '</p>'
+      endcapture
+      assign output = output | replace: matching_card_price_plain, matching_card_price_currency
+    endif
+
+    assign origin_copy = product.metafields.custom.made_in.value | default: product.metafields.custom.country_of_origin.value
+    if origin_copy == 'Imported'
+      assign output = output | replace: '<strong>Origin</strong><span>Made in Imported</span>', '<strong>Origin</strong><span>Imported</span>'
+      assign output = output | replace: '<strong>Origin</strong> <span>Made in Imported</span>', '<strong>Origin</strong> <span>Imported</span>'
+    endif
+    if origin_copy contains 'Designed in'
+      capture designed_origin_plain
+        echo '<div class="pdp-conversion-assurances__fact"><strong>Origin</strong><span>Made in '
+        echo origin_copy | escape
+        echo '</span></div>'
+      endcapture
+      capture designed_origin_spaced
+        echo '<div class="pdp-conversion-assurances__fact"><strong>Origin</strong> <span>Made in '
+        echo origin_copy | escape
+        echo '</span></div>'
+      endcapture
+      assign output = output | replace: designed_origin_plain, '' | replace: designed_origin_spaced, ''
+    endif
+
+    assign related_products = product.metafields.custom.related_products.value
+    if related_products != blank
+      assign output = output | replace: '>New Arrivals</h2>', '>You Might Also Like</h2>'
+      assign output = output | replace: '>New arrivals</h2>', '>You Might Also Like</h2>'
+      unless output contains 'melato-related-products--curated'
+        capture related_markup
+          echo '<section class="melato-related-products melato-related-products--curated" aria-labelledby="MelatoRelatedProductsTitle"><style>.melato-related-products--curated{width:min(1440px,calc(100% - 32px));margin:38px auto 0;padding:28px;border:1px solid rgba(255,255,255,.095);border-radius:26px;background:var(--pdp-surface,#111214);color:var(--pdp-text,#f5f1e8)}.melato-related-products--curated h2{margin:0 0 18px;color:var(--melato-pdp-section-title,#d3a74a);font-size:12px;letter-spacing:.18em;text-transform:uppercase}.melato-related-products__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.melato-related-products__card{display:grid;gap:10px;color:inherit;text-decoration:none}.melato-related-products__image{width:100%;height:auto;border-radius:16px;background:#0a0a0a}.melato-related-products__title{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.08em}.melato-related-products__price{margin:0;font-size:12px;opacity:.78}@media(max-width:820px){.melato-related-products__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.melato-related-products__grid{grid-template-columns:1fr}}</style><h2 id="MelatoRelatedProductsTitle">You Might Also Like</h2><div class="melato-related-products__grid" role="list">'
+          for related_product in related_products limit: 4
+            echo '<a class="melato-related-products__card" role="listitem" href="'
+            echo related_product.url
+            echo '">'
+            if related_product.featured_image != blank
+              echo related_product.featured_image | image_url: width: 700 | image_tag: class: 'melato-related-products__image', loading: 'lazy', widths: '260, 420, 700', sizes: '(min-width: 900px) 25vw, 50vw', alt: related_product.title
+            endif
+            echo '<p class="melato-related-products__title">'
+            echo related_product.title | escape
+            echo '</p><p class="melato-related-products__price">'
+            echo related_product.price | money_with_currency
+            echo '</p></a>'
+          endfor
+          echo '</div></section>'
+        endcapture
+        assign output = output | append: related_markup
+      endunless
+    endif
+
+    capture currency_runtime
+      echo '<script data-melato-pdp-currency-hotfix>(function(){function money(cents){try{return new Intl.NumberFormat(document.documentElement.lang||"en-CA",{style:"currency",currency:"'
+      echo shop.currency | escape
+      echo '"}).format((Number(cents)||0)/100)}catch(e){return "$"+((Number(cents)||0)/100).toFixed(2)+" '
+      echo shop.currency | escape
+      echo '"}}function sync(section,variant){if(!section||!variant)return;var price=section.querySelector(".pdp-price-row .pdp-price");var sticky=section.querySelector("[id^=PDPStickyPrice]");if(price)price.textContent=money(variant.price);if(sticky)sticky.textContent=money(variant.price)}function init(){document.querySelectorAll(".melato-pdp-rebuild").forEach(function(section){var script=section.querySelector("script[id^=PDPVariants]")||document.querySelector("script[id^=PDPVariants]");if(!script)return;var variants=[];try{variants=JSON.parse(script.textContent||"[]")}catch(e){}var idInput=section.querySelector("[data-variant-id]");var variant=variants.find(function(item){return idInput&&String(item.id)===String(idInput.value)})||variants[0];sync(section,variant);});}document.addEventListener("variant:change",function(event){var section=document.querySelector(".melato-pdp-rebuild");sync(section,event.detail&&event.detail.variant)});if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",init)}else{init()}window.addEventListener("pageshow",init);})();</script>'
+    endcapture
+    unless output contains 'data-melato-pdp-currency-hotfix'
+      assign output = output | append: currency_runtime
+    endunless
+  endif
+-%}
+
+{{- output -}}
