@@ -20,14 +20,10 @@
       assign has_specific_size_guide = true
     endif
 
-    # The base layer normalizes </strong><span> to </strong> <span>.
-    # Match the normalized server HTML, not the pre-normalization source string.
     assign generic_sizing_row = '<div class="pdp-conversion-assurances__fact"><strong>Sizing</strong> <span><a href="/pages/size-guide">Fit guidance</a> for products without approved garment measurements.</span></div>'
     assign legacy_generic_sizing_row = '<div class="pdp-conversion-assurances__fact"><strong>Sizing</strong><span><a href="/pages/size-guide">Fit guidance</a> for products without approved garment measurements.</span></div>'
     assign output = output | replace: generic_sizing_row, '' | replace: legacy_generic_sizing_row, ''
 
-    # Keep the concise trust-list return promise and the full Shipping & returns
-    # content. Remove the intermediary metadata row that repeats the policy.
     assign conversion_returns_row = '<div class="pdp-conversion-assurances__fact"><strong>Returns</strong> <span>Approved eligible returns include free standard return shipping through the Melato return method.</span></div>'
     assign legacy_conversion_returns_row = '<div class="pdp-conversion-assurances__fact"><strong>Returns</strong><span>Approved eligible returns include free standard return shipping through the Melato return method.</span></div>'
     assign proof_returns_row = '<div><strong>Returns</strong> <span>Eligible unused products follow the posted Melato return policy.</span></div>'
@@ -36,8 +32,6 @@
     assign legacy_proof_fragrance_returns_row = '<div><strong>Returns</strong><span>Unopened fragrance products follow the posted Melato return policy.</span></div>'
     assign output = output | replace: conversion_returns_row, '' | replace: legacy_conversion_returns_row, '' | replace: proof_returns_row, '' | replace: legacy_proof_returns_row, '' | replace: proof_fragrance_returns_row, '' | replace: legacy_proof_fragrance_returns_row, ''
 
-    # The detailed Fit section remains authoritative. Remove the automatically
-    # repeated above-fold fact when the same product fit copy was injected there.
     assign fit_preview = product.metafields.melato.fit.value | default: product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit_notes.value | default: product.metafields.custom.fit.value
     if fit_preview != blank
       capture fit_row
@@ -53,14 +47,12 @@
       assign output = output | replace: fit_row, '' | replace: legacy_fit_row, ''
     endif
 
-    # A generic fit drawer must never claim to be product measurements.
     unless has_specific_size_guide
       assign product_measurements_heading = product.title | append: ' measurements'
       assign output = output | replace: product_measurements_heading, 'Melato Fit Guide'
       assign output = output | replace: '>Product measurements</button>', '>Fit guide</button>'
     endunless
 
-    # Never present design provenance as manufacturing origin.
     assign origin_copy = product.metafields.custom.made_in.value | default: product.metafields.custom.country_of_origin.value
     if origin_copy != blank and origin_copy contains 'Designed in'
       capture malformed_origin_row
@@ -90,8 +82,6 @@
       endunless
     endif
 
-    # Resolve the companion product from the same canonical metafield chain as
-    # the PDP section and replace the passive cross-link with a real two-item add.
     assign matching_product = product.metafields.custom.companion_product.value
     if matching_product == blank
       assign matching_product = product.metafields.custom.matching_product.value | default: product.metafields.custom.matching_piece.value | default: product.metafields.custom.set_partner.value
@@ -183,8 +173,6 @@
         echo matching_product.url
         echo '">View matching piece</a>'
         echo '</div>'
-        echo '<style>.melato-full-set-action--server{display:grid;gap:12px;margin-top:14px}.melato-full-set-selectors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.melato-full-set-selector{display:grid;gap:6px}.melato-full-set-selector>span{font-size:10px;line-height:1.2;letter-spacing:.12em;text-transform:uppercase}.melato-full-set-selector select{width:100%;min-height:44px;border:1px solid rgba(8,8,8,.22);border-radius:0;background:transparent;color:inherit;padding:0 12px;font:inherit}.melato-full-set-price{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0;font-size:12px}.melato-full-set-price span{text-transform:uppercase;letter-spacing:.1em;font-size:10px}.melato-full-set-action--server .pdp-set-cta{display:inline-flex;width:max-content}.melato-full-set-status{min-height:1.2em;margin:0;font-size:11px}@media(max-width:560px){.melato-full-set-selectors{grid-template-columns:1fr}}</style>'
-        echo '<script>(function(){if(window.__melatoServerFullSetBound)return;window.__melatoServerFullSetBound=true;function money(cents,currency){try{return new Intl.NumberFormat(document.documentElement.lang||"en-CA",{style:"currency",currency:currency||"CAD"}).format((Number(cents)||0)/100)}catch(e){return "$"+((Number(cents)||0)/100).toFixed(2)}}function refresh(root){var a=root.querySelector("[data-melato-set-current]");var b=root.querySelector("[data-melato-set-matching]");var total=root.querySelector("[data-melato-set-total]");if(!a||!b||!total)return;var ap=a.options[a.selectedIndex];var bp=b.options[b.selectedIndex];total.textContent=money((Number(ap&&ap.dataset.price)||0)+(Number(bp&&bp.dataset.price)||0),root.dataset.currency)}document.addEventListener("change",function(e){var root=e.target.closest&&e.target.closest("[data-melato-server-full-set]");if(root&&(e.target.matches("[data-melato-set-current]")||e.target.matches("[data-melato-set-matching]")))refresh(root)});document.addEventListener("click",async function(e){var button=e.target.closest&&e.target.closest("[data-melato-set-add]");if(!button)return;var root=button.closest("[data-melato-server-full-set]");var a=root&&root.querySelector("[data-melato-set-current]");var b=root&&root.querySelector("[data-melato-set-matching]");var status=root&&root.querySelector("[data-melato-set-status]");if(!a||!b)return;button.disabled=true;button.textContent="ADDING SET...";if(status)status.textContent="";try{var response=await fetch("/cart/add.js",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({items:[{id:Number(a.value),quantity:1},{id:Number(b.value),quantity:1}]})});if(!response.ok){var payload=await response.json().catch(function(){return{}});throw new Error(payload.description||payload.message||"Unable to add the full set.")}button.textContent="SET ADDED";if(status)status.textContent="Both pieces were added to your cart.";window.dispatchEvent(new CustomEvent("cart:updated"));window.location.assign("/cart")}catch(error){button.disabled=false;button.textContent="ADD FULL SET";if(status)status.textContent=error&&error.message?error.message:"Unable to add the full set. Please try again.";}});document.querySelectorAll("[data-melato-server-full-set]").forEach(refresh)})();</script>'
       endcapture
 
       if output contains legacy_set_link
@@ -194,4 +182,4 @@
   endif
 -%}
 
-{{- output -}}
+{% render 'melato-theme-audit-hotfix', html: output, context: context %}
