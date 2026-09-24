@@ -42,19 +42,6 @@
       endcapture
       assign output = output | replace: price_plain, price_currency
 
-      capture sticky_plain
-        echo '<span class="purchase-summary__price" id="PDPStickyPrice-'
-      endcapture
-      if output contains sticky_plain
-        capture current_money_plain
-          echo current_variant.price | money
-        endcapture
-        capture current_money_currency
-          echo current_variant.price | money_with_currency
-        endcapture
-        assign output = output | replace: current_money_plain, current_money_currency
-      endif
-
       if current_variant.compare_at_price > current_variant.price
         capture compare_plain
           echo '<s class="pdp-compare">'
@@ -151,6 +138,16 @@
     unless output contains 'data-melato-pdp-currency-hotfix'
       assign output = output | append: currency_runtime
     endunless
+
+    if output contains 'data-melato-server-full-set'
+      capture full_set_runtime
+        echo '<style data-melato-full-set-runtime>.melato-full-set-action--server{display:grid;gap:12px;margin-top:14px}.melato-full-set-selectors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.melato-full-set-selector{display:grid;gap:6px}.melato-full-set-selector>span{font-size:10px;line-height:1.2;letter-spacing:.12em;text-transform:uppercase}.melato-full-set-selector select{width:100%;min-height:44px;border:1px solid rgba(255,255,255,.22);border-radius:0;background:transparent;color:inherit;padding:0 12px;font:inherit}.melato-full-set-price{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0;font-size:12px}.melato-full-set-price span{text-transform:uppercase;letter-spacing:.1em;font-size:10px}.melato-full-set-action--server .pdp-set-cta{display:inline-flex;width:max-content}.melato-full-set-status{min-height:1.2em;margin:0;font-size:11px}@media(max-width:560px){.melato-full-set-selectors{grid-template-columns:1fr}}</style>'
+        echo '<script data-melato-full-set-runtime>(function(){if(window.__melatoServerFullSetBound)return;window.__melatoServerFullSetBound=true;function money(cents,currency){try{return new Intl.NumberFormat(document.documentElement.lang||"en-CA",{style:"currency",currency:currency||"CAD"}).format((Number(cents)||0)/100)}catch(e){return "$"+((Number(cents)||0)/100).toFixed(2)}}function refresh(root){var a=root.querySelector("[data-melato-set-current]");var b=root.querySelector("[data-melato-set-matching]");var total=root.querySelector("[data-melato-set-total]");if(!a||!b||!total)return;var ap=a.options[a.selectedIndex];var bp=b.options[b.selectedIndex];total.textContent=money((Number(ap&&ap.dataset.price)||0)+(Number(bp&&bp.dataset.price)||0),root.dataset.currency)}document.addEventListener("change",function(e){var root=e.target.closest&&e.target.closest("[data-melato-server-full-set]");if(root&&(e.target.matches("[data-melato-set-current]")||e.target.matches("[data-melato-set-matching]")))refresh(root)});document.addEventListener("click",async function(e){var button=e.target.closest&&e.target.closest("[data-melato-set-add]");if(!button)return;var root=button.closest("[data-melato-server-full-set]");var a=root&&root.querySelector("[data-melato-set-current]");var b=root&&root.querySelector("[data-melato-set-matching]");var status=root&&root.querySelector("[data-melato-set-status]");if(!a||!b)return;button.disabled=true;button.textContent="ADDING SET...";if(status)status.textContent="";try{var response=await fetch("/cart/add.js",{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({items:[{id:Number(a.value),quantity:1},{id:Number(b.value),quantity:1}]})});if(!response.ok){var payload=await response.json().catch(function(){return{}});throw new Error(payload.description||payload.message||"Unable to add the full set.")}button.textContent="SET ADDED";if(status)status.textContent="Both pieces were added to your cart.";window.dispatchEvent(new CustomEvent("cart:updated"));window.location.assign("/cart")}catch(error){button.disabled=false;button.textContent="ADD FULL SET";if(status)status.textContent=error&&error.message?error.message:"Unable to add the full set. Please try again.";}});document.querySelectorAll("[data-melato-server-full-set]").forEach(refresh)})();</script>'
+      endcapture
+      unless output contains 'data-melato-full-set-runtime'
+        assign output = output | append: full_set_runtime
+      endunless
+    endif
   endif
 -%}
 
