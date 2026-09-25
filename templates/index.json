@@ -278,16 +278,15 @@
         "kicker": "World of Melato",
         "wordmark": "MELATO",
         "line": "Ottawa / The House",
-        "height": "100dvh",
         "list_label": "Featured locations",
         "hint": "Drag to spin · Click a marker to enter",
         "enter_label": "Enter this room",
-        "close_label": "Back to orbit"
+        "close_label": "Back to orbit",
+        "height": "100dvh"
       }
     }
   },
   "order": [
-    "melato_world_orb",
     "video_Hm6knQ",
     "melato_conversion_2026",
     "ticker",
@@ -297,6 +296,7 @@
     "announcement_marquee_VfV9At",
     "brand_story",
     "drop_signup_FMehUL",
-    "concierge_strip_74pEae"
+    "concierge_strip_74pEae",
+    "melato_world_orb"
   ]
 }
