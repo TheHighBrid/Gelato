@@ -45,6 +45,18 @@
     "melato_world_orb_4qXxeE": {
       "type": "melato-world-orb",
       "blocks": {
+        "location_aVN8eb": {
+          "type": "location",
+          "settings": {
+            "loc_id": "",
+            "title": "",
+            "kicker": "",
+            "blurb": "",
+            "link": "",
+            "lat": 10,
+            "lon": 20
+          }
+        },
         "location_M7J6Dc": {
           "type": "location",
           "settings": {
@@ -131,6 +143,7 @@
         }
       },
       "block_order": [
+        "location_aVN8eb",
         "location_M7J6Dc",
         "location_mnpQhY",
         "location_BY3kmc",
