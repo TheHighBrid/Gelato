@@ -9,25 +9,152 @@
  */
 {
   "sections": {
+    "melato_living_book_casefile_Ehq6fj": {
+      "type": "melato-living-book-casefile",
+      "name": "Living Book v2",
+      "settings": {
+        "case_code": "LB-INFINITE",
+        "case_subtitle": "CASE FILE / UNRESOLVED",
+        "case_title": "THE LIVING BOOK",
+        "outline_title": "EVIDENCE",
+        "deck": "A forensic fashion archive built from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive.",
+        "filed_date": "18 AUG 2026",
+        "include_case03": true
+      }
+    },
     "main": {
       "type": "melato-lookbook",
+      "disabled": true,
       "settings": {
+        "lookbook_collection": "",
+        "product_limit": 12,
         "eyebrow": "Melato Lookbook",
         "heading": "Styled for motion. Built for presence.",
         "intro": "A curated editorial view of Melato pieces, built for product discovery and premium retro presentation.",
         "season_label": "Spring 2026",
-        "product_limit": 12,
+        "location_label": "Toronto/Montreal/Ottawa/Canada",
         "show_vendor": false,
-        "bg_color": "#0B0B0B",
+        "bg_color": "#0b0b0b",
         "surface_color": "#151515",
-        "text_color": "#F4F0E8",
-        "muted_color": "#AFA79A",
-        "accent_color": "#D8B56D",
-        "border_color": "#2A2A2A"
+        "text_color": "#f4f0e8",
+        "muted_color": "#afa79a",
+        "accent_color": "#d8b56d",
+        "border_color": "#2a2a2a"
+      }
+    },
+    "melato_world_orb_4qXxeE": {
+      "type": "melato-world-orb",
+      "blocks": {
+        "location_M7J6Dc": {
+          "type": "location",
+          "settings": {
+            "loc_id": "living-book",
+            "title": "Living Book",
+            "kicker": "Lookbook",
+            "blurb": "The cinematic dossier. Frames of evidence, garments, and withheld identity — the house, narrated.",
+            "link": "/pages/living-lookbook",
+            "lat": 22,
+            "lon": 18
+          }
+        },
+        "location_mnpQhY": {
+          "type": "location",
+          "settings": {
+            "loc_id": "ready-to-wear",
+            "title": "Ready To Wear",
+            "kicker": "The Uniform",
+            "blurb": "Limited-run apparel, tailored for movement and cut with intent. Tracksuits, denim, the daily house language.",
+            "link": "/collections/new-arrivals",
+            "lat": 6,
+            "lon": 72
+          }
+        },
+        "location_BY3kmc": {
+          "type": "location",
+          "settings": {
+            "loc_id": "accessories",
+            "title": "Accessories",
+            "kicker": "Finishing",
+            "blurb": "Bags, lenses, chain wallets, and the last decisions. Small objects that complete the look.",
+            "link": "/collections/accessories",
+            "lat": -16,
+            "lon": 128
+          }
+        },
+        "location_QxeTbK": {
+          "type": "location",
+          "settings": {
+            "loc_id": "editorial",
+            "title": "Editorial",
+            "kicker": "Journal",
+            "blurb": "Notes from the house. Process, references, and the culture that wears us.",
+            "link": "/blogs/news",
+            "lat": 34,
+            "lon": 196
+          }
+        },
+        "location_kNiwMw": {
+          "type": "location",
+          "settings": {
+            "loc_id": "popup",
+            "title": "Pop-Up Show & Events",
+            "kicker": "Coordinates",
+            "blurb": "Physical appearances. Popup calendar, showings, and the house in a room.",
+            "link": "/pages/popup-calendar",
+            "lat": -28,
+            "lon": 244
+          }
+        },
+        "location_3r6FTR": {
+          "type": "location",
+          "settings": {
+            "loc_id": "concierge",
+            "title": "Concierge",
+            "kicker": "Service",
+            "blurb": "Fit, care, delivery, and private assistance. One line to the house.",
+            "link": "/pages/contact",
+            "lat": 12,
+            "lon": 300
+          }
+        },
+        "location_XemHxA": {
+          "type": "location",
+          "settings": {
+            "loc_id": "radio",
+            "title": "Melato Radio",
+            "kicker": "Frequency",
+            "blurb": "The house frequency. Sound from the atelier — a listening room for the world of Melato.",
+            "link": "/pages/our-story",
+            "lat": -20,
+            "lon": 348
+          }
+        }
+      },
+      "block_order": [
+        "location_M7J6Dc",
+        "location_mnpQhY",
+        "location_BY3kmc",
+        "location_QxeTbK",
+        "location_kNiwMw",
+        "location_3r6FTR",
+        "location_XemHxA"
+      ],
+      "name": "Melato World Orb",
+      "settings": {
+        "kicker": "World of Melato",
+        "wordmark": "MELATO",
+        "line": "Ottawa / The House",
+        "list_label": "Featured locations",
+        "hint": "Drag to spin · Click a marker to enter",
+        "enter_label": "Enter this room",
+        "close_label": "Back to orbit",
+        "height": "100dvh"
       }
     }
   },
   "order": [
-    "main"
+    "melato_living_book_casefile_Ehq6fj",
+    "main",
+    "melato_world_orb_4qXxeE"
   ]
 }
