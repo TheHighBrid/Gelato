@@ -1,7 +1,8 @@
 {% comment %}
-  Reusable Melato product card. Clean QA 2026-08-17.
+  Reusable Melato product card. Clean QA 2026-09-26.
   One status system: NEW IN, EXCLUSIVE, LIMITED, SALE, SOLD OUT.
-  Collection head preloads prioritize the first four products; card markup stays lazy by default.
+  Product card media uses Shopify image_url + image_tag with widths and sizes,
+  so Shopify generates responsive srcsets instead of hand-written img markup.
 {% endcomment %}
 {%- liquid
   assign card_image_ratio = settings.card_image_ratio | default: 'portrait'
@@ -14,25 +15,38 @@
   assign color_option = product.options_by_name['Color'] | default: product.options_by_name['Colour'] | default: product.options_by_name['Couleur']
   assign card_color_count = 0
   assign card_fetchpriority = 'auto'
+  assign card_sizes = '(min-width:1200px) 25vw,(min-width:768px) 33vw,50vw'
+  assign card_widths = '400, 600, 800, 900'
+  assign primary_image_class = 'product-card__img product-card__img--primary'
+
+  if product.images.size == 1
+    assign primary_image_class = primary_image_class | append: ' product-card__img--only'
+  endif
+
   if color_option
     assign card_color_count = color_option.values.size
   endif
+
   if template.name == 'collection' and collection
     if product.id == collection.products[0].id or product.id == collection.products[1].id or product.id == collection.products[2].id or product.id == collection.products[3].id
       assign card_fetchpriority = 'high'
     endif
   endif
+
   assign on_sale = false
   assign sold_out = false
   assign card_is_new = false
   assign card_is_exclusive = false
   assign card_is_limited = false
+
   if card_compare_at_price != blank and card_compare_at_price > card_price
     assign on_sale = true
   endif
+
   unless product.available
     assign sold_out = true
   endunless
+
   for tag in product.tags
     assign card_tag = tag | downcase | strip
     if card_tag == 'new' or card_tag == 'new arrival' or card_tag == 'new arrivals' or card_tag == 'new_arrival' or card_tag == 'new-arrival' or card_tag == 'new drop'
@@ -51,19 +65,68 @@
   <div class="product-card__media">
     <a href="{{ product.url }}" aria-label="View {{ product.title | escape }}" tabindex="-1">
       {%- if product.featured_image != blank -%}
-        <img class="product-card__img product-card__img--primary{% if product.images.size == 1 %} product-card__img--only{% endif %}" src="{{ product.featured_image | image_url: width: 600 }}" srcset="{{ product.featured_image | image_url: width: 400 }} 400w, {{ product.featured_image | image_url: width: 600 }} 600w, {{ product.featured_image | image_url: width: 800 }} 800w" sizes="(min-width:1200px) 25vw,(min-width:768px) 33vw,50vw" alt="{{ product.featured_image.alt | default: product.title | escape }}" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}" loading="lazy" fetchpriority="{{ card_fetchpriority }}">
-        {%- if product.images.size > 1 and settings.card_hover_second_image -%}<img class="product-card__img product-card__img--secondary" src="{{ product.images[1] | image_url: width: 600 }}" srcset="{{ product.images[1] | image_url: width: 400 }} 400w, {{ product.images[1] | image_url: width: 600 }} 600w, {{ product.images[1] | image_url: width: 800 }} 800w" sizes="(min-width:1200px) 25vw,(min-width:768px) 33vw,50vw" alt="" width="{{ product.images[1].width }}" height="{{ product.images[1].height }}" loading="lazy" aria-hidden="true">{%- endif -%}
-      {%- else -%}{{ 'product-1' | placeholder_svg_tag: 'product-card__img product-card__img--primary product-card__img--only' }}{%- endif -%}
+        {{ product.featured_image
+          | image_url: width: 900
+          | image_tag:
+            class: primary_image_class,
+            widths: card_widths,
+            sizes: card_sizes,
+            alt: product.featured_image.alt | default: product.title,
+            loading: 'lazy',
+            fetchpriority: card_fetchpriority
+        }}
+        {%- if product.images.size > 1 and settings.card_hover_second_image -%}
+          {{ product.images[1]
+            | image_url: width: 900
+            | image_tag:
+              class: 'product-card__img product-card__img--secondary',
+              widths: card_widths,
+              sizes: card_sizes,
+              alt: '',
+              loading: 'lazy'
+          }}
+        {%- endif -%}
+      {%- else -%}
+        {{ 'product-1' | placeholder_svg_tag: 'product-card__img product-card__img--primary product-card__img--only' }}
+      {%- endif -%}
     </a>
-    <div class="product-card__badges" aria-label="Product status">{%- if sold_out -%}<span class="badge badge--sold-out">Sold out</span>{%- endif -%}{%- if card_is_new -%}<span class="badge badge--new">New in</span>{%- endif -%}{%- if card_is_exclusive -%}<span class="badge badge--exclusive">Exclusive</span>{%- endif -%}{%- if card_is_limited -%}<span class="badge badge--limited">Limited</span>{%- endif -%}{%- if on_sale and sold_out == false -%}{%- assign discount_pct = card_compare_at_price | minus: card_price | times: 100 | divided_by: card_compare_at_price -%}<span class="badge badge--sale">−{{ discount_pct }}%</span>{%- endif -%}</div>
-    <button class="product-card__wishlist" type="button" aria-label="Save {{ product.title | escape }}" aria-pressed="false" data-wishlist-btn="{{ product.id }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-    {%- if show_quick_view -%}<button class="product-card__quick-view" aria-label="{{ 'products.quick_view' | t }}: {{ product.title | escape }}" data-quick-view="{{ product.url }}">{{ 'products.quick_view' | t }}</button>{%- endif -%}
+    <div class="product-card__badges" aria-label="Product status">
+      {%- if sold_out -%}<span class="badge badge--sold-out">Sold out</span>{%- endif -%}
+      {%- if card_is_new -%}<span class="badge badge--new">New in</span>{%- endif -%}
+      {%- if card_is_exclusive -%}<span class="badge badge--exclusive">Exclusive</span>{%- endif -%}
+      {%- if card_is_limited -%}<span class="badge badge--limited">Limited</span>{%- endif -%}
+      {%- if on_sale and sold_out == false -%}
+        {%- assign discount_pct = card_compare_at_price | minus: card_price | times: 100 | divided_by: card_compare_at_price -%}
+        <span class="badge badge--sale">−{{ discount_pct }}%</span>
+      {%- endif -%}
+    </div>
+    <button class="product-card__wishlist" type="button" aria-label="Save {{ product.title | escape }}" aria-pressed="false" data-wishlist-btn="{{ product.id }}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </button>
+    {%- if show_quick_view -%}
+      <button class="product-card__quick-view" aria-label="{{ 'products.quick_view' | t }}: {{ product.title | escape }}" data-quick-view="{{ product.url }}">{{ 'products.quick_view' | t }}</button>
+    {%- endif -%}
   </div>
   <div class="product-card__info">
     {%- if settings.card_show_vendor and product.vendor != blank -%}<p class="product-card__vendor">{{ product.vendor }}</p>{%- endif -%}
     <h3 class="product-card__heading"><a href="{{ product.url }}" class="product-card__title">{{ product.title }}</a></h3>
-    <div class="product-card__price" aria-label="{{ card_price_label | strip | escape }}">{%- if on_sale -%}<span class="price price--sale">{{ card_price | money }}</span><span class="visually-hidden">Previously </span><span class="price price--was">{{ card_compare_at_price | money }}</span>{%- else -%}<span class="price{% if sold_out %} price--muted{% endif %}">{{ card_price | money }}</span>{%- endif -%}</div>
-    {%- if swatch_style != 'none' and color_option -%}<div class="product-card__swatches" aria-label="Available colors">{%- for value in color_option.values limit:6 -%}<span class="swatch swatch--{{ swatch_style }}" style="background-color:{{ value | handle }}" title="{{ value }}" aria-label="{{ value }}"></span>{%- endfor -%}{%- if color_option.values.size > 6 -%}<span class="text-label" style="line-height:18px">+{{ color_option.values.size | minus: 6 }}</span>{%- endif -%}</div>{%- endif -%}
-    {%- if show_rating and product.metafields.reviews.rating.value != blank -%}<div class="product-card__rating"><span aria-hidden="true">★★★★★</span><span class="text-label">({{ product.metafields.reviews.rating_count.value }})</span></div>{%- endif -%}
+    <div class="product-card__price" aria-label="{{ card_price_label | strip | escape }}">
+      {%- if on_sale -%}
+        <span class="price price--sale">{{ card_price | money }}</span>
+        <span class="visually-hidden">Previously </span>
+        <span class="price price--was">{{ card_compare_at_price | money }}</span>
+      {%- else -%}
+        <span class="price{% if sold_out %} price--muted{% endif %}">{{ card_price | money }}</span>
+      {%- endif -%}
+    </div>
+    {%- if swatch_style != 'none' and color_option -%}
+      <div class="product-card__swatches" aria-label="Available colors">
+        {%- for value in color_option.values limit:6 -%}<span class="swatch swatch--{{ swatch_style }}" style="background-color:{{ value | handle }}" title="{{ value }}" aria-label="{{ value }}"></span>{%- endfor -%}
+        {%- if color_option.values.size > 6 -%}<span class="text-label" style="line-height:18px">+{{ color_option.values.size | minus: 6 }}</span>{%- endif -%}
+      </div>
+    {%- endif -%}
+    {%- if show_rating and product.metafields.reviews.rating.value != blank -%}
+      <div class="product-card__rating"><span aria-hidden="true">★★★★★</span><span class="text-label">({{ product.metafields.reviews.rating_count.value }})</span></div>
+    {%- endif -%}
   </div>
 </article>
