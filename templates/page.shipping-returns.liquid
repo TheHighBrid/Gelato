@@ -2,28 +2,22 @@
   Melato — Delivery & Returns Page Template
   Template: page.shipping-returns
   URL: /pages/shipping-returns
+
+  The Shopify Page body is the source of truth. This template intentionally
+  does not add a second hero, grey service cards, Client Services strip, or
+  duplicate page messaging.
 {% endcomment %}
 
-{{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'melato-concierge.js' | asset_url }}" defer></script>
-
-<div class="melato-page">
-  <header class="melato-page-header melato-service-hero" style="background:#0b0b0c!important;color:#f5f1e8!important;opacity:1!important;padding:clamp(44px,7vw,86px) 24px;margin:0 auto clamp(28px,5vw,52px);max-width:1120px;text-align:center;">
-    <div class="melato-eyebrow" style="color:#d8d0c4!important;opacity:1!important;">Melato Client Services</div>
-    <h1 class="melato-page-header__title" style="color:#f5f1e8!important;opacity:1!important;text-shadow:none!important;">{{ page.title | default: 'Shipping & Returns' }}</h1>
-    <p class="melato-page-header__subtitle" style="color:#e8dfd1!important;opacity:1!important;">Processing, delivery, tracking and return guidance in one place.</p>
-  </header>
-
-  <div class="melato-container">
+<div class="melato-page melato-service-page-clean" style="background:#0b0b0c!important;color:#f5f1e8!important;min-height:72vh;">
+  <div class="melato-container" style="max-width:980px;margin:0 auto;padding:clamp(54px,7vw,92px) 24px clamp(72px,9vw,120px);background:transparent!important;color:#f5f1e8!important;">
     {% if page.content != blank %}
-      <div class="rte">{{ page.content }}</div>
+      <div class="rte melato-service-rte" style="color:#f5f1e8!important;background:transparent!important;">{{ page.content }}</div>
     {% else %}
-      <div class="melato-card">
-        <h2 class="melato-h3">Delivery & returns</h2>
-        <p class="melato-body-sm">Available services and eligibility follow Melato's current shipping and returns policies.</p>
-      </div>
+      <section style="max-width:860px;color:#f5f1e8!important;">
+        <p style="margin:0 0 14px;color:#c8bca9!important;font-size:12px;letter-spacing:.18em;text-transform:uppercase;">Delivery & returns</p>
+        <h1 style="margin:0 0 22px;color:#f5f1e8!important;font-size:clamp(52px,9vw,104px);line-height:.86;letter-spacing:-.04em;text-transform:uppercase;">Shipping & Returns</h1>
+        <p style="margin:0;color:#ded6c8!important;font-size:18px;line-height:1.7;">Delivery, tracking, pickup and return terms for current Melato orders.</p>
+      </section>
     {% endif %}
   </div>
-
-  {% section 'concierge-strip' %}
 </div>
