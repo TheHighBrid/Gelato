@@ -121,7 +121,7 @@
                 {{ product.images[1] | image_url: width: 1100 | image_tag: class: 'melato-home-product__image melato-home-product__image--secondary', loading: 'lazy', widths: '360, 540, 760, 1100', sizes: '(min-width: 900px) 25vw, 50vw', alt: '' }}
               {%- endif -%}
             </a>
-            <div class="melato-home-product__meta"><h3><a href="{{ product.url }}">{{ product.title }}</a></h3><p>{{ product.price | money }}</p></div>
+            <div class="melato-home-product__meta"><h3><a href="{{ product.url }}">{{ product.title }}</a></h3><p>{{ product.price | money_with_currency }}</p></div>
           </article>
         {%- endfor -%}
       </div>
@@ -150,7 +150,7 @@
           <article class="melato-home-uniform__item" role="listitem">
             <a href="{{ product.url }}">
               {%- if product.featured_image != blank -%}{{ product.featured_image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '320, 500, 700, 1000', sizes: '(min-width: 1100px) 22vw, (min-width: 750px) 32vw, 72vw', alt: product.featured_image.alt | default: product.title }}{%- endif -%}
-              <span><strong>{{ product.title }}</strong><small>{{ product.price | money }}</small></span>
+              <span><strong>{{ product.title }}</strong><small>{{ product.price | money_with_currency }}</small></span>
             </a>
           </article>
         {%- endfor -%}
@@ -177,7 +177,7 @@
         <p class="melato-home-kicker">Featured object</p>
         <h2 id="MelatoObjectTitle-{{ section.id }}">{{ featured_object.title }}</h2>
         <p>{{ section.settings.object_copy }}</p>
-        <p class="melato-home-object__price">{{ featured_object.price | money }}</p>
+        <p class="melato-home-object__price">{{ featured_object.price | money_with_currency }}</p>
         <a class="melato-home-text-link" href="{{ featured_object.url }}">Discover the object</a>
       </div>
       <a class="melato-home-object__media" href="{{ featured_object.url }}" aria-label="View {{ featured_object.title | escape }}">
@@ -226,22 +226,15 @@
     {"type":"image_picker","id":"women_image","label":"Womenswear image"},
     {"type":"collection","id":"uniform_collection","label":"The Uniform collection"},
     {"type":"collection","id":"living_collection","label":"Living Book collection"},
-    {"type":"image_picker","id":"living_image","label":"Living Book image"},
-    {"type":"textarea","id":"living_copy","label":"Living Book copy","default":"Campaigns, people, movement and the world surrounding the clothes."},
-
-    {"type":"header","content":"Featured object"},
-    {"type":"collection","id":"objects_collection","label":"Objects fallback collection"},
-    {"type":"product","id":"featured_object","label":"Featured object product"},
+    {"type":"collection","id":"objects_collection","label":"Accessories collection"},
+    {"type":"product","id":"featured_object","label":"Featured object"},
     {"type":"image_picker","id":"object_image","label":"Featured object image"},
-    {"type":"textarea","id":"object_copy","label":"Featured object copy","default":"One object pulled forward from the current rotation."},
-
-    {"type":"header","content":"House statement"},
-    {"type":"textarea","id":"statement","label":"Statement","default":"THE CULTURE WEARS US"},
-    {"type":"textarea","id":"statement_copy","label":"Statement copy","default":"Melato is built around presence, identity, movement and cultural self-definition."},
-
-    {"type":"header","content":"Newsletter"},
-    {"type":"text","id":"newsletter_heading","label":"Newsletter heading","default":"Letters from Melato"},
-    {"type":"textarea","id":"newsletter_copy","label":"Newsletter copy","default":"New work, private releases and stories from the world around the clothes."}
+    {"type":"textarea","id":"object_copy","label":"Featured object copy","default":"One object, selected for the week."},
+    {"type":"textarea","id":"living_copy","label":"Living Book copy","default":"The collection outside the studio. Movement, city, people, evidence."},
+    {"type":"textarea","id":"statement","label":"House statement","default":"CLOTHES ARE THE DOCUMENT. YOU ARE THE EVIDENCE."},
+    {"type":"textarea","id":"statement_copy","label":"House statement copy","default":"Melato is a Canadian fashion house working across tailoring, sportswear, objects and fragrance."},
+    {"type":"text","id":"newsletter_heading","label":"Newsletter heading","default":"PRIVATE NOTES FROM THE HOUSE"},
+    {"type":"textarea","id":"newsletter_copy","label":"Newsletter copy","default":"New pieces, appointments, editorial releases and private access."}
   ],
   "presets":[{"name":"Melato House homepage"}]
 }
