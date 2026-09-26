@@ -97,9 +97,11 @@ jobs:
                       failures.append(f'{path}: image source ceiling {width}px exceeds 2400px')
 
           cards = read('snippets/product-card.liquid')
-          if cards.count('srcset=') < 2:
-              failures.append('snippets/product-card.liquid: responsive product-card srcset contract weakened')
-          if cards.count('loading="lazy"') < 2:
+          # Shopify image_tag emits responsive srcset output from widths:. Guard the
+          # source contract instead of requiring hand-written srcset attributes.
+          if cards.count('widths:') < 2:
+              failures.append('snippets/product-card.liquid: responsive product-card widths contract weakened')
+          if cards.count("loading: 'lazy'") < 2:
               failures.append('snippets/product-card.liquid: product-card lazy loading contract weakened')
 
           if failures:

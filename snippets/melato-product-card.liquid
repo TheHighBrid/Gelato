@@ -73,13 +73,13 @@
     <div class="m-card__price-row">
       {%- if card_product.compare_at_price > card_product.price -%}
         <span class="m-card__price m-card__price--sale">
-          {{- card_product.price | money -}}
+          {{- card_product.price | money_with_currency -}}
         </span>
         <s class="m-card__price m-card__price--compare">
-          {{- card_product.compare_at_price | money -}}
+          {{- card_product.compare_at_price | money_with_currency -}}
         </s>
       {%- else -%}
-        <span class="m-card__price">{{ card_product.price | money }}</span>
+        <span class="m-card__price">{{ card_product.price | money_with_currency }}</span>
       {%- endif -%}
     </div>
 
