@@ -3,37 +3,21 @@
   Template: page.size-guide
   URL: /pages/size-guide
 
-  The Shopify Page body is the source of truth. This template deliberately does
-  not generate a universal measurement chart.
+  The Shopify Page body is the source of truth. This template intentionally
+  does not add a second hero, Client Services strip, universal measurement
+  chart, or duplicate guidance copy.
 {% endcomment %}
 
-{%- liquid
-  assign service_content = page.content
-  assign content_has_heading = false
-  if service_content contains '<h1'
-    assign content_has_heading = true
-  endif
--%}
-
-<div class="melato-page">
-  {% unless content_has_heading %}
-    <header class="melato-page-header melato-service-hero" style="background:#0b0b0c!important;color:#f5f1e8!important;opacity:1!important;padding:clamp(44px,7vw,86px) 24px;margin:0 auto clamp(28px,5vw,52px);max-width:1120px;text-align:center;">
-      <div class="melato-eyebrow" style="color:#d8d0c4!important;opacity:1!important;">Melato Client Services</div>
-      <h1 class="melato-page-header__title" style="color:#f5f1e8!important;opacity:1!important;text-shadow:none!important;">{{ page.title | default: 'Fit Guidance' }}</h1>
-      <p class="melato-page-header__subtitle" style="color:#e8dfd1!important;opacity:1!important;">Product-specific fit notes, approved garment measurements when available, and personal sizing support.</p>
-    </header>
-  {% endunless %}
-
-  <div class="melato-container">
-    {% if service_content != blank %}
-      <div class="rte">{{ service_content }}</div>
+<div class="melato-page melato-service-page-clean" style="background:#0b0b0c!important;color:#f5f1e8!important;min-height:72vh;">
+  <div class="melato-container" style="max-width:980px;margin:0 auto;padding:clamp(54px,7vw,92px) 24px clamp(72px,9vw,120px);background:transparent!important;color:#f5f1e8!important;">
+    {% if page.content != blank %}
+      <div class="rte melato-service-rte" style="color:#f5f1e8!important;background:transparent!important;">{{ page.content }}</div>
     {% else %}
-      <div class="melato-card">
-        <h2 class="melato-h3">Fit is product-specific.</h2>
-        <p class="melato-body-sm">Use the Fit guidance and any approved Product Measurements shown on the product page. If measurements are not published for that piece, contact <a href="mailto:support@melato.ca">support@melato.ca</a> before ordering.</p>
-      </div>
+      <section style="max-width:820px;color:#f5f1e8!important;">
+        <p style="margin:0 0 14px;color:#c8bca9!important;font-size:12px;letter-spacing:.18em;text-transform:uppercase;">Fit guide</p>
+        <h1 style="margin:0 0 22px;color:#f5f1e8!important;font-size:clamp(52px,9vw,104px);line-height:.86;letter-spacing:-.04em;text-transform:uppercase;">Fit Guide</h1>
+        <p style="margin:0;color:#ded6c8!important;font-size:18px;line-height:1.7;">Use the product page first. Melato fit is product-specific by construction, silhouette, rise, length and intended drape.</p>
+      </section>
     {% endif %}
   </div>
-
-  {% section 'concierge-strip' %}
 </div>
