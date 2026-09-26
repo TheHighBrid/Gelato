@@ -200,7 +200,7 @@
 (() => {
   const mq = window.matchMedia('(max-width: 900px)');
   const fitImage = (img) => {
-    if (!mq.matches || !img || img.tagName !== 'IMG') return;
+    if (!img || img.tagName !== 'IMG') return;
     const w = img.naturalWidth;
     const h = img.naturalHeight;
     if (!w || !h) return;
