@@ -1,0 +1,72 @@
+{% comment %}
+  Melato Product Page Bible semantic adapter.
+  Keeps the canonical PDP vocabulary appropriate to the product family without
+  changing product facts. Apparel retains Fit + Fit Guide. Bags use Dimensions
+  & Capacity. Eyewear uses Frame & Lens Measurements. Fragrance is already
+  handled by the canonical renderer.
+{% endcomment %}
+
+{%- liquid
+  assign product_type_down = product.product_type | downcase
+  assign product_title_down = product.title | downcase
+  assign pdp_family = 'other'
+
+  if product_type_down contains 'bag' or product_type_down contains 'duffle' or product_type_down contains 'tote' or product_type_down contains 'messenger'
+    assign pdp_family = 'bags'
+  elsif product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_title_down contains 'sunglass'
+    assign pdp_family = 'eyewear'
+  endif
+-%}
+
+{%- if pdp_family == 'bags' or pdp_family == 'eyewear' -%}
+<script data-melato-pdp-product-type-semantics>
+(function () {
+  'use strict';
+  var family = {{ pdp_family | json }};
+
+  function cleanText(node) {
+    return node ? String(node.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase() : '';
+  }
+
+  function apply() {
+    var root = document.querySelector('.melato-pdp-rebuild');
+    if (!root) return;
+
+    root.querySelectorAll('.pdp-buybox-spec').forEach(function (details) {
+      var summary = details.querySelector(':scope > summary');
+      if (!summary || cleanText(summary).indexOf('fit') !== 0) return;
+
+      var label = summary.querySelector('span:first-child');
+      if (label) {
+        label.textContent = family === 'bags' ? 'Dimensions & Capacity' : 'Frame & Lens Measurements';
+      }
+
+      details.querySelectorAll('.pdp-inline-link').forEach(function (link) {
+        link.remove();
+      });
+    });
+
+    root.querySelectorAll('.size-guide-trigger, .melato-sizing-fallback').forEach(function (trigger) {
+      trigger.remove();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', apply, { once: true });
+  } else {
+    apply();
+  }
+
+  document.addEventListener('shopify:section:load', apply);
+})();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Melato PDP type semantics",
+  "tag": "section",
+  "settings": [],
+  "presets": [{"name": "Melato PDP type semantics"}]
+}
+{% endschema %}
