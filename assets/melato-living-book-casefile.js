@@ -193,3 +193,41 @@
     });
   });
 })();
+
+
+/* Fit editorial frames to the bitmap. Metadata is stored as 1200x1500 for
+   every file, which made object-fit:cover crop the real photograph. */
+(() => {
+  const mq = window.matchMedia('(max-width: 900px)');
+  const fitImage = (img) => {
+    if (!mq.matches || !img || img.tagName !== 'IMG') return;
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+    if (!w || !h) return;
+    const photo = img.closest('.lbv2-frame__photo, .lbv2-masthead__image');
+    img.removeAttribute('width');
+    img.removeAttribute('height');
+    img.style.aspectRatio = 'auto';
+    img.style.width = '100%';
+    img.style.height = 'auto';
+    img.style.objectFit = 'contain';
+    img.style.transform = 'none';
+    img.style.filter = 'none';
+    if (photo && photo.classList.contains('lbv2-frame__photo')) {
+      photo.style.aspectRatio = w + ' / ' + h;
+      photo.style.height = 'auto';
+    }
+  };
+  const scan = () => {
+    document.querySelectorAll('.lbv2-frame__photo img, .lbv2-masthead__image img').forEach((img) => {
+      if (img.complete && img.naturalWidth) fitImage(img);
+    });
+  };
+  document.addEventListener('load', (event) => {
+    const target = event.target;
+    if (target && target.closest && target.closest('.lbv2-frame__photo, .lbv2-masthead__image')) fitImage(target);
+  }, true);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', scan);
+  else scan();
+  if (mq.addEventListener) mq.addEventListener('change', scan);
+})();
