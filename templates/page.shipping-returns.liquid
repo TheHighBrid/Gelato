@@ -1,5 +1,5 @@
 {% comment %}
-  Melato — Delivery & Returns Page Template
+  Melato - Delivery & Returns Page Template
   Template: page.shipping-returns
   URL: /pages/shipping-returns
 
@@ -21,3 +21,26 @@
     {% endif %}
   </div>
 </div>
+
+<script data-melato-shipping-heading-integrity>
+(function () {
+  'use strict';
+  function clean() {
+    var page = document.querySelector('.melato-service-page-clean');
+    if (!page) return;
+    var canonical = page.querySelector('.melato-service-rte h1, .melato-container h1');
+    if (!canonical) return;
+    document.querySelectorAll('.melato-hotfix-service-header').forEach(function (header) {
+      if (header.querySelector('h1')) header.remove();
+    });
+  }
+  clean();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', clean, { once: true });
+  }
+  var root = document.querySelector('.melato-page');
+  if (root && 'MutationObserver' in window) {
+    new MutationObserver(clean).observe(root, { childList: true });
+  }
+})();
+</script>

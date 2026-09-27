@@ -33,6 +33,10 @@
       "type": "melato-pdp-product-type-semantics",
       "settings": {}
     },
+    "currency_enforcer": {
+      "type": "melato-pdp-currency-enforcer",
+      "settings": {}
+    },
     "safe_accent": {
       "type": "melato-product-safe-accent",
       "settings": {}
@@ -60,5 +64,5 @@
       "settings": {}
     }
   },
-  "order": ["main_product", "proof_integrity", "pdp_unification", "product_type_semantics", "safe_accent", "variant_media_sync", "related", "recently_viewed", "contextual_merchandising"]
+  "order": ["main_product", "proof_integrity", "pdp_unification", "product_type_semantics", "currency_enforcer", "safe_accent", "variant_media_sync", "related", "recently_viewed", "contextual_merchandising"]
 }
