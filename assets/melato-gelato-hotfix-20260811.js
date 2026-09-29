@@ -2,7 +2,7 @@
   'use strict';
   const STORAGE_KEY = 'melato:saved-products:v1';
   const normalize = v => String(v || '').replace(/\s+/g, ' ').trim();
-  const escapeHtml = value => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#039;'}[char]));
+  const escapeHtml = value => String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
 
   function readSaved(){
     try { const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); return Array.isArray(value) ? value.filter(x => x && x.handle) : []; }
