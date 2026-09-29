@@ -27,7 +27,7 @@
 -%}
 
 {%- if product != blank -%}
-  <section class="melato-related section-{{ section.id }}" aria-labelledby="RelatedHeading-{{ section.id }}">
+  <section class="melato-related{% if curated_products != blank %} melato-related-products--curated{% endif %} section-{{ section.id }}" aria-labelledby="RelatedHeading-{{ section.id }}">
     <div class="melato-section-wrap">
       <div class="melato-section-head">
         <p class="melato-eyebrow">{{ section_eyebrow }}</p>
