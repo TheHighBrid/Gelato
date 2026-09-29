@@ -36,7 +36,7 @@
                 <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" aria-label="Quantity" data-line-key="{{ item.key }}">
                 <button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1" data-line-key="{{ item.key }}">+</button>
               </div>
-              <span class="price" data-line-price="{{ item.key }}" aria-label="{{ item.final_line_price | money | strip_html | escape }}">{{ item.final_line_price | money }}</span>
+              <span class="price" data-line-price="{{ item.key }}" aria-label="{{ item.final_line_price | money_with_currency | strip_html | escape }}">{{ item.final_line_price | money_with_currency }}</span>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
   {%- endif -%}
 
   <div class="cart-drawer__footer">
-    <div class="cart-subtotal" aria-label="Subtotal {{ cart.total_price | money | strip_html | escape }}"><span class="cart-subtotal__label">Subtotal:</span> <span class="cart-subtotal__amount" data-cart-subtotal>{{ cart.total_price | money }}</span></div>
+    <div class="cart-subtotal" aria-label="Subtotal {{ cart.total_price | money_with_currency | strip_html | escape }}"><span class="cart-subtotal__label">Subtotal:</span> <span class="cart-subtotal__amount" data-cart-subtotal>{{ cart.total_price | money_with_currency }}</span></div>
     <p class="cart-drawer__policy-note">Complimentary standard delivery.</p>
     <form id="cart-form" action="/cart" method="post">
       <input type="hidden" name="note" data-note-hidden value="{{ cart.note | escape }}">
