@@ -18,7 +18,6 @@
     >
       {%- if section.settings.video_url != blank -%}
         <video
-          src="{{ section.settings.video_url }}"
           {% if section.settings.autoplay %}autoplay muted loop playsinline{% endif %}
           {% unless section.settings.autoplay %}controls{% endunless %}
           style="width:100%;height:100%;object-fit:cover;"
@@ -26,6 +25,10 @@
           preload="metadata"
           data-melato-video
         >
+          {%- if section.settings.mobile_video_url != blank -%}
+            <source media="(max-width: 749px)" src="{{ section.settings.mobile_video_url }}" type="video/mp4">
+          {%- endif -%}
+          <source src="{{ section.settings.video_url }}" type="video/mp4">
           Your browser does not support the video tag.
         </video>
 
@@ -178,7 +181,8 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading" },
     { "type": "checkbox", "id": "center_heading", "label": "Center heading", "default": true },
-    { "type": "text", "id": "video_url", "label": "Video URL", "info": "Upload to Files. MP4 or WebM." },
+    { "type": "text", "id": "video_url", "label": "Desktop video URL", "info": "Upload to Files. MP4 or WebM." },
+    { "type": "text", "id": "mobile_video_url", "label": "Mobile video URL", "info": "Optional lower-resolution source for screens up to 749px." },
     { "type": "image_picker", "id": "cover_image", "label": "Cover image (if no video)" },
     { "type": "checkbox", "id": "autoplay", "label": "Autoplay (muted)", "default": false },
     { "type": "checkbox", "id": "full_width", "label": "Full width", "default": false },
