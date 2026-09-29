@@ -61,6 +61,7 @@
     },
     "contextual_merchandising": {
       "type": "melato-pdp-contextual-merchandising",
+      "disabled": true,
       "settings": {}
     }
   },
