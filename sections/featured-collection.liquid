@@ -61,6 +61,20 @@
   </div>
 </section>
 
+{%- comment -%}
+  Mobile grid contract: respect the section's mobile column setting all the way
+  down to phone widths. The global legacy grid used to collapse every .grid--4
+  to one column below 480px, which made THE UNIFORM render 1-by-1 even though
+  this section is explicitly configured for two mobile columns.
+{%- endcomment -%}
+<style>
+  @media (max-width: 480px) {
+    #shopify-section-{{ section.id }} .featured-collection .grid {
+      grid-template-columns: repeat(var(--cols-mobile, 2), minmax(0, 1fr)) !important;
+    }
+  }
+</style>
+
 {% schema %}
 {
   "name": "Featured Collection",
