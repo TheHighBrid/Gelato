@@ -1,0 +1,15 @@
+{% comment %}
+  Canonical customer-facing money formatter.
+  Shopify's money_with_currency output can vary by context/market, so this
+  guarantees the active ISO currency code is present exactly once.
+
+  Usage: {% render 'melato-money-with-currency', amount: product.price %}
+{% endcomment %}
+{%- liquid
+  assign melato_currency_code = localization.country.currency.iso_code | default: cart.currency.iso_code | default: shop.currency
+  capture melato_formatted_money
+    echo amount | money_with_currency
+  endcapture
+  assign melato_formatted_money = melato_formatted_money | strip
+-%}
+{{- melato_formatted_money -}}{%- unless melato_formatted_money contains melato_currency_code -%} {{ melato_currency_code }}{%- endunless -%}
