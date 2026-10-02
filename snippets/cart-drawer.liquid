@@ -18,6 +18,7 @@
       {%- render 'melato-cart-empty-state' -%}
     {%- else -%}
       {%- for item in cart.items -%}
+        {%- capture melato_line_price -%}{%- render 'melato-money-with-currency', amount: item.final_line_price -%}{%- endcapture -%}
         <div class="cart-item" role="listitem" data-line-key="{{ item.key }}" data-line-index="{{ forloop.index }}">
           <a href="{{ item.url }}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">
             {%- if item.image != blank -%}
@@ -36,7 +37,7 @@
                 <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" aria-label="Quantity" data-line-key="{{ item.key }}">
                 <button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1" data-line-key="{{ item.key }}">+</button>
               </div>
-              <span class="price" data-line-price="{{ item.key }}" aria-label="{{ item.final_line_price | money_with_currency | strip_html | escape }}">{{ item.final_line_price | money_with_currency }}</span>
+              <span class="price" data-line-price="{{ item.key }}" aria-label="{{ melato_line_price | strip_html | escape }}">{{ melato_line_price }}</span>
             </div>
           </div>
         </div>
@@ -54,8 +55,9 @@
     </div>
   {%- endif -%}
 
+  {%- capture melato_cart_subtotal -%}{%- render 'melato-money-with-currency', amount: cart.total_price -%}{%- endcapture -%}
   <div class="cart-drawer__footer">
-    <div class="cart-subtotal" aria-label="Subtotal {{ cart.total_price | money_with_currency | strip_html | escape }}"><span class="cart-subtotal__label">Subtotal:</span> <span class="cart-subtotal__amount" data-cart-subtotal>{{ cart.total_price | money_with_currency }}</span></div>
+    <div class="cart-subtotal" aria-label="Subtotal {{ melato_cart_subtotal | strip_html | escape }}"><span class="cart-subtotal__label">Subtotal:</span> <span class="cart-subtotal__amount" data-cart-subtotal>{{ melato_cart_subtotal }}</span></div>
     <p class="cart-drawer__policy-note">Complimentary standard delivery.</p>
     <form id="cart-form" action="/cart" method="post">
       <input type="hidden" name="note" data-note-hidden value="{{ cart.note | escape }}">
