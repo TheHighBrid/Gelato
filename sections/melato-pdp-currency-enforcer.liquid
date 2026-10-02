@@ -5,10 +5,18 @@
   renderer still contains older plain-money output paths.
 {% endcomment %}
 
+{%- liquid
+  assign melato_current_variant = product.selected_or_first_available_variant
+  assign melato_matching_product = product.metafields.custom.companion_product.value | default: product.metafields.custom.matching_product.value
+-%}
+{%- capture melato_current_price -%}{%- render 'melato-money-with-currency', amount: melato_current_variant.price -%}{%- endcapture -%}
+{%- capture melato_product_price -%}{%- render 'melato-money-with-currency', amount: product.price -%}{%- endcapture -%}
+{%- capture melato_matching_price -%}{%- if melato_matching_product != blank -%}{%- render 'melato-money-with-currency', amount: melato_matching_product.price -%}{%- endif -%}{%- endcapture -%}
+
 <section class="melato-pdp-currency-source" hidden aria-hidden="true"
-  data-current-price="{{ product.selected_or_first_available_variant.price | money_with_currency | escape }}"
-  data-product-price="{{ product.price | money_with_currency | escape }}"
-  data-matching-price="{% if product.metafields.custom.companion_product.value != blank %}{{ product.metafields.custom.companion_product.value.price | money_with_currency | escape }}{% elsif product.metafields.custom.matching_product.value != blank %}{{ product.metafields.custom.matching_product.value.price | money_with_currency | escape }}{% endif %}">
+  data-current-price="{{ melato_current_price | strip | escape }}"
+  data-product-price="{{ melato_product_price | strip | escape }}"
+  data-matching-price="{{ melato_matching_price | strip | escape }}">
 </section>
 <script data-melato-pdp-currency-enforcer>
 (function () {
