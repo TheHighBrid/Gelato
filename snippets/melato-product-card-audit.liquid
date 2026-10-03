@@ -36,10 +36,10 @@
 
     <div class="melato-card__price" aria-label="Price">
       {%- if has_discount -%}
-        <span class="melato-card__price-current">{{ price | money }}</span>
-        <s class="melato-card__price-compare">{{ compare_at | money }}</s>
+        <span class="melato-card__price-current">{% render 'melato-money-with-currency', amount: price %}</span>
+        <s class="melato-card__price-compare">{% render 'melato-money-with-currency', amount: compare_at %}</s>
       {%- else -%}
-        <span>{{ price | money }}</span>
+        <span>{% render 'melato-money-with-currency', amount: price %}</span>
       {%- endif -%}
     </div>
   </div>

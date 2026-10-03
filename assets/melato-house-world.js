@@ -8,7 +8,7 @@
   ]);
 
   const links = [
-    ['/collections/the-living-lookbook', 'Living Book'],
+    ['/pages/living-lookbook', 'Living Book'],
     ['/collections/ovum-before-the-world', 'Collections'],
     ['/pages/our-story', 'The House'],
     ['/collections/new-arrivals', 'New Work']

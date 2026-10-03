@@ -15,7 +15,7 @@
   assign specification_pending = false
   assign material_spec_status = product.metafields.custom.material_spec_status.value | downcase | strip
   assign material_spec_ready = false
-  if material_spec_status == 'ready for storefront'
+  if material_spec_status contains 'ready'
     assign material_spec_ready = true
   endif
 

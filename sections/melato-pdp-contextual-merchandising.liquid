@@ -1,0 +1,215 @@
+{% comment %}
+  MELATO PRODUCT PAGE BIBLE 1.0.0
+  Deterministic pre-footer merchandising.
+  Maximum two modules. No per-product randomization or merchant settings.
+{% endcomment %}
+
+{%- liquid
+  assign type_down = product.product_type | downcase
+  assign tags_down = product.tags | join: '|' | downcase
+
+  assign family = 'other'
+  if type_down contains 'fragrance' or type_down contains 'eau de' or tags_down contains 'fragrance'
+    assign family = 'fragrance'
+  elsif type_down contains 'denim' or type_down contains 'jean' or tags_down contains 'denim'
+    assign family = 'denim'
+  elsif type_down contains 'bag' or type_down contains 'duffle' or type_down contains 'tote' or type_down contains 'messenger'
+    assign family = 'bags'
+  elsif type_down contains 'sunglass' or type_down contains 'eyewear' or type_down contains 'tie' or type_down contains 'suspender' or type_down contains 'belt' or type_down contains 'accessor'
+    assign family = 'accessories'
+  elsif type_down contains 'shoe' or type_down contains 'footwear' or type_down contains 'sneaker' or type_down contains 'boot'
+    assign family = 'footwear'
+  elsif type_down contains 'track jacket' or type_down contains 'track pant' or type_down contains 'tracksuit' or tags_down contains 'uniform'
+    assign family = 'uniform'
+  elsif type_down contains 'jacket' or type_down contains 'pant' or type_down contains 'trouser' or type_down contains 'shirt' or type_down contains 'tee' or type_down contains 'top' or type_down contains 'dress' or type_down contains 'skirt' or type_down contains 'bodysuit' or type_down contains 'vest' or type_down contains 'polo' or type_down contains 'knit'
+    assign family = 'apparel'
+  endif
+
+  assign material_value = product.metafields.custom.material_composition.value
+  if material_value == blank
+    assign material_value = product.metafields.custom.fabric_composition.value | default: product.metafields.custom.composition.value
+  endif
+
+  assign care_value = product.metafields.custom.care_instructions.value
+  if care_value == blank
+    assign care_value = product.metafields.custom.care.value | default: product.metafields.custom.care_notes.value
+  endif
+
+  assign fit_value = product.metafields.custom.fit_notes.value
+  if fit_value == blank
+    assign fit_value = product.metafields.custom.fit.value
+  endif
+
+  assign construction_value = product.metafields.custom.construction.value
+  assign ingredients_value = product.metafields.custom.ingredients.value
+  assign use_value = product.metafields.custom.use.value
+  assign companion_value = product.metafields.custom.companion_product.value
+  if companion_value == blank
+    assign companion_value = product.metafields.custom.matching_product.value | default: product.metafields.custom.matching_piece.value | default: product.metafields.custom.set_partner.value
+  endif
+
+  assign enrichment_count = 0
+  if family == 'fragrance'
+    if ingredients_value != blank
+      assign enrichment_count = enrichment_count | plus: 1
+    endif
+    if use_value != blank
+      assign enrichment_count = enrichment_count | plus: 1
+    endif
+  else
+    if material_value != blank
+      assign enrichment_count = enrichment_count | plus: 1
+    endif
+    if care_value != blank
+      assign enrichment_count = enrichment_count | plus: 1
+    endif
+    if fit_value != blank and family != 'bags'
+      assign enrichment_count = enrichment_count | plus: 1
+    endif
+    if construction_value != blank
+      assign enrichment_count = enrichment_count | plus: 1
+    endif
+    if use_value != blank and family == 'bags' or use_value != blank and family == 'accessories'
+      assign enrichment_count = enrichment_count | plus: 1
+    endif
+    if companion_value != blank
+      assign enrichment_count = enrichment_count | plus: 1
+    endif
+  endif
+
+  assign module_limit = 2
+  if enrichment_count >= 4
+    assign module_limit = 1
+  endif
+
+  assign primary_handle = 'new-arrivals'
+  assign secondary_handle = 'accessories'
+
+  case family
+    when 'fragrance'
+      assign secondary_handle = 'accessories'
+    when 'bags'
+      assign secondary_handle = 'tracksuits'
+    when 'accessories'
+      assign secondary_handle = 'tracksuits'
+    when 'denim'
+      assign secondary_handle = 'tracksuits'
+    when 'uniform'
+      assign secondary_handle = 'accessories'
+    when 'footwear'
+      assign secondary_handle = 'tracksuits'
+    when 'apparel'
+      assign secondary_handle = 'accessories'
+    else
+      assign secondary_handle = 'accessories'
+  endcase
+
+  assign fallback_handles = 'new-arrivals|accessories|tracksuits|denim|bags|fragrance' | split: '|'
+  assign chosen_handles = ''
+  assign chosen_count = 0
+
+  assign first_collection = collections[primary_handle]
+  if first_collection != blank and first_collection.products_count > 0
+    assign chosen_handles = primary_handle
+    assign chosen_count = 1
+  endif
+
+  if chosen_count < module_limit
+    assign second_collection = collections[secondary_handle]
+    if second_collection != blank and second_collection.products_count > 0 and secondary_handle != primary_handle
+      if chosen_handles == blank
+        assign chosen_handles = secondary_handle
+      else
+        assign chosen_handles = chosen_handles | append: '|' | append: secondary_handle
+      endif
+      assign chosen_count = chosen_count | plus: 1
+    endif
+  endif
+
+  if chosen_count < module_limit
+    for fallback_handle in fallback_handles
+      if chosen_count >= module_limit
+        break
+      endif
+      assign token = '|' | append: chosen_handles | append: '|'
+      assign candidate_token = '|' | append: fallback_handle | append: '|'
+      unless token contains candidate_token
+        assign candidate_collection = collections[fallback_handle]
+        if candidate_collection != blank and candidate_collection.products_count > 0
+          if chosen_handles == blank
+            assign chosen_handles = fallback_handle
+          else
+            assign chosen_handles = chosen_handles | append: '|' | append: fallback_handle
+          endif
+          assign chosen_count = chosen_count | plus: 1
+        endif
+      endunless
+    endfor
+  endif
+
+  assign render_handles = chosen_handles | split: '|'
+-%}
+
+{%- if product != blank and chosen_count > 0 -%}
+  <section class="melato-pdp-merchandising section-{{ section.id }}" data-melato-pdp-merchandising data-enrichment-count="{{ enrichment_count }}" data-module-limit="{{ module_limit }}">
+    <div class="melato-pdp-merchandising__inner">
+      {%- for collection_handle in render_handles limit: module_limit -%}
+        {%- assign merch_collection = collections[collection_handle] -%}
+        {%- if merch_collection != blank and merch_collection.products_count > 0 -%}
+          {%- liquid
+            assign merch_title = merch_collection.title
+            case collection_handle
+              when 'new-arrivals'
+                assign merch_title = 'New Arrivals'
+              when 'accessories'
+                assign merch_title = 'Accessories'
+              when 'fragrance'
+                assign merch_title = 'Fragrance'
+              when 'bags'
+                assign merch_title = 'Bags'
+              when 'denim'
+                assign merch_title = 'Denim'
+              when 'tracksuits'
+                assign merch_title = 'The Uniform'
+            endcase
+          -%}
+          <div class="melato-pdp-merchandising__module" data-collection="{{ collection_handle }}">
+            <div class="melato-pdp-merchandising__head">
+              <h2 class="melato-pdp-bible-section-title">{{ merch_title }}</h2>
+              <a href="{{ merch_collection.url }}" class="melato-pdp-merchandising__view-all">View all</a>
+            </div>
+            <div class="melato-grid melato-grid--cards">
+              {%- assign shown = 0 -%}
+              {%- for card_product in merch_collection.products -%}
+                {%- if shown >= 4 -%}{%- break -%}{%- endif -%}
+                {%- if card_product.available and card_product.id != product.id -%}
+                  {% render 'melato-product-card-audit', card_product: card_product %}
+                  {%- assign shown = shown | plus: 1 -%}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </section>
+
+  <style>
+    .section-{{ section.id }}.melato-pdp-merchandising{padding:clamp(38px,6vw,84px) 0;background:#080808;color:#f5f1e8}
+    .section-{{ section.id }} .melato-pdp-merchandising__inner{width:min(1440px,calc(100% - 32px));margin:0 auto;display:grid;gap:clamp(42px,6vw,78px)}
+    .section-{{ section.id }} .melato-pdp-merchandising__head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:22px}
+    .section-{{ section.id }} .melato-pdp-bible-section-title{margin:0;color:var(--melato-pdp-section-title,var(--melato-product-title,#f5f1e8));font-size:clamp(1.35rem,2.4vw,2.25rem);line-height:1.05;transition:color .8s ease}
+    .section-{{ section.id }} .melato-pdp-merchandising__view-all{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px;white-space:nowrap}
+    @media (prefers-reduced-motion: reduce){.section-{{ section.id }} .melato-pdp-bible-section-title{transition:none}}
+  </style>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Melato PDP merchandising",
+  "tag": "section",
+  "class": "section melato-section",
+  "settings": [],
+  "presets": [{"name":"Melato PDP merchandising"}]
+}
+{% endschema %}

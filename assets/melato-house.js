@@ -3,7 +3,7 @@
 
   const HOUSE_ROUTES = {
     currentDrop: '/collections/drop-001-texture-form',
-    livingBook: '/collections/the-living-lookbook',
+    livingBook: '/pages/living-lookbook',
     newArrivals: '/collections/new-arrivals'
   };
 
@@ -47,7 +47,7 @@
     const text = normalizeText(link.textContent);
     const routeHint = link.dataset.houseRoute || '';
 
-    if (routeHint === 'living-book' || path === '/pages/living-lookbook') {
+    if (routeHint === 'living-book' || path === '/pages/living-lookbook' || path === '/collections/the-living-lookbook') {
       if (path !== HOUSE_ROUTES.livingBook) link.setAttribute('href', HOUSE_ROUTES.livingBook);
       return;
     }

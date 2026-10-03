@@ -41,14 +41,16 @@
     const amount = Number(cents || 0) / 100;
     const currencyCode = String(code || window.DRIP?.shop?.currency || 'CAD').trim().toUpperCase();
     try {
-      return new Intl.NumberFormat(locale(), {
+      const formatted = new Intl.NumberFormat(locale(), {
         style:'currency', currency:currencyCode, currencyDisplay:'narrowSymbol'
       }).format(amount);
+      return formatted.includes(currencyCode) ? formatted : `${formatted} ${currencyCode}`;
     } catch (error) {
       if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
-        return window.Shopify.formatMoney(Number(cents || 0), window.DRIP?.shop?.moneyFormat || '${{amount}}');
+        const formatted = window.Shopify.formatMoney(Number(cents || 0), window.DRIP?.shop?.moneyFormat || '${{amount}}');
+        return String(formatted).includes(currencyCode) ? formatted : `${formatted} ${currencyCode}`;
       }
-      return `$${amount.toFixed(2)}`;
+      return `$${amount.toFixed(2)} ${currencyCode}`;
     }
   }
 

@@ -160,12 +160,13 @@
   }
 
   function ensureServiceHero(){
-    if(!/^\/pages\/(size-guide|size-guide-1|shipping-returns)\/?$/i.test(location.pathname)) return;
+    // Shipping & Returns owns its semantic H1 in the Liquid template. Never inject
+    // another client-side H1 there. The helper remains only for the legacy size guides.
+    if(!/^\/pages\/(size-guide|size-guide-1)\/?$/i.test(location.pathname)) return;
     const page = document.querySelector('.melato-page');
     if(!page || page.querySelector('.melato-page-header')) return;
-    const shipping = /shipping-returns/i.test(location.pathname);
-    const title = shipping ? 'Shipping & Returns' : 'Fit Guide';
-    const sub = shipping ? 'Processing, delivery, tracking and return guidance in one place.' : 'Product-specific measurements, fit notes and personal sizing support.';
+    const title = 'Fit Guide';
+    const sub = 'Product-specific measurements, fit notes and personal sizing support.';
     const header = document.createElement('header');
     header.className = 'melato-page-header melato-hotfix-service-header';
     header.innerHTML = '<div class="melato-eyebrow">Melato Client Services</div><h1 class="melato-page-header__title">'+title+'</h1><p class="melato-page-header__subtitle">'+sub+'</p>';

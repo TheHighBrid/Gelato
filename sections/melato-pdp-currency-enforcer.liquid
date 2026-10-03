@@ -1,0 +1,79 @@
+{% comment %}
+  Melato Product Page Bible currency enforcer.
+  Canonical customer-facing PDP prices must always include currency.
+  This section keeps the rendered price UI aligned while the legacy PDP
+  renderer still contains older plain-money output paths.
+{% endcomment %}
+
+{%- liquid
+  assign melato_current_variant = product.selected_or_first_available_variant
+  assign melato_matching_product = product.metafields.custom.companion_product.value | default: product.metafields.custom.matching_product.value
+-%}
+{%- capture melato_current_price -%}{%- render 'melato-money-with-currency', amount: melato_current_variant.price -%}{%- endcapture -%}
+{%- capture melato_product_price -%}{%- render 'melato-money-with-currency', amount: product.price -%}{%- endcapture -%}
+{%- capture melato_matching_price -%}{%- if melato_matching_product != blank -%}{%- render 'melato-money-with-currency', amount: melato_matching_product.price -%}{%- endif -%}{%- endcapture -%}
+
+<section class="melato-pdp-currency-source" hidden aria-hidden="true"
+  data-current-price="{{ melato_current_price | strip | escape }}"
+  data-product-price="{{ melato_product_price | strip | escape }}"
+  data-matching-price="{{ melato_matching_price | strip | escape }}">
+</section>
+<script data-melato-pdp-currency-enforcer>
+(function () {
+  'use strict';
+  var source = document.querySelector('.melato-pdp-currency-source');
+  var root = document.querySelector('.melato-pdp-rebuild');
+  if (!source || !root) return;
+
+  function currentVariant() {
+    try {
+      var node = document.querySelector('[id^="PDPVariants-"]');
+      if (!node) return null;
+      var variants = JSON.parse(node.textContent || '[]');
+      var idInput = root.querySelector('[data-variant-id]');
+      if (!idInput) return null;
+      return variants.find(function (variant) { return String(variant.id) === String(idInput.value); }) || null;
+    } catch (_) { return null; }
+  }
+
+  function money(cents) {
+    var number = Number(cents || 0) / 100;
+    return '$' + number.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CAD';
+  }
+
+  function apply() {
+    var variant = currentVariant();
+    var main = root.querySelector('.pdp-price');
+    var sticky = root.querySelector('[id^="PDPStickyPrice-"]');
+    if (variant) {
+      if (main) main.textContent = money(variant.price);
+      if (sticky) sticky.textContent = money(variant.price);
+      var compare = root.querySelector('.pdp-compare');
+      if (compare && variant.compare_at_price) compare.textContent = money(variant.compare_at_price);
+    } else {
+      if (main && source.dataset.currentPrice) main.textContent = source.dataset.currentPrice;
+      if (sticky && source.dataset.currentPrice) sticky.textContent = source.dataset.currentPrice;
+    }
+
+    var cards = root.querySelectorAll('.pdp-set-card .purchase-summary__price');
+    if (cards[0] && source.dataset.productPrice) cards[0].textContent = source.dataset.productPrice;
+    if (cards[1] && source.dataset.matchingPrice) cards[1].textContent = source.dataset.matchingPrice;
+  }
+
+  apply();
+  root.addEventListener('change', function (event) {
+    if (event.target && event.target.matches('.pdp-choice input')) setTimeout(apply, 0);
+  });
+  document.addEventListener('variant:change', apply);
+  document.addEventListener('shopify:section:load', apply);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "PDP currency enforcer",
+  "tag": "section",
+  "settings": [],
+  "presets": [{"name":"PDP currency enforcer"}]
+}
+{% endschema %}

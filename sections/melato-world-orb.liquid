@@ -1,0 +1,211 @@
+{% comment %}
+  MELATO WORLD ORB
+  Full-viewport rotating house navigator.
+  Theme editor: add section "Melato World Orb" to the homepage or a page template.
+{% endcomment %}
+
+{{ 'melato-world-orb.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign height = section.settings.height | default: '100dvh'
+-%}
+
+<section
+  id="mwo-{{ section.id }}"
+  class="mwo"
+  data-mwo
+  style="--mwo-height: {{ height }};"
+  aria-label="{{ section.settings.kicker | default: 'World of Melato' }}"
+>
+  <script type="application/json" data-mwo-config>
+    [
+      {%- for block in section.blocks -%}
+        {
+          "id": {{ block.settings.loc_id | default: block.id | json }},
+          "index": {{ forloop.index | prepend: '0' | json }},
+          "title": {{ block.settings.title | json }},
+          "kicker": {{ block.settings.kicker | json }},
+          "blurb": {{ block.settings.blurb | json }},
+          "href": {{ block.settings.link | json }},
+          "lat": {{ block.settings.lat | default: 0 }},
+          "lon": {{ block.settings.lon | default: 0 }},
+          "cta": {{ section.settings.enter_label | json }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+      {%- endfor -%}
+    ]
+  </script>
+
+  <div class="mwo__stage" data-mwo-stage></div>
+  <div class="mwo__vignette"></div>
+
+  <div class="mwo__hud">
+    <header class="mwo__top">
+      <div class="mwo__brand">
+        <p class="mwo__kicker">{{ section.settings.kicker | default: 'World of Melato' }}</p>
+        <h2 class="mwo__wordmark">{{ section.settings.wordmark | default: 'MELATO' }}</h2>
+        <p class="mwo__line">{{ section.settings.line | default: 'Ottawa / The House' }}</p>
+      </div>
+      <div class="mwo__status">
+        <span>Orbit <b data-mwo-orbit>live</b></span>
+        <span>Rooms <b>{{ section.blocks.size | prepend: '0' }}</b></span>
+      </div>
+    </header>
+
+    <nav class="mwo__index" aria-label="Featured locations">
+      <p class="mwo__index-label">{{ section.settings.list_label | default: 'Featured locations' }}</p>
+      <ul class="mwo__list">
+        {%- for block in section.blocks -%}
+          <li {{ block.shopify_attributes }}>
+            <button type="button" class="mwo__item" data-mwo-focus="{{ block.settings.loc_id | default: block.id }}">
+              <em>{{ forloop.index | prepend: '0' }}</em>
+              <strong>{{ block.settings.title }}</strong>
+              <small>{{ block.settings.kicker }}</small>
+            </button>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <p class="mwo__hint">{{ section.settings.hint | default: 'Drag to spin · Click a marker to enter' }}</p>
+  </div>
+
+  <article class="mwo__panel" data-mwo-panel aria-live="polite">
+    <p class="mwo__panel-kicker">
+      <span data-mwo-panel-index></span>
+      <span>Melato</span>
+    </p>
+    <h2 data-mwo-panel-title></h2>
+    <p data-mwo-panel-blurb></p>
+    <div class="mwo__actions">
+      <a class="mwo__btn" data-mwo-panel-link href="#">{{ section.settings.enter_label | default: 'Enter this room' }}</a>
+      <button type="button" class="mwo__btn mwo__btn--ghost" data-mwo-close>{{ section.settings.close_label | default: 'Back to orbit' }}</button>
+    </div>
+  </article>
+  <div class="mwo__grain"></div>
+</section>
+
+<script type="module" src="{{ 'melato-world-orb.js' | asset_url }}"></script>
+
+{% schema %}
+{
+  "name": "Melato World Orb",
+  "tag": "section",
+  "class": "section-melato-world-orb",
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "World of Melato" },
+    { "type": "text", "id": "wordmark", "label": "Wordmark", "default": "MELATO" },
+    { "type": "text", "id": "line", "label": "Location line", "default": "Ottawa / The House" },
+    { "type": "text", "id": "list_label", "label": "List label", "default": "Featured locations" },
+    { "type": "text", "id": "hint", "label": "Hint", "default": "Drag to spin · Click a marker to enter" },
+    { "type": "text", "id": "enter_label", "label": "Enter button", "default": "Enter this room" },
+    { "type": "text", "id": "close_label", "label": "Close button", "default": "Back to orbit" },
+    { "type": "text", "id": "height", "label": "Section height", "default": "100dvh", "info": "CSS height, e.g. 100dvh, 90vh, 800px" }
+  ],
+  "blocks": [
+    {
+      "type": "location",
+      "name": "Location",
+      "settings": [
+        { "type": "text", "id": "loc_id", "label": "ID", "info": "Stable id used by the 3D engine" },
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "text", "id": "kicker", "label": "Kicker" },
+        { "type": "textarea", "id": "blurb", "label": "Description" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "number", "id": "lat", "label": "Latitude", "default": 10, "info": "Marker latitude, -80 to 80" },
+        { "type": "number", "id": "lon", "label": "Longitude", "default": 20, "info": "Marker longitude, 0 to 360" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Melato World Orb",
+      "blocks": [
+        {
+          "type": "location",
+          "settings": {
+            "loc_id": "living-book",
+            "title": "Living Book",
+            "kicker": "Lookbook",
+            "blurb": "The cinematic dossier. Frames of evidence, garments, and withheld identity — the house, narrated.",
+            "link": "/pages/living-lookbook",
+            "lat": 22,
+            "lon": 18
+          }
+        },
+        {
+          "type": "location",
+          "settings": {
+            "loc_id": "ready-to-wear",
+            "title": "Ready To Wear",
+            "kicker": "The Uniform",
+            "blurb": "Limited-run apparel, tailored for movement and cut with intent. Tracksuits, denim, the daily house language.",
+            "link": "/collections/new-arrivals",
+            "lat": 6,
+            "lon": 72
+          }
+        },
+        {
+          "type": "location",
+          "settings": {
+            "loc_id": "accessories",
+            "title": "Accessories",
+            "kicker": "Finishing",
+            "blurb": "Bags, lenses, chain wallets, and the last decisions. Small objects that complete the look.",
+            "link": "/collections/accessories",
+            "lat": -16,
+            "lon": 128
+          }
+        },
+        {
+          "type": "location",
+          "settings": {
+            "loc_id": "editorial",
+            "title": "Editorial",
+            "kicker": "Journal",
+            "blurb": "Notes from the house. Process, references, and the culture that wears us.",
+            "link": "/blogs/news",
+            "lat": 34,
+            "lon": 196
+          }
+        },
+        {
+          "type": "location",
+          "settings": {
+            "loc_id": "popup",
+            "title": "Pop-Up Show & Events",
+            "kicker": "Coordinates",
+            "blurb": "Physical appearances. Popup calendar, showings, and the house in a room.",
+            "link": "/pages/popup-calendar",
+            "lat": -28,
+            "lon": 244
+          }
+        },
+        {
+          "type": "location",
+          "settings": {
+            "loc_id": "concierge",
+            "title": "Concierge",
+            "kicker": "Service",
+            "blurb": "Fit, care, delivery, and private assistance. One line to the house.",
+            "link": "/pages/contact",
+            "lat": 12,
+            "lon": 300
+          }
+        },
+        {
+          "type": "location",
+          "settings": {
+            "loc_id": "radio",
+            "title": "Melato Radio",
+            "kicker": "Frequency",
+            "blurb": "The house frequency. Sound from the atelier — a listening room for the world of Melato.",
+            "link": "/pages/our-story",
+            "lat": -20,
+            "lon": 348
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

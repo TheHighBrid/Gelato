@@ -1,29 +1,31 @@
 {% comment %}
-  Melato — Delivery & Returns Page Template
+  Melato - Delivery & Returns Page Template
   Template: page.shipping-returns
   URL: /pages/shipping-returns
+
+  The Shopify Page body is the source of truth. This template owns the one
+  canonical page-level H1 so theme/header injections cannot duplicate it.
 {% endcomment %}
 
-{{ 'melato-concierge.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'melato-concierge.js' | asset_url }}" defer></script>
-
-<div class="melato-page">
-  <header class="melato-page-header">
-    <div class="melato-eyebrow">Melato Client Services</div>
-    <h1 class="melato-page-header__title">{{ page.title | default: 'Shipping & Returns' }}</h1>
-    <p class="melato-page-header__subtitle">Processing, delivery, tracking and return guidance in one place.</p>
-  </header>
-
-  <div class="melato-container">
+<div class="melato-page melato-service-page-clean" style="background:#0b0b0c!important;color:#f5f1e8!important;min-height:72vh;">
+  <div class="melato-container" style="max-width:980px;margin:0 auto;padding:clamp(54px,7vw,92px) 24px clamp(72px,9vw,120px);background:transparent!important;color:#f5f1e8!important;">
     {% if page.content != blank %}
-      <div class="rte">{{ page.content }}</div>
+      {%- if page.content contains '<h1' and page.content contains '</h1>' -%}
+        {%- assign shipping_h1_parts = page.content | split: '<h1' -%}
+        {%- assign shipping_before_h1 = shipping_h1_parts[0] -%}
+        {%- assign shipping_after_open = shipping_h1_parts[1] -%}
+        {%- assign shipping_after_parts = shipping_after_open | split: '</h1>' -%}
+        {%- assign shipping_after_h1 = shipping_after_parts[1] -%}
+        <div class="rte melato-service-rte" style="color:#f5f1e8!important;background:transparent!important;">{{ shipping_before_h1 }}<h1 style="margin:0 0 22px;color:#f5f1e8!important;font-size:clamp(46px,8vw,92px);line-height:.9;letter-spacing:-.04em;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif!important;font-weight:800;">Shipping &amp; Returns</h1>{{ shipping_after_h1 }}</div>
+      {%- else -%}
+        <div class="rte melato-service-rte" style="color:#f5f1e8!important;background:transparent!important;"><h1 style="margin:0 0 22px;color:#f5f1e8!important;font-size:clamp(46px,8vw,92px);line-height:.9;letter-spacing:-.04em;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif!important;font-weight:800;">Shipping &amp; Returns</h1>{{ page.content }}</div>
+      {%- endif -%}
     {% else %}
-      <div class="melato-card">
-        <h2 class="melato-h3">Delivery & returns</h2>
-        <p class="melato-body-sm">Available services and eligibility follow Melato's current shipping and returns policies.</p>
-      </div>
+      <section style="max-width:860px;color:#f5f1e8!important;">
+        <p style="margin:0 0 14px;color:#c8bca9!important;font-size:12px;letter-spacing:.18em;text-transform:uppercase;">Delivery & returns</p>
+        <h1 style="margin:0 0 22px;color:#f5f1e8!important;font-size:clamp(52px,9vw,104px);line-height:.86;letter-spacing:-.04em;text-transform:uppercase;">Shipping & Returns</h1>
+        <p style="margin:0;color:#ded6c8!important;font-size:18px;line-height:1.7;">Delivery, tracking, pickup and return terms for current Melato orders.</p>
+      </section>
     {% endif %}
   </div>
-
-  {% section 'concierge-strip' %}
 </div>

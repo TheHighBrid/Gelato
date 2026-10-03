@@ -91,6 +91,7 @@
             el.classList.remove('is-visible');
             requestAnimationFrame(function () { el.classList.add('is-visible'); });
           });
+          enhanceProgressivePagination();
         }
 
         // Swap toolbar count + badges
@@ -139,6 +140,68 @@
       .finally(function () {
         isFetching = false;
         grid.classList.remove('is-loading');
+      });
+  }
+
+  // ── Progressive New Arrivals pagination ──────────────────────────────────
+  function enhanceProgressivePagination() {
+    var shell = qs('[data-progressive-pagination]', grid);
+    if (!shell) return;
+    var nativePagination = qs('[data-native-pagination]', shell);
+    var loadMoreButton = qs('[data-load-more]', shell);
+    if (nativePagination && loadMoreButton) nativePagination.hidden = true;
+  }
+
+  function loadMore(url, button) {
+    if (isFetching || !url) return;
+    isFetching = true;
+    button.setAttribute('aria-busy', 'true');
+    var originalText = button.textContent;
+    button.textContent = 'Loading';
+
+    fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+      .then(function (r) {
+        if (!r.ok) throw new Error('Network response not ok');
+        return r.text();
+      })
+      .then(function (html) {
+        var parser = new DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var newGrid = doc.getElementById('melato-product-grid');
+        var currentInner = qs('.melato-product-grid__inner', grid);
+        var nextInner = newGrid ? qs('.melato-product-grid__inner', newGrid) : null;
+        if (!newGrid || !currentInner || !nextInner) throw new Error('Next product page is missing expected grid markup');
+
+        var appended = [];
+        qsa(':scope > .melato-product-grid__item', nextInner).forEach(function (item) {
+          var clone = item.cloneNode(true);
+          currentInner.appendChild(clone);
+          appended.push(clone);
+        });
+
+        var currentShell = qs('[data-progressive-pagination]', grid);
+        var nextShell = qs('[data-progressive-pagination]', newGrid);
+        if (currentShell) {
+          if (nextShell) currentShell.replaceWith(nextShell.cloneNode(true));
+          else currentShell.remove();
+        }
+        enhanceProgressivePagination();
+
+        appended.forEach(function (el) {
+          el.classList.remove('is-visible');
+          requestAnimationFrame(function () { el.classList.add('is-visible'); });
+        });
+      })
+      .catch(function (err) {
+        console.error('Collection load more error:', err);
+        window.location.assign(url);
+      })
+      .finally(function () {
+        isFetching = false;
+        if (button && button.isConnected) {
+          button.removeAttribute('aria-busy');
+          button.textContent = originalText;
+        }
       });
   }
 
@@ -254,6 +317,13 @@
 
   // ── Event delegation ─────────────────────────────────────────────────────
   document.addEventListener('click', function (e) {
+    // Progressive Load More. The anchor remains a crawlable/fallback URL.
+    var loadMoreLink = e.target.closest('[data-load-more]');
+    if (loadMoreLink) {
+      e.preventDefault();
+      loadMore(loadMoreLink.getAttribute('href'), loadMoreLink);
+      return;
+    }
     // Open drawer
     if (e.target.closest('[data-filter-open]')) {
       e.preventDefault(); openDrawer(); return;
@@ -374,6 +444,8 @@
     var url = (e.state && e.state.url) || window.location.href;
     fetchAndSwap(url, false);
   });
+
+  enhanceProgressivePagination();
 
   // ── Restore on page load ─────────────────────────────────────────────────
   // Only restore if no filters active in current URL (i.e. direct navigation)

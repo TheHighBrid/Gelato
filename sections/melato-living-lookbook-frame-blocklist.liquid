@@ -1,0 +1,78 @@
+{% comment %}
+  Exact Living Lookbook frame blocklist.
+  Removes a rejected stale CDN frame from every current lookbook renderer.
+{% endcomment %}
+<script>
+(() => {
+  const blocked = 'rn-image_picker_lib_temp_b58a1244-8d27-49a7-92b8-37928ae8ce32.jpg';
+  const selector = [
+    `img[src*="${blocked}"]`,
+    `img[srcset*="${blocked}"]`,
+    `[data-evidence-full*="${blocked}"]`,
+    `[data-full*="${blocked}"]`
+  ].join(',');
+
+  const refreshCounts = () => {
+    const legacy = document.getElementById('MelatoLivingLookbook');
+    if (legacy) {
+      const count = legacy.querySelectorAll('.mlb-card').length;
+      const total = legacy.querySelector('.mlb-issue aside strong');
+      if (total) total.textContent = count;
+    }
+
+    document.querySelectorAll('[data-evidence-archive]').forEach((archive) => {
+      const count = archive.querySelectorAll('.mea__evidence').length;
+      const volume = archive.querySelector('.mea__registry div:nth-child(2) dd');
+      if (volume) volume.textContent = `${count} FRAMES`;
+      const footer = archive.querySelector('.mea__footer p:last-child');
+      if (footer) footer.textContent = footer.textContent.replace(/\d+\s+EXHIBITS/i, `${count} EXHIBITS`);
+    });
+  };
+
+  const removeBlocked = (scope = document) => {
+    const roots = scope.matches?.(selector) ? [scope] : Array.from(scope.querySelectorAll?.(selector) || []);
+    let removed = false;
+
+    roots.forEach((node) => {
+      const frame = node.closest?.('.mlb-card, .mea__evidence, .mlbd__exhibit, .lbv2-frame');
+      (frame || node).remove();
+      removed = true;
+    });
+
+    if (removed) refreshCounts();
+  };
+
+  removeBlocked();
+
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) removeBlocked(node);
+        });
+      } else if (mutation.type === 'attributes') {
+        removeBlocked(mutation.target);
+      }
+    }
+  });
+
+  observer.observe(document.documentElement, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    attributeFilter: ['src', 'srcset', 'data-evidence-full', 'data-full']
+  });
+
+  document.addEventListener('shopify:section:load', (event) => removeBlocked(event.target));
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Lookbook frame blocklist",
+  "tag": "section",
+  "class": "section-lookbook-frame-blocklist",
+  "settings": [],
+  "presets": [{ "name": "Lookbook frame blocklist" }]
+}
+{% endschema %}

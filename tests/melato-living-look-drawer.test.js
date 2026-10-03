@@ -17,11 +17,9 @@ test('Living Lookbook production template only orders defined sections and block
   const sectionIds = new Set(Object.keys(template.sections));
   for (const sectionId of template.order) assert.ok(sectionIds.has(sectionId), `Missing ordered section: ${sectionId}`);
 
-  assert.equal(template.sections.main?.type, 'melato-living-lookbook-old');
-  const evidence = template.sections.evidence_20260714;
-  assert.equal(evidence?.type, 'melato-living-lookbook-evidence');
-  const blockIds = new Set(Object.keys(evidence?.blocks || {}));
-  for (const blockId of evidence?.block_order || []) assert.ok(blockIds.has(blockId), `Missing ordered block: ${blockId}`);
+  assert.equal(template.sections.main?.type, 'melato-living-book-vol01');
+  assert.equal(template.order.length, 1);
+  assert.equal(template.sections.main?.settings?.hide_store_chrome, true);
 });
 
 test('Living Look drawer is route-scoped and progressively enhanced', () => {

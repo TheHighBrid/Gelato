@@ -1,0 +1,109 @@
+{
+  "sections": {
+    "world_orb": {
+      "type": "melato-world-orb",
+      "blocks": {
+        "living_book": {
+          "type": "location",
+          "settings": {
+            "loc_id": "living-book",
+            "title": "Living Book",
+            "kicker": "Lookbook",
+            "blurb": "The cinematic dossier. Frames of evidence, garments, and withheld identity — the house, narrated.",
+            "link": "/pages/living-lookbook",
+            "lat": 22,
+            "lon": 18
+          }
+        },
+        "ready_to_wear": {
+          "type": "location",
+          "settings": {
+            "loc_id": "ready-to-wear",
+            "title": "Ready To Wear",
+            "kicker": "The Uniform",
+            "blurb": "Limited-run apparel, tailored for movement and cut with intent.",
+            "link": "/collections/new-arrivals",
+            "lat": 6,
+            "lon": 72
+          }
+        },
+        "accessories": {
+          "type": "location",
+          "settings": {
+            "loc_id": "accessories",
+            "title": "Accessories",
+            "kicker": "Finishing",
+            "blurb": "Bags, lenses, chain wallets, and the last decisions.",
+            "link": "/collections/accessories",
+            "lat": -16,
+            "lon": 128
+          }
+        },
+        "editorial": {
+          "type": "location",
+          "settings": {
+            "loc_id": "editorial",
+            "title": "Editorial",
+            "kicker": "Journal",
+            "blurb": "Notes from the house. Process, references, and the culture that wears us.",
+            "link": "/blogs/news",
+            "lat": 34,
+            "lon": 196
+          }
+        },
+        "popup": {
+          "type": "location",
+          "settings": {
+            "loc_id": "popup",
+            "title": "Pop-Up Show & Events",
+            "kicker": "Coordinates",
+            "blurb": "Physical appearances. Popup calendar, showings, and the house in a room.",
+            "link": "/pages/popup-calendar",
+            "lat": -28,
+            "lon": 244
+          }
+        },
+        "concierge": {
+          "type": "location",
+          "settings": {
+            "loc_id": "concierge",
+            "title": "Concierge",
+            "kicker": "Service",
+            "blurb": "Fit, care, delivery, and private assistance.",
+            "link": "/pages/contact",
+            "lat": 12,
+            "lon": 300
+          }
+        },
+        "radio": {
+          "type": "location",
+          "settings": {
+            "loc_id": "radio",
+            "title": "Melato Radio",
+            "kicker": "Frequency",
+            "blurb": "The house frequency. Sound from the atelier.",
+            "link": "/pages/our-story",
+            "lat": -20,
+            "lon": 348
+          }
+        }
+      },
+      "block_order": [
+        "living_book",
+        "ready_to_wear",
+        "accessories",
+        "editorial",
+        "popup",
+        "concierge",
+        "radio"
+      ],
+      "settings": {
+        "kicker": "World of Melato",
+        "wordmark": "MELATO",
+        "line": "Ottawa / The House",
+        "height": "100dvh"
+      }
+    }
+  },
+  "order": ["world_orb"]
+}

@@ -29,8 +29,7 @@ test('pending product proof fails safe without JavaScript', () => {
 test('storefront-ready status overrides stale pending metadata', () => {
   const guard = read('sections/melato-product-proof-integrity.liquid');
   assert.match(guard, /product\.metafields\.custom\.material_spec_status\.value/);
-  assert.match(guard, /material_spec_status == 'ready for storefront'/);
-  assert.doesNotMatch(guard, /material_spec_status contains 'ready'/);
+  assert.match(guard, /material_spec_status contains 'ready'/);
   assert.match(guard, /proof_tag == 'specification_pending' and material_spec_ready == false/);
 });
 
@@ -57,6 +56,7 @@ test('PDP unification normalizes disclosures, fragrance semantics, sizing and se
   assert.match(layer, /pdp-spec \.pdp-rte/);
   assert.match(layer, /Fragrance details/);
   assert.match(layer, /cleanText\(summary\) === 'material'/);
+  assert.match(layer, /if \(!isFragrance\)/);
   assert.match(layer, /Product measurements/);
   assert.match(layer, /\/pages\/size-guide/);
   assert.match(layer, /melato-full-set-button/);

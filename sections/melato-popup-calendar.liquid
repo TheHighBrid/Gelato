@@ -65,7 +65,9 @@
 #MelatoPopup-{{ section.id }} .melato-popup__lede{max-width:520px;font-size:clamp(17px,2vw,24px);line-height:1.35;margin:0}
 #MelatoPopup-{{ section.id }} .melato-popup__calendar{border-top:1px solid var(--line)}
 #MelatoPopup-{{ section.id }} .melato-popup__event{display:grid;grid-template-columns:110px 1fr 240px;gap:24px;align-items:center;padding:30px 0;border-bottom:1px solid var(--line)}
-#MelatoPopup-{{ section.id }} .melato-popup__event--next{background:var(--paper);color:var(--ink);margin-inline:-16px;padding-inline:16px}
+#MelatoPopup-{{ section.id }} .melato-popup__event--next{background:var(--paper)!important;color:var(--ink)!important;margin-inline:-16px;padding-inline:16px}
+#MelatoPopup-{{ section.id }} .melato-popup__event--next :where(.melato-popup__number,.melato-popup__status,h2,p,div,strong,span){color:var(--ink)!important;opacity:1!important;text-shadow:none!important}
+#MelatoPopup-{{ section.id }} .melato-popup__event:not(.melato-popup__event--next),#MelatoPopup-{{ section.id }} .melato-popup__event:not(.melato-popup__event--next) :where(.melato-popup__number,.melato-popup__status,h2,p,div,strong,span){color:var(--paper)!important;opacity:1!important;text-shadow:none!important}
 #MelatoPopup-{{ section.id }} .melato-popup__number{font:400 clamp(42px,6vw,78px)/.8 var(--font-heading-family,'Bebas Neue',sans-serif)}
 #MelatoPopup-{{ section.id }} .melato-popup__event h2{font:400 clamp(28px,4vw,52px)/1 var(--font-heading-family,'Bebas Neue',sans-serif);margin:4px 0}
 #MelatoPopup-{{ section.id }} .melato-popup__event p{margin:0}
