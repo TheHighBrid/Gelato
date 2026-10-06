@@ -30,8 +30,8 @@ test('trust and returns copy advertises complimentary delivery and protected fre
   const filters = read('snippets/melato-rendered-output-filters.liquid');
   const index = read('templates/index.json');
 
-  assert.match(layout, /<span>Secure checkout<\/span>/);
-  assert.match(cart, /<strong>Secure checkout<\/strong>/);
+  assert.doesNotMatch(layout, /Secure checkout/i);
+  assert.doesNotMatch(cart, /Secure checkout/i);
   assert.ok(cart.includes('free returns within 30 days'));
   assert.ok(cart.includes(freeReturnMethod));
   assert.ok(filters.includes(freeReturnMethod));
