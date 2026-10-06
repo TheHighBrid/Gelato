@@ -6,7 +6,7 @@
   {%- if template.name == 'product' and product != blank -%}
     {%- assign melato_description = product.description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | truncate: 160 -%}
     {%- if melato_description == blank -%}
-      {%- capture melato_description -%}Shop {{ product.title }} by Melato. Explore product details, fit guidance, care information, complimentary standard delivery, and secure checkout.{%- endcapture -%}
+      {%- capture melato_description -%}Shop {{ product.title }} by Melato. Explore product details, fit guidance, care information and complimentary standard delivery.{%- endcapture -%}
     {%- endif -%}
   {%- elsif template.name == 'collection' and collection != blank -%}
     {%- assign melato_description = collection.description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | truncate: 160 -%}
