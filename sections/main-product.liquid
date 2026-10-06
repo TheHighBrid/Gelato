@@ -2,7 +2,7 @@
   Melato - Main Product Section
   v2.3 — Trust Signal Cluster
   - Replaces plain pill badges with a structured 4-signal trust bar
-  - Signals: Free shipping threshold | Easy returns | Secure checkout | Estimated delivery
+  - Signals: Free shipping threshold | Easy returns | Estimated delivery
   - Delivery estimate auto-calculates based on today's date + 5–9 business days
   - All signals driven by section settings (editable in Theme Editor)
   - Fully accessible, dark-mode native, mobile optimised
@@ -132,18 +132,6 @@
           <div class="melato-trust-cluster__text">
             <span class="melato-trust-cluster__label">{{ section.settings.trust_returns_label | default: 'Easy Returns' }}</span>
             <span class="melato-trust-cluster__sub">{{ section.settings.trust_returns_sub | default: '14-day return window' }}</span>
-          </div>
-        </div>
-        {% endif %}
-
-        {% if section.settings.trust_show_secure %}
-        <div class="melato-trust-cluster__item">
-          <div class="melato-trust-cluster__icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-          </div>
-          <div class="melato-trust-cluster__text">
-            <span class="melato-trust-cluster__label">{{ section.settings.trust_secure_label | default: 'Secure Checkout' }}</span>
-            <span class="melato-trust-cluster__sub">{{ section.settings.trust_secure_sub | default: 'SSL encrypted · PCI compliant' }}</span>
           </div>
         </div>
         {% endif %}
@@ -546,24 +534,7 @@ body.sg-modal-open{overflow:hidden}
       "label": "Returns — sub-copy",
       "default": "14-day return window"
     },
-    {
-      "type": "checkbox",
-      "id": "trust_show_secure",
-      "label": "Show secure checkout signal",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "trust_secure_label",
-      "label": "Secure — label",
-      "default": "Secure Checkout"
-    },
-    {
-      "type": "text",
-      "id": "trust_secure_sub",
-      "label": "Secure — sub-copy",
-      "default": "SSL encrypted \u00b7 PCI compliant"
-    },
+
     {
       "type": "checkbox",
       "id": "trust_show_delivery",
