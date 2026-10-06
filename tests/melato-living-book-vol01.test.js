@@ -63,6 +63,29 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
     'waqaa',
     'astroFront',
     'astroProfile',
+    'suitBack',
+    'sunday',
+    'colourblock',
+    'bonjour',
+    'ciao',
+    'casino',
+    'enroute2',
+    'riad',
+    'redlight',
+    'nightedit',
+    'burgundy',
+    'casting',
+    'ojos',
+    'goldFront',
+    'goldBack',
+    'blushStudio',
+    'blushCollar',
+    'rexWorn',
+    'rexCollar',
+    'frame0',
+    'frame10',
+    'colourblock2',
+    'intent',
     'The argument, from behind',
     'Divididos, facing',
     'Same set, second body',
@@ -72,7 +95,21 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
     'The violation, standing',
     'The other script',
     'Figure XII',
-    'In profile, still orbiting'
+    'In profile, still orbiting',
+    'The other uniform',
+    'Sunday edition',
+    'Colourblock as personality test',
+    'Bonjour',
+    'Ciao',
+    'House always dressed',
+    'Still en route',
+    'Riad, with citrus',
+    'Redlight',
+    'The night edit',
+    'Blush, under lights',
+    'The plaque, close',
+    'Rex X, worn',
+    'The shawl, at the throat'
   ]) {
     assert.equal(engine.includes(removedFrame), false, 'rejected Living Lookbook frame leaked back in: ' + removedFrame);
   }
@@ -81,25 +118,8 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
   assert.doesNotMatch(engine, /The_Living_Lookbook-Frame-0_10/);
   assert.doesNotThrow(() => new vm.Script(engine));
 
-  assert.match(section, /data-lbv-assets/);
-  assert.match(section, /lbv-goldset-front\.jpg/);
-  assert.match(section, /lbv-divididos-cast\.jpg/);
-  assert.match(section, /lbv-waqaa-front\.jpg/);
-  assert.match(section, /lbv-astro-front\.jpg/);
-  assert.match(section, /lbv-suit-back\.jpg/);
-  for (const file of [
-    'lbv-goldset-front.jpg',
-    'lbv-goldset-back.jpg',
-    'lbv-sidetape-back.jpg',
-    'lbv-divididos-cast.jpg',
-    'lbv-divididos-exit.jpg',
-    'lbv-waqaa-front.jpg',
-    'lbv-astro-front.jpg',
-    'lbv-astro-profile.jpg',
-    'lbv-suit-back.jpg'
-  ]) {
-    assert.ok(fs.existsSync(path.join(repo, 'assets', file)), 'missing theme frame ' + file);
-  }
+  assert.doesNotMatch(section, /data-lbv-assets/);
+  assert.doesNotMatch(section, /lbv-(?:goldset|sidetape|divididos|waqaa|astro|suit)-/);
 });
 
 test('House living book route points at the editorial page', () => {
