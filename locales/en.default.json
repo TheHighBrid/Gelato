@@ -134,7 +134,7 @@
     "on_orders_over": "on all orders",
     "easy_returns": "Easy returns",
     "return_days": "{{ days }}-day returns",
-    "secure_checkout": "Secure checkout",
+    "secure_checkout": "Checkout",
     "currency": "Currency",
     "country": "Country / Region",
     "language": "Language",
