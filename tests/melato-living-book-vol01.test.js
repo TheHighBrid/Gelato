@@ -50,12 +50,32 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
   assert.match(engine, /is-arming/);
   assert.match(engine, /Enter the book/);
   assert.match(engine, /mountSpread\(0, 'is-current'\)/);
-  assert.match(engine, /divididos-velour-track-jacket-view-03/);
-  assert.match(engine, /Split on purpose/);
-  assert.match(engine, /Je devais voir Anne-So/);
   assert.match(engine, /rex-x-fur-jacket-view-05/);
   assert.match(engine, /blush-ledger-satin-shirt-view-01/);
-  assert.match(engine, /@divididosCast/);
+  for (const removedFrame of [
+    'divFront',
+    'divCast',
+    'divBack',
+    'divExit',
+    'sideTape',
+    'detourStudio',
+    'dressPack',
+    'waqaa',
+    'astroFront',
+    'astroProfile',
+    'The argument, from behind',
+    'Divididos, facing',
+    'Same set, second body',
+    'Leaving, still divided',
+    'Side tape, walking',
+    'Je devais voir Anne-So',
+    'The violation, standing',
+    'The other script',
+    'Figure XII',
+    'In profile, still orbiting'
+  ]) {
+    assert.equal(engine.includes(removedFrame), false, 'rejected Living Lookbook frame leaked back in: ' + removedFrame);
+  }
   assert.match(engine, /data-lbv-assets/);
   assert.doesNotMatch(engine, /The_Living_Lookbook-Frame-02_5/);
   assert.doesNotMatch(engine, /The_Living_Lookbook-Frame-0_10/);
