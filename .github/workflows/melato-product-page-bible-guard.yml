@@ -88,7 +88,7 @@ jobs:
           ensure_replace(
               'layout/theme.liquid',
               '<section class="melato-trust-strip" aria-label="Shopping assurances"><span>Complimentary standard delivery</span><span>Prepared in 1–3 business days</span><a href="/policies/refund-policy">Free returns within 30 days</a><span>Secure checkout</span></section>',
-              '<section class="melato-trust-strip" aria-label="Shopping assurances"><ul role="list"><li>Complimentary standard delivery</li><li>Prepared in 1–3 business days</li><li><a href="/policies/refund-policy">Free returns on eligible items within 30 days</a></li><li>Secure checkout</li></ul></section>',
+              '<section class="melato-trust-strip" aria-label="Shopping assurances"><ul role="list"><li>Complimentary standard delivery</li><li>Prepared in 1–3 business days</li><li><a href="/policies/refund-policy">Free returns on eligible items within 30 days</a></li></ul></section>',
           )
           PY
 
