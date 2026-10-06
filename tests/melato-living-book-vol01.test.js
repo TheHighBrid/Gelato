@@ -50,8 +50,8 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
   assert.match(engine, /is-arming/);
   assert.match(engine, /Enter the book/);
   assert.match(engine, /mountSpread\(0, 'is-current'\)/);
-  assert.match(engine, /rex-x-fur-jacket-view-05/);
-  assert.match(engine, /blush-ledger-satin-shirt-view-01/);
+  assert.match(engine, /MELATO_TAWAKAL26_TLB_OTTAWA_001/);
+  assert.match(engine, /The_Living_Lookbook_Editorial_Shots_Vol2_15/);
   for (const removedFrame of [
     'divFront',
     'divCast',
