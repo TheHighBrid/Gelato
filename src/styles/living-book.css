@@ -1,0 +1,30 @@
+/* Isolated new reader tokens. Never set body overflow:hidden: the reader scrolls. */
+.living-book {
+  --melato-noir: #070709;
+  --melato-vermilion: #5c0a0e;
+  --melato-tungsten: #d9822b;
+  --melato-border: rgba(255, 255, 255, 0.12);
+  --font-mono: 'Geist Mono', monospace;
+  background: var(--melato-noir);
+  color: #fff;
+  font-family: sans-serif;
+}
+.living-book .melato-glass-panel {
+  background: rgba(14, 14, 18, 0.65);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--melato-border);
+}
+.living-book .hotspot-node,
+.living-book .size-btn,
+.living-book .hud-btn { min-width: 44px; min-height: 44px; }
+@media (prefers-contrast: more) {
+  .living-book .melato-glass-panel {
+    background: #000;
+    border: 2px solid #fff;
+    backdrop-filter: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .living-book .melato-glass-panel { transition: none; }
+}
