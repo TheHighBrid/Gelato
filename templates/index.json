@@ -20,7 +20,7 @@
         "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
         "autoplay": true,
         "full_width": true,
-        "aspect_ratio": "4/3"
+        "aspect_ratio": "1/1"
       }
     },
     "melato_conversion_2026": {
@@ -124,6 +124,7 @@
         "heading": "HENDRIX BLUE MAGIC",
         "center_heading": true,
         "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
+        "mobile_video_url": "",
         "cover_image": "shopify://shop_images/hendrix-flare-jean-view-07.png",
         "autoplay": false,
         "full_width": true,
