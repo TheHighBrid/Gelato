@@ -5,7 +5,7 @@
 <section id="MelatoVideo-{{ section.id }}" class="section-spacing">
   <div class="{% if section.settings.full_width %}container--full{% else %}container{% endif %}">
 
-    {%- if section.settings.heading != blank -%}
+    {%- if section.settings.heading != blank and section.settings.show_hero_actions != true -%}
       <h2 class="heading-md drip-reveal" style="margin-bottom:40px;{% if section.settings.center_heading %}text-align:center;{% endif %}">
         {{ section.settings.heading }}
       </h2>
@@ -23,6 +23,7 @@
           style="width:100%;height:100%;object-fit:cover;"
           aria-label="{{ section.settings.heading | default: 'Video' | escape }}"
           preload="metadata"
+          {% if section.settings.cover_image != blank %}poster="{{ section.settings.cover_image | image_url: width: 2200 }}"{% endif %}
           data-melato-video
         >
           {%- if section.settings.mobile_video_url != blank -%}
@@ -68,12 +69,32 @@
       {%- else -%}
         {{ 'lifestyle-1' | placeholder_svg_tag }}
       {%- endif -%}
+      {%- if section.settings.show_hero_actions -%}
+        <div class="melato-video-hero-content">
+          <h1>{{ section.settings.hero_heading | escape }}</h1>
+          <div class="melato-video-hero-actions">
+            <a class="melato-video-hero-link melato-video-hero-link--primary" href="{{ section.settings.primary_link }}">{{ section.settings.primary_label | escape }}</a>
+            <a class="melato-video-hero-link" href="{{ section.settings.secondary_link }}">{{ section.settings.secondary_label | escape }}</a>
+          </div>
+        </div>
+      {%- endif -%}
     </div>
 
   </div>
 </section>
 
 <style>
+  {% if section.settings.show_hero_actions %}
+  #MelatoVideo-{{ section.id }} {padding-block:0}
+  #MelatoVideo-{{ section.id }} .melato-video-frame {aspect-ratio:auto!important;height:clamp(440px,68svh,760px)}
+  #MelatoVideo-{{ section.id }} .melato-video-hero-content {position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:clamp(28px,5vw,80px);padding-bottom:80px;color:#f5f1e8;background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.72));}
+  #MelatoVideo-{{ section.id }} h1 {max-width:900px;margin:0;font-family:var(--font-heading-family,sans-serif);font-size:clamp(48px,8vw,120px);line-height:.95;text-wrap:balance}
+  #MelatoVideo-{{ section.id }} .melato-video-hero-actions {display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+  #MelatoVideo-{{ section.id }} .melato-video-hero-link {display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 22px;border:1px solid #f5f1e8;color:#f5f1e8;background:rgba(0,0,0,.4);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.08em}
+  #MelatoVideo-{{ section.id }} .melato-video-hero-link--primary {background:#f5f1e8;color:#080808}
+  #MelatoVideo-{{ section.id }} .melato-video-hero-link:focus-visible {outline:2px solid #f5f1e8;outline-offset:4px}
+  @media(max-width:749px){#MelatoVideo-{{ section.id }} .melato-video-frame {height:max(440px,64svh)}}
+  {% endif %}
   #MelatoVideo-{{ section.id }} .melato-video-sound-toggle {
     position: absolute;
     right: clamp(14px, 2vw, 26px);
@@ -179,6 +200,12 @@
   "name": "Video",
   "tag": "section",
   "settings": [
+    { "type": "checkbox", "id": "show_hero_actions", "label": "Use as shopping hero", "default": false },
+    { "type": "text", "id": "hero_heading", "label": "Hero heading", "default": "THE CULTURE WEARS US" },
+    { "type": "text", "id": "primary_label", "label": "Primary link label", "default": "Shop the drop" },
+    { "type": "url", "id": "primary_link", "label": "Primary link" },
+    { "type": "text", "id": "secondary_label", "label": "Secondary link label", "default": "Living Lookbook" },
+    { "type": "url", "id": "secondary_link", "label": "Secondary link" },
     { "type": "text", "id": "heading", "label": "Heading" },
     { "type": "checkbox", "id": "center_heading", "label": "Center heading", "default": true },
     { "type": "text", "id": "video_url", "label": "Desktop video URL", "info": "Upload to Files. MP4 or WebM." },

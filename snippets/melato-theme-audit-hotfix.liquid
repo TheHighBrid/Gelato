@@ -114,9 +114,7 @@
 
     assign related_products = product.metafields.custom.related_products.value
     if related_products != blank
-      assign output = output | replace: '>New Arrivals</h2>', '>You Might Also Like</h2>'
-      assign output = output | replace: '>New arrivals</h2>', '>You Might Also Like</h2>'
-      unless output contains 'melato-related-products--curated'
+      unless output contains 'melato-related-products--curated' or output contains 'RelatedHeading-'
         capture related_markup
           echo '<section class="melato-related-products melato-related-products--curated" aria-labelledby="MelatoRelatedProductsTitle"><style>.melato-related-products--curated{width:min(1440px,calc(100% - 32px));margin:38px auto 0;padding:28px;border:1px solid rgba(255,255,255,.095);border-radius:26px;background:var(--pdp-surface,#111214);color:var(--pdp-text,#f5f1e8)}.melato-related-products--curated h2{margin:0 0 18px;color:var(--melato-pdp-section-title,#d3a74a);font-size:12px;letter-spacing:.18em;text-transform:uppercase}.melato-related-products__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.melato-related-products__card{display:grid;gap:10px;color:inherit;text-decoration:none}.melato-related-products__image{width:100%;height:auto;border-radius:16px;background:#0a0a0a}.melato-related-products__title{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.08em}.melato-related-products__price{margin:0;font-size:12px;opacity:.78}@media(max-width:820px){.melato-related-products__grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.melato-related-products__grid{grid-template-columns:1fr}}</style><h2 id="MelatoRelatedProductsTitle">You Might Also Like</h2><div class="melato-related-products__grid" role="list">'
           for related_product in related_products limit: 4

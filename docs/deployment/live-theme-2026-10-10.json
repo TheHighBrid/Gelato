@@ -1,0 +1,1128 @@
+{
+  "capturedAt": "2026-10-10",
+  "liveThemeId": "162873704703",
+  "liveThemeName": "READY: Sep 19 Audit Fix + PDP Color Details",
+  "source": "Shopify Admin theme.files checksumMd5",
+  "files": [
+    {
+      "filename": "assets/app.css",
+      "checksumMd5": "35242df6e38eec67732fab4b28e53a08"
+    },
+    {
+      "filename": "assets/app.js",
+      "checksumMd5": "d0de65cde49d8e0e253ea4eb99cb1b0d"
+    },
+    {
+      "filename": "assets/icon.svg",
+      "checksumMd5": "afba34b2e2e1382ed7c20e9b9f57c33f"
+    },
+    {
+      "filename": "assets/lbv-astro-front.jpg",
+      "checksumMd5": "5e136fc82c69589c0c7cae151a43a440"
+    },
+    {
+      "filename": "assets/lbv-astro-profile.jpg",
+      "checksumMd5": "a83bead73d37513e33cc935fb6b19728"
+    },
+    {
+      "filename": "assets/lbv-divididos-cast.jpg",
+      "checksumMd5": "4ffca137b2380520fffa41d33668e0c1"
+    },
+    {
+      "filename": "assets/lbv-divididos-exit.jpg",
+      "checksumMd5": "78c23e2a3e6b6ffe44c8bf86d186f7a5"
+    },
+    {
+      "filename": "assets/lbv-goldset-back.jpg",
+      "checksumMd5": "1804e6922e145d3f54d9403230492c17"
+    },
+    {
+      "filename": "assets/lbv-goldset-front.jpg",
+      "checksumMd5": "ee550952cd12ba6c5e48f57f5b6d8851"
+    },
+    {
+      "filename": "assets/lbv-sidetape-back.jpg",
+      "checksumMd5": "84d194a86a3a0e6061524ef243724348"
+    },
+    {
+      "filename": "assets/lbv-suit-back.jpg",
+      "checksumMd5": "939311cab792c115907a887e037dc91b"
+    },
+    {
+      "filename": "assets/lbv-waqaa-front.jpg",
+      "checksumMd5": "a1e228d41ae3dacc7f95d76116a04f5f"
+    },
+    {
+      "filename": "assets/melato-ai-concierge-widget.js",
+      "checksumMd5": "2454530fc60b70200963f259ddac0cec"
+    },
+    {
+      "filename": "assets/melato-ann-color.js",
+      "checksumMd5": "4049277da665d2cf8976a0449edb338a"
+    },
+    {
+      "filename": "assets/melato-audit-completion-2026.css",
+      "checksumMd5": "c46a4ef699065bec65d872643fa5aeee"
+    },
+    {
+      "filename": "assets/melato-audit-completion-2026.js",
+      "checksumMd5": "9383765881dd98bc7c28ba05dca6e1c7"
+    },
+    {
+      "filename": "assets/melato-audit-guard.js",
+      "checksumMd5": "985b82afee06464d945a5ba0cac3b5ef"
+    },
+    {
+      "filename": "assets/melato-audit-nav-collections.js",
+      "checksumMd5": "5462c0672a5012b4e92c412ee236203c"
+    },
+    {
+      "filename": "assets/melato-audit-ui-20260818.js",
+      "checksumMd5": "c3122c6351b680ec22a701889a521e98"
+    },
+    {
+      "filename": "assets/melato-audit-upgrades.css",
+      "checksumMd5": "c57202949ca56b9423d65aa928f8dd64"
+    },
+    {
+      "filename": "assets/melato-audit-upgrades.js",
+      "checksumMd5": "b79dad4a322cac2a5dc43b1d79e5d06e"
+    },
+    {
+      "filename": "assets/melato-august-2026-audit-fixes.css",
+      "checksumMd5": "95dc266c4903f5564a6ac7980031d1e6"
+    },
+    {
+      "filename": "assets/melato-august-2026-audit-fixes.js",
+      "checksumMd5": "2569b413ceb7fe1b911f17767fb1ac20"
+    },
+    {
+      "filename": "assets/melato-back-in-stock.js",
+      "checksumMd5": "d200e2c323d9defccf47dc957c3c75ae"
+    },
+    {
+      "filename": "assets/melato-cart-drawer.js",
+      "checksumMd5": "6865a1ad16599e977eb9c0dbabc634b0"
+    },
+    {
+      "filename": "assets/melato-collection-filters.js",
+      "checksumMd5": "64a459de9d9d9adaa0305c0e89783102"
+    },
+    {
+      "filename": "assets/melato-complete-set.js",
+      "checksumMd5": "415dea49ac7151be64c7115be18908aa"
+    },
+    {
+      "filename": "assets/melato-concierge.css",
+      "checksumMd5": "161495b12fc4a7fed83f3b2c7b123c11"
+    },
+    {
+      "filename": "assets/melato-concierge.js",
+      "checksumMd5": "cb5cbae019cea1c4940377bd326d565b"
+    },
+    {
+      "filename": "assets/melato-contact-gate.css",
+      "checksumMd5": "1c2d4b031d51e14ea909017029c4393a"
+    },
+    {
+      "filename": "assets/melato-contact-gate.js",
+      "checksumMd5": "1c2d4b031d51e14ea909017029c4393a"
+    },
+    {
+      "filename": "assets/melato-content-policy-20260811.js",
+      "checksumMd5": "3cc559638fcba30b0b39d8a3b3de333a"
+    },
+    {
+      "filename": "assets/melato-dynamic-bar.js",
+      "checksumMd5": "1f6463bbaede6e4736159c6ae9c89fad"
+    },
+    {
+      "filename": "assets/melato-enhancements.css",
+      "checksumMd5": "11d8b242df7dc5d51cf754db19374667"
+    },
+    {
+      "filename": "assets/melato-enhancements.js",
+      "checksumMd5": "ce52b95a7b370e87ba87c4ab77e64e77"
+    },
+    {
+      "filename": "assets/melato-gelato-hotfix-20260811.css",
+      "checksumMd5": "cafb5ceb59cb9030cb4339caea8fb7ed"
+    },
+    {
+      "filename": "assets/melato-gelato-hotfix-20260811.js",
+      "checksumMd5": "2fe55433f3e4d9138e739a823f71e175"
+    },
+    {
+      "filename": "assets/melato-header-footer-fix.css",
+      "checksumMd5": "cf12782ea59c25ba92e7d11f435816fc"
+    },
+    {
+      "filename": "assets/melato-header-footer-fix.js",
+      "checksumMd5": "c660d76d410c6ea5ac8e28bbfd2990d0"
+    },
+    {
+      "filename": "assets/melato-header-logo-bigger.css",
+      "checksumMd5": "deb8ebc82d49aff371252594106dc47a"
+    },
+    {
+      "filename": "assets/melato-hidden-ui-cleanup.css",
+      "checksumMd5": "683e3dc5f6cc4425c6801c11d76748b4"
+    },
+    {
+      "filename": "assets/melato-house-collection.css",
+      "checksumMd5": "149c24d745e3e907be5f2ab2685ce070"
+    },
+    {
+      "filename": "assets/melato-house-collection.js",
+      "checksumMd5": "f4528c8f5ded44696518958d605d67a3"
+    },
+    {
+      "filename": "assets/melato-house-home.css",
+      "checksumMd5": "a8f50ccac10b5e455a1f9c43596b9696"
+    },
+    {
+      "filename": "assets/melato-house-home.js",
+      "checksumMd5": "0561085b624c2b9a3d01398d900ba616"
+    },
+    {
+      "filename": "assets/melato-house-legacy-bridge.js",
+      "checksumMd5": "033b808781ca1cdb947f4ea50156e1ad"
+    },
+    {
+      "filename": "assets/melato-house-pdp.css",
+      "checksumMd5": "a4f55a1b829dc7286839418debeba10a"
+    },
+    {
+      "filename": "assets/melato-house-release-fixes.css",
+      "checksumMd5": "7b88ea8f7b7453b0c1c8adf4277e5f84"
+    },
+    {
+      "filename": "assets/melato-house-service.css",
+      "checksumMd5": "63cbcb575a22ae7519e294bd57806339"
+    },
+    {
+      "filename": "assets/melato-house-utility.css",
+      "checksumMd5": "d9a1bc6d5d826d881485906742aa0aaa"
+    },
+    {
+      "filename": "assets/melato-house-world.css",
+      "checksumMd5": "586baf60de37228cf95ea1163655d8b0"
+    },
+    {
+      "filename": "assets/melato-house-world.js",
+      "checksumMd5": "bdce17de98e9184f69e2a000ca044346"
+    },
+    {
+      "filename": "assets/melato-house.css",
+      "checksumMd5": "49b2b19dbfca8928f5ce8e8435420289"
+    },
+    {
+      "filename": "assets/melato-house.js",
+      "checksumMd5": "d713e05229ceecd7dc50f38672d61cfc"
+    },
+    {
+      "filename": "assets/melato-info-legal-pages.css",
+      "checksumMd5": "ec31f9154ce1babf7c4f93bea02f0eca"
+    },
+    {
+      "filename": "assets/melato-living-book-casefile.css",
+      "checksumMd5": "6407e39f213b0615d178184c50db735b"
+    },
+    {
+      "filename": "assets/melato-living-book-casefile.js",
+      "checksumMd5": "9864210f3cf08f7032ac9ab75db0e3ba"
+    },
+    {
+      "filename": "assets/melato-living-book-director.css",
+      "checksumMd5": "2cd98c44f5a21a809d305569c23ec815"
+    },
+    {
+      "filename": "assets/melato-living-book-director.js",
+      "checksumMd5": "d9456bbd24349347bb560783c464759f"
+    },
+    {
+      "filename": "assets/melato-living-book-vol01.css",
+      "checksumMd5": "4edf1a613ba4ba1b99501308abfdff19"
+    },
+    {
+      "filename": "assets/melato-living-book-vol01.js",
+      "checksumMd5": "93936cea052312bc08804d08332066bf"
+    },
+    {
+      "filename": "assets/melato-living-look-drawer-legacy.js",
+      "checksumMd5": "8e589de52b7af6ff7fecd407755bf322"
+    },
+    {
+      "filename": "assets/melato-living-look-drawer.css",
+      "checksumMd5": "5e5f0583eb325656f82147ed00dbf403"
+    },
+    {
+      "filename": "assets/melato-living-look-drawer.js",
+      "checksumMd5": "fb0efa25e35fe2cde2cd9f4fe6dd2738"
+    },
+    {
+      "filename": "assets/melato-living-lookbook-evidence.css",
+      "checksumMd5": "69755542f3b283cb366f0369baf001d1"
+    },
+    {
+      "filename": "assets/melato-living-lookbook-evidence.js",
+      "checksumMd5": "f88cf004baa11ebcfd534106df66bf1a"
+    },
+    {
+      "filename": "assets/melato-living-lookbook-image-repair.js",
+      "checksumMd5": "c585270ebf1998ff79f126bb2b6e7ded"
+    },
+    {
+      "filename": "assets/melato-living-lookbook-shop-v5.js",
+      "checksumMd5": "bdd682297f2d7ea019dd718f12c24233"
+    },
+    {
+      "filename": "assets/melato-living-lookbook-shop.js",
+      "checksumMd5": "ca0c056d694d0fe19b310cb941c2853f"
+    },
+    {
+      "filename": "assets/melato-mobile-collection-header-20260818.css",
+      "checksumMd5": "61e4d9d7b7ebf393008dcfd0d94d56d2"
+    },
+    {
+      "filename": "assets/melato-mobile-header-priority-20260818.css",
+      "checksumMd5": "2f94a8ad49319dbf38e315031761aa2f"
+    },
+    {
+      "filename": "assets/melato-mobile-pdp-hotfix.css",
+      "checksumMd5": "d64a49ab2497b934c02239e6a20526d7"
+    },
+    {
+      "filename": "assets/melato-mobile-qa-20260826.js",
+      "checksumMd5": "abdc1dadc8b6400cffa37aeeb23573fe"
+    },
+    {
+      "filename": "assets/melato-optimization-2026.css",
+      "checksumMd5": "f7b344bad8a3074808599f1558d52f98"
+    },
+    {
+      "filename": "assets/melato-optimization-2026.js",
+      "checksumMd5": "0b8e6deaad5ed8a729b9b5125f534808"
+    },
+    {
+      "filename": "assets/melato-palette-logo-updated.css",
+      "checksumMd5": "53240ff1d3f1a25aa764af846185e461"
+    },
+    {
+      "filename": "assets/melato-palette-v3.css",
+      "checksumMd5": "847754deb177cb12bdb860010d922bde"
+    },
+    {
+      "filename": "assets/melato-palette.css",
+      "checksumMd5": "907c2141de5451f482ef1b861cd402b9"
+    },
+    {
+      "filename": "assets/melato-pdp-cleanup-20260818.css",
+      "checksumMd5": "2822192f177051d3153623b174dd4f80"
+    },
+    {
+      "filename": "assets/melato-pdp-cleanup-20260818.js",
+      "checksumMd5": "50ed40acb54cd0e13412e7e8a9436f11"
+    },
+    {
+      "filename": "assets/melato-pdp-fit-sync-diagnostics.js",
+      "checksumMd5": "2cdbbf68b01c90425c21b806b0dbb890"
+    },
+    {
+      "filename": "assets/melato-pdp-fit-sync.css",
+      "checksumMd5": "7f1aee9d6c8fa000ae915620543423ac"
+    },
+    {
+      "filename": "assets/melato-pdp-layout-2026.css",
+      "checksumMd5": "c10724a168d5ca8716defbc3bd06a778"
+    },
+    {
+      "filename": "assets/melato-pdp-polish.js",
+      "checksumMd5": "601c23cee30cf7771cc29a32435c4f5a"
+    },
+    {
+      "filename": "assets/melato-premium-audit-fixes.css",
+      "checksumMd5": "4c160133e2cfef950c90efdf7022c60f"
+    },
+    {
+      "filename": "assets/melato-site-cleanup-20260811.css",
+      "checksumMd5": "0358295ce60aec053139fd47cb2d611a"
+    },
+    {
+      "filename": "assets/melato-site-cleanup-20260811.js",
+      "checksumMd5": "2672a395143e54bca9fad64d9dc6011a"
+    },
+    {
+      "filename": "assets/melato-storefront-tail.css",
+      "checksumMd5": "bf2da51246771e3fd03076ca049a27bd"
+    },
+    {
+      "filename": "assets/melato-theme.css",
+      "checksumMd5": "f3eb2e3db3dca8dd2ecbc930737bb075"
+    },
+    {
+      "filename": "assets/melato-theme.js",
+      "checksumMd5": "f3fb7de873af8916967cf9a1dcec60cc"
+    },
+    {
+      "filename": "assets/melato-world-orb.css",
+      "checksumMd5": "3d46ca09840b55f2d9084f673a5c562a"
+    },
+    {
+      "filename": "assets/melato-world-orb.js",
+      "checksumMd5": "8890cc6f3e2896e728e7852ff5835629"
+    },
+    {
+      "filename": "assets/melato-zara-product.css",
+      "checksumMd5": "5c0dbcdaa0e7e6c179d275f91117365c"
+    },
+    {
+      "filename": "assets/melato-zara-product.js",
+      "checksumMd5": "3b67658defe16c8c58eb605a3df86013"
+    },
+    {
+      "filename": "assets/premium-enhancements.css",
+      "checksumMd5": "1191a5c4911e9b608d1bf459d122356c"
+    },
+    {
+      "filename": "assets/premium-enhancements.js",
+      "checksumMd5": "0084d39d17955723b789ec66292001b9"
+    },
+    {
+      "filename": "assets/theme.css",
+      "checksumMd5": "de2bab941a0b731c5f03f377155648f0"
+    },
+    {
+      "filename": "assets/theme.js",
+      "checksumMd5": "3401a0041db36fb19e95491c680351c2"
+    },
+    {
+      "filename": "blocks/ai_gen_block_1462ce9.liquid",
+      "checksumMd5": "158bede07676ee17b2a59798303e1433"
+    },
+    {
+      "filename": "blocks/ai_gen_block_264325d.liquid",
+      "checksumMd5": "fb1696aaf75e20eeef31c545568c638a"
+    },
+    {
+      "filename": "config/melato-product-page-bible.json",
+      "checksumMd5": "69cb2e88651c83330891a457648cff5a"
+    },
+    {
+      "filename": "config/settings_data.json",
+      "checksumMd5": "4d6df313bee731501f028eb97dbff771"
+    },
+    {
+      "filename": "config/settings_schema.json",
+      "checksumMd5": "bcc0031dd8667c8f4115771c44cfe55d"
+    },
+    {
+      "filename": "layout/password.liquid",
+      "checksumMd5": "9d9ba75930a99f52f993731bd21f6296"
+    },
+    {
+      "filename": "layout/theme.liquid",
+      "checksumMd5": "8422789f2429f72a1b8c6196ba4a945d"
+    },
+    {
+      "filename": "locales/ar.json",
+      "checksumMd5": "f99042591b38107477bbf0e9010b4d0b"
+    },
+    {
+      "filename": "locales/en.default.json",
+      "checksumMd5": "8a7b5e36964ba508c8447cef6b1b7802"
+    },
+    {
+      "filename": "locales/en.default.schema.json",
+      "checksumMd5": "332517c022ac08a5c8f170251c000df5"
+    },
+    {
+      "filename": "locales/fr.json",
+      "checksumMd5": "d014ca80d6c6b13f37e3d9ee913899b0"
+    },
+    {
+      "filename": "sections/announcement-marquee.liquid",
+      "checksumMd5": "907bdbd9fb145ddb5b84ad4de6769609"
+    },
+    {
+      "filename": "sections/brand-story.liquid",
+      "checksumMd5": "ccbaba1a1a9e08ccd2e55a235953ba62"
+    },
+    {
+      "filename": "sections/complete-the-set.liquid",
+      "checksumMd5": "dfa95519cd42af1d60230040f3c377fa"
+    },
+    {
+      "filename": "sections/concierge-strip.liquid",
+      "checksumMd5": "7acacd83471268865152ff55489c61bd"
+    },
+    {
+      "filename": "sections/drop-countdown.liquid",
+      "checksumMd5": "5b346440e008d487ac975d4207c59f13"
+    },
+    {
+      "filename": "sections/drop-signup.liquid",
+      "checksumMd5": "5bba0fb66d9c91602a1f66b32aa23763"
+    },
+    {
+      "filename": "sections/featured-collection.liquid",
+      "checksumMd5": "f27fe33b866b41ae44da8e9ae0a33c0f"
+    },
+    {
+      "filename": "sections/FIX-04_seo-meta-patches.liquid",
+      "checksumMd5": "45c7cd5dea653366c79128508ecaf3ac"
+    },
+    {
+      "filename": "sections/hero-video.liquid",
+      "checksumMd5": "fa196a756784d68bebc92b7f127b3a5f"
+    },
+    {
+      "filename": "sections/image-with-text.liquid",
+      "checksumMd5": "493147298ebfa15210b3fc8cc4d0afad"
+    },
+    {
+      "filename": "sections/living-lookbook-contact-gate.liquid",
+      "checksumMd5": "f88b3567cfa6fdce3d2a60c04a2397ed"
+    },
+    {
+      "filename": "sections/main-404.liquid",
+      "checksumMd5": "ba2781c28686c2701f9bdd563b419b9c"
+    },
+    {
+      "filename": "sections/main-account.liquid",
+      "checksumMd5": "880a6d8a133ab72497137dbb704900cf"
+    },
+    {
+      "filename": "sections/main-addresses.liquid",
+      "checksumMd5": "6e4c5849167a81b8476c2f8e7db89fa1"
+    },
+    {
+      "filename": "sections/main-article.liquid",
+      "checksumMd5": "c3d402dd67433904ae82e801d90b2bd5"
+    },
+    {
+      "filename": "sections/main-blog.liquid",
+      "checksumMd5": "aa191cc15d05f31880143627d32fe52a"
+    },
+    {
+      "filename": "sections/main-cart.liquid",
+      "checksumMd5": "385231c829e64cec32f80a7c9115ea79"
+    },
+    {
+      "filename": "sections/main-collection.liquid",
+      "checksumMd5": "e142d4c0be8aad23ec70e2dbca19031d"
+    },
+    {
+      "filename": "sections/main-login.liquid",
+      "checksumMd5": "d855489003a7649e01b189d35e9ad1e8"
+    },
+    {
+      "filename": "sections/main-order.liquid",
+      "checksumMd5": "1e4045bd2bc75b3dc039929060bd1312"
+    },
+    {
+      "filename": "sections/main-page.liquid",
+      "checksumMd5": "dbc234c1fac849edd9bb44a2e0496980"
+    },
+    {
+      "filename": "sections/main-product.liquid",
+      "checksumMd5": "bc8ea8318069681de5fb935a6bf767c5"
+    },
+    {
+      "filename": "sections/main-register.liquid",
+      "checksumMd5": "0a66403479c0ac47682c79796433b8e2"
+    },
+    {
+      "filename": "sections/melato-ai-concierge-section.liquid",
+      "checksumMd5": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "filename": "sections/melato-announcement-bar.liquid",
+      "checksumMd5": "099664e798de4ede127ecfe75540293d"
+    },
+    {
+      "filename": "sections/melato-brand-editorial-block.liquid",
+      "checksumMd5": "59955d79f4f93fc46bb0f4e0287800ca"
+    },
+    {
+      "filename": "sections/melato-care-library.liquid",
+      "checksumMd5": "1fa456034132b2d1fd6a382362f5d8ad"
+    },
+    {
+      "filename": "sections/melato-collection-cro-fixes.liquid",
+      "checksumMd5": "ed6748f6fd98e4aad70236f2b1235135"
+    },
+    {
+      "filename": "sections/melato-complete-the-set.liquid",
+      "checksumMd5": "90512777a8fcbdcae67d8685622ae57d"
+    },
+    {
+      "filename": "sections/melato-complete-uniform.liquid",
+      "checksumMd5": "fa879461db0adba27a97dad571674c98"
+    },
+    {
+      "filename": "sections/melato-contact-upgrade.liquid",
+      "checksumMd5": "b503c25bae06caa2d8522e9826367e6b"
+    },
+    {
+      "filename": "sections/melato-digital-maison-suite.liquid",
+      "checksumMd5": "29e2802b182b5fcb2d445af10cebcc19"
+    },
+    {
+      "filename": "sections/melato-faq-upgrade.liquid",
+      "checksumMd5": "dd93330b2bb046f730a006a914bec528"
+    },
+    {
+      "filename": "sections/melato-fit-quiz.liquid",
+      "checksumMd5": "9b06abfff1ca0f1ff48df16f2ab4431f"
+    },
+    {
+      "filename": "sections/melato-footer.liquid",
+      "checksumMd5": "d02575db9391845edf308af795510075"
+    },
+    {
+      "filename": "sections/melato-fragrance-product.liquid",
+      "checksumMd5": "8c538d9ee21c04a1aef1f0abafc326f6"
+    },
+    {
+      "filename": "sections/melato-header.liquid",
+      "checksumMd5": "f6f61c598ab1e375e788687a3ad53b1d"
+    },
+    {
+      "filename": "sections/melato-hero.liquid",
+      "checksumMd5": "82e25ce57a3f4cb168f3e7bade7bd552"
+    },
+    {
+      "filename": "sections/melato-home-conversion.liquid",
+      "checksumMd5": "edd40b41bd4a76abb37a69e3f4bf32f9"
+    },
+    {
+      "filename": "sections/melato-home-house.liquid",
+      "checksumMd5": "4b7a67b0785fcb4c2fdc30a10a72760c"
+    },
+    {
+      "filename": "sections/melato-living-book-casefile.liquid",
+      "checksumMd5": "e88537160300485de24b4458dcfdc01c"
+    },
+    {
+      "filename": "sections/melato-living-book-director.liquid",
+      "checksumMd5": "14bcd38e9aa80bab90907bfb4806e490"
+    },
+    {
+      "filename": "sections/melato-living-book-vol01.liquid",
+      "checksumMd5": "021d94a5e1c8186b207e9dfe594e7ddb"
+    },
+    {
+      "filename": "sections/melato-living-lookbook-20260901.liquid",
+      "checksumMd5": "9d5025431560bb7855a9c791a7dc1397"
+    },
+    {
+      "filename": "sections/melato-living-lookbook-curation-fixes.liquid",
+      "checksumMd5": "649ce565a75b757c3dfd938052ef7fe3"
+    },
+    {
+      "filename": "sections/melato-living-lookbook-evidence.liquid",
+      "checksumMd5": "ff6e07e2cb94846d2d563d830467a21f"
+    },
+    {
+      "filename": "sections/melato-living-lookbook-frame-blocklist.liquid",
+      "checksumMd5": "d5fcb561e90d3fca34ad13542ff766b7"
+    },
+    {
+      "filename": "sections/melato-living-lookbook-old.liquid",
+      "checksumMd5": "5f65176e6620a2fd8b4c022a840b32db"
+    },
+    {
+      "filename": "sections/melato-living-lookbook.liquid",
+      "checksumMd5": "60a96d8ce5f13a6b5284f4de2010f39a"
+    },
+    {
+      "filename": "sections/melato-lookbook.liquid",
+      "checksumMd5": "779a2ea451cabcf0a6144e887718bdff"
+    },
+    {
+      "filename": "sections/melato-luxury-product-page.liquid",
+      "checksumMd5": "9bf9b6c2574dbbf0988fcfe53bf7210e"
+    },
+    {
+      "filename": "sections/melato-main-search.liquid",
+      "checksumMd5": "ca67037763ed87fe14c4c697471849e4"
+    },
+    {
+      "filename": "sections/melato-ovum-home-redesign.liquid",
+      "checksumMd5": "d41d8cd98f00b204e9800998ecf8427e"
+    },
+    {
+      "filename": "sections/melato-pdp-content-patch.liquid",
+      "checksumMd5": "990856bc2e39fe9de7ae26b41406fbef"
+    },
+    {
+      "filename": "sections/melato-pdp-contextual-merchandising.liquid",
+      "checksumMd5": "cbbb7ff5935c8f2bf866842000890131"
+    },
+    {
+      "filename": "sections/melato-pdp-currency-enforcer.liquid",
+      "checksumMd5": "030375718fd20144451a30b14303fa85"
+    },
+    {
+      "filename": "sections/melato-pdp-product-type-semantics.liquid",
+      "checksumMd5": "937266b0e2f3045234dff294eca7a349"
+    },
+    {
+      "filename": "sections/melato-pdp-story-tech-minimized.liquid",
+      "checksumMd5": "0c617f11b6d9f42d5cdbc297178b28f0"
+    },
+    {
+      "filename": "sections/melato-pdp-unification.liquid",
+      "checksumMd5": "a02b162a2751d09e4fd431bd4c586cb7"
+    },
+    {
+      "filename": "sections/melato-popup-calendar.liquid",
+      "checksumMd5": "41d6324a0f698954136a03ac847b4843"
+    },
+    {
+      "filename": "sections/melato-preview-products.liquid",
+      "checksumMd5": "e60ef72e93e88b8720b24edb9eb6e4df"
+    },
+    {
+      "filename": "sections/melato-product-page-clean.liquid",
+      "checksumMd5": "9227f13d13a7cdf4ef1ed98f9c90d051"
+    },
+    {
+      "filename": "sections/melato-product-page-rebuild.liquid",
+      "checksumMd5": "7db420d6bae690a3f04b96bced65566c"
+    },
+    {
+      "filename": "sections/melato-product-proof-bar.liquid",
+      "checksumMd5": "13e4edc1e066b7f26003cd9c7189c5d9"
+    },
+    {
+      "filename": "sections/melato-product-proof-integrity.liquid",
+      "checksumMd5": "af8661ea1f387e41ff616d11d3137c49"
+    },
+    {
+      "filename": "sections/melato-product-safe-accent.liquid",
+      "checksumMd5": "ffd2b503ef1b17495dbe27617b6389a6"
+    },
+    {
+      "filename": "sections/melato-product-trust-accordions.liquid",
+      "checksumMd5": "b22060c594a92c09bbebdcb3863b5be9"
+    },
+    {
+      "filename": "sections/melato-related-products.liquid",
+      "checksumMd5": "88e8ba90c8ea6d89367a3ef094480cdc"
+    },
+    {
+      "filename": "sections/melato-service-hero.liquid",
+      "checksumMd5": "24afbca4ee23f9c95c6a3bdc9a2d8222"
+    },
+    {
+      "filename": "sections/melato-support-form.liquid",
+      "checksumMd5": "03199d53241a4e98fc7618dce26cfcfb"
+    },
+    {
+      "filename": "sections/melato-variant-media-sync.liquid",
+      "checksumMd5": "0bfa4588875c45fd7aa9ec71ee6cba08"
+    },
+    {
+      "filename": "sections/melato-world-living-intro.liquid",
+      "checksumMd5": "6469b188e4dbd9f68e8dffc4dc983272"
+    },
+    {
+      "filename": "sections/melato-world-orb.liquid",
+      "checksumMd5": "bc102433686f8ec225689939091c5001"
+    },
+    {
+      "filename": "sections/melato-world-page.liquid",
+      "checksumMd5": "080a7e5d326047aea1b02294afd0df53"
+    },
+    {
+      "filename": "sections/melato-zara-product.liquid",
+      "checksumMd5": "2d6185e0c09495d7eeba635775143253"
+    },
+    {
+      "filename": "sections/mll.liquid",
+      "checksumMd5": "6edfd4a890d6325590442c1159b92db5"
+    },
+    {
+      "filename": "sections/newsletter.liquid",
+      "checksumMd5": "b7038691499db0541d7b1eee64ba90ce"
+    },
+    {
+      "filename": "sections/product-tabs.liquid",
+      "checksumMd5": "2717218bc0527bb333225cf9a42e3517"
+    },
+    {
+      "filename": "sections/recently-viewed.liquid",
+      "checksumMd5": "e3801458a02158dbe675e3016a92a93a"
+    },
+    {
+      "filename": "sections/related-products.liquid",
+      "checksumMd5": "0da61f14b7bdd8625204cc885eceb87b"
+    },
+    {
+      "filename": "sections/tag-recommendations.liquid",
+      "checksumMd5": "1b17b7f2bf11610746a5f6dc13b9800b"
+    },
+    {
+      "filename": "sections/testimonials.liquid",
+      "checksumMd5": "7c51b7f9ca1f86fef3f1f3300a5e18f6"
+    },
+    {
+      "filename": "sections/ticker.liquid",
+      "checksumMd5": "12bfb9504e57bf8977116c363e356dde"
+    },
+    {
+      "filename": "sections/ugc-wall.liquid",
+      "checksumMd5": "f5976a3d9780ea18445a4ab3ffc77f3c"
+    },
+    {
+      "filename": "sections/video.liquid",
+      "checksumMd5": "b4d25334251e779ac50fefcca47c39c8"
+    },
+    {
+      "filename": "snippets/back-in-stock-form.liquid",
+      "checksumMd5": "b9b90b1bb514b9744c6caf8c0129ce18"
+    },
+    {
+      "filename": "snippets/cart-drawer.liquid",
+      "checksumMd5": "f7065300aef6e71b25232e410c66080d"
+    },
+    {
+      "filename": "snippets/contact-gate-boot.liquid",
+      "checksumMd5": "9d825caf7295a9fa1d827a20476b4cd8"
+    },
+    {
+      "filename": "snippets/melato-back-in-stock-loader.liquid",
+      "checksumMd5": "3835c44004821e25f46feadcb2439367"
+    },
+    {
+      "filename": "snippets/melato-care-note.liquid",
+      "checksumMd5": "f21ed63b7cf9c303fd0723e224f2d368"
+    },
+    {
+      "filename": "snippets/melato-cart-empty-state.liquid",
+      "checksumMd5": "fe56444f13b0830a721be7f5980b5e62"
+    },
+    {
+      "filename": "snippets/melato-concierge-icon-access.liquid",
+      "checksumMd5": "2a8d55aef45cacb2085d9d0c24381cf7"
+    },
+    {
+      "filename": "snippets/melato-concierge-icon-care.liquid",
+      "checksumMd5": "3c33a6b40980ce1595dd34f50162371f"
+    },
+    {
+      "filename": "snippets/melato-concierge-icon-delivery.liquid",
+      "checksumMd5": "14f445198b7e4f3453da139108a192f1"
+    },
+    {
+      "filename": "snippets/melato-concierge-icon-fit.liquid",
+      "checksumMd5": "ac1386fe896dce3788c4cc71543ffe0d"
+    },
+    {
+      "filename": "snippets/melato-contact-form-fields.liquid",
+      "checksumMd5": "b8b04631a6ec9f98935ac2a6285d4785"
+    },
+    {
+      "filename": "snippets/melato-fit-card.liquid",
+      "checksumMd5": "2f1d1fa83b2f178d04d7147dc8e4e376"
+    },
+    {
+      "filename": "snippets/melato-global-jsonld.liquid",
+      "checksumMd5": "b46c421b7d46d5b19ca50157510e80cc"
+    },
+    {
+      "filename": "snippets/melato-global-polish.liquid",
+      "checksumMd5": "b7ce51786a26aeee455e6a0354c5bd55"
+    },
+    {
+      "filename": "snippets/melato-icon-account.liquid",
+      "checksumMd5": "923db3f98a42d6d81281ea27cdd7515e"
+    },
+    {
+      "filename": "snippets/melato-icon-cart.liquid",
+      "checksumMd5": "9038f20478e8d2deb1471787aa288cc0"
+    },
+    {
+      "filename": "snippets/melato-icon-menu.liquid",
+      "checksumMd5": "ad33c60f9bba2bdc9dc0c91ff2b091a4"
+    },
+    {
+      "filename": "snippets/melato-icon-search.liquid",
+      "checksumMd5": "a7d83867e85aae6aa72db4e344a89bf5"
+    },
+    {
+      "filename": "snippets/melato-icon-style.liquid",
+      "checksumMd5": "c94ecb6e82719312e1d9490cbed6dd22"
+    },
+    {
+      "filename": "snippets/melato-living-lookbook-evidence-case02-additions.liquid",
+      "checksumMd5": "19aa44614abf33702def04e038cb1522"
+    },
+    {
+      "filename": "snippets/melato-living-lookbook-evidence-case03-data.liquid",
+      "checksumMd5": "bf11e5c9205696f8b0808b0b195939a8"
+    },
+    {
+      "filename": "snippets/melato-living-lookbook-evidence-data.liquid",
+      "checksumMd5": "d1d9ffe56bbbc07183bcee2f9d313ef6"
+    },
+    {
+      "filename": "snippets/melato-living-lookbook-legacy-data.liquid",
+      "checksumMd5": "b97f6aaeaf1d698abf60c3e9191943ed"
+    },
+    {
+      "filename": "snippets/melato-living-lookbook-loader.liquid",
+      "checksumMd5": "3de87007ba4e6d9ff2b2502da63cc5f3"
+    },
+    {
+      "filename": "snippets/melato-money-with-currency.liquid",
+      "checksumMd5": "6d16bb1e440da1a21ec177e060f248fc"
+    },
+    {
+      "filename": "snippets/melato-product-card-audit.liquid",
+      "checksumMd5": "aad10e1701e9ff582d6b942f9aa8f8b2"
+    },
+    {
+      "filename": "snippets/melato-product-card.liquid",
+      "checksumMd5": "f218ad862b6ca665e12a9e197e531b2d"
+    },
+    {
+      "filename": "snippets/melato-product-color-engine.liquid",
+      "checksumMd5": "53e9b4b4f5a197bfbf835c29be5b1980"
+    },
+    {
+      "filename": "snippets/melato-product-jsonld.liquid",
+      "checksumMd5": "a9a26056e6a0e4823bbac0cd5ef868e7"
+    },
+    {
+      "filename": "snippets/melato-rendered-output-filters-base.liquid",
+      "checksumMd5": "e0926f06253f216095ff0e93a046a106"
+    },
+    {
+      "filename": "snippets/melato-rendered-output-filters.liquid",
+      "checksumMd5": "a8e37c5e06a02dbf0c2f27106e907e3b"
+    },
+    {
+      "filename": "snippets/melato-responsive-image.liquid",
+      "checksumMd5": "400ff9c974539c6edd4276c99c779100"
+    },
+    {
+      "filename": "snippets/melato-service-card.liquid",
+      "checksumMd5": "a4b0d5e2c39f27a5df88152819aa1cb7"
+    },
+    {
+      "filename": "snippets/melato-services-rail.liquid",
+      "checksumMd5": "bf01e4ba8c5095170724fd7ba7e31178"
+    },
+    {
+      "filename": "snippets/melato-shipping-policy.liquid",
+      "checksumMd5": "50eb7cc6a7d1503f3be165d75c502a4e"
+    },
+    {
+      "filename": "snippets/melato-smart-cta.liquid",
+      "checksumMd5": "5f7910194f0c46706b52d79ec7388080"
+    },
+    {
+      "filename": "snippets/melato-theme-audit-hotfix.liquid",
+      "checksumMd5": "5c9b9ff366a5eb68b5bd68deed166c5b"
+    },
+    {
+      "filename": "snippets/melato-world-rail.liquid",
+      "checksumMd5": "326f7f9668c336700c5ef556e7855985"
+    },
+    {
+      "filename": "snippets/mobile-menu.liquid",
+      "checksumMd5": "ebb003b99f2795b23f432944fa399a3e"
+    },
+    {
+      "filename": "snippets/product-badge.liquid",
+      "checksumMd5": "c374040a2abe1addf85f70cee7c6d9b1"
+    },
+    {
+      "filename": "snippets/product-card-images.liquid",
+      "checksumMd5": "057b97bdbbfdad669d8b0e24c6dd2890"
+    },
+    {
+      "filename": "snippets/product-card.liquid",
+      "checksumMd5": "191f7e8b24945385393d073a2bf9cf79"
+    },
+    {
+      "filename": "snippets/quick-view-modal.liquid",
+      "checksumMd5": "9a38f9ebd1b60f0f8e95503ff4b5a6b8"
+    },
+    {
+      "filename": "snippets/search-drawer.liquid",
+      "checksumMd5": "1d1d8ac00dd9649a2169c81187a684af"
+    },
+    {
+      "filename": "snippets/size-guide-drawer.liquid",
+      "checksumMd5": "0763b1156c005496a3eeb717881cc8a6"
+    },
+    {
+      "filename": "snippets/size-guide-modal.liquid",
+      "checksumMd5": "7bdf8ffb1e8b6098fc31dace6a2e4860"
+    },
+    {
+      "filename": "templates/404.json",
+      "checksumMd5": "da95c85b26afdfe5524ee8f64f88fb7a"
+    },
+    {
+      "filename": "templates/article.json",
+      "checksumMd5": "2d1625651b96b6225eb3fdc672d75b94"
+    },
+    {
+      "filename": "templates/blog.json",
+      "checksumMd5": "e96643bbe33d8183b32e866df7532c47"
+    },
+    {
+      "filename": "templates/cart.json",
+      "checksumMd5": "1df70e66e4598bc653558ec6a5ac63c9"
+    },
+    {
+      "filename": "templates/collection.jackets.json",
+      "checksumMd5": "8966cc864548b8a09e77ebf654be4d4a"
+    },
+    {
+      "filename": "templates/collection.json",
+      "checksumMd5": "aae21cb98ce7865794880c7c3b45d7fc"
+    },
+    {
+      "filename": "templates/collection.pants.json",
+      "checksumMd5": "8966cc864548b8a09e77ebf654be4d4a"
+    },
+    {
+      "filename": "templates/collection.tracksuits.json",
+      "checksumMd5": "33f74a9863558d9ba7092e8814556d26"
+    },
+    {
+      "filename": "templates/customers/account.json",
+      "checksumMd5": "da3bbd98863524d9fcd58b5120176e72"
+    },
+    {
+      "filename": "templates/customers/activate_account.liquid",
+      "checksumMd5": "56ec82541f4e1235e800dc4662f73f3c"
+    },
+    {
+      "filename": "templates/customers/addresses.json",
+      "checksumMd5": "282680e2b0136849aeb9ae28819a8b5e"
+    },
+    {
+      "filename": "templates/customers/login.json",
+      "checksumMd5": "b6cddf593fc146cdddd44fa1b413c72c"
+    },
+    {
+      "filename": "templates/customers/order.json",
+      "checksumMd5": "4c6968ee34eb3459cba92a89668c5d28"
+    },
+    {
+      "filename": "templates/customers/register.json",
+      "checksumMd5": "2c222eb81ebad367d8df2ff1514deb59"
+    },
+    {
+      "filename": "templates/customers/reset_password.liquid",
+      "checksumMd5": "cbbedc5af9bae36922594abd691855ec"
+    },
+    {
+      "filename": "templates/gift_card.liquid",
+      "checksumMd5": "64e85cc9baf96ccf3c7d8293f7bac93a"
+    },
+    {
+      "filename": "templates/index.json",
+      "checksumMd5": "2330e2f12edef0777e41cb6cad86ca39"
+    },
+    {
+      "filename": "templates/index.melato-ovum-redesign.json",
+      "checksumMd5": "04e40670e87ae49352853ed2078b6fb1"
+    },
+    {
+      "filename": "templates/metaobject/best_sellers.json",
+      "checksumMd5": "f9af32ba23ee64fba85e9168d24117ea"
+    },
+    {
+      "filename": "templates/page.contact-upgrade.json",
+      "checksumMd5": "ff319700de1cac9f268dba0b283fa500"
+    },
+    {
+      "filename": "templates/page.faq-upgrade.json",
+      "checksumMd5": "c061fa1671338bc25ff82d54343ce9f4"
+    },
+    {
+      "filename": "templates/page.json",
+      "checksumMd5": "d8085538dc93d34f2457f8df79e37e50"
+    },
+    {
+      "filename": "templates/page.living-lookbook.json",
+      "checksumMd5": "9683a7ec2b84aee118a528965fb350a0"
+    },
+    {
+      "filename": "templates/page.lookbook.json",
+      "checksumMd5": "492496f61403a9bccb5547dc8aef2181"
+    },
+    {
+      "filename": "templates/page.popup-calendar.json",
+      "checksumMd5": "625139dcc008d320740827dd5e692ed3"
+    },
+    {
+      "filename": "templates/page.preview.liquid",
+      "checksumMd5": "520a04b0e930d2edaa9655b6222edb3f"
+    },
+    {
+      "filename": "templates/page.saved-products.liquid",
+      "checksumMd5": "0ba70417446ccd0fc92650c284898fe2"
+    },
+    {
+      "filename": "templates/page.shipping-returns.liquid",
+      "checksumMd5": "3daacc97308d2717697789f8ffd999b5"
+    },
+    {
+      "filename": "templates/page.size-guide.liquid",
+      "checksumMd5": "40e2caba9b4e323e16b767bad14a38a7"
+    },
+    {
+      "filename": "templates/page.thank-you.liquid",
+      "checksumMd5": "feb88c701190781a40bb84ad9b715154"
+    },
+    {
+      "filename": "templates/page.world-orb.json",
+      "checksumMd5": "3b1d228369d758957b18725925d84072"
+    },
+    {
+      "filename": "templates/page.world.json",
+      "checksumMd5": "6e7d4cf963e3b54bca5329def5a77001"
+    },
+    {
+      "filename": "templates/product.fragrance.json",
+      "checksumMd5": "d3e62646b8e061fb421b775e7ba651a1"
+    },
+    {
+      "filename": "templates/product.jackets-2.json",
+      "checksumMd5": "88846dafb1f77d1c7a5e1ee335c49d1b"
+    },
+    {
+      "filename": "templates/product.jackets.json",
+      "checksumMd5": "88846dafb1f77d1c7a5e1ee335c49d1b"
+    },
+    {
+      "filename": "templates/product.json",
+      "checksumMd5": "dfcc9a8ba582f8917f606a451994c1b5"
+    },
+    {
+      "filename": "templates/product.melato-audit.json",
+      "checksumMd5": "cb3a43cfcde6b258c15e1fd71f25f3d5"
+    },
+    {
+      "filename": "templates/product.melato-zara.json",
+      "checksumMd5": "31359c43e1cdbf39a2c569d03b69fe2e"
+    },
+    {
+      "filename": "templates/product.product-melato.json",
+      "checksumMd5": "c53e95060a4061520dc5cd499eea04c5"
+    },
+    {
+      "filename": "templates/search.json",
+      "checksumMd5": "7d1aeec18e3dd9e08a86e7e21d1bdd5e"
+    }
+  ]
+}

@@ -55,23 +55,22 @@
     style.id = 'MelatoDiscoveryStyles';
     style.textContent = [
       '.mxh__desktop-nav{display:none}',
-      '#melato-announcement-bar.is-melato-static .melato-ann__viewport{-webkit-mask-image:none!important;mask-image:none!important;overflow:hidden!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__viewport{-webkit-mask-image:none!important;mask-image:none!important;overflow:visible!important}',
       '#melato-announcement-bar.is-melato-static .melato-ann__track{animation:none!important;transform:none!important;width:100%!important;display:block!important}',
-      '#melato-announcement-bar.is-melato-static .melato-ann__group{display:flex!important;width:100%!important;min-width:0!important;justify-content:center!important;align-items:center!important;gap:clamp(18px,3vw,42px)!important;padding-inline:18px!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__group{display:flex!important;width:100%!important;min-width:0!important;justify-content:center!important;align-items:center!important;flex-direction:column!important;gap:6px!important;padding-inline:0!important}',
       '#melato-announcement-bar.is-melato-static .melato-ann__group[aria-hidden="true"]{display:none!important}',
-      '#melato-announcement-bar.is-melato-static .melato-ann__item{flex:0 1 auto!important;white-space:nowrap!important}',
-      '#melato-announcement-bar.is-melato-static .melato-ann__item:nth-child(n+3){display:none!important}',
+      '#melato-announcement-bar.is-melato-static .melato-ann__item{flex:0 1 auto!important;white-space:normal!important;text-align:center!important;line-height:1.5!important}',
       '@media(max-width:749px){#melato-announcement-bar.is-melato-static .melato-ann__item:nth-child(n+2){display:none!important}}',
       '@media(min-width:1180px){',
       '.mxh__left{gap:16px!important}',
-      '.mxh__desktop-nav{display:flex;align-items:center;gap:clamp(9px,1.05vw,18px);min-width:0}',
+      '.mxh__desktop-nav{display:flex;align-items:center;justify-content:center;gap:clamp(16px,2vw,32px);min-width:0;padding:12px 20px;border-top:1px solid var(--mxh-line)}',
       '.mxh__desktop-nav a{position:relative;white-space:nowrap;font-family:var(--font-mono-family,monospace);font-size:10px;line-height:1;letter-spacing:.085em;text-transform:uppercase;opacity:.78;transition:opacity .2s ease}',
       '.mxh__desktop-nav a:hover,.mxh__desktop-nav a[aria-current="page"]{opacity:1}',
       '.mxh__desktop-nav a:after{content:"";position:absolute;left:0;right:100%;bottom:-7px;height:1px;background:currentColor;transition:right .22s ease}',
       '.mxh__desktop-nav a:hover:after,.mxh__desktop-nav a[aria-current="page"]:after{right:0}',
       '.mxh__menu-text{display:none}',
       '}',
-      '@media(min-width:1180px) and (max-width:1320px){.mxh__desktop-nav a:nth-child(n+5){display:none}}'
+      '@media(min-width:1180px){#melato-announcement-bar.is-melato-static .melato-ann__item small{display:none}}'
     ].join('');
     document.head.appendChild(style);
   }
@@ -93,7 +92,8 @@
 
       var links = Array.from(header.querySelectorAll('.mxh__drawer .mxh__nav-item > .mxh__nav-link, .mxh__drawer .mxh__nav > .mxh__nav-link'))
         .filter(function (link) { return link.getAttribute('href'); })
-        .slice(0, 5);
+        .filter(function (link) { return normalizeHref(link.getAttribute('href')) !== '/collections/sunglasses'; })
+        .slice(0, 6);
       if (!links.length) return;
 
       var nav = document.createElement('nav');
@@ -108,7 +108,7 @@
         nav.appendChild(link);
       });
 
-      menu.insertAdjacentElement('afterend', nav);
+      header.querySelector('.mxh__bar').insertAdjacentElement('afterend', nav);
     });
   }
 
