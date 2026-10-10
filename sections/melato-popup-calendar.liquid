@@ -1,38 +1,34 @@
+{% comment %}Announced dates: AUGUST 20, 2026; SEPTEMBER 21, 2026; OCTOBER 21, 2026. Status and archive placement derive from the ISO dates below.{% endcomment %}
 <section class="melato-popup" id="MelatoPopup-{{ section.id }}">
   <div class="melato-popup__hero">
     <p class="melato-popup__eyebrow">MELATO / FIELD OPERATIONS</p>
     <h1>POPUP<br>CALENDAR</h1>
-    <p class="melato-popup__lede">Three dates. One rule: the exact location is released 48 hours before each show.</p>
+    <p class="melato-popup__lede">One rule: the exact location is released 48 hours before each show.</p>
   </div>
 
+  {%- liquid
+    assign today = 'now' | date: '%Y-%m-%d'
+    assign events = '2026-08-20|05,2026-09-21|06,2026-10-21|07' | split: ','
+    assign next_shown = false
+  -%}
   <div class="melato-popup__calendar" aria-label="Upcoming Melato popup shows">
-    <article class="melato-popup__event melato-popup__event--next">
-      <div class="melato-popup__number">05</div>
-      <div>
-        <p class="melato-popup__status">NEXT OPERATION</p>
-        <h2>AUGUST 20, 2026</h2>
-        <p>Popup Show #5</p>
-      </div>
-      <div class="melato-popup__location">LOCATION<br><strong>RELEASED 48H PRIOR</strong></div>
-    </article>
-    <article class="melato-popup__event">
-      <div class="melato-popup__number">06</div>
-      <div>
-        <p class="melato-popup__status">UPCOMING</p>
-        <h2>SEPTEMBER 21, 2026</h2>
-        <p>Popup Show #6</p>
-      </div>
-      <div class="melato-popup__location">LOCATION<br><strong>RELEASED 48H PRIOR</strong></div>
-    </article>
-    <article class="melato-popup__event">
-      <div class="melato-popup__number">07</div>
-      <div>
-        <p class="melato-popup__status">UPCOMING</p>
-        <h2>OCTOBER 21, 2026</h2>
-        <p>Popup Show #7</p>
-      </div>
-      <div class="melato-popup__location">LOCATION<br><strong>RELEASED 48H PRIOR</strong></div>
-    </article>
+    {%- for event in events -%}
+      {%- assign details = event | split: '|' -%}
+      {%- assign event_date = details[0] -%}
+      {%- if event_date >= today -%}
+        <article class="melato-popup__event{% unless next_shown %} melato-popup__event--next{% endunless %}">
+          <div class="melato-popup__number">{{ details[1] }}</div>
+          <div>
+            <p class="melato-popup__status">{% if event_date == today %}TODAY{% elsif next_shown %}UPCOMING{% else %}NEXT OPERATION{% endif %}</p>
+            <h2>{{ event_date | date: '%B %d, %Y' | upcase }}</h2>
+            <p>Popup Show #{{ details[1] | plus: 0 }}</p>
+          </div>
+          <div class="melato-popup__location">LOCATION<br><strong>RELEASED 48H PRIOR</strong></div>
+        </article>
+        {%- assign next_shown = true -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- unless next_shown -%}<p>Future show dates will be announced here.</p>{%- endunless -%}
   </div>
 
   <div class="melato-popup__mechanics">
@@ -51,6 +47,18 @@
   <div class="melato-popup__archive">
     <p class="melato-popup__eyebrow">CASE ARCHIVE</p>
     <h2>PAST POPUP SHOWS</h2>
+    <div aria-label="Past Melato popup shows">
+      {%- for event in events reversed -%}
+        {%- assign details = event | split: '|' -%}
+        {%- assign event_date = details[0] -%}
+        {%- if event_date < today -%}
+          <article class="melato-popup__event">
+            <div class="melato-popup__number">{{ details[1] }}</div>
+            <div><p class="melato-popup__status">ARCHIVED DATE</p><h2>{{ event_date | date: '%B %d, %Y' | upcase }}</h2><p>Popup Show #{{ details[1] | plus: 0 }}</p></div>
+          </article>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
     <p>Reports, photographs, recaps and artifacts from previous Melato popup operations.</p>
     <a href="/blogs/news" class="melato-popup__cta">ENTER THE JOURNAL</a>
   </div>
