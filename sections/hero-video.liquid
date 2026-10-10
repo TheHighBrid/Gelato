@@ -62,10 +62,10 @@
       {% endif %}
 
       {% if section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank %}
-        <h1 class="melato-hero-video__heading">
+        <h2 class="melato-hero-video__heading">
           {% if section.settings.heading_line_1 != blank %}<span>{{ section.settings.heading_line_1 | escape }}</span>{% endif %}
           {% if section.settings.heading_line_2 != blank %}<span>{{ section.settings.heading_line_2 | escape }}</span>{% endif %}
-        </h1>
+        </h2>
       {% endif %}
 
       {% if section.settings.body != blank %}

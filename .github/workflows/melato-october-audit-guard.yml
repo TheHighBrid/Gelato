@@ -22,6 +22,8 @@ jobs:
       - name: Verify calendar rollover and single-owner PDP copy
         env:
           NODE_PATH: ${{ runner.temp }}/melato-audit-tests/node_modules
-        run: node scripts/test-october-audit.cjs
+        run: |
+          node scripts/test-october-audit.cjs
+          node scripts/test-storefront-audit.cjs
       - name: Verify Product Page Bible
         run: node scripts/validate-melato-product-page-bible.mjs

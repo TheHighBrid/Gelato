@@ -17,10 +17,16 @@
         "center_heading": true,
         "video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.HD-1080p-7.2Mbps-93650307.mp4",
         "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.SD-480p-1.5Mbps-95096030.mp4",
-        "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
+        "cover_image": "shopify://shop_images/Melato.ca-_EL_TLB_-FRAME_261.jpg",
         "autoplay": true,
         "full_width": true,
-        "aspect_ratio": "1/1"
+        "aspect_ratio": "1/1",
+        "show_hero_actions": true,
+        "hero_heading": "THE CULTURE WEARS US",
+        "primary_label": "Shop the drop",
+        "primary_link": "/collections/new-arrivals",
+        "secondary_label": "Living Lookbook",
+        "secondary_link": "/pages/living-lookbook"
       }
     },
     "melato_conversion_2026": {

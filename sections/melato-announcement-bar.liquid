@@ -414,6 +414,19 @@
 @media(max-width:749px){#melato-announcement-bar{grid-template-columns:1fr;min-height:max(48px,calc(var(--ab-h) - 8px));padding:0 14px}#melato-announcement-bar .melato-ann__badge,#melato-announcement-bar .melato-ann__cta{display:none}#melato-announcement-bar .melato-ann__item{font-size:max(11px,calc(var(--ab-fs) - 1px))}}
 </style>
 
+<style>
+/* Keep the complete delivery message readable on desktop at every width. */
+@media(min-width:750px){
+  #melato-announcement-bar{height:auto;min-height:var(--ab-h);padding-block:8px}
+  #melato-announcement-bar .melato-ann__viewport{overflow:visible;mask-image:none;-webkit-mask-image:none}
+  #melato-announcement-bar .melato-ann__track{width:100%;animation:none!important;transform:none!important;will-change:auto}
+  #melato-announcement-bar .melato-ann__group{width:100%;display:flex;flex-direction:column;gap:6px;padding:0}
+  #melato-announcement-bar .melato-ann__group[aria-hidden="true"]{display:none}
+  #melato-announcement-bar .melato-ann__item{width:100%;justify-content:center;text-align:center;white-space:normal;line-height:1.5;overflow-wrap:anywhere}
+  #melato-announcement-bar .melato-ann__item>span:not(.melato-ann__dot){min-width:0}
+  #melato-announcement-bar .melato-ann__dot{flex-shrink:0}
+}
+</style>
 {% schema %}
 {
   "name":"Announcement Bar",
