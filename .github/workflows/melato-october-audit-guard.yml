@@ -1,0 +1,27 @@
+name: Melato calendar and PDP copy guard
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  audit-regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Liquid renderer for tests
+        run: npm install --prefix "$RUNNER_TEMP/melato-audit-tests" liquidjs@10.30.0 --no-audit --no-fund
+      - name: Verify calendar rollover and single-owner PDP copy
+        env:
+          NODE_PATH: ${{ runner.temp }}/melato-audit-tests/node_modules
+        run: node scripts/test-october-audit.cjs
+      - name: Verify Product Page Bible
+        run: node scripts/validate-melato-product-page-bible.mjs
