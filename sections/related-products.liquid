@@ -46,74 +46,61 @@
           {%- endfor -%}
         </div>
       {%- else -%}
-        <product-recommendations
-          class="melato-recommendations"
-          data-section-id="{{ section.id }}"
-          data-source-product-id="{{ product.id }}"
-          data-limit="{{ products_to_show }}"
-          data-intent="related"
-          data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ products_to_show }}&intent=related">
-
-          {%- if recommendations.performed and recommendations.products_count > 0 -%}
-            <div class="melato-grid melato-grid--cards">
-              {%- for recommendation in recommendations.products limit: products_to_show -%}
-                {%- if recommendation.available and recommendation.id != product.id -%}
-                  {% render 'melato-product-card-audit', card_product: recommendation %}
-                {%- endif -%}
-              {%- endfor -%}
-            </div>
-          {%- else -%}
-            {%- liquid
-              assign shown = 0
-              assign shown_ids = '|' | append: product.id | append: '|'
-              assign new_arrivals = collections['new-arrivals']
-              assign best_sellers = collections['best-sellers']
-            -%}
-            <div class="melato-grid melato-grid--cards">
-              {%- if new_arrivals != blank -%}
-                {%- for fallback_product in new_arrivals.products -%}
-                  {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
-                  {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
-                  {%- if fallback_product.available and fallback_product.product_type == product.product_type and fallback_product.id != product.id -%}
-                    {%- unless shown_ids contains fallback_key -%}
-                      {% render 'melato-product-card-audit', card_product: fallback_product %}
-                      {%- assign shown = shown | plus: 1 -%}
-                      {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
-                    {%- endunless -%}
-                  {%- endif -%}
-                {%- endfor -%}
+        {%- comment -%}Only matching product families; never a broad new-arrivals fallback.{%- endcomment -%}
+        {%- liquid
+          assign family = 'other'
+          assign kind = product.product_type | downcase
+          assign title_down = product.title | downcase
+          if kind contains 'fragrance' or kind contains 'perfume' or title_down contains 'eau de'
+            assign family = 'fragrance'
+          elsif kind contains 'denim' or kind contains 'jean' or title_down contains 'jean'
+            assign family = 'denim'
+          elsif kind contains 'blazer' or kind contains 'tailor' or title_down contains 'blazer'
+            assign family = 'tailoring'
+          endif
+          assign family_collection = blank
+          for candidate in product.collections
+            assign handle = candidate.handle | downcase
+            if family == 'fragrance' and handle contains 'fragrance'
+              assign family_collection = candidate
+              break
+            elsif family == 'denim' and handle contains 'denim'
+              assign family_collection = candidate
+              break
+            elsif family == 'tailoring' and handle contains 'tailor'
+              assign family_collection = candidate
+              break
+            endif
+          endfor
+          assign fallback_collection = family_collection
+          if fallback_collection == blank
+            assign fallback_collection = collections['new-arrivals']
+          endif
+          assign shown = 0
+        -%}
+        <div class="melato-grid melato-grid--cards">
+          {%- if fallback_collection != blank -%}
+            {%- for recommendation in fallback_collection.products -%}
+              {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
+              {%- assign recommendation_kind = recommendation.product_type | downcase -%}
+              {%- assign recommendation_title = recommendation.title | downcase -%}
+              {%- assign relevant = false -%}
+              {%- if family == 'fragrance' -%}
+                {%- if recommendation_kind contains 'fragrance' or recommendation_kind contains 'perfume' or recommendation_title contains 'eau de' -%}{%- assign relevant = true -%}{%- endif -%}
+              {%- elsif family == 'denim' -%}
+                {%- if recommendation_kind contains 'denim' or recommendation_kind contains 'jean' or recommendation_title contains 'jean' -%}{%- assign relevant = true -%}{%- endif -%}
+              {%- elsif family == 'tailoring' -%}
+                {%- if recommendation_kind contains 'blazer' or recommendation_kind contains 'tailor' or recommendation_title contains 'blazer' -%}{%- assign relevant = true -%}{%- endif -%}
+              {%- elsif recommendation_kind == kind and kind != blank -%}
+                {%- assign relevant = true -%}
               {%- endif -%}
-
-              {%- if shown < products_to_show and best_sellers != blank -%}
-                {%- for fallback_product in best_sellers.products -%}
-                  {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
-                  {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
-                  {%- if fallback_product.available and fallback_product.id != product.id -%}
-                    {%- unless shown_ids contains fallback_key -%}
-                      {% render 'melato-product-card-audit', card_product: fallback_product %}
-                      {%- assign shown = shown | plus: 1 -%}
-                      {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
-                    {%- endunless -%}
-                  {%- endif -%}
-                {%- endfor -%}
+              {%- if relevant and recommendation.available and recommendation.id != product.id -%}
+                {% render 'melato-product-card-audit', card_product: recommendation %}
+                {%- assign shown = shown | plus: 1 -%}
               {%- endif -%}
-
-              {%- if shown < products_to_show and new_arrivals != blank -%}
-                {%- for fallback_product in new_arrivals.products -%}
-                  {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
-                  {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
-                  {%- if fallback_product.available and fallback_product.id != product.id -%}
-                    {%- unless shown_ids contains fallback_key -%}
-                      {% render 'melato-product-card-audit', card_product: fallback_product %}
-                      {%- assign shown = shown | plus: 1 -%}
-                      {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
-                    {%- endunless -%}
-                  {%- endif -%}
-                {%- endfor -%}
-              {%- endif -%}
-            </div>
+            {%- endfor -%}
           {%- endif -%}
-        </product-recommendations>
+        </div>
       {%- endif -%}
     </div>
   </section>
