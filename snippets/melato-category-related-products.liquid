@@ -1,0 +1,69 @@
+{% comment %}
+MELATO category-aware related products.
+Add as the single related-products section in the active product template.
+Merchandised custom.related_products takes precedence. No unrelated new-arrivals fallback.
+{% endcomment %}
+{%- liquid
+  assign recommendations = product.metafields.custom.related_products.value
+  assign current_type = product.type | downcase
+  assign current_title = product.title | downcase
+  assign family = 'other'
+  if current_type contains 'fragrance' or current_title contains 'eau de' or current_type contains 'perfume'
+    assign family = 'fragrance'
+  elsif current_type contains 'denim' or current_type contains 'jean' or current_title contains 'jean'
+    assign family = 'denim'
+  elsif current_type contains 'blazer' or current_type contains 'tailor' or current_title contains 'blazer'
+    assign family = 'tailoring'
+  endif
+  assign family_collection = blank
+  for collection in product.collections
+    assign handle = collection.handle | downcase
+    if family == 'fragrance' and (handle contains 'fragrance' or handle contains 'perfume')
+      assign family_collection = collection
+      break
+    elsif family == 'denim' and (handle contains 'denim' or handle contains 'jean')
+      assign family_collection = collection
+      break
+    elsif family == 'tailoring' and (handle contains 'tailor' or handle contains 'formal' or handle contains 'suit')
+      assign family_collection = collection
+      break
+    endif
+  endfor
+-%}
+{%- capture cards -%}
+  {%- assign shown = 0 -%}
+  {%- if recommendations != blank -%}
+    {%- for item in recommendations -%}
+      {%- if item.id != product.id and item.available and shown < 4 -%}
+        <a href="{{ item.url }}" class="melato-related-card">
+          {%- if item.featured_image -%}{{ item.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: item.title }}{%- endif -%}
+          <span>{{ item.title | escape }}</span><span>{{ item.price | money }}</span>
+        </a>
+        {%- assign shown = shown | plus: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- elsif family_collection != blank -%}
+    {%- for item in family_collection.products -%}
+      {%- if item.id != product.id and item.available and shown < 4 -%}
+        <a href="{{ item.url }}" class="melato-related-card">
+          {%- if item.featured_image -%}{{ item.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: item.title }}{%- endif -%}
+          <span>{{ item.title | escape }}</span><span>{{ item.price | money }}</span>
+        </a>
+        {%- assign shown = shown | plus: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endcapture -%}
+{%- if shown > 0 -%}
+<section class="melato-related" aria-label="Related products">
+  <h2>You Might Also Like</h2>
+  <div class="melato-related-grid">{{ cards }}</div>
+</section>
+<style>
+.melato-related{margin:48px auto;max-width:1400px;padding:0 24px}
+.melato-related-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.melato-related-card{display:flex;flex-direction:column;gap:8px;color:inherit;text-decoration:none}
+.melato-related-card img{width:100%;height:auto;aspect-ratio:3/4;object-fit:cover}
+@media(max-width:749px){.melato-related-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+{%- endif -%}
