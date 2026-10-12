@@ -18,13 +18,13 @@ Merchandised custom.related_products takes precedence. No unrelated new-arrivals
   assign family_collection = blank
   for collection in product.collections
     assign handle = collection.handle | downcase
-    if family == 'fragrance' and (handle contains 'fragrance' or handle contains 'perfume')
+    if family == 'fragrance' and handle contains 'fragrance'
       assign family_collection = collection
       break
-    elsif family == 'denim' and (handle contains 'denim' or handle contains 'jean')
+    elsif family == 'denim' and handle contains 'denim'
       assign family_collection = collection
       break
-    elsif family == 'tailoring' and (handle contains 'tailor' or handle contains 'formal' or handle contains 'suit')
+    elsif family == 'tailoring' and handle contains 'tailor'
       assign family_collection = collection
       break
     endif
