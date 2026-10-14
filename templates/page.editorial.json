@@ -1,0 +1,13 @@
+{
+  "sections": {
+    "main": {
+      "type": "melato-editorial",
+      "settings": {
+        "intro_enabled": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
