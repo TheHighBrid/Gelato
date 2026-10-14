@@ -2,8 +2,8 @@
   MELATO PRODUCT PAGE BIBLE 1.0.0
   Universal PDP continuation layer.
   Canonical priority: custom.related_products, legacy custom.pdp_recommendations,
-  Shopify related recommendations, same product type from New Arrivals,
-  Best Sellers, then broader New Arrivals.
+  same-type Shopify recommendations, then same-type New Arrivals and Best Sellers.
+  Never cross-sell unrelated categories as a fallback.
   Heading is intentionally fixed to avoid category-by-category language drift.
 {% endcomment %}
 
@@ -39,7 +39,7 @@
           {%- assign curated_shown = 0 -%}
           {%- for recommendation in curated_products -%}
             {%- if curated_shown >= products_to_show -%}{%- break -%}{%- endif -%}
-            {%- if recommendation.available and recommendation.id != product.id -%}
+            {%- if recommendation.available and recommendation.id != product.id and recommendation.product_type == product.product_type and recommendation.product_type == product.product_type -%}
               {% render 'melato-product-card-audit', card_product: recommendation %}
               {%- assign curated_shown = curated_shown | plus: 1 -%}
             {%- endif -%}
@@ -88,7 +88,7 @@
                 {%- for fallback_product in best_sellers.products -%}
                   {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
                   {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
-                  {%- if fallback_product.available and fallback_product.id != product.id -%}
+                  {%- if fallback_product.available and fallback_product.id != product.id and fallback_product.product_type == product.product_type and fallback_product.product_type == product.product_type -%}
                     {%- unless shown_ids contains fallback_key -%}
                       {% render 'melato-product-card-audit', card_product: fallback_product %}
                       {%- assign shown = shown | plus: 1 -%}
@@ -98,17 +98,7 @@
                 {%- endfor -%}
               {%- endif -%}
 
-              {%- if shown < products_to_show and new_arrivals != blank -%}
-                {%- for fallback_product in new_arrivals.products -%}
-                  {%- if shown >= products_to_show -%}{%- break -%}{%- endif -%}
-                  {%- assign fallback_key = '|' | append: fallback_product.id | append: '|' -%}
-                  {%- if fallback_product.available and fallback_product.id != product.id -%}
-                    {%- unless shown_ids contains fallback_key -%}
-                      {% render 'melato-product-card-audit', card_product: fallback_product %}
-                      {%- assign shown = shown | plus: 1 -%}
-                      {%- assign shown_ids = shown_ids | append: fallback_product.id | append: '|' -%}
-                    {%- endunless -%}
-                  {%- endif -%}
+
                 {%- endfor -%}
               {%- endif -%}
             </div>
