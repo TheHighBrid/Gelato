@@ -220,7 +220,8 @@
           {%- assign fragrance_returns = product.metafields.custom.returns_note.value | default: 'Unopened, unused fragrance may be eligible for return. Opened or sprayed fragrance is generally not returnable.' -%}
           <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. {{ fragrance_returns | strip_html | escape }} <a href="/pages/shipping-returns">Full return policy</a>.</p>
         {%- else -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the <a href="/pages/shipping-returns">return policy</a>.</p>
+          {%- assign canonical_apparel_returns = 'Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.' -%}
+          <p class="pdp-shipping-returns">{{ canonical_apparel_returns }} <a href="/pages/shipping-returns">Details</a></p>
         {%- endif -%}
 
         {%- comment -%}
