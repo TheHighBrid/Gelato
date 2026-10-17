@@ -216,7 +216,13 @@
 
         {% render 'back-in-stock-form', product: product %}
 
-        <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.</p>
+        {%- if family == 'fragrance' -%}
+          {%- assign fragrance_returns = product.metafields.custom.returns_note.value | default: 'Unopened, unused fragrance may be eligible for return. Opened or sprayed fragrance is generally not returnable.' -%}
+          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. {{ fragrance_returns | strip_html | escape }} <a href="/pages/shipping-returns">Full return policy</a>.</p>
+        {%- else -%}
+          {%- assign canonical_apparel_returns = 'Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.' -%}
+          <p class="pdp-shipping-returns">{{ canonical_apparel_returns }} <a href="/pages/shipping-returns">Details</a></p>
+        {%- endif -%}
 
         {%- comment -%}
           Bible v1.0: purchase-decision facts belong in the buybox.
@@ -309,14 +315,14 @@
           <div class="pdp-set-grid" role="list">
             <article class="pdp-set-card" role="listitem">
               {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
-              <h3 class="purchase-summary__title">{{ product.title }}</h3>
+              <p class="pdp-set-label">Selected piece</p><h3 class="purchase-summary__title">{{ product.title }}</h3>
               <p class="purchase-summary__price">{{ product.price | money }}</p>
             </article>
             <article class="pdp-set-card" role="listitem">
               <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
                 {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               </a>
-              <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
+              <p class="pdp-set-label">Matching piece</p><h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
               <p class="purchase-summary__price">{{ matching_product.price | money }}</p>
               <a class="pdp-set-cta" href="{{ matching_product.url }}">View matching piece</a>
             </article>
