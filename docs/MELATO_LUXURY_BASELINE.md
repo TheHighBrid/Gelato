@@ -83,4 +83,6 @@ Inherited failing tests:
 
 W1 adds the semantic token source and contextual audit, and makes the Bible guard read-only. The token stylesheet is not yet linked into the storefront. No live file has been replaced, no published setting has changed, and no template integration is being presented as validated.
 
-Required next work: reconcile the current live layout/renderers/settings against main, capture visual baseline and full rollback export, activate tokens through the existing stylesheet owners, validate the unpublished integrated theme, and resolve inherited test failures before release. Browser computed-style checks are pending: the local browser download returned a truncated archive. The Shopify helper also lacks its theme-check dependency; no Liquid was edited in W1.
+The live reconciliation batch is now documented in `MELATO_THEME_RECONCILIATION.md`, with all 283 inventory decisions in its companion JSON manifest. The candidate preserves live resources, homepage editor values and exact settings bytes while retaining repository fixes. Local component browser checks and Shopify validation of the changed Liquid/JSON files pass. The luxury stylesheet remains inactive.
+
+Required next work: capture a complete rollback export and full storefront visual baseline, resolve the eight inherited failures, integrate tokens through existing stylesheet owners, and validate the unpublished integrated theme before activation or release. The full suite after reconciliation has 54 tests, 46 passing and the same eight inherited failures.

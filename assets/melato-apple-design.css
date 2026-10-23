@@ -1,0 +1,443 @@
+/* ==========================================================================
+   MELATO ATELIER × APPLE DESIGN & FLUID MOTION SYSTEM
+   Architected for Melato.ca — Luxury Streetwear & Cut-and-Sew Storefront
+   Principles: WWDC "Designing Fluid Interfaces" & "Principles of Great Design"
+   ========================================================================== */
+
+:root {
+  /* Apple Fluid Motion Spring & Physics Tokens */
+  --ease-apple-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-apple-snap: cubic-bezier(0.2, 0, 0, 1);
+  --ease-apple-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Apple Latency & Duration Budgets */
+  --duration-instant: 120ms;
+  --duration-fast: 180ms;
+  --duration-normal: 280ms;
+  --duration-sheet: 380ms;
+
+  /* Specular Light & Translucent Materials */
+  --glass-header-bg: rgba(7, 7, 9, 0.82);
+  --glass-header-scrolled: rgba(5, 5, 7, 0.92);
+  --glass-drawer-bg: rgba(11, 11, 14, 0.88);
+  --glass-specular-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-specular-top: 1px solid rgba(255, 255, 255, 0.12);
+  --glass-blur-header: blur(24px) saturate(180%);
+  --glass-blur-sheet: blur(28px) saturate(160%);
+  --glass-blur-scrim: blur(14px) saturate(120%);
+}
+
+/* ==========================================================================
+   1. RESPONSE — KILL LATENCY (Instant Pointer Feedback)
+   ========================================================================== */
+
+/* Universal tap highlight removal & instant manipulation */
+*, *::before, *::after {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Primary buttons & interactive CTA controls */
+.btn,
+button.button,
+.button,
+.product-form__submit,
+.mxh__menu,
+.mxh__text-btn,
+.mxh__drawer-search,
+.mxh__search-form button,
+.cart-drawer__checkout,
+.quick-add-btn,
+.melato-button,
+a.button-light,
+.send-button {
+  touch-action: manipulation;
+  transition: transform var(--duration-fast) var(--ease-apple-spring),
+              background-color var(--duration-fast) ease,
+              border-color var(--duration-fast) ease,
+              box-shadow var(--duration-fast) ease,
+              color var(--duration-fast) ease;
+}
+
+/* Instant active depression on pointer-down */
+.btn:active,
+button.button:active,
+.button:active,
+.product-form__submit:active,
+.mxh__menu:active,
+.mxh__text-btn:active,
+.mxh__drawer-search:active,
+.mxh__search-form button:active,
+.cart-drawer__checkout:active,
+.quick-add-btn:active,
+.melato-button:active,
+a.button-light:active,
+.send-button:active,
+.service-tab:active,
+.chip:active {
+  transform: scale(0.972) !important;
+  transition: transform var(--duration-instant) var(--ease-apple-snap) !important;
+}
+
+/* Variant swatches, size selector pills, and icon triggers */
+.product-form__input input[type="radio"] + label,
+.variant-picker__button,
+.size-selector__btn,
+.swatch,
+.header__icon,
+.mxh__icon-btn,
+.quantity__button {
+  touch-action: manipulation;
+  transition: transform var(--duration-fast) var(--ease-apple-spring),
+              border-color var(--duration-fast) ease,
+              background-color var(--duration-fast) ease,
+              box-shadow var(--duration-fast) ease;
+}
+
+.product-form__input input[type="radio"] + label:active,
+.variant-picker__button:active,
+.size-selector__btn:active,
+.swatch:active,
+.header__icon:active,
+.mxh__icon-btn:active,
+.quantity__button:active {
+  transform: scale(0.94) !important;
+  transition: transform var(--duration-instant) var(--ease-apple-snap) !important;
+}
+
+/* ==========================================================================
+   2. MATERIALS & DEPTH — TRANSLUCENT FUNCTIONAL CHROME
+   ========================================================================== */
+
+/* Translucent Sticky Header (Overrides opaque background) */
+.site-header,
+.header-wrapper,
+.shopify-section-header header,
+#shopify-section-header header,
+.mxh,
+[data-mxh] {
+  background: var(--glass-header-bg) !important;
+  backdrop-filter: var(--glass-blur-header) !important;
+  -webkit-backdrop-filter: var(--glass-blur-header) !important;
+  border-bottom: var(--glass-specular-border) !important;
+  transition: background 320ms var(--ease-apple-smooth),
+              box-shadow 320ms var(--ease-apple-smooth),
+              border-color 320ms var(--ease-apple-smooth) !important;
+}
+
+/* Specular illumination on header when scrolled */
+.site-header.is-scrolled,
+.header-wrapper.is-scrolled,
+.mxh.is-scrolled,
+[data-mxh].is-scrolled {
+  background: var(--glass-header-scrolled) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Dimming & Depth Scrim Overlay */
+.drip-overlay {
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: var(--glass-blur-scrim) !important;
+  -webkit-backdrop-filter: var(--glass-blur-scrim) !important;
+  transition: opacity 340ms var(--ease-apple-spring),
+              visibility 340ms var(--ease-apple-spring) !important;
+}
+
+/* Cart Drawer & Mobile Menus — Frosted Acrylic Depth & Apple Sheet Physics */
+.cart-drawer,
+.mobile-menu,
+.search-drawer {
+  background: var(--glass-drawer-bg) !important;
+  backdrop-filter: var(--glass-blur-sheet) !important;
+  -webkit-backdrop-filter: var(--glass-blur-sheet) !important;
+  border-left: var(--glass-specular-border) !important;
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.55) !important;
+  transition: transform var(--duration-sheet) var(--ease-apple-drawer) !important;
+}
+
+[dir="rtl"] .cart-drawer,
+[dir="rtl"] .mobile-menu {
+  border-left: none !important;
+  border-right: var(--glass-specular-border) !important;
+  box-shadow: 24px 0 60px rgba(0, 0, 0, 0.55) !important;
+}
+
+.search-drawer {
+  border-bottom: var(--glass-specular-border) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Fullscreen Navigation Atelier Drawer Polish */
+.mxh__drawer {
+  background: rgba(8, 8, 10, 0.94) !important;
+  backdrop-filter: var(--glass-blur-sheet) !important;
+  -webkit-backdrop-filter: var(--glass-blur-sheet) !important;
+  transition: opacity 320ms var(--ease-apple-spring),
+              visibility 320ms var(--ease-apple-spring) !important;
+}
+
+.mxh__drawer-note {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: var(--glass-specular-border) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-radius: 8px;
+}
+
+/* ==========================================================================
+   3. STAGGERED DRAWER CONTENT & SPATIAL CONTINUITY
+   ========================================================================== */
+
+@keyframes appleItemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.cart-drawer.is-open .cart-drawer__item {
+  animation: appleItemSlideIn 380ms var(--ease-apple-spring) forwards;
+}
+
+.cart-drawer.is-open .cart-drawer__item:nth-child(1) { animation-delay: 50ms; }
+.cart-drawer.is-open .cart-drawer__item:nth-child(2) { animation-delay: 95ms; }
+.cart-drawer.is-open .cart-drawer__item:nth-child(3) { animation-delay: 140ms; }
+.cart-drawer.is-open .cart-drawer__item:nth-child(4) { animation-delay: 185ms; }
+.cart-drawer.is-open .cart-drawer__item:nth-child(5) { animation-delay: 230ms; }
+
+/* Stagger for navigation links in mobile menu */
+.mobile-menu.is-open .mobile-nav__item,
+.mxh__drawer.is-open .mxh__nav-item {
+  animation: appleItemSlideIn 340ms var(--ease-apple-spring) forwards;
+}
+.mobile-menu.is-open .mobile-nav__item:nth-child(1),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(1) { animation-delay: 40ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(2),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(2) { animation-delay: 80ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(3),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(3) { animation-delay: 120ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(4),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(4) { animation-delay: 160ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(5),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(5) { animation-delay: 200ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(6),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(6) { animation-delay: 240ms; }
+
+/* ==========================================================================
+   4. OPTICAL TYPOGRAPHY & VISUAL HIERARCHY (WWDC 2020)
+   ========================================================================== */
+
+/* Large Display Type: Negative Tracking & Compact Leading */
+h1,
+.hero h1,
+.mxh__title,
+.lbv2-title,
+.section-heading h2,
+.product-title,
+.product__title {
+  letter-spacing: -0.022em !important;
+  line-height: 1.04 !important;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern" 1;
+}
+
+/* Micro Utility & Monospace Type: Crisp Positive Tracking for Legibility */
+.kicker,
+.eyebrow,
+.section-index,
+.service-label,
+.mini-label,
+.mxh__drawer-kicker,
+.cart-drawer__title,
+.drip-toast {
+  letter-spacing: 0.12em !important;
+}
+
+/* ==========================================================================
+   5. PRODUCT CARDS & MICRO-INTERACTIONS
+   ========================================================================== */
+
+.product-card,
+.melato-product-card {
+  position: relative;
+  transition: transform 340ms var(--ease-apple-spring),
+              box-shadow 340ms var(--ease-apple-spring);
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover,
+  .melato-product-card:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.product-card__media,
+.melato-product-card .product-card__media {
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--color-surface, #121214);
+}
+
+.product-card__img,
+.melato-product-card img {
+  transition: transform 650ms var(--ease-apple-spring),
+              filter 400ms var(--ease-apple-smooth),
+              opacity 380ms ease !important;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover .product-card__img--primary,
+  .melato-product-card:hover img {
+    transform: scale(1.035);
+  }
+}
+
+/* Floating Badges & Save/Wishlist Buttons */
+.product-card__badges .badge,
+.product-card__wishlist,
+.melato-card-save {
+  backdrop-filter: blur(12px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+  border: var(--glass-specular-border) !important;
+  transition: transform var(--duration-fast) var(--ease-apple-spring),
+              background-color var(--duration-fast) ease !important;
+}
+
+.product-card__wishlist:active,
+.melato-card-save:active {
+  transform: scale(0.9) !important;
+}
+
+/* ==========================================================================
+   6. CONTINUOUS ACCORDION DISCLOSURE ANIMATION
+   ========================================================================== */
+
+.melato-accordion {
+  border-bottom: 1px solid var(--melato-line, rgba(255, 255, 255, 0.12));
+}
+
+.melato-accordion summary {
+  user-select: none;
+  transition: color var(--duration-fast) ease, opacity var(--duration-fast) ease;
+}
+
+.melato-accordion summary:hover {
+  opacity: 0.9;
+}
+
+/* Spring icon flip */
+.melato-accordion summary span:last-child {
+  display: inline-block;
+  transform-origin: center center;
+  transition: transform 320ms var(--ease-apple-spring) !important;
+  will-change: transform;
+}
+
+.melato-accordion[open] summary span:last-child {
+  transform: rotate(45deg) !important;
+}
+
+/* Content wrapper smooth transition */
+.melato-accordion__content {
+  overflow: hidden;
+  transition: opacity 280ms var(--ease-apple-spring),
+              transform 280ms var(--ease-apple-spring);
+}
+
+.melato-accordion:not([open]) .melato-accordion__content {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.melato-accordion[open] .melato-accordion__content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   7. TOAST NOTIFICATION — DYNAMIC ISLAND PILL
+   ========================================================================== */
+
+.drip-toast {
+  border-radius: 999px !important;
+  background: rgba(246, 240, 229, 0.94) !important;
+  color: #080808 !important;
+  backdrop-filter: var(--glass-blur-header) !important;
+  -webkit-backdrop-filter: var(--glass-blur-header) !important;
+  border: var(--glass-specular-top) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.38) !important;
+  font-weight: 700 !important;
+  padding: 12px 24px !important;
+  transition: opacity 320ms var(--ease-apple-spring),
+              transform 360ms var(--ease-apple-spring) !important;
+  transform: translateX(-50%) translateY(24px) scale(0.95) !important;
+  will-change: transform, opacity;
+}
+
+.drip-toast.is-visible {
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
+}
+
+/* Cart Quantity Badge Pulse */
+@keyframes appleBadgePulse {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.24); }
+  100% { transform: scale(1); }
+}
+
+.cart-count-bubble.badge-pulse,
+.mxh__cart-count.badge-pulse {
+  animation: appleBadgePulse 320ms var(--ease-apple-spring) forwards;
+}
+
+/* ==========================================================================
+   8. ACCESSIBILITY — REDUCED MOTION & REDUCED TRANSPARENCY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cart-drawer,
+  .mobile-menu,
+  .search-drawer,
+  .drip-toast,
+  .product-card,
+  .melato-accordion summary span:last-child {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-header,
+  .header-wrapper,
+  .mxh,
+  [data-mxh],
+  .cart-drawer,
+  .mobile-menu,
+  .search-drawer,
+  .mxh__drawer,
+  .drip-toast,
+  .drip-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: #08080a !important;
+  }
+
+  .drip-toast {
+    background-color: #f6f0e5 !important;
+  }
+}

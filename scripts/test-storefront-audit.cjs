@@ -22,7 +22,7 @@ async function main() {
   assert.match(video, /href="\/pages\/living-lookbook"[^>]*>Living Lookbook/);
   assert.match(video, /<h1>THE CULTURE WEARS US<\/h1>/);
   assert.ok(!video.includes('<h2'), 'Campaign title must not precede the shopping hero');
-  assert.match(video, /poster="[^\"]*FRAME_261/);
+  assert.ok(video.includes(`poster="${first.settings.cover_image}"`), 'Preserve the current editor-selected poster');
   assert.match(video, /<source media="\(max-width: 749px\)"[^>]*SD-480p/);
   assert.match(video, /<source src="[^\"]*HD-1080p/);
   assert.ok(!read('sections/melato-home-conversion.liquid').includes('<h1'));

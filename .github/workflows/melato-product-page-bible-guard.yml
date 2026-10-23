@@ -7,6 +7,11 @@ on:
       - 'assets/melato-luxury-tokens.css'
       - 'scripts/audit-luxury-colors.mjs'
       - 'tests/luxury-color-audit.test.js'
+      - 'tests/theme-reconciliation.test.js'
+      - 'scripts/prepare-reconciled-theme.mjs'
+      - 'docs/MELATO_THEME_RECONCILIATION.json'
+      - 'templates/index.json'
+      - 'snippets/melato-collection-tabs.liquid'
       - 'docs/MELATO_PRODUCT_PAGE_BIBLE.md'
       - 'config/melato-product-page-bible.json'
       - 'templates/product*.json'
@@ -28,6 +33,11 @@ on:
       - 'assets/melato-luxury-tokens.css'
       - 'scripts/audit-luxury-colors.mjs'
       - 'tests/luxury-color-audit.test.js'
+      - 'tests/theme-reconciliation.test.js'
+      - 'scripts/prepare-reconciled-theme.mjs'
+      - 'docs/MELATO_THEME_RECONCILIATION.json'
+      - 'templates/index.json'
+      - 'snippets/melato-collection-tabs.liquid'
       - 'docs/MELATO_PRODUCT_PAGE_BIBLE.md'
       - 'config/melato-product-page-bible.json'
       - 'templates/product*.json'
@@ -62,5 +72,5 @@ jobs:
       - name: Validate canonical Melato PDP contract
         run: node scripts/validate-melato-product-page-bible.mjs
 
-      - name: Verify contextual luxury color audit
-        run: node --test tests/luxury-color-audit.test.js
+      - name: Verify luxury audit and live-theme reconciliation
+        run: node --test tests/luxury-color-audit.test.js tests/theme-reconciliation.test.js
