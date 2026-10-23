@@ -6,7 +6,7 @@ on:
       - 'AGENTS.md'
       - 'assets/melato-luxury-tokens.css'
       - 'scripts/audit-luxury-colors.mjs'
-      - 'tests/luxury-color-audit.test.js'
+      - 'tests/**'
       - 'tests/theme-reconciliation.test.js'
       - 'tests/rooted-files.test.js'
       - 'scripts/rooted-files.cjs'
@@ -34,7 +34,7 @@ on:
       - 'AGENTS.md'
       - 'assets/melato-luxury-tokens.css'
       - 'scripts/audit-luxury-colors.mjs'
-      - 'tests/luxury-color-audit.test.js'
+      - 'tests/**'
       - 'tests/theme-reconciliation.test.js'
       - 'tests/rooted-files.test.js'
       - 'scripts/rooted-files.cjs'
@@ -77,4 +77,4 @@ jobs:
         run: node scripts/validate-melato-product-page-bible.mjs
 
       - name: Verify luxury audit and live-theme reconciliation
-        run: node --test tests/luxury-color-audit.test.js tests/theme-reconciliation.test.js tests/rooted-files.test.js
+        run: npm test

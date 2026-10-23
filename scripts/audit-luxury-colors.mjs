@@ -14,7 +14,7 @@ export function auditText(filename, text) {
     const value = declaration[2];
     for (const match of value.matchAll(colorPattern)) {
       const color = match[0].toLowerCase();
-      const kind = /^rgba?\(\s*255\s*,\s*255\s*,\s*255\s*,/.test(color)
+      const kind = /^rgba?\(\s*(?:255\s*,\s*255\s*,\s*255\s*,|255\s+255\s+255\s*\/)/.test(color)
         ? 'white-alpha-review'
         : property.startsWith('--') ? 'token-review'
           : property.startsWith('background') ? 'surface-review'
@@ -32,6 +32,10 @@ export function auditText(filename, text) {
   for (const match of source.matchAll(/%23[\da-f]{3,8}\b/gi)) {
     findings.push({file: filename, line: source.slice(0, match.index).split('\n').length,
       property: 'embedded-svg', color: match[0].replace(/%23/i, '#'), kind: 'svg-review'});
+  }
+  for (const match of source.matchAll(/\b(?:fill|stroke|stop-color|flood-color|lighting-color)\s*=\s*["'](#[\da-f]{3,8})["']/gi)) {
+    findings.push({file: filename, line: source.slice(0, match.index).split('\n').length,
+      property: 'embedded-svg', color: match[1], kind: 'svg-review'});
   }
   return findings;
 }

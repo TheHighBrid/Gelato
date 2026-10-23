@@ -1,33 +1,11 @@
 (() => {
-  'use strict';
-
   if (!window.MelatoAI) throw new Error('MelatoAI widget engine was not loaded.');
 
-  const log = document.getElementById('demo-log');
-  const form = document.getElementById('chat-form');
-  const input = document.getElementById('chat-input');
-  const quick = document.getElementById('quick-replies');
-  const voiceButton = document.getElementById('voice-button');
-  const emailName = document.getElementById('email-name');
-  const emailInquiry = document.getElementById('email-inquiry');
-  const emailSubject = document.getElementById('email-subject');
-  const emailBody = document.getElementById('email-body');
-  const draftButton = document.getElementById('draft-email');
-  const copyButton = document.getElementById('copy-email');
-  const emailStatus = document.getElementById('email-status');
+  const [log, form, input, quick, voiceButton, emailName, emailInquiry, emailSubject, emailBody, draftButton, copyButton, emailStatus, plannerForm, planResult, activeServiceLabel, servicePrompt, planItem, planSize, planPreference, planOrder, planEmail, planNeed] =
+    ['demo-log', 'chat-form', 'chat-input', 'quick-replies', 'voice-button', 'email-name', 'email-inquiry', 'email-subject', 'email-body', 'draft-email', 'copy-email', 'email-status', 'service-plan-form', 'plan-result', 'active-service-label', 'service-prompt', 'plan-item', 'plan-size', 'plan-preference', 'plan-order', 'plan-email', 'plan-need'].map(id => document.getElementById(id));
 
-  const plannerForm = document.getElementById('service-plan-form');
-  const planResult = document.getElementById('plan-result');
   const serviceTabs = [...document.querySelectorAll('.service-tab')];
   const serviceJumps = [...document.querySelectorAll('[data-jump-service]')];
-  const activeServiceLabel = document.getElementById('active-service-label');
-  const servicePrompt = document.getElementById('service-prompt');
-  const planItem = document.getElementById('plan-item');
-  const planSize = document.getElementById('plan-size');
-  const planPreference = document.getElementById('plan-preference');
-  const planOrder = document.getElementById('plan-order');
-  const planEmail = document.getElementById('plan-email');
-  const planNeed = document.getElementById('plan-need');
   const fitFields = [...document.querySelectorAll('.fit-field')];
   const orderFields = [...document.querySelectorAll('.order-field')];
   const needFields = [...document.querySelectorAll('.need-field')];
@@ -61,7 +39,7 @@
     return '/pages/contact';
   }
 
-  const copyText = async text => {
+  async function copyText(text) {
     if (navigator.clipboard && window.isSecureContext) {
       await navigator.clipboard.writeText(text);
       return;
@@ -72,15 +50,18 @@
     area.style.opacity = '0';
     document.body.appendChild(area);
     area.select();
-    document.execCommand('copy');
-    area.remove();
-  };
+    try {
+      if (!document.execCommand('copy')) throw new Error('Copy failed');
+    } finally {
+      area.remove();
+    }
+  }
 
   function addMessage(text, role, cta) {
     const bubble = document.createElement('div');
     bubble.className = `msg ${role}`;
     bubble.textContent = text;
-    if (cta && cta.href) {
+    if (cta?.href) {
       const link = document.createElement('a');
       link.href = safeHref(cta.href);
       link.textContent = cta.label || 'Open';

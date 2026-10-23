@@ -7,7 +7,6 @@
  */
 
 (function MelatoAppleDesign() {
-  'use strict';
 
   let prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -19,7 +18,7 @@
     }
   }
 
-  onReady(function () {
+  onReady(() => {
     initHeaderGlassScroll();
     initSmoothAccordions();
     initInterruptibleDrawers();
@@ -47,7 +46,7 @@
       isTicking = false;
     }
 
-    window.addEventListener('scroll', function () {
+    window.addEventListener('scroll', () => {
       if (!isTicking) {
         window.requestAnimationFrame(update);
         isTicking = true;
@@ -72,7 +71,7 @@
 
       let isAnimating = false;
 
-      summary.addEventListener('click', function (e) {
+      summary.addEventListener('click', (e) => {
         if (prefersReducedMotion.matches) return; // Allow native snap if user prefers reduced motion
 
         e.preventDefault();
@@ -92,7 +91,7 @@
             easing: 'cubic-bezier(0.16, 1, 0.3, 1)'
           });
 
-          anim.onfinish = function () {
+          anim.onfinish = () => {
             accordion.removeAttribute('open');
             isAnimating = false;
           };
@@ -110,7 +109,7 @@
             easing: 'cubic-bezier(0.16, 1, 0.3, 1)'
           });
 
-          openAnim.onfinish = function () {
+          openAnim.onfinish = () => {
             isAnimating = false;
           };
         }
@@ -122,7 +121,7 @@
      3. INTERRUPTIBLE DRAWERS & ESCAPE DISMISSAL
      -------------------------------------------------------------------------- */
   function initInterruptibleDrawers() {
-    document.addEventListener('keydown', function (e) {
+    document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' || e.keyCode === 27) {
         let cartDrawer = document.querySelector('.cart-drawer.is-open');
         let mobileMenu = document.querySelector('.mobile-menu.is-open');
@@ -170,7 +169,7 @@
   function initTactilePointerFeedback() {
     let pressSelector = '.btn, button, .product-form__submit, .mxh__menu, .mxh__text-btn, .quick-add-btn, .variant-picker__button, .swatch';
 
-    document.addEventListener('pointerdown', function (e) {
+    document.addEventListener('pointerdown', (e) => {
       let target = e.target.closest(pressSelector);
       if (!target) return;
       target.style.transform = 'scale(0.972)';
@@ -193,8 +192,8 @@
     let bubbles = document.querySelectorAll('.cart-count-bubble, .header__cart-count, .site-header__cart-count, .mxh__cart-count, [data-cart-item-count]');
     if (!bubbles.length) return;
 
-    let observer = new MutationObserver(function () {
-      bubbles.forEach(function (bubble) {
+    let observer = new MutationObserver(() => {
+      bubbles.forEach((bubble) => {
         bubble.classList.remove('badge-pulse');
         // Force reflow for retriggering animation
         void bubble.offsetWidth;
@@ -202,7 +201,7 @@
       });
     });
 
-    bubbles.forEach(function (bubble) {
+    bubbles.forEach((bubble) => {
       observer.observe(bubble, { childList: true, characterData: true, subtree: true });
     });
   }

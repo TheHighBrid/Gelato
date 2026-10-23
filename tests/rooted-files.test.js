@@ -57,3 +57,16 @@ test('assembler rejects a symlinked snapshot settings file before creating outpu
   assert.throws(() => prepareTheme({ source: files.checked('source'), snapshot: files.checked('snapshot'), output: files.checked('candidate', true), manifest: { decisions: [] } }), /symlink rejected/);
   assert.equal(files.exists('candidate'), false);
 });
+
+test('assembler rejects a symlink at a top-level theme directory', async t => {
+  const files = fixture(t);
+  files.mkdir('source');
+  files.mkdir('snapshot/config');
+  const settings = Buffer.from('{}');
+  files.writeNew('snapshot/config/settings_data.json', settings);
+  fs.symlinkSync(files.checked('safe'), files.checked('source/assets', true));
+  const manifest = { decisions: [{ path: 'config/settings_data.json', decision: 'private-overlay', liveBodySha256: require('node:crypto').createHash('sha256').update(settings).digest('hex') }] };
+  const { prepareTheme } = await import('../scripts/prepare-reconciled-theme.mjs');
+  assert.throws(() => prepareTheme({ source: files.checked('source'), snapshot: files.checked('snapshot'), output: files.checked('candidate', true), manifest }), /symlink rejected/);
+  assert.equal(files.exists('candidate'), false);
+});

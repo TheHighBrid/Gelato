@@ -6,11 +6,13 @@ const test = require('node:test');
 
 const read = (path) => fs.readFileSync(path, 'utf8');
 
-test('homepage keeps verified Judge.me social proof blocks', () => {
-  const template = read('templates/index.json');
-  assert.match(template, /"judge_me_reviews_all_reviews_text_home"/);
-  assert.match(template, /"judge_me_reviews_verified_badge_home"/);
-  assert.match(template, /"reviews"/);
+test('review integration keeps the active merchant-configured Judge.me app embed', () => {
+  const settings = JSON.parse(read('config/settings_data.json').replace(/^\s*\/\*[\s\S]*?\*\//, ''));
+  const embeds = Object.values(settings.current.blocks).filter(block => block.type.includes('shopify://apps/judge-me-reviews/blocks/judgeme_core/'));
+  assert.equal(embeds.length, 1);
+  assert.equal(embeds[0].disabled, false);
+  const template = JSON.parse(read('templates/index.json').replace(/^\s*\/\*[\s\S]*?\*\//, ''));
+  for (const id of template.order) assert.ok(template.sections[id], 'Homepage may only order real merchant sections');
 });
 
 test('empty cart keeps a merchandised recovery rail', () => {

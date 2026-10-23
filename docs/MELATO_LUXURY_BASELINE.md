@@ -85,4 +85,6 @@ W1 adds the semantic token source and contextual audit, and makes the Bible guar
 
 The live reconciliation batch is now documented in `MELATO_THEME_RECONCILIATION.md`, with all 283 inventory decisions in its companion JSON manifest. The candidate preserves live resources, homepage editor values and exact settings bytes while retaining repository fixes. Local component browser checks and Shopify validation of the changed Liquid/JSON files pass. The luxury stylesheet remains inactive.
 
+The later merge-validation batch resolves the inherited Node failures: 61/61 now pass. `MELATO_MERGE_VALIDATION.md` explains each source correction or obsolete assertion and records the external-check gate. Earlier counts below are historical checkpoint evidence.
+
 Required next work: capture a complete rollback export and full storefront visual baseline, resolve the eight inherited failures, integrate tokens through existing stylesheet owners, and validate the unpublished integrated theme before activation or release. The full suite after reconciliation has 54 tests, 46 passing and the same eight inherited failures.

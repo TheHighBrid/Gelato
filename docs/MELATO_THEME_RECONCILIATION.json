@@ -13,9 +13,9 @@
       "path": "assets/app.css",
       "liveMd5": "35242df6e38eec67732fab4b28e53a08",
       "liveBodySha256": "95fdb1fa3b8fdb233acdb288691f5cd17caa2eeffe83d134e091a3b61cc10151",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "95fdb1fa3b8fdb233acdb288691f5cd17caa2eeffe83d134e091a3b61cc10151"
+      "decision": "remediate-live",
+      "reason": "Existing live dashboard styling retained with reviewed active/hover label contrast and screen-reader clipping corrections. Original liveBodySha256 remains immutable provenance.",
+      "candidateSha256": "1df850babf32a8067884840bc0615c71e94016d08fff511f26073c7920582732"
     },
     {
       "path": "assets/app.js",
@@ -23,7 +23,7 @@
       "liveBodySha256": "d0f2e6f0a73037f0fdb937851aece54d664237caac0f7bff6e39ad78a732c742",
       "decision": "remediate-live",
       "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
-      "candidateSha256": "b1c18bdb0d4dd7916ac7d72d4b79b7e3ac470bf3a62f0317ad2c620821b47250"
+      "candidateSha256": "e51d4e64b552bd009f1dbe00eb48627149e7aed6f1f22d8ebb0f2c88ff517583"
     },
     {
       "path": "assets/icon.svg",
@@ -135,7 +135,7 @@
       "liveBodySha256": "177cd16017c4f3ccb7d80b98fe468dd74403778ea563530d69e205c187538de9",
       "decision": "remediate-live",
       "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
-      "candidateSha256": "b12066190af4dc308d1b57dd82afb5e2b157138973bb4bffbd01e9c522cd0d30"
+      "candidateSha256": "3f915a0ad3e00c39084fa3c0fd3718e05ec6a60c9deecdfaa05cd5286d4b94fa"
     },
     {
       "path": "assets/melato-audit-completion-2026.css",
@@ -303,7 +303,7 @@
       "liveBodySha256": "1df39442502305a19947ddf79f2c5d95b8c59d6b50d79bc1ffe65c1c21ca916d",
       "decision": "remediate-live",
       "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
-      "candidateSha256": "5e11e0964ab90e22549a1d6a9c63a796e254124ed35794288059fdbf29df5988"
+      "candidateSha256": "f7ea8856c5d59301637d60782a1975dad9c3368fdd8cad10e071b1056e4a7f0a"
     },
     {
       "path": "assets/melato-dynamic-bar.js",
@@ -1423,7 +1423,7 @@
       "liveBodySha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b",
       "decision": "identical",
       "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
-      "candidateSha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b"
+      "candidateSha256": "dee5898b9960f43937cdd65467c9d4a84ff66dabc83f120f93ecc8c9a90fa760"
     },
     {
       "path": "sections/melato-product-proof-bar.liquid",

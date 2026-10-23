@@ -35,3 +35,10 @@ test('audit includes legacy hardcoded custom-property colors without treating th
   assert.equal(result.length, 2);
   assert.ok(result.every(x => x.kind === 'token-review'));
 });
+
+test('audit catches modern white-alpha syntax and inline SVG attributes', async () => {
+  const { auditText } = await import('../scripts/audit-luxury-colors.mjs');
+  const result = auditText('snippets/icon.liquid', '.card{border:1px solid rgba(255 255 255 / .1)}\n<svg><path fill="#F4EAD8" stroke="#111"/></svg>');
+  assert.equal(result[0].kind, 'white-alpha-review');
+  assert.deepEqual(result.filter(x => x.kind === 'svg-review').map(x => x.color), ['#F4EAD8', '#111']);
+});

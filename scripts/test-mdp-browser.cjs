@@ -51,6 +51,15 @@ async function main() {
       assert.equal(await page.evaluate(() => window.xss), undefined);
     }
     assert.deepEqual(errors, []);
+    for (const mode of ['false', 'throw', 'true']) {
+      await page.evaluate(mode => {
+        Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined });
+        document.execCommand = () => { if (mode === 'throw') throw new Error('Clipboard denied'); return mode === 'true'; };
+      }, mode);
+      await page.locator('#copy-plan').click();
+      assert.equal(await page.locator('#copy-plan').textContent(), mode === 'true' ? 'Copied' : 'Copy unavailable');
+      assert.equal(await page.locator('textarea[style*="position: fixed"]').count(), 0, 'Temporary clipboard node must always be removed');
+    }
     console.log('MDP browser checks passed: six service routes, copy handoff, prototype-key fallback, literal malicious text and blocked javascript/data URLs.');
   } finally {
     await browser.close();
