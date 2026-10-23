@@ -36,7 +36,7 @@ The live settings file differs semantically only in the announcement fallback te
 node scripts/prepare-reconciled-theme.mjs /absolute/path/to/live-snapshot /absolute/path/to/new-candidate
 ```
 
-The output must be a new directory outside the source and snapshot. Assembly verifies the captured settings body SHA-256 before writing, refuses source symlinks, copies theme directories only and performs no upload. The verified local candidate contains 289 files. Six repository-only theme files are retained, while the one diagnostic probe is excluded.
+The output must be a new directory outside the source and snapshot. Assembly verifies the captured settings body SHA-256 before writing, refuses source symlinks, copies theme directories only and performs no upload. The verified local candidate contains 289 files. Seven repository-only files under theme directories are retained, while the one diagnostic probe is excluded. The source includes a legacy layout instruction text file; candidate assembly is a local source-preservation step, and Shopify-supported upload paths still require review before staging.
 
 Provider `checksumMd5` is stored as provider evidence, not recomputed from returned text. For several generated JSON documents, the returned representation has a different digest. `liveBodySha256` records the actual fetched bytes and is the settings assembly gate. A provider digest mismatch is never silently substituted for a matching body hash.
 
