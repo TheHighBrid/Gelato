@@ -44,7 +44,22 @@
 
   let activeService = 'fit';
 
-  const escapeHtml = value => String(value || '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = String(text ?? '');
+    return node;
+  }
+
+  function safeHref(value) {
+    try {
+      const url = new URL(String(value), window.location.href);
+      if (['https:', 'http:', 'mailto:'].includes(url.protocol)) return url.href;
+    } catch {
+      return '/pages/contact';
+    }
+    return '/pages/contact';
+  }
 
   const copyText = async text => {
     if (navigator.clipboard && window.isSecureContext) {
@@ -67,7 +82,7 @@
     bubble.textContent = text;
     if (cta && cta.href) {
       const link = document.createElement('a');
-      link.href = cta.href;
+      link.href = safeHref(cta.href);
       link.textContent = cta.label || 'Open';
       link.target = '_blank';
       link.rel = 'noopener';
@@ -88,26 +103,35 @@
     return result;
   }
 
-  function renderPlan(plan) {
-    const checklist = plan.checklist.map(item => `<li>${escapeHtml(item)}</li>`).join('');
-    planResult.innerHTML = `
-      <div class="plan-output">
-        <div class="plan-output-head">
-          <div><p class="mini-label">YOUR SERVICE PLAN</p><h3>${escapeHtml(plan.title)}</h3></div>
-          <span class="plan-intent">${escapeHtml(plan.intent).toUpperCase()}</span>
-        </div>
-        <p class="plan-summary">${escapeHtml(plan.summary)}</p>
-        <div class="plan-lower">
-          <div class="plan-block"><h4>WHAT TO HAVE READY</h4><ul class="plan-checklist">${checklist}</ul></div>
-          <div class="plan-block"><h4>HANDOFF NOTE</h4><p class="plan-draft">${escapeHtml(plan.draft)}</p></div>
-        </div>
-        <div class="plan-actions">
-          <a class="result-link" href="${escapeHtml(plan.cta.href)}">${escapeHtml(plan.cta.label)} <span>↗</span></a>
-          <button class="copy-plan" type="button" id="copy-plan">Copy handoff note</button>
-        </div>
-      </div>`;
+  function planHeading(plan) {
+    const heading = element('div', 'plan-output-head');
+    const title = element('div');
+    title.append(element('p', 'mini-label', 'YOUR SERVICE PLAN'), element('h3', '', plan.title));
+    heading.append(title, element('span', 'plan-intent', String(plan.intent ?? '').toUpperCase()));
+    return heading;
+  }
 
-    document.getElementById('copy-plan').addEventListener('click', async event => {
+  function planDetails(plan) {
+    const lower = element('div', 'plan-lower');
+    const ready = element('div', 'plan-block');
+    const checklist = element('ul', 'plan-checklist');
+    for (const item of plan.checklist) checklist.append(element('li', '', item));
+    ready.append(element('h4', '', 'WHAT TO HAVE READY'), checklist);
+    const note = element('div', 'plan-block');
+    note.append(element('h4', '', 'HANDOFF NOTE'), element('p', 'plan-draft', plan.draft));
+    lower.append(ready, note);
+    return lower;
+  }
+
+  function planActions(plan) {
+    const actions = element('div', 'plan-actions');
+    const link = element('a', 'result-link', plan.cta.label);
+    link.href = safeHref(plan.cta.href);
+    link.append(element('span', '', '↗'));
+    const copy = element('button', 'copy-plan', 'Copy handoff note');
+    copy.type = 'button';
+    copy.id = 'copy-plan';
+    copy.addEventListener('click', async event => {
       const button = event.currentTarget;
       try {
         await copyText(plan.draft);
@@ -117,11 +141,20 @@
       }
       window.setTimeout(() => { button.textContent = 'Copy handoff note'; }, 1400);
     });
+    actions.append(link, copy);
+    return actions;
+  }
+
+  function renderPlan(plan) {
+    const output = element('div', 'plan-output');
+    output.append(planHeading(plan), element('p', 'plan-summary', plan.summary), planDetails(plan), planActions(plan));
+    planResult.replaceChildren(output);
   }
 
   function setActiveService(service) {
-    activeService = SERVICE_META[service] ? service : 'fit';
-    const meta = SERVICE_META[activeService];
+    const selected = Object.entries(SERVICE_META).find(([key]) => key === service);
+    activeService = selected ? selected[0] : 'fit';
+    const meta = selected ? selected[1] : SERVICE_META.fit;
     activeServiceLabel.textContent = meta.label;
     servicePrompt.textContent = meta.prompt;
 
@@ -130,12 +163,14 @@
       tab.classList.toggle('is-active', selected);
       tab.setAttribute('aria-selected', String(selected));
     });
-    fitFields.forEach(field => field.classList.toggle('is-hidden', !meta.fit));
-    orderFields.forEach(field => field.classList.toggle('is-hidden', !meta.order));
-    needFields.forEach(field => field.classList.toggle('is-hidden', !meta.need));
+    fitFields.forEach(field => { field.classList.toggle('is-hidden', !meta.fit); });
+    orderFields.forEach(field => { field.classList.toggle('is-hidden', !meta.order); });
+    needFields.forEach(field => { field.classList.toggle('is-hidden', !meta.need); });
     itemField.classList.toggle('is-hidden', !meta.item);
 
-    planResult.innerHTML = '<div class="result-placeholder"><span class="result-orbit"></span><p>Set the details for this route, then we will assemble the most useful next step.</p></div>';
+    const placeholder = element('div', 'result-placeholder');
+    placeholder.append(element('span', 'result-orbit'), element('p', '', 'Set the details for this route, then we will assemble the most useful next step.'));
+    planResult.replaceChildren(placeholder);
   }
 
   window.MelatoAI.ask('').quickReplies.forEach(label => {
@@ -143,7 +178,7 @@
     chip.className = 'chip';
     chip.type = 'button';
     chip.textContent = label;
-    chip.addEventListener('click', () => submit(label));
+    chip.addEventListener('click', () => { submit(label); });
     quick.appendChild(chip);
   });
 
@@ -152,8 +187,8 @@
     submit();
   });
 
-  serviceTabs.forEach(tab => tab.addEventListener('click', () => setActiveService(tab.dataset.service)));
-  serviceJumps.forEach(link => link.addEventListener('click', () => setActiveService(link.dataset.jumpService)));
+  serviceTabs.forEach(tab => { tab.addEventListener('click', () => { setActiveService(tab.dataset.service); }); });
+  serviceJumps.forEach(link => { link.addEventListener('click', () => { setActiveService(link.dataset.jumpService); }); });
 
   plannerForm.addEventListener('submit', event => {
     event.preventDefault();
@@ -225,7 +260,9 @@
     recognition.start();
   });
 
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(error => {
+    console.warn('Melato offline support is unavailable.', error);
+  });
 
   setActiveService(activeService);
   addMessage(window.MelatoAI.config.greeting, 'bot');

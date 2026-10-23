@@ -21,9 +21,9 @@
       "path": "assets/app.js",
       "liveMd5": "d0de65cde49d8e0e253ea4eb99cb1b0d",
       "liveBodySha256": "d0f2e6f0a73037f0fdb937851aece54d664237caac0f7bff6e39ad78a732c742",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "d0f2e6f0a73037f0fdb937851aece54d664237caac0f7bff6e39ad78a732c742"
+      "decision": "remediate-live",
+      "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
+      "candidateSha256": "b1c18bdb0d4dd7916ac7d72d4b79b7e3ac470bf3a62f0317ad2c620821b47250"
     },
     {
       "path": "assets/icon.svg",
@@ -133,9 +133,9 @@
       "path": "assets/melato-apple-design.js",
       "liveMd5": "6a66cce00b61971a075c004ddcbf8c64",
       "liveBodySha256": "177cd16017c4f3ccb7d80b98fe468dd74403778ea563530d69e205c187538de9",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "177cd16017c4f3ccb7d80b98fe468dd74403778ea563530d69e205c187538de9"
+      "decision": "remediate-live",
+      "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
+      "candidateSha256": "b12066190af4dc308d1b57dd82afb5e2b157138973bb4bffbd01e9c522cd0d30"
     },
     {
       "path": "assets/melato-audit-completion-2026.css",
@@ -301,9 +301,9 @@
       "path": "assets/melato-dynamic-announcement.js",
       "liveMd5": "63af7fc79e452345098476e35d2fc01f",
       "liveBodySha256": "1df39442502305a19947ddf79f2c5d95b8c59d6b50d79bc1ffe65c1c21ca916d",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "1df39442502305a19947ddf79f2c5d95b8c59d6b50d79bc1ffe65c1c21ca916d"
+      "decision": "remediate-live",
+      "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
+      "candidateSha256": "5e11e0964ab90e22549a1d6a9c63a796e254124ed35794288059fdbf29df5988"
     },
     {
       "path": "assets/melato-dynamic-bar.js",

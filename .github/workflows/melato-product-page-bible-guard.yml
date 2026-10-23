@@ -8,6 +8,8 @@ on:
       - 'scripts/audit-luxury-colors.mjs'
       - 'tests/luxury-color-audit.test.js'
       - 'tests/theme-reconciliation.test.js'
+      - 'tests/rooted-files.test.js'
+      - 'scripts/rooted-files.cjs'
       - 'scripts/prepare-reconciled-theme.mjs'
       - 'docs/MELATO_THEME_RECONCILIATION.json'
       - 'templates/index.json'
@@ -34,6 +36,8 @@ on:
       - 'scripts/audit-luxury-colors.mjs'
       - 'tests/luxury-color-audit.test.js'
       - 'tests/theme-reconciliation.test.js'
+      - 'tests/rooted-files.test.js'
+      - 'scripts/rooted-files.cjs'
       - 'scripts/prepare-reconciled-theme.mjs'
       - 'docs/MELATO_THEME_RECONCILIATION.json'
       - 'templates/index.json'
@@ -73,4 +77,4 @@ jobs:
         run: node scripts/validate-melato-product-page-bible.mjs
 
       - name: Verify luxury audit and live-theme reconciliation
-        run: node --test tests/luxury-color-audit.test.js tests/theme-reconciliation.test.js
+        run: node --test tests/luxury-color-audit.test.js tests/theme-reconciliation.test.js tests/rooted-files.test.js

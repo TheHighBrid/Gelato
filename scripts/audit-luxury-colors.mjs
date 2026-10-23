@@ -1,7 +1,7 @@
-import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import rooted from './rooted-files.cjs';
 
 const colorPattern = /#[\da-f]{3,8}\b|rgba?\(\s*[\d.,%\s/]+\)|\b(?:white|black)\b/gi;
 const propertyPattern = /(?:^|[;{\s])(--[\w-]+|(?:background|color|border|outline|box-shadow|fill|stroke|caret-color|text-shadow)[\w-]*)\s*:\s*([^;{}]+)/gm;
@@ -37,14 +37,16 @@ export function auditText(filename, text) {
 }
 
 export function auditTree(root) {
+  const files = rooted.rootedFiles(root);
   const findings = [];
   for (const folder of ['assets', 'sections', 'snippets', 'layout']) {
-    const directory = path.join(root, folder);
-    if (!fs.existsSync(directory)) continue;
-    for (const file of fs.readdirSync(directory).sort()) {
-      if (!/\.(css|liquid)$/.test(file)) continue;
-      const relative = `${folder}/${file}`;
-      findings.push(...auditText(relative, fs.readFileSync(path.join(root, relative), 'utf8')));
+    if (!files.exists(folder)) continue;
+    for (const file of files.list(folder).sort((a, b) => a.name.localeCompare(b.name))) {
+      if (!/\.(css|liquid)$/.test(file.name)) continue;
+      if (file.isSymbolicLink()) throw new Error('Source symlink rejected');
+      if (!file.isFile()) continue;
+      const relative = `${folder}/${file.name}`;
+      findings.push(...auditText(relative, files.read(relative, 'utf8')));
     }
   }
   return { mode: 'review-only', note: 'Findings require declaration-context review; legitimate ink, action-label and deferred-hero colors must not be blindly replaced.', findings };

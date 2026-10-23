@@ -8,6 +8,8 @@ Reconciled the published `gelato-v1-00` theme, ID `167790772479`, against main `
 
 The luxury token stylesheet remains unlinked. This batch preserves existing live resources and editor content; it does not activate the new aesthetic. No Shopify file, setting, product, policy or published theme was changed. Main is untouched.
 
+Subsequent MDP remediation hardens three imported JavaScript assets and the local filesystem tools. Their original live-body hashes remain provenance; reviewed candidate hashes and `remediate-live` dispositions identify the patched bytes. The original disposition table and verification below describe the reconciliation checkpoint. See `MDP_CODACY_REMEDIATION.md` for the later changes, current checks and ticket-by-ticket evidence.
+
 ## Disposition
 
 `MELATO_THEME_RECONCILIATION.json` records every file, its reason, provider checksum and available materialized-body/candidate SHA-256 hashes.
