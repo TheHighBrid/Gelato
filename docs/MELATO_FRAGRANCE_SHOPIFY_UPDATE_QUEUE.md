@@ -1,12 +1,14 @@
+**Superseding source:** MELATO FRAGRANCE MASTER TECHNICAL SPECIFICATION VERIFIED.pdf (10 pages, supplied October 23, 2026). Supplier named Robertet. Supplier-document receipt does not independently prove regulatory certification.
+
 # Melato Fragrance Shopify Update Queue
 **NON-EXECUTABLE PROPOSAL: NO ADMIN WRITES OR PUBLICATION.** Source: MEL-FRG-2026 rev 1.0. Supplier identity and supporting certificates absent. Every field below requires label/batch verification. Product handles are proposed matching targets, not Admin-confirmed identifiers.
 
 ## Petal Veil · MEL-FRG-001
 - Proposed handle: `petal-veil-eau-de-toilette`
-- Verification: `PENDING_SUPPLIER_VERIFICATION`
-- Concentration/type: 15% Eau de Parfum
-- Net volume: 50 mL (100 mL claimed, variant unverified)
-- Scent family: Floral / Soft Musk
+- Verification: `SUPPLIER_DOCUMENT_RECEIVED`
+- Concentration/type: 10% Eau de Toilette
+- Net volume: 50 mL (100 mL documented as available; Shopify variant not verified)
+- Scent family: Soft Floral / Musk
 - Top: White Peach, Pink Peppercorn, Bergamot
 - Heart: Peony, Jasmine Sambac, Freesia
 - Base: White Musk, Cashmere Wood, Sandalwood
@@ -20,7 +22,7 @@
 
 ## Open Air · MEL-FRG-002
 - Proposed handle: `open-air-eau-de-toilette`
-- Verification: `PENDING_SUPPLIER_VERIFICATION`
+- Verification: `SUPPLIER_DOCUMENT_RECEIVED`
 - Concentration/type: 10% Eau de Toilette
 - Net volume: 50 mL
 - Scent family: Fresh / Aromatic
@@ -37,7 +39,7 @@
 
 ## Silk Bloom · MEL-FRG-003
 - Proposed handle: `silk-bloom-eau-de-parfum`
-- Verification: `PENDING_SUPPLIER_VERIFICATION`
+- Verification: `SUPPLIER_DOCUMENT_RECEIVED`
 - Concentration/type: 20% Eau de Parfum
 - Net volume: 100 mL
 - Scent family: Warm Floral / Amber
@@ -54,7 +56,7 @@
 
 ## Obsidian Coast · MEL-FRG-004
 - Proposed handle: `obsidian-coast-eau-de-parfum`
-- Verification: `PENDING_SUPPLIER_VERIFICATION`
+- Verification: `SUPPLIER_DOCUMENT_RECEIVED`
 - Concentration/type: 18% Eau de Parfum
 - Net volume: 100 mL
 - Scent family: Woody / Oriental
@@ -70,8 +72,8 @@
 - Proposed metafields: `custom.fragrance_concentration`, `custom.net_volume_ml`, `custom.scent_family`, `custom.top_notes`, `custom.heart_notes`, `custom.base_notes`, `custom.ingredients`, `custom.fragrance_allergens`, `custom.flash_point_c`, `custom.fragrance_safety`, `custom.fragrance_bottle`, `custom.material_spec_status`.
 
 ## Conflicts and hold points
-- Petal Veil document says Eau de Parfum, while proposed existing handle ends `eau-de-toilette`. Do not silently change type or product title; reconcile with actual SKU/label.
+- Corrected supplier PDF explicitly identifies Petal Veil as 10% Eau de Toilette; its proposed handle is consistent. Verify the actual product label/SKU before editing.
 - Petal Veil 100 mL is mentioned but no verified active Shopify variant was supplied. Do not create it.
-- Claims of France/Grasse origin, IFRA compliance, FSC certification and laboratory testing require documentary evidence.
+- Corrected PDF names Robertet and asserts France/Grasse origin, IFRA compliance, FSC certification and testing. These assertions are not substitutes for independently checkable certificates, batch records or supplier authentication.
 - Product-page copy, INCI, warnings, and shipping restrictions require regulatory and supplier confirmation.
 - All product changes are staged as review-only text. No inventory, status, channel or pricing changes.
