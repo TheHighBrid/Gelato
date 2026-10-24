@@ -58,7 +58,7 @@
   endif
   assign construction_paragraph = product.metafields.custom.pdp_technical_paragraph.value
 
-  assign ingredients_copy = product.metafields.custom.ingredients.value | default: product.metafields.custom.scent_profile.value
+  assign ingredients_copy = product.metafields.custom.ingredients.value
   assign use_copy = product.metafields.custom.use.value | default: product.metafields.custom.application.value
   assign made_in = product.metafields.custom.made_in.value
   assign material_profile = product.metafields.custom.material_profile.value
@@ -216,7 +216,11 @@
 
         {% render 'back-in-stock-form', product: product %}
 
-        <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.</p>
+        {%- if family == 'fragrance' -%}
+          {% render 'melato-fragrance-pdp-details', product: product %}
+        {%- else -%}
+          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.</p>
+        {%- endif -%}
 
         {%- comment -%}
           Bible v1.0: purchase-decision facts belong in the buybox.
@@ -309,6 +313,7 @@
           <div class="pdp-set-grid" role="list">
             <article class="pdp-set-card" role="listitem">
               {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
+              <p class="pdp-set-role">Selected piece</p>
               <h3 class="purchase-summary__title">{{ product.title }}</h3>
               <p class="purchase-summary__price">{{ product.price | money_with_currency }}</p>
             </article>
@@ -316,6 +321,7 @@
               <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
                 {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               </a>
+              <p class="pdp-set-role">Matching piece</p>
               <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
               <p class="purchase-summary__price">{{ matching_product.price | money_with_currency }}</p>
               <a class="pdp-set-cta" href="{{ matching_product.url }}">View matching piece</a>
@@ -334,7 +340,7 @@
   <script type="application/json" id="PDPVariants-{{ section.id }}">{{ product.variants | json }}</script>
 </section>
 
-{% render 'size-guide-drawer', product: product %}
+{%- unless family == 'fragrance' -%}{% render 'size-guide-drawer', product: product %}{%- endunless -%}
 
 <script>
 (function(){

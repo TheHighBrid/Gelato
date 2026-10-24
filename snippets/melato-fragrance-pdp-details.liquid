@@ -1,0 +1,39 @@
+{%- comment -%}
+  Melato Fragrance Product Page Bible v1.0.
+  Rendered exclusively by the canonical PDP when family == 'fragrance'.
+  Never substitute scent profile for a verified INCI ingredient declaration.
+{%- endcomment -%}
+{%- liquid
+  assign concentration = product.metafields.custom.fragrance_concentration.value
+  assign volume = product.metafields.custom.net_volume_ml.value
+  assign top_notes = product.metafields.custom.top_notes.value
+  assign heart_notes = product.metafields.custom.heart_notes.value
+  assign base_notes = product.metafields.custom.base_notes.value
+  assign scent_profile = product.metafields.custom.scent_profile.value
+  assign safety = product.metafields.custom.fragrance_safety.value | default: product.metafields.custom.safety_warnings.value
+  assign ingredients = product.metafields.custom.ingredients.value
+  assign usage = product.metafields.custom.use.value | default: product.metafields.custom.application.value
+-%}
+<div class="melato-fragrance-disclosure" data-fragrance-bible="1.0">
+  <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns on eligible unopened, unused fragrance are subject to our <a href="/pages/shipping-returns">shipping and returns policy</a>. Opened or used fragrance is not eligible for standard change-of-mind returns.</p>
+  {%- if concentration != blank or volume != blank -%}
+    <p class="melato-fragrance-facts">
+      {%- if concentration != blank -%}<span>Concentration: {{ concentration | escape }}</span>{%- endif -%}
+      {%- if volume != blank -%}<span> · Volume: {{ volume | escape }} mL</span>{%- endif -%}
+    </p>
+  {%- endif -%}
+  {%- if scent_profile != blank or top_notes != blank or heart_notes != blank or base_notes != blank -%}
+    <details class="pdp-buybox-spec">
+      <summary><span>Scent profile</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+      <div class="pdp-buybox-spec__body pdp-rte">
+        {%- if scent_profile != blank -%}<p>{{ scent_profile | escape }}</p>{%- endif -%}
+        {%- if top_notes != blank -%}<p><strong>Top:</strong> {{ top_notes | escape }}</p>{%- endif -%}
+        {%- if heart_notes != blank -%}<p><strong>Heart:</strong> {{ heart_notes | escape }}</p>{%- endif -%}
+        {%- if base_notes != blank -%}<p><strong>Base:</strong> {{ base_notes | escape }}</p>{%- endif -%}
+      </div>
+    </details>
+  {%- endif -%}
+  {%- if safety != blank -%}
+    <details class="pdp-buybox-spec"><summary><span>Safety</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary><div class="pdp-buybox-spec__body pdp-rte">{{ safety | escape }}</div></details>
+  {%- endif -%}
+</div>
