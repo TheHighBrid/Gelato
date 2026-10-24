@@ -58,6 +58,8 @@
         <img
           src="{{ section.settings.cover_image | image_url: width: 1600 }}"
           alt="{{ section.settings.cover_image.alt | escape }}"
+          width="{{ section.settings.cover_image.width }}"
+          height="{{ section.settings.cover_image.height }}"
           loading="lazy"
           style="width:100%;height:100%;object-fit:cover;"
         >
