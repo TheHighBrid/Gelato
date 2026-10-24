@@ -1,0 +1,72 @@
+/* MELATO SITE CLEANUP QA / 2026-08-11
+   One final presentation layer. Scope: legibility, geometry, empty-state removal,
+   product-grid consistency, disabled-state clarity, service pages, and saved pieces. */
+
+:root{
+  --melato-ink:#080808;
+  --melato-surface:#111214;
+  --melato-cream:#f5f1e8;
+  --melato-muted:#9b968d;
+  --melato-line:rgba(245,241,232,.12);
+  --melato-media:#f2efe9;
+  --melato-radius:18px;
+}
+html body{background:var(--melato-ink);color:var(--melato-cream)}
+
+/* Header: stable sticky host, simple symbols, no nested sticky trap. */
+.melato-header-host{position:sticky!important;top:0!important;z-index:2400!important;width:100%!important}
+.melato-header-host>.mxh,.melato-header-host .mxh{position:relative!important;top:auto!important}
+.melato-saved-header-link{width:42px;height:42px;display:inline-grid;place-items:center;position:relative;border:1px solid rgba(246,240,229,.18);border-radius:999px;color:inherit;text-decoration:none;background:rgba(255,255,255,.025);flex:0 0 auto}
+.melato-saved-header-link svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.55}.melato-saved-header-link.is-active svg{fill:currentColor}
+.melato-saved-header-count{position:absolute;right:-3px;top:-4px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;display:grid;place-items:center;background:var(--melato-cream);color:var(--melato-ink);font:700 9px/1 var(--font-mono-family,monospace)}
+.melato-saved-header-count:empty,.melato-saved-header-count[data-count="0"]{display:none}
+
+/* Product cards: a single canvas, scale, text alignment and status hierarchy. */
+.product-card{height:100%;display:flex;flex-direction:column}
+.product-card__media{position:relative!important;background:var(--melato-media)!important;border-radius:16px!important;overflow:hidden!important;aspect-ratio:4/5!important}
+.product-card__media>a{display:grid!important;place-items:center!important;width:100%!important;height:100%!important;background:var(--melato-media)!important}
+.product-card__media .product-card__img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;display:block!important}
+.product-card__info{display:flex!important;flex-direction:column!important;align-items:center!important;text-align:center!important;padding:14px 4px 0!important}
+.product-card__heading,.product-card__price{width:100%!important;text-align:center!important}
+.product-card__heading{margin:0!important;min-height:2.35em!important;display:flex!important;align-items:flex-start!important;justify-content:center!important}
+.product-card__title{font-family:var(--font-heading-family,'Bebas Neue',sans-serif)!important;font-size:clamp(16px,2.3vw,21px)!important;line-height:1.08!important;letter-spacing:.01em!important;text-transform:uppercase!important}
+.product-card__price{margin-top:8px!important;font-family:var(--font-mono-family,monospace)!important;font-size:13px!important;letter-spacing:.04em!important}
+.product-card__badges{position:absolute;left:12px;top:12px;z-index:5;display:flex;gap:6px;flex-wrap:wrap;max-width:calc(100% - 64px)}
+.product-card__badges .badge{display:inline-flex!important;min-height:28px;align-items:center;padding:0 9px;border-radius:999px;background:rgba(8,8,8,.88);color:var(--melato-cream);font:800 9px/1 var(--font-mono-family,monospace);letter-spacing:.11em;text-transform:uppercase;backdrop-filter:blur(9px)}
+.product-card__badges .badge--new{background:var(--melato-cream);color:var(--melato-ink)}.product-card__badges .badge--exclusive,.product-card__badges .badge--limited{background:#d3a74a;color:var(--melato-ink)}
+.product-card__wishlist,.melato-card-save{position:absolute!important;right:12px!important;top:12px!important;z-index:6!important;width:38px!important;height:38px!important;display:grid!important;place-items:center!important;border-radius:999px!important;border:1px solid rgba(8,8,8,.16)!important;background:rgba(245,241,232,.92)!important;color:var(--melato-ink)!important;cursor:pointer!important}
+.product-card__wishlist svg,.melato-card-save svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6}.product-card__wishlist[aria-pressed="true"] svg,.melato-card-save[aria-pressed="true"] svg{fill:currentColor}
+.product-card--sold-out .product-card__img--primary{filter:grayscale(1) brightness(.96);opacity:.64}.product-card__oos-banner{display:none!important}
+
+/* Collection controls stay reachable. */
+.melato-collection-toolbar{position:sticky!important;top:78px!important;z-index:180!important;background:rgba(11,11,12,.97)!important;backdrop-filter:blur(14px)!important;border-block:1px solid var(--melato-line)!important}
+.melato-filter-btn,.melato-sort-select{min-height:46px!important;border-radius:999px!important;padding-inline:16px!important}
+.melato-pagination{display:flex!important;justify-content:center!important;align-items:center!important;gap:6px!important;margin:42px auto 0!important}
+.melato-pagination a,.melato-pagination span,.melato-pagination .page a,.melato-pagination .page.current{box-sizing:border-box;min-width:44px!important;height:44px!important;padding:0 12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;border:1px solid var(--melato-line)!important;border-radius:12px!important;background:var(--melato-surface)!important;color:var(--melato-cream)!important;text-decoration:none!important;font:700 10px/1 var(--font-mono-family,monospace)!important}
+.melato-pagination .page.current,.melato-pagination [aria-current="page"]{background:var(--melato-cream)!important;color:var(--melato-ink)!important}
+
+/* Product page safety nets for legacy/custom templates. */
+body.template-product button[disabled],body.template-product .pdp-atc--oos,body.template-product [data-pdp-sticky-button][disabled]{background:#292a2d!important;color:#8f9095!important;border:1px solid rgba(255,255,255,.12)!important;box-shadow:none!important;cursor:not-allowed!important;opacity:1!important}
+body.template-product .pdp-sticky-atc:has(button[disabled]),body.template-product .pdp-sticky-atc:has(.pdp-atc--oos){display:none!important}
+body.template-product .pdp-thesis,body.template-product .pdp-proof-mini,body.template-product .product-assurances{display:none!important}
+body.template-product .pdp-section-head{background:transparent!important}
+body.template-product .pdp-editorial-card{background:var(--melato-media)!important}
+
+/* Concierge exists on service pages, not as homepage filler. */
+.template-index .melato-strip,.template-index [class*="concierge-strip"]{display:none!important}
+.melato-page{background:#fff!important;color:#171717!important;font-family:var(--font-body-family,'Barlow',sans-serif)!important}
+.melato-page .melato-page-header{width:min(1180px,calc(100% - 32px));margin:28px auto 0!important;padding:42px 24px!important;background:#111214!important;color:#fff!important;text-align:center!important;border-radius:0!important}
+.melato-page .melato-page-header__title{margin:0!important;color:#fff!important;font-family:var(--font-heading-family,'Bebas Neue',sans-serif)!important;font-size:clamp(42px,7vw,78px)!important;line-height:.92!important;text-transform:uppercase!important}
+.melato-page .melato-page-header__subtitle{max-width:650px!important;margin:18px auto 0!important;color:rgba(255,255,255,.72)!important;font-size:15px!important;line-height:1.55!important}
+.melato-page .melato-container{padding-top:0!important;padding-bottom:30px!important}.melato-page .rte,.melato-page .rte *{color:#292929!important}.melato-page .rte h1,.melato-page .rte h2,.melato-page .rte h3{font-family:var(--font-heading-family,'Bebas Neue',sans-serif)!important;color:#111!important;text-transform:uppercase!important}
+.melato-page .melato-strip{margin-top:28px!important;padding:36px 16px 42px!important;background:#0b0b0c!important;border:0!important;color:var(--melato-cream)!important}.melato-page .melato-strip-link{background:transparent!important;color:var(--melato-cream)!important;border-color:rgba(245,241,232,.35)!important;border-radius:999px!important}.melato-page .melato-strip-link--active,.melato-page .melato-strip-link:hover{background:var(--melato-cream)!important;color:var(--melato-ink)!important;border-color:var(--melato-cream)!important}.melato-page .melato-strip__contextual{background:#fff!important;border:0!important;border-radius:14px!important}.melato-page .melato-strip__contextual-text,.melato-page .melato-strip__contextual-text *{color:#222!important}
+
+/* Footer balance */
+@media(max-width:900px){.melato-footer .melato-footer__brand{align-items:center!important;text-align:center!important}.melato-footer .melato-footer__logo-link{margin-inline:auto!important;justify-content:center!important}.melato-footer .melato-footer__tagline{margin-left:auto!important;margin-right:auto!important;text-align:center!important}.melato-footer .melato-footer__social{margin-inline:auto!important}}
+
+/* Saved pieces */
+.melato-saved-page{min-height:65vh;background:var(--melato-ink);color:var(--melato-cream);padding:clamp(48px,7vw,96px) max(16px,5vw)}.melato-saved-page__inner{width:min(1280px,100%);margin:0 auto}.melato-saved-page__eyebrow{margin:0 0 10px;color:#d3a74a;font:800 10px/1 var(--font-mono-family,monospace);letter-spacing:.22em;text-transform:uppercase}.melato-saved-page h1{margin:0;font-family:var(--font-heading-family,'Bebas Neue',sans-serif);font-size:clamp(48px,8vw,96px);line-height:.9;text-transform:uppercase}.melato-saved-page__intro{max-width:650px;color:var(--melato-muted);line-height:1.65;margin:18px 0 34px}.melato-saved-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.melato-saved-card{position:relative;background:var(--melato-surface);border:1px solid var(--melato-line);border-radius:18px;overflow:hidden}.melato-saved-card__media{display:block;aspect-ratio:4/5;background:var(--melato-media);overflow:hidden}.melato-saved-card__media img{width:100%;height:100%;display:block;object-fit:contain}.melato-saved-card__body{padding:16px;text-align:center}.melato-saved-card__title{margin:0 0 7px;font-size:14px;text-transform:uppercase}.melato-saved-card__title a{color:var(--melato-cream);text-decoration:none}.melato-saved-card__price{margin:0;color:#bdb5a9;font:500 12px/1.4 var(--font-mono-family,monospace)}.melato-saved-card__remove{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:999px;border:1px solid rgba(8,8,8,.15);background:rgba(245,241,232,.92);color:var(--melato-ink);display:grid;place-items:center;cursor:pointer}.melato-saved-card__remove svg{width:18px;height:18px;fill:currentColor;stroke:currentColor}.melato-saved-empty{padding:48px 0;border-top:1px solid var(--melato-line);color:#aaa49b}.melato-saved-empty a{display:inline-flex;margin-top:18px;padding:13px 18px;border-radius:999px;background:var(--melato-cream);color:var(--melato-ink);text-decoration:none;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.1em}
+
+@media(max-width:900px){.melato-saved-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:749px){.melato-collection-toolbar{top:70px!important;padding:10px 12px!important}.melato-collection-count{display:none!important}.melato-filter-btn,.melato-sort-select{min-height:44px!important;max-width:48vw!important}.melato-sort-wrap{margin-left:auto!important}.melato-page .melato-page-header{width:calc(100% - 24px);margin-top:16px!important;padding:34px 16px!important}.melato-page .melato-container{padding-inline:16px!important}.melato-page .melato-strip__nav{display:grid!important;grid-template-columns:1fr 1fr!important}.melato-page .melato-strip-link{width:100%!important;justify-content:center!important;text-align:center!important}}
+@media(max-width:420px){.melato-page .melato-strip__nav{grid-template-columns:1fr!important}.melato-saved-grid{gap:10px}}

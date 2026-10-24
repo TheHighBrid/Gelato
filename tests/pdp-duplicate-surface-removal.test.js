@@ -8,7 +8,9 @@ const auditTemplate = fs.readFileSync('templates/product.melato-audit.json', 'ut
 
 test('duplicate PDP shipping and story surfaces are suppressed before paint', () => {
   assert.match(unification, /\.pdp-shipping-returns[\s\S]*\.pdp-story[\s\S]*display:\s*none\s*!important/);
-  assert.doesNotMatch(unification, /\.pdp-story[\s\S]*\.pdp-spec-grid[\s\S]*display:\s*none\s*!important/);
+  const hiddenRules = [...unification.matchAll(/([^{}]+)\{([^{}]*display:\s*none\s*!important[^{}]*)\}/g)];
+  assert.ok(hiddenRules.some(rule => rule[1].includes('.pdp-shipping-returns') && rule[1].includes('.pdp-story')));
+  assert.ok(hiddenRules.every(rule => !/(?:^|,)\s*[^,{}]*\.pdp-spec-grid\s*(?:,|$)/.test(rule[1])), 'No hiding rule may target the canonical specification grid');
 });
 
 test('canonical Material Fit and Care specification grid remains in the live DOM', () => {

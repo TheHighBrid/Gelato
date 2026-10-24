@@ -159,8 +159,8 @@
         {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle }}</p>{%- endif -%}
 
         <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="Price">
-          <span class="pdp-price">{{ current_variant.price | money }}</span>
-          {%- if current_variant.compare_at_price > current_variant.price -%}<s class="pdp-compare">{{ current_variant.compare_at_price | money }}</s>{%- endif -%}
+          <span class="pdp-price">{{ current_variant.price | money_with_currency }}</span>
+          {%- if current_variant.compare_at_price > current_variant.price -%}<s class="pdp-compare">{{ current_variant.compare_at_price | money_with_currency }}</s>{%- endif -%}
         </div>
 
         {% form 'product', product, id: product_form_id, class: 'pdp-form' %}
@@ -310,14 +310,14 @@
             <article class="pdp-set-card" role="listitem">
               {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               <h3 class="purchase-summary__title">{{ product.title }}</h3>
-              <p class="purchase-summary__price">{{ product.price | money }}</p>
+              <p class="purchase-summary__price">{{ product.price | money_with_currency }}</p>
             </article>
             <article class="pdp-set-card" role="listitem">
               <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
                 {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               </a>
               <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
-              <p class="purchase-summary__price">{{ matching_product.price | money }}</p>
+              <p class="purchase-summary__price">{{ matching_product.price | money_with_currency }}</p>
               <a class="pdp-set-cta" href="{{ matching_product.url }}">View matching piece</a>
             </article>
           </div>
@@ -327,7 +327,7 @@
   </div>
 
   <div class="pdp-sticky-atc" data-pdp-sticky aria-hidden="true">
-    <div class="purchase-summary"><strong class="purchase-summary__title">{{ product.title }}</strong><span class="purchase-summary__price" id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money }}</span></div>
+    <div class="purchase-summary"><strong class="purchase-summary__title">{{ product.title }}</strong><span class="purchase-summary__price" id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money_with_currency }}</span></div>
     <button type="button" data-pdp-sticky-button class="{% unless current_variant.available %}pdp-atc--oos{% endunless %}" {% unless current_variant.available %}disabled{% endunless %}>{% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}</button>
   </div>
 

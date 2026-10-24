@@ -121,7 +121,7 @@
   },
   "general": {
     "free_shipping": "شحن مجاني",
-    "secure_checkout": "الدفع",
+    "secure_checkout": "دفع آمن",
     "on_orders_over": "للطلبات التي تتجاوز {{ amount }}",
     "easy_returns": "سهولة الإرجاع",
     "return_days": "عوائد {{ days }} يوم",
