@@ -125,9 +125,9 @@
       "path": "assets/melato-apple-design.css",
       "liveMd5": "91fb9c866d38a4aa99977e858a3d4781",
       "liveBodySha256": "cbfe39a7890969e227bdec58859b2d92070ae9d53602f2101604e7a0f46f463c",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "cbfe39a7890969e227bdec58859b2d92070ae9d53602f2101604e7a0f46f463c"
+      "decision": "remediate-live",
+      "reason": "Retain existing live navigation and interaction behavior while migrating dark surfaces, borders and pale links to approved luxury semantic tokens.",
+      "candidateSha256": "a23b7f034e3077b2cf89a6a82a95427169bff28a145c8ba880d91e3ce1146a1e"
     },
     {
       "path": "assets/melato-apple-design.js",
@@ -237,9 +237,9 @@
       "path": "assets/melato-collection-navigation.css",
       "liveMd5": "e739cfe07d0f4644cb7c7341dd7ae2d8",
       "liveBodySha256": "4399bc4726ad97aa1a2599883a9fd4fca35b4e28dab9fa69bce2137ad90daea6",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "4399bc4726ad97aa1a2599883a9fd4fca35b4e28dab9fa69bce2137ad90daea6"
+      "decision": "remediate-live",
+      "reason": "Retain existing live navigation and interaction behavior while migrating dark surfaces, borders and pale links to approved luxury semantic tokens.",
+      "candidateSha256": "a3e5e2dfe4ffe117198574734745cf36faf40fca2334f5d173213c9da74dd1d2"
     },
     {
       "path": "assets/melato-complete-set.js",
