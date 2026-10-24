@@ -885,9 +885,9 @@
       "path": "layout/theme.liquid",
       "liveMd5": "ece3feaea1dfb8b7615b8c1e9cbf6819",
       "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
-      "decision": "import-live",
-      "reason": "Preserve five existing live resource inclusions with their relative load order; keep main layout content otherwise unchanged.",
-      "candidateSha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b"
+      "decision": "remediate-live",
+      "reason": "Preserve reconciled live functionality; activate approved white canvas, font roles and responsive luxury spacing through existing presentation owners.",
+      "candidateSha256": "41c18b345a4614adad520031fe3b97b10d06751c21eabe3854fa74671955ace4"
     },
     {
       "path": "locales/ar.json",
@@ -1061,9 +1061,9 @@
       "path": "sections/main-collection.liquid",
       "liveMd5": "f6d5723af87fe6a72d8a1aea0a584c5f",
       "liveBodySha256": "37288f17f6556e9697fe4d166fba35b4c82bf90477884b0871f6a8b37e00ecc2",
-      "decision": "import-live",
-      "reason": "Preserve live collection navigation snippet inclusion; retain all repository collection behavior.",
-      "candidateSha256": "37288f17f6556e9697fe4d166fba35b4c82bf90477884b0871f6a8b37e00ecc2"
+      "decision": "remediate-live",
+      "reason": "Preserve reconciled live functionality; activate approved white canvas, font roles and responsive luxury spacing through existing presentation owners.",
+      "candidateSha256": "8b93b7def939d46fecaa071e78b408e38d46ee2da81b0b37c3c012477e3cadfe"
     },
     {
       "path": "sections/main-login.liquid",
