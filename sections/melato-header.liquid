@@ -115,11 +115,11 @@
 
 <style>
   #mxh-{{ section.id }} {
-    --mxh-bg: {{ section.settings.bg_color | default: '#050505' }};
-    --mxh-text: {{ section.settings.text_color | default: '#F6F0E5' }};
+    --mxh-bg: var(--surface-page);
+    --mxh-text: var(--text-primary);
     --mxh-muted: color-mix(in srgb, var(--mxh-text) 62%, transparent);
     --mxh-line: color-mix(in srgb, var(--mxh-text) 13%, transparent);
-    --mxh-panel: #090909;
+    --mxh-panel: var(--surface-page);
     --mxh-accent: {{ section.settings.accent_color | default: '#D8C7A7' }};
     --mxh-logo-width: {{ section.settings.logo_width | default: 188 }}px;
     position: sticky;
@@ -127,7 +127,7 @@
     z-index: 1200;
     width: 100%;
     color: var(--mxh-text);
-    background: color-mix(in srgb, var(--mxh-bg) 94%, transparent);
+    background: var(--mxh-bg);
     border-bottom: 1px solid var(--mxh-line);
     backdrop-filter: blur(18px) saturate(125%);
     -webkit-backdrop-filter: blur(18px) saturate(125%);
@@ -166,7 +166,7 @@
     opacity: 1 !important;
     visibility: visible !important;
   }
-  #mxh-{{ section.id }} .mxh__wordmark { font-family: var(--font-heading-family, sans-serif); font-size: clamp(28px, 4vw, 46px); letter-spacing: -.055em; text-transform: uppercase; }
+  #mxh-{{ section.id }} .mxh__wordmark { font-family: var(--font-commerce); font-size: clamp(28px, 4vw, 46px); letter-spacing: .08em; text-transform: uppercase; }
 
   #mxh-{{ section.id }} button { font: inherit; color: inherit; }
   #mxh-{{ section.id }} .mxh__menu,
@@ -232,14 +232,14 @@
   #mxh-{{ section.id }} .mxh__drawer-note p { margin: 0 0 24px; color: var(--mxh-muted); font-size: clamp(15px, 1.6vw, 19px); line-height: 1.45; letter-spacing: .01em; }
   #mxh-{{ section.id }} .mxh__drawer-note a { display: inline-flex; border-bottom: 1px solid currentColor; padding-bottom: 5px; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
   #mxh-{{ section.id }} .mxh__nav { display: grid; gap: 2px; }
-  #mxh-{{ section.id }} .mxh__nav-link { display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 16px; padding: clamp(10px, 1.3vw, 18px) 0; border-bottom: 1px solid var(--mxh-line); font-family: var(--font-heading-family, sans-serif); font-size: clamp(44px, 7.4vw, 118px); line-height: .86; letter-spacing: -.055em; text-transform: uppercase; }
+  #mxh-{{ section.id }} .mxh__nav-link { display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 16px; padding: clamp(10px, 1.3vw, 18px) 0; border-bottom: 1px solid var(--mxh-line); font-family: var(--font-commerce); font-size: clamp(44px, 7.4vw, 118px); line-height: .86; letter-spacing: .08em; text-transform: uppercase; }
   #mxh-{{ section.id }} .mxh__nav-link span { color: var(--mxh-accent); font-family: var(--font-body-family, sans-serif); font-size: 11px; letter-spacing: .14em; line-height: 1; }
   #mxh-{{ section.id }} .mxh__nav-link:hover { color: var(--mxh-accent); }
   #mxh-{{ section.id }} .mxh__subnav { display: flex; flex-wrap: wrap; gap: 10px 18px; padding: 12px 0 22px 60px; }
   #mxh-{{ section.id }} .mxh__subnav a { color: var(--mxh-muted); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
   #mxh-{{ section.id }} .mxh__drawer-bottom a { color: var(--mxh-muted); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
 
-  #mxh-{{ section.id }} .mxh__search { display: grid; place-items: center; padding: 24px; background: rgba(5,5,5,.96); backdrop-filter: blur(18px); }
+  #mxh-{{ section.id }} .mxh__search { display: grid; place-items: center; padding: 24px; background: var(--surface-page); backdrop-filter: blur(18px); }
   #mxh-{{ section.id }} .mxh__search-panel { width: min(820px, 100%); position: relative; }
   #mxh-{{ section.id }} .mxh__search-close { position: absolute; right: 0; top: -70px; }
   #mxh-{{ section.id }} .mxh__search-form { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-top: 18px; }
@@ -283,8 +283,8 @@
   inset: 0 !important;
   z-index: 2 !important;
   background:
-    linear-gradient(90deg, rgba(5, 5, 5, 0.98) 0%, rgba(7, 7, 7, 0.96) 42%, rgba(7, 7, 7, 0.92) 100%) !important;
-  color: #f6f0e5 !important;
+    var(--surface-page) !important;
+  color: var(--text-primary) !important;
   overflow-y: auto !important;
   min-height: 100svh !important;
 }
@@ -315,7 +315,7 @@
 
 #mxh-{{ section.id }} .mxh__drawer-top {
   min-height: 54px !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.10) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
   padding-bottom: 20px !important;
 }
 
@@ -323,7 +323,7 @@
   display: inline-flex !important;
   align-items: center !important;
   gap: 10px !important;
-  color: rgba(246, 240, 229, 0.62) !important;
+  color: var(--text-secondary) !important;
   font-size: 11px !important;
   letter-spacing: 0.22em !important;
   text-transform: uppercase !important;
@@ -337,14 +337,14 @@
 }
 
 #mxh-{{ section.id }} .mxh__close {
-  background: rgba(246, 240, 229, 0.045) !important;
-  border: 1px solid rgba(246, 240, 229, 0.14) !important;
-  color: #f6f0e5 !important;
+  background: var(--border-subtle) !important;
+  border: 1px solid var(--border-subtle) !important;
+  color: var(--text-primary) !important;
   transition: background 180ms ease, border-color 180ms ease, transform 180ms ease !important;
 }
 
 #mxh-{{ section.id }} .mxh__close:hover {
-  background: #f6f0e5 !important;
+  background: var(--surface-studio) !important;
   border-color: #f6f0e5 !important;
   color: #050505 !important;
   transform: rotate(90deg) !important;
@@ -361,21 +361,21 @@
   align-self: center !important;
   max-width: 360px !important;
   padding: 28px !important;
-  border: 1px solid rgba(246, 240, 229, 0.10) !important;
+  border: 1px solid var(--border-subtle) !important;
   background: rgba(255, 255, 255, 0.035) !important;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42) !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-note p {
-  color: rgba(246, 240, 229, 0.76) !important;
+  color: var(--text-secondary) !important;
   font-size: clamp(14px, 1.15vw, 17px) !important;
   line-height: 1.55 !important;
   margin-bottom: 26px !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-note a {
-  color: #f6f0e5 !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.55) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--text-secondary) !important;
   font-size: 11px !important;
   letter-spacing: 0.16em !important;
 }
@@ -398,9 +398,9 @@
   align-items: center !important;
   gap: 18px !important;
   padding: clamp(14px, 1.45vw, 22px) 0 !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.10) !important;
-  color: #f6f0e5 !important;
-  font-family: var(--font-heading-family, sans-serif) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-commerce) !important;
   font-size: clamp(42px, 5.4vw, 84px) !important;
   line-height: 0.88 !important;
   letter-spacing: -0.045em !important;
@@ -410,7 +410,7 @@
 }
 
 #mxh-{{ section.id }} .mxh__nav-link span {
-  color: rgba(216, 199, 167, 0.78) !important;
+  color:var(--text-secondary) !important;
   font-family: var(--font-body-family, sans-serif) !important;
   font-size: 11px !important;
   font-weight: 600 !important;
@@ -430,29 +430,29 @@
 }
 
 #mxh-{{ section.id }} .mxh__subnav a {
-  color: rgba(246, 240, 229, 0.58) !important;
+  color: var(--text-secondary) !important;
   font-size: 11px !important;
   letter-spacing: 0.14em !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-bottom {
-  border-top: 1px solid rgba(246, 240, 229, 0.10) !important;
+  border-top: 1px solid var(--border-subtle) !important;
   padding-top: 20px !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-search {
-  background: rgba(246, 240, 229, 0.045) !important;
-  border-color: rgba(246, 240, 229, 0.14) !important;
+  background: var(--border-subtle) !important;
+  border-color: var(--border-subtle) !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-bottom a {
-  color: rgba(246, 240, 229, 0.72) !important;
+  color: var(--text-secondary) !important;
 }
 
 /* Mobile luxury drawer */
 @media (max-width: 749px) {
   #mxh-{{ section.id }} .mxh__drawer {
-    background: rgba(5, 5, 5, 0.98) !important;
+    background: var(--surface-page) !important;
   }
 
   #mxh-{{ section.id }} .mxh__drawer-inner {

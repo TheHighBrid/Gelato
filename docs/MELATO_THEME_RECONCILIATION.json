@@ -125,9 +125,9 @@
       "path": "assets/melato-apple-design.css",
       "liveMd5": "91fb9c866d38a4aa99977e858a3d4781",
       "liveBodySha256": "cbfe39a7890969e227bdec58859b2d92070ae9d53602f2101604e7a0f46f463c",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "cbfe39a7890969e227bdec58859b2d92070ae9d53602f2101604e7a0f46f463c"
+      "decision": "remediate-live",
+      "reason": "Retain existing live navigation and interaction behavior while migrating dark surfaces, borders and pale links to approved luxury semantic tokens.",
+      "candidateSha256": "a23b7f034e3077b2cf89a6a82a95427169bff28a145c8ba880d91e3ce1146a1e"
     },
     {
       "path": "assets/melato-apple-design.js",
@@ -237,9 +237,9 @@
       "path": "assets/melato-collection-navigation.css",
       "liveMd5": "e739cfe07d0f4644cb7c7341dd7ae2d8",
       "liveBodySha256": "4399bc4726ad97aa1a2599883a9fd4fca35b4e28dab9fa69bce2137ad90daea6",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "4399bc4726ad97aa1a2599883a9fd4fca35b4e28dab9fa69bce2137ad90daea6"
+      "decision": "remediate-live",
+      "reason": "Retain existing live navigation and interaction behavior while migrating dark surfaces, borders and pale links to approved luxury semantic tokens.",
+      "candidateSha256": "a3e5e2dfe4ffe117198574734745cf36faf40fca2334f5d173213c9da74dd1d2"
     },
     {
       "path": "assets/melato-complete-set.js",
@@ -885,9 +885,9 @@
       "path": "layout/theme.liquid",
       "liveMd5": "ece3feaea1dfb8b7615b8c1e9cbf6819",
       "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
-      "decision": "import-live",
-      "reason": "Preserve five existing live resource inclusions with their relative load order; keep main layout content otherwise unchanged.",
-      "candidateSha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b"
+      "decision": "remediate-live",
+      "reason": "Preserve reconciled live functionality; activate approved white canvas, font roles and responsive luxury spacing through existing presentation owners.",
+      "candidateSha256": "41c18b345a4614adad520031fe3b97b10d06751c21eabe3854fa74671955ace4"
     },
     {
       "path": "locales/ar.json",
@@ -1061,9 +1061,9 @@
       "path": "sections/main-collection.liquid",
       "liveMd5": "f6d5723af87fe6a72d8a1aea0a584c5f",
       "liveBodySha256": "37288f17f6556e9697fe4d166fba35b4c82bf90477884b0871f6a8b37e00ecc2",
-      "decision": "import-live",
-      "reason": "Preserve live collection navigation snippet inclusion; retain all repository collection behavior.",
-      "candidateSha256": "37288f17f6556e9697fe4d166fba35b4c82bf90477884b0871f6a8b37e00ecc2"
+      "decision": "remediate-live",
+      "reason": "Preserve reconciled live functionality; activate approved white canvas, font roles and responsive luxury spacing through existing presentation owners.",
+      "candidateSha256": "8b93b7def939d46fecaa071e78b408e38d46ee2da81b0b37c3c012477e3cadfe"
     },
     {
       "path": "sections/main-login.liquid",

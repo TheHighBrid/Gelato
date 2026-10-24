@@ -35,11 +35,11 @@ test('reconciled homepage keeps current editor artwork, disabled slots and exist
   for (const id of home.order) assert.ok(home.sections[id], id);
 });
 
-test('existing live dependencies load in order and new luxury tokens remain inactive', () => {
+test('existing live dependencies load in order and luxury tokens are explicitly activated', () => {
   const layout = read('layout/theme.liquid');
   assert.ok(layout.indexOf("'theme.css'") < layout.indexOf("'melato-collection-navigation.css'"));
   assert.ok(layout.indexOf("'theme.js'") < layout.indexOf("'melato-dynamic-announcement.js'"));
-  assert.ok(!layout.includes('melato-luxury-tokens.css'));
+  assert.equal((layout.match(/melato-luxury-tokens\.css/g) || []).length, 1);
   assert.match(read('sections/main-collection.liquid'), /render "melato-collection-tabs"/);
   assert.ok(!read('assets/melato-pdp-cleanup-20260818.js').includes('new MutationObserver'));
 });
