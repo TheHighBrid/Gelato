@@ -163,7 +163,10 @@
     this.on(vp, 'keydown', function (e) {
       if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'Home' || e.key === 'End') {
         e.preventDefault(); self.hover = null; self.edge = 0;
-        self.snapTo(e.key === 'Home' ? 0 : e.key === 'End' ? self.items.length - 1 : self.nearest(self.target) + (e.key === 'ArrowRight' ? 1 : -1));
+        var index = e.key === 'Home' ? 0 : e.key === 'End' ? self.items.length - 1 : self.nearest(self.target) + (e.key === 'ArrowRight' ? 1 : -1);
+        self.snapTo(index);
+        var activeLink = self.items[self.active].querySelector('[data-rack-link]');
+        if (activeLink && activeLink !== e.target) activeLink.focus({ preventScroll: true });
       } else if (e.key === 'Enter' && e.target === vp) { e.preventDefault(); self.open(self.active); }
     });
     this.on(this.prev, 'click', function () { self.snapTo(self.nearest(self.target) - 1); });
