@@ -84,11 +84,11 @@
         "border_color": "#d8d3cb"
       }
     },
-    "melato_rack_xT8jGm": {
+    "melato_rack_LzgiUD": {
       "type": "melato-rack",
       "name": "Melato Rack",
       "settings": {
-        "collection": "",
+        "collection": "rack",
         "max_items": 14,
         "heading": "",
         "cta_label": "See availability",
@@ -355,7 +355,7 @@
     "video_Hm6knQ",
     "melato_conversion_2026",
     "ticker",
-    "melato_rack_xT8jGm",
+    "melato_rack_LzgiUD",
     "featured_collection",
     "hero_video_wLntL4",
     "video_YBN7Uc",
