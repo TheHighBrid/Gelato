@@ -1,10 +1,24 @@
-/* Merchant section IDs, ordering, app blocks and artwork reconciled from live; repository shopping controls retained. */
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "video_Hm6knQ": {
       "type": "video",
       "name": "Video",
       "settings": {
+        "show_hero_actions": true,
+        "hero_heading": "THE CULTURE WEARS US",
+        "primary_label": "Shop the drop",
+        "primary_link": "/collections/new-arrivals",
+        "secondary_label": "Living Lookbook",
+        "secondary_link": "/pages/living-lookbook",
         "heading": "THUNDERSTORM AMBER ALERT",
         "center_heading": true,
         "video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.HD-1080p-7.2Mbps-93650307.mp4",
@@ -12,13 +26,7 @@
         "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
         "autoplay": true,
         "full_width": true,
-        "aspect_ratio": "1/1",
-        "show_hero_actions": true,
-        "hero_heading": "THE CULTURE WEARS US",
-        "primary_label": "Shop the drop",
-        "primary_link": "/collections/new-arrivals",
-        "secondary_label": "Living Lookbook",
-        "secondary_link": "/pages/living-lookbook"
+        "aspect_ratio": "1/1"
       }
     },
     "melato_conversion_2026": {
@@ -76,6 +84,26 @@
         "border_color": "#d8d3cb"
       }
     },
+    "melato_rack_xT8jGm": {
+      "type": "melato-rack",
+      "name": "Melato Rack",
+      "settings": {
+        "collection": "",
+        "max_items": 14,
+        "heading": "",
+        "cta_label": "See availability",
+        "show_ticker": true,
+        "ticker_text": "The culture wears us | Numbered drops | Made in limited runs",
+        "ticker_speed": 70,
+        "bg_color": "#EFEEEB",
+        "ink_color": "#22201E",
+        "accent_color": "#9C8765",
+        "rail_color": "#8D8F91",
+        "blend_photos": true,
+        "padding_top": 48,
+        "padding_bottom": 0
+      }
+    },
     "featured_collection": {
       "type": "featured-collection",
       "settings": {
@@ -119,6 +147,12 @@
       "disabled": true,
       "name": "Video",
       "settings": {
+        "show_hero_actions": false,
+        "hero_heading": "THE CULTURE WEARS US",
+        "primary_label": "Shop the drop",
+        "primary_link": "",
+        "secondary_label": "Living Lookbook",
+        "secondary_link": "",
         "heading": "HENDRIX BLUE MAGIC",
         "center_heading": true,
         "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
@@ -185,6 +219,26 @@
         "eyebrow": "",
         "headline": "",
         "subcopy": ""
+      }
+    },
+    "video_LXiWPt": {
+      "type": "video",
+      "disabled": true,
+      "name": "Video",
+      "settings": {
+        "show_hero_actions": false,
+        "hero_heading": "THE CULTURE WEARS US",
+        "primary_label": "Shop the drop",
+        "primary_link": "",
+        "secondary_label": "Living Lookbook",
+        "secondary_link": "",
+        "heading": "",
+        "center_heading": true,
+        "video_url": "",
+        "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/49f8211e467c4d22acbad3fe6f4a2371/49f8211e467c4d22acbad3fe6f4a2371.SD-480p-1.5Mbps-97751476.mp4",
+        "autoplay": true,
+        "full_width": true,
+        "aspect_ratio": "4/3"
       }
     },
     "melato_world_orb_kPPgtR": {
@@ -295,26 +349,13 @@
         "close_label": "Back to orbit",
         "height": "100dvh"
       }
-    },
-    "video_LXiWPt": {
-      "type": "video",
-      "disabled": true,
-      "name": "Video",
-      "settings": {
-        "heading": "",
-        "center_heading": true,
-        "video_url": "",
-        "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/49f8211e467c4d22acbad3fe6f4a2371/49f8211e467c4d22acbad3fe6f4a2371.SD-480p-1.5Mbps-97751476.mp4",
-        "autoplay": true,
-        "full_width": true,
-        "aspect_ratio": "4/3"
-      }
     }
   },
   "order": [
     "video_Hm6knQ",
     "melato_conversion_2026",
     "ticker",
+    "melato_rack_xT8jGm",
     "featured_collection",
     "hero_video_wLntL4",
     "video_YBN7Uc",
