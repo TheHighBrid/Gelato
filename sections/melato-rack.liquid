@@ -1,116 +1,78 @@
-{%- comment -%}
-  Melato Rack: horizontal "clothing rack" showroom.
-  Reads only existing product data (title, price, url, media, variants).
-  No new product metafields are written or required; see docs/MELATO_RACK_README.md.
-  Front image = product.featured_image, back image = product.images[1] (second media).
-{%- endcomment -%}
-
 {{ 'melato-rack.css' | asset_url | stylesheet_tag }}
-
 {%- liquid
   assign rack_collection = section.settings.collection | default: collection
   assign max_items = section.settings.max_items
   assign ticker_items = section.settings.ticker_text | split: '|'
 -%}
-
-<section
-  class="mrack{% if section.settings.blend_photos %} mrack--blend{% endif %}"
-  data-melato-rack
-  data-section-id="{{ section.id }}"
-  data-cta="{{ section.settings.cta_label | escape }}"
-  style="
-    --mrack-bg: {{ section.settings.bg_color }};
-    --mrack-ink: {{ section.settings.ink_color }};
-    --mrack-accent: {{ section.settings.accent_color }};
-    --mrack-rail: {{ section.settings.rail_color }};
-    --mrack-ticker-speed: {{ section.settings.ticker_speed }}s;
-    --mrack-pad-top: {{ section.settings.padding_top }}px;
-    --mrack-pad-bottom: {{ section.settings.padding_bottom }}px;
-  "
->
-  {%- if section.settings.heading != blank -%}
-    <h2 class="mrack__heading">{{ section.settings.heading | escape }}</h2>
-  {%- endif -%}
-
+<section class="mrack" data-melato-rack data-version="atelier-2" data-section-id="{{ section.id }}" style="--mrack-bg:{{ section.settings.bg_color }};--mrack-ink:{{ section.settings.ink_color }};--mrack-accent:{{ section.settings.accent_color }};--mrack-pad-top:{{ section.settings.padding_top }}px;--mrack-pad-bottom:{{ section.settings.padding_bottom }}px;--mrack-ticker-speed:{{ section.settings.ticker_speed }}s;">
+  <p class="mrack__eyebrow">{{ 'melato_rack.eyebrow' | t }}</p>
+  <h2 class="mrack__heading">{{ section.settings.heading | default: 'Off the rail' | escape }}</h2>
+  <p class="mrack__hint">{{ 'melato_rack.browse_hint' | t }}</p>
   {%- if rack_collection == blank or rack_collection.products_count == 0 -%}
-    <p class="mrack__empty">Choose a collection with active products to fill this rack.</p>
+    <p class="mrack__empty">{{ 'melato_rack.empty' | t }}</p>
   {%- else -%}
     <div class="mrack__viewport" data-rack-viewport tabindex="0" role="group" aria-roledescription="carousel" aria-label="{{ rack_collection.title | escape }}">
       <div class="mrack__rail" aria-hidden="true"></div>
       <ul class="mrack__track" data-rack-track>
         {%- for product in rack_collection.products limit: max_items -%}
-          {%- render 'melato-rack-item', product: product, index: forloop.index0 -%}
+          {%- render 'melato-rack-item', product: product, index: forloop.index0, view_blocks: section.blocks -%}
         {%- endfor -%}
       </ul>
     </div>
-
-    <div class="mrack__controls">
-      <button type="button" class="mrack__arrow" data-rack-prev aria-label="Previous piece">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
-      <a class="mrack__all" href="{{ rack_collection.url }}">View all {{ rack_collection.title | escape }}</a>
-      <button type="button" class="mrack__arrow" data-rack-next aria-label="Next piece">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
+    <div class="mrack__selection">
+      <p class="mrack__caption" data-rack-caption></p>
+      <span class="mrack__counter" data-rack-counter aria-hidden="true"></span>
     </div>
-
-    <p class="mrack__live visually-hidden" aria-live="polite" data-rack-live></p>
-
-    {%- comment -%} Close-up stage {%- endcomment -%}
-    <div class="mrack__stage" data-rack-stage hidden role="dialog" aria-modal="true" aria-label="Piece close-up">
-      <button type="button" class="mrack__close" data-rack-close aria-label="Return to the rack">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
-      <div class="mrack__stage-body">
-        <div class="mrack__hanger-wrap" aria-hidden="true">
-          {%- render 'melato-rack-hanger' -%}
+    <div class="mrack__controls">
+      <button type="button" class="mrack__arrow" data-rack-prev aria-label="{{ 'melato_rack.previous' | t }}">&#8592;</button>
+      <a class="mrack__all" href="{{ rack_collection.url }}">{{ 'melato_rack.view_collection' | t }}</a>
+      <button type="button" class="mrack__arrow" data-rack-next aria-label="{{ 'melato_rack.next' | t }}">&#8594;</button>
+    </div>
+    <p class="visually-hidden" aria-live="polite" data-rack-live></p>
+    <dialog class="mrack__stage" data-rack-stage hidden aria-label="{{ 'melato_rack.inspect' | t }}">
+      <button type="button" class="mrack__close" data-rack-close><span>{{ 'melato_rack.return' | t }}</span><span aria-hidden="true">&#10005;</span></button>
+      <div class="mrack__stage-body" data-rack-stage-body>
+        <div class="mrack__art" data-rack-art>
+          <div class="mrack__flip" data-rack-flip>
+            <div class="mrack__face mrack__face--front"><span class="mrack__hanger-wrap" aria-hidden="true">{% render 'melato-rack-hanger' %}</span><img data-rack-img-front alt="" width="1200" height="1500" decoding="async" draggable="false"></div>
+            <div class="mrack__face mrack__face--back"><span class="mrack__hanger-wrap" aria-hidden="true">{% render 'melato-rack-hanger' %}</span><img data-rack-img-back alt="" width="1200" height="1500" decoding="async" draggable="false"></div>
+          </div>
         </div>
-        <div class="mrack__flip" data-rack-flip>
-          <div class="mrack__face mrack__face--front"><img data-rack-img-front alt="" decoding="async"></div>
-          <div class="mrack__face mrack__face--back"><img data-rack-img-back alt="" decoding="async"></div>
-        </div>
-        <div class="mrack__shadow" aria-hidden="true"></div>
         <div class="mrack__info">
-          <p class="mrack__name" data-rack-name></p>
+          <p class="mrack__stage-kicker">{{ 'melato_rack.inspect' | t }}</p>
+          <h3 class="mrack__name" data-rack-name></h3>
           <p class="mrack__price" data-rack-price></p>
+          <div class="mrack__toggle" role="group" aria-label="{{ 'melato_rack.view' | t }}">
+            <button type="button" data-rack-side="front" aria-pressed="true">{{ 'melato_rack.front' | t }}</button>
+            <button type="button" data-rack-side="angle" aria-pressed="false">{{ 'melato_rack.angle' | t }}</button>
+            <button type="button" data-rack-side="back" aria-pressed="false">{{ 'melato_rack.back' | t }}</button>
+          </div>
+          <label class="mrack__turn-label">{{ 'melato_rack.turn_hint' | t }}<input class="mrack__turn" data-rack-turn type="range" min="0" max="180" value="0" step="1"></label>
+          <button class="mrack__zoom" type="button" data-rack-zoom aria-pressed="false">{{ 'melato_rack.zoom' | t }}</button>
           <div class="mrack__actions">
-            <div class="mrack__toggle" data-rack-toggle role="group" aria-label="View">
-              <button type="button" data-rack-side="front" aria-pressed="true">Front</button>
-              <button type="button" data-rack-side="back" aria-pressed="false">Back</button>
-            </div>
             <button type="button" class="mrack__cta" data-rack-avail>{{ section.settings.cta_label | escape }}</button>
-            <a class="mrack__pdp" data-rack-pdp href="#">Full details</a>
+            <a class="mrack__pdp" data-rack-pdp href="{{ rack_collection.url }}">{{ 'melato_rack.details' | t }}</a>
+          </div>
+          <div class="mrack__stage-nav">
+            <button type="button" class="mrack__arrow" data-rack-stage-prev aria-label="{{ 'melato_rack.previous' | t }}">&#8592;</button>
+            <span class="mrack__stage-count" data-rack-stage-count></span>
+            <button type="button" class="mrack__arrow" data-rack-stage-next aria-label="{{ 'melato_rack.next' | t }}">&#8594;</button>
           </div>
         </div>
       </div>
-
-      <aside class="mrack__drawer" data-rack-drawer hidden aria-label="Availability">
-        <button type="button" class="mrack__drawer-close" data-rack-drawer-close aria-label="Close availability">
-          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
-        </button>
+      <aside class="mrack__drawer" data-rack-drawer hidden aria-label="{{ 'melato_rack.availability' | t }}">
+        <button type="button" class="mrack__drawer-close" data-rack-drawer-close aria-label="{{ 'melato_rack.close_availability' | t }}">&#10005;</button>
         <p class="mrack__drawer-title" data-rack-drawer-title></p>
         <ul class="mrack__sizes" data-rack-sizes></ul>
-        <button type="button" class="mrack__add" data-rack-add disabled>Select a size</button>
-        <p class="mrack__msg" data-rack-msg role="status"></p>
+        <button type="button" class="mrack__add" data-rack-add data-select-label="{{ 'melato_rack.select_size' | t }}" data-add-label="{{ 'melato_rack.add' | t }}" disabled>{{ 'melato_rack.select_size' | t }}</button>
+        <p class="mrack__msg" data-rack-msg role="status" data-adding="{{ 'melato_rack.adding' | t }}" data-added="{{ 'melato_rack.added' | t }}" data-bag="{{ 'melato_rack.bag' | t }}" data-error="{{ 'melato_rack.cart_error' | t }}"></p>
       </aside>
-    </div>
+    </dialog>
   {%- endif -%}
-
   {%- if section.settings.show_ticker and ticker_items.size > 0 -%}
-    <div class="mrack__ticker" aria-hidden="true">
-      <div class="mrack__ticker-run">
-        {%- for i in (1..2) -%}
-          <span class="mrack__ticker-set">
-            {%- for item in ticker_items -%}
-              <span class="mrack__ticker-item">{{ item | strip | escape }}</span>
-            {%- endfor -%}
-          </span>
-        {%- endfor -%}
-      </div>
-    </div>
+    <div class="mrack__ticker" aria-hidden="true"><div class="mrack__ticker-run">{%- for i in (1..2) -%}<span class="mrack__ticker-set">{%- for item in ticker_items -%}<span class="mrack__ticker-item">{{ item | strip | escape }}</span>{%- endfor -%}</span>{%- endfor -%}</div></div>
   {%- endif -%}
 </section>
-
 <script src="{{ 'melato-rack.js' | asset_url }}" defer></script>
 
 {% schema %}
@@ -119,26 +81,145 @@
   "tag": "div",
   "class": "section-melato-rack",
   "settings": [
-    { "type": "collection", "id": "collection", "label": "Collection" },
-    { "type": "range", "id": "max_items", "min": 4, "max": 24, "step": 1, "default": 14, "label": "Maximum pieces on the rack" },
-    { "type": "text", "id": "heading", "label": "Heading (optional)" },
-    { "type": "text", "id": "cta_label", "label": "Button label", "default": "See availability" },
-    { "type": "header", "content": "Ticker" },
-    { "type": "checkbox", "id": "show_ticker", "label": "Show ticker", "default": true },
-    { "type": "textarea", "id": "ticker_text", "label": "Ticker text (separate phrases with |)", "default": "The culture wears us | Numbered drops | Made in limited runs" },
-    { "type": "range", "id": "ticker_speed", "min": 30, "max": 120, "step": 5, "unit": "s", "default": 70, "label": "Seconds per loop" },
-    { "type": "header", "content": "Colors" },
-    { "type": "color", "id": "bg_color", "label": "Background", "default": "#EFEEEB" },
-    { "type": "color", "id": "ink_color", "label": "Text", "default": "#22201E" },
-    { "type": "color", "id": "accent_color", "label": "Accent", "default": "#9C8765" },
-    { "type": "color", "id": "rail_color", "label": "Rail", "default": "#8D8F91" },
-    { "type": "checkbox", "id": "blend_photos", "label": "Blend white photo backgrounds into the page", "default": true },
-    { "type": "header", "content": "Spacing" },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 48, "label": "Top" },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 0, "label": "Bottom" }
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "max_items",
+      "min": 4,
+      "max": 24,
+      "step": 1,
+      "default": 14,
+      "label": "Maximum pieces on the rack"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading (optional)",
+      "default": "Off the rail"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Button label",
+      "default": "See availability"
+    },
+    {
+      "type": "header",
+      "content": "Ticker"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ticker",
+      "label": "Show ticker",
+      "default": false
+    },
+    {
+      "type": "textarea",
+      "id": "ticker_text",
+      "label": "Ticker text (separate phrases with |)",
+      "default": "The culture wears us | Numbered drops | Made in limited runs"
+    },
+    {
+      "type": "range",
+      "id": "ticker_speed",
+      "min": 30,
+      "max": 120,
+      "step": 5,
+      "unit": "s",
+      "default": 70,
+      "label": "Seconds per loop"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background",
+      "default": "#FAF9F6"
+    },
+    {
+      "type": "color",
+      "id": "ink_color",
+      "label": "Text",
+      "default": "#22201E"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent",
+      "default": "#9C8765"
+    },
+    {
+      "type": "color",
+      "id": "rail_color",
+      "label": "Rail",
+      "default": "#8D8F91"
+    },
+    {
+      "type": "checkbox",
+      "id": "blend_photos",
+      "label": "Legacy setting (transparent assets do not need blending)",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 48,
+      "label": "Top"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 0,
+      "label": "Bottom"
+    }
   ],
   "presets": [
-    { "name": "Melato Rack" }
+    {
+      "name": "Melato Rack"
+    }
+  ],
+  "max_blocks": 24,
+  "blocks": [
+    {
+      "type": "piece",
+      "name": "Garment views",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "front",
+          "label": "Transparent front"
+        },
+        {
+          "type": "image_picker",
+          "id": "back",
+          "label": "Transparent back (verified only)"
+        }
+      ]
+    }
   ]
 }
 {% endschema %}

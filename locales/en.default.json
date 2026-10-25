@@ -155,5 +155,30 @@
     "locked": "Drop not live yet",
     "coming_soon": "Coming Soon",
     "drop_calendar": "Upcoming Drops"
+  },
+  "melato_rack": {
+    "eyebrow": "The Melato wardrobe",
+    "browse_hint": "Move across the rail or drag to browse. Select a piece to take a closer look.",
+    "empty": "Choose a collection with garment views to fill this rack.",
+    "previous": "Previous piece",
+    "next": "Next piece",
+    "view_collection": "Explore the collection",
+    "inspect": "A closer look",
+    "return": "Return to the rail",
+    "view": "Garment view",
+    "front": "Front",
+    "angle": "Angle",
+    "back": "Back",
+    "turn_hint": "Drag the garment or slide to turn",
+    "zoom": "Inspect texture",
+    "details": "Full details",
+    "availability": "Availability",
+    "close_availability": "Close availability",
+    "select_size": "Select a size",
+    "add": "Add to bag",
+    "adding": "Adding…",
+    "added": "Added to your bag.",
+    "bag": "View bag",
+    "cart_error": "Could not add this size. Please try again."
   }
 }

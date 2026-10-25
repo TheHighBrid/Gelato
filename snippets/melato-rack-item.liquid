@@ -1,43 +1,47 @@
-{%- comment -%}
-  One hanger + garment.
-  Params: product, index
-  Front = featured image, back = second image (if any).
-{%- endcomment -%}
+{% doc %}
+  Renders a garment with explicit rack media and optional section overrides.
+  @param {product} product - The product to display
+  @param {number} index - Position in the collection
+  @param {block[]} [view_blocks] - Section media overrides
+{% enddoc %}
 {%- liquid
-  assign front = product.featured_image
-  assign back = product.images[1]
+  capture media_record
+    render 'melato-rack-media', product: product
+  endcapture
+  assign media_parts = media_record | strip | split: '|'
+  assign front_asset = media_parts[0]
+  assign back_asset = media_parts[1]
+  assign front_image = nil
+  assign back_image = nil
+  for view_block in view_blocks
+    if view_block.settings.product.id == product.id
+      assign front_image = view_block.settings.front
+      assign back_image = view_block.settings.back
+      break
+    endif
+  endfor
+  assign front_url = nil
+  assign back_url = nil
+  if front_image
+    assign front_url = front_image | image_url: width: 1200
+  elsif front_asset and front_asset != empty
+    assign front_url = front_asset | asset_url
+  endif
+  if back_image
+    assign back_url = back_image | image_url: width: 1200
+  elsif back_asset and back_asset != empty
+    assign back_url = back_asset | asset_url
+  endif
+  assign front_alt = product.title | append: ' - Front'
 -%}
-{%- if front != blank -%}
+{%- if front_url -%}
   <li class="mrack__item" data-rack-item data-handle="{{ product.handle }}" data-index="{{ index }}">
-    <a class="mrack__link" href="{{ product.url }}" data-rack-link aria-label="{{ product.title | escape }}, {{ product.price | money }}">
-      <span class="mrack__hanger-wrap" aria-hidden="true">{%- render 'melato-rack-hanger' -%}</span>
-      <span class="mrack__garment">
-        <img
-          src="{{ front | image_url: width: 600 }}"
-          srcset="{{ front | image_url: width: 360 }} 360w, {{ front | image_url: width: 600 }} 600w, {{ front | image_url: width: 900 }} 900w"
-          sizes="(max-width: 640px) 62vw, 22vw"
-          width="{{ front.width }}" height="{{ front.height }}"
-          alt="{{ front.alt | default: product.title | escape }}"
-          loading="{% if index < 3 %}eager{% else %}lazy{% endif %}"
-          decoding="async"
-          draggable="false">
-      </span>
-      <span class="mrack__item-shadow" aria-hidden="true"></span>
+    <a class="mrack__link" href="{{ product.url }}" data-rack-link aria-label="{{ product.title | escape }}, {{ product.price | money_with_currency }}">
+      <span class="mrack__hanger-wrap" aria-hidden="true">{% render 'melato-rack-hanger' %}</span>
+      <span class="mrack__garment"><img src="{{ front_url }}" alt="{{ front_alt | escape }}" width="1200" height="1500" loading="{% if index < 3 %}eager{% else %}lazy{% endif %}" decoding="async" draggable="false"></span>
     </a>
     <script type="application/json" data-rack-data>
-      {
-        "handle": {{ product.handle | json }},
-        "title": {{ product.title | json }},
-        "price": {{ product.price | money | json }},
-        "url": {{ product.url | json }},
-        "front": {{ front | image_url: width: 1200 | json }},
-        "back": {% if back %}{{ back | image_url: width: 1200 | json }}{% else %}null{% endif %},
-        "variants": [
-          {%- for v in product.variants -%}
-            { "id": {{ v.id }}, "title": {{ v.title | json }}, "available": {{ v.available | json }} }{% unless forloop.last %},{% endunless %}
-          {%- endfor -%}
-        ]
-      }
+      {"handle":{{ product.handle | json }},"title":{{ product.title | json }},"price":{{ product.price | money_with_currency | json }},"url":{{ product.url | json }},"front":{{ front_url | json }},"back":{% if back_url %}{{ back_url | json }}{% else %}null{% endif %},"variants":[{%- for variant in product.variants -%}{"id":{{ variant.id }},"title":{{ variant.title | json }},"available":{{ variant.available | json }}}{% unless forloop.last %},{% endunless %}{%- endfor -%}]}
     </script>
   </li>
 {%- endif -%}
