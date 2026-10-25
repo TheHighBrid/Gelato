@@ -18,7 +18,7 @@ w.eval(source);w.document.dispatchEvent(new w.Event('DOMContentLoaded'));return 
 function pointer(w,node,type,props){const e=new w.Event(type,{bubbles:true,cancelable:true});Object.assign(e,{pointerId:1,pointerType:'mouse',button:0,clientX:100,clientY:100,...props});node.dispatchEvent(e);}
 require('node:test')('rack interaction and media contract', async()=>{let passed=[];const {w,dom,r}=await create();
 assert.equal(r.items.length,14);assert.equal(r.data.filter(x=>x.back).length,7);assert.equal(r.data[0].title,'Divididos Track Jacket');passed.push('14 prepared fronts and seven explicit backs');
-r.next.click();r.next.click();assert.equal(r.nearest(r.target),2);passed.push('rapid arrows advance sequentially');
+r.snapTo(0,true);r.next.click();r.next.click();assert.equal(r.nearest(r.target),2);passed.push('rapid arrows advance sequentially');
 r.snapTo(4,true);pointer(w,r.viewport,'pointerenter',{clientX:600});pointer(w,r.viewport,'pointermove',{clientX:640});assert.ok(r.target>r.pos);passed.push('hover moves the full rack without a held button');
 pointer(w,r.viewport,'pointerdown',{clientX:500,clientY:100});pointer(w,w,'pointermove',{clientX:500,clientY:160});assert.equal(r.drag,null);passed.push('vertical touch motion is not hijacked');
 r.snapTo(0,true);pointer(w,r.viewport,'pointerdown',{clientX:100});pointer(w,w,'pointermove',{clientX:30});pointer(w,w,'pointerup',{clientX:30});assert.equal(r.suppressClick,true);r.items[0].querySelector('a').click();assert.equal(r.selected,null);passed.push('drag release does not accidentally open an item');

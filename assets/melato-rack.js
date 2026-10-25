@@ -23,8 +23,8 @@
     this.counter = root.querySelector('[data-rack-counter]');
     this.prev = root.querySelector('[data-rack-prev]');
     this.next = root.querySelector('[data-rack-next]');
-    this.measure(); this.snapTo(0, true); this.bind(); this.bindStage();
     root.classList.add('mrack--js');
+    this.measure(); this.snapTo(Math.min(2, this.items.length - 1), true); this.bind(); this.bindStage();
     var self = this;
     this.resize = new ResizeObserver(function () { self.measure(); self.snapTo(Math.max(0, self.active), true); });
     this.resize.observe(this.viewport);
@@ -251,13 +251,14 @@
     this.stage.querySelector('[data-rack-stage-count]').textContent = (index + 1) + ' / ' + this.items.length;
     this.stage.querySelector('[data-rack-stage-prev]').disabled = index === 0;
     this.stage.querySelector('[data-rack-stage-next]').disabled = index === this.items.length - 1;
-    this.closeDrawer(true); this.stage.hidden = false;
+    this.closeDrawer(true); this.art.style.visibility = 'hidden'; this.stage.hidden = false;
     this.previousOverflow = document.documentElement.style.overflow;
     document.documentElement.style.overflow = 'hidden';
     this.stage.showModal(); this.stage.classList.add('is-open');
     source.classList.add('is-picked');
     try { await Promise.race([this.imgFront.decode().catch(function () {}), new Promise(function (resolve) { setTimeout(resolve, 500); })]); } catch (_) {}
     if (this.destroyed) return;
+    this.art.style.visibility = '';
     await this.travel(from, this.art.getBoundingClientRect(), false);
     this.busy = false;
     this.stage.querySelector('[data-rack-close]').focus({ preventScroll: true });
@@ -299,7 +300,7 @@
       button.type = 'button'; button.textContent = variant.title === 'Default Title' ? 'ONE SIZE' : variant.title;
       button.setAttribute('aria-pressed', 'false'); button.disabled = !variant.available;
       if (!variant.available) button.setAttribute('aria-label', button.textContent + ', sold out');
-      self.on(button, 'click', function () {
+      button.addEventListener('click', function () {
         self.selectedVariant = variant;
         self.sizes.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b === button)); });
         self.addBtn.disabled = false; self.addBtn.textContent = self.addBtn.dataset.addLabel;
