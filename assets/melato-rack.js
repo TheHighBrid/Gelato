@@ -165,7 +165,7 @@
         e.preventDefault(); self.hover = null; self.edge = 0;
         var index = e.key === 'Home' ? 0 : e.key === 'End' ? self.items.length - 1 : self.nearest(self.target) + (e.key === 'ArrowRight' ? 1 : -1);
         self.snapTo(index);
-        var activeLink = self.items[self.active].querySelector('[data-rack-link]');
+        var activeLink = self.items[clamp(index, 0, self.items.length - 1)].querySelector('[data-rack-link]');
         if (activeLink && activeLink !== e.target) activeLink.focus({ preventScroll: true });
       } else if (e.key === 'Enter' && e.target === vp) { e.preventDefault(); self.open(self.active); }
     });
