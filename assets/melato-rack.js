@@ -84,6 +84,14 @@
       var d = (this.centers[i] + this.pos - this.vw / 2) / Math.min(this.vw, 850);
       var distance = Math.min(Math.abs(d), 1);
       var angle = motion.matches ? 0 : clamp(-d * 82, -58, 58);
+      var views = this.data[i] && this.data[i].angles;
+      if (views && views.length) {
+        var desired = Math.min(Math.abs(d) * 160, 90);
+        var view = views.reduce(function (best, candidate) { return Math.abs(candidate.degrees - desired) < Math.abs(best.degrees - desired) ? candidate : best; }, views[0]);
+        var image = this.items[i].querySelector('[data-rack-link] img');
+        if (image.getAttribute('src') !== view.url) image.src = view.url;
+        angle = motion.matches ? 0 : clamp(-d * 12, -8, 8);
+      }
       var sway = motion.matches ? 0 : this.swing * (1 - distance * 0.4);
       this.items[i].style.transform = 'perspective(1100px) rotateY(' + angle.toFixed(2) + 'deg) rotateZ(' + sway.toFixed(2) + 'deg) scale(' + (1 - distance * 0.12).toFixed(3) + ')';
       this.items[i].style.zIndex = String(100 - Math.round(distance * 80));
@@ -216,36 +224,63 @@
   };
   Rack.prototype.setTurn = function (degrees) {
     this.rotation = degrees; this.turn.value = degrees;
-    this.flip.style.setProperty('--mrack-turn', degrees + 'deg');
+    var views = this.current && this.current.angles;
+    if (views && views.length) {
+      var nearest = views.reduce(function (best, view) { return Math.abs(view.degrees - degrees) < Math.abs(best.degrees - degrees) ? view : best; }, views[0]);
+      if (this.imgFront.getAttribute('src') !== nearest.url) this.imgFront.src = nearest.url;
+      this.imgFront.alt = this.current.title + ', ' + nearest.degrees + ' degree view';
+      this.flip.style.setProperty('--mrack-turn', clamp(degrees - nearest.degrees, -8, 8) + 'deg');
+    }
+    if (!views || !views.length) this.flip.style.setProperty('--mrack-turn', degrees + 'deg');
     this.stage.querySelectorAll('[data-rack-side]').forEach(function (b) {
       var value = b.dataset.rackSide === 'back' ? 180 : b.dataset.rackSide === 'angle' ? 32 : 0;
       b.setAttribute('aria-pressed', String(Math.abs(degrees - value) < 1));
     });
   };
+  Rack.prototype.makeSpace = async function (index, returning) {
+    this.root.classList.toggle('is-inspecting', !returning);
+    var distance = Math.min(this.items[index].offsetWidth * 0.25, 90);
+    this.items.forEach(function (item, i) {
+      item.style.translate = returning || i === index ? '0px' : (i < index ? -distance : distance) + 'px';
+    });
+    if (!motion.matches) await new Promise(function (resolve) { setTimeout(resolve, returning ? 380 : 240); });
+  };
   Rack.prototype.travel = function (from, to, returning) {
     if (motion.matches || !this.art.animate || !from.width || !to.width) return Promise.resolve();
     var dx = from.left + from.width / 2 - to.left - to.width / 2;
-    var dy = from.top - to.top;
-    var scale = from.width / to.width;
-    var frames = [{ transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ') rotate(-5deg)' }, { transform: 'translate(' + dx * 0.3 + 'px,' + (dy * 0.3 - 45) + 'px) scale(' + (scale + (1 - scale) * 0.7) + ') rotate(3deg)', offset: 0.62 }, { transform: 'none' }];
-    if (returning) frames.reverse();
-    this.animation = this.art.animate(frames, { duration: 650, easing: 'cubic-bezier(.22,.75,.22,1)', fill: 'both' });
-    var animation = this.animation;
-    return animation.finished.catch(function () {}).then(function () { animation.cancel(); });
+    var dy = from.top - to.top, scale = from.width / to.width;
+    var frames = [
+      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ')', offset: 0 },
+      { transform: 'translate(' + dx + 'px,' + (dy - 28) + 'px) scale(' + scale + ') rotate(-1.5deg)', offset: 0.22 },
+      { transform: 'translate(' + dx * 0.28 + 'px,' + (dy * 0.28 - 18) + 'px) scale(' + (scale + (1 - scale) * 0.72) + ') rotate(1deg)', offset: 0.7 },
+      { transform: 'none', offset: 1 }
+    ];
+    this.stage.classList.add('is-travelling');
+    this.animation = this.art.animate(frames, { duration: 900, direction: returning ? 'reverse' : 'normal', easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'both' });
+    var animation = this.animation, stage = this.stage;
+    return animation.finished.catch(function () {}).then(function () { animation.cancel(); stage.classList.remove('is-travelling'); });
   };
   Rack.prototype.open = async function (index, switching) {
     if (this.busy || this.selected !== null || !this.data[index] || !this.stage) return;
     this.busy = true; this.stop(); this.drag = null;
     var data = this.data[index], source = this.items[index];
     this.lastFocus = switching ? source.querySelector('[data-rack-link]') : document.activeElement;
-    this.snapTo(index, true); var from = source.getBoundingClientRect();
+    this.snapTo(index);
+    if (!motion.matches) await new Promise(function (resolve) { setTimeout(resolve, 320); });
+    this.stop(); this.pos = this.target; this.render();
+    await this.makeSpace(index, false);
+    if (this.destroyed) return;
+    var from = source.querySelector('[data-rack-link]').getBoundingClientRect();
     this.selected = index; this.current = data;
+    this.stage.classList.toggle('has-baked-hanger', !!data.bakedHanger);
+    this.stage.classList.toggle('has-angle-views', !!(data.angles && data.angles.length));
+    if (data.angles) data.angles.forEach(function (view) { var img = new Image(); img.src = view.url; });
     this.stage.setAttribute('aria-label', data.title);
     this.imgFront.src = data.front; this.imgFront.alt = data.title + ', front';
     this.imgBack.hidden = !data.back;
     if (data.back) { this.imgBack.src = data.back; this.imgBack.alt = data.title + ', back'; } else this.imgBack.removeAttribute('src');
     this.stage.querySelector('[data-rack-side="back"]').hidden = !data.back;
-    this.turn.min = data.back ? 0 : -35; this.turn.max = data.back ? 180 : 35;
+    this.turn.min = data.angles && data.angles.length ? data.angles[0].degrees : data.back ? 0 : -35; this.turn.max = data.angles && data.angles.length ? data.angles[data.angles.length - 1].degrees : data.back ? 180 : 35;
     this.setTurn(0); this.art.classList.remove('is-zoomed');
     this.stage.querySelector('[data-rack-zoom]').setAttribute('aria-pressed', 'false');
     this.stage.querySelector('[data-rack-name]').textContent = data.title;
@@ -271,10 +306,11 @@
     this.busy = true;
     var index = this.selected, source = this.items[index];
     this.closeDrawer(true); this.setTurn(0); this.art.classList.remove('is-zoomed');
-    await this.travel(source.getBoundingClientRect(), this.art.getBoundingClientRect(), true);
+    await this.travel(source.querySelector('[data-rack-link]').getBoundingClientRect(), this.art.getBoundingClientRect(), true);
     this.stage.classList.remove('is-open'); this.stage.close(); this.stage.hidden = true;
     source.classList.remove('is-picked'); this.selected = null;
     document.documentElement.style.overflow = this.previousOverflow;
+    await this.makeSpace(index, true);
     this.busy = false;
     if (!switching && this.lastFocus && this.lastFocus.isConnected) this.lastFocus.focus({ preventScroll: true });
     return true;

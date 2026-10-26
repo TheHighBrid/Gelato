@@ -27,3 +27,12 @@ The published theme (162873704703) was read and reconciled for the rack files. I
 Release only the rack assets, section and snippets, plus merge the `melato_rack` translation object into the existing live locale. Do not publish the entire Lumière theme: it contains unrelated changes. The existing homepage rack section will pick up the new implementation when that scoped patch is deployed; the homepage JSON, theme settings, app embeds and product templates do not need replacement.
 
 Images and the source-gallery provenance are included beside this record. Full-resolution generated PNGs are separate assets; WebP files in the theme are optimized delivery copies.
+
+
+## Motion revision, October 25
+
+Selection now settles the rail, opens space between neighbouring garments, lifts the hook and then moves the garment into inspection. The background and detail controls reveal after the travel instead of covering the rail immediately. Return reverses the lift path and closes the gap. The SVG now renders only its exposed hook and neck, eliminating shoulder bars protruding beside narrow garments. Photographs that include their hanger suppress the SVG entirely.
+
+Conquista Track Jacket was confirmed through the storefront product endpoint (`conquista-velour-track-jacket`, ID 9497124798719). Five separate owner-supplied transparent images are delivered as WebP views at approximate 0, 30, 45, 90 and 135 degrees. No complete rear or 360-degree sequence is claimed. The rack includes this prepared piece when the product resolves and it is not already in the rack collection. The other uploaded sheets and the photograph with an opaque background were excluded.
+
+The new section controls support transparent angle views and a photograph-includes-hanger flag per product. Existing products retain their approved imagery. This revision has local interaction tests and Bible validation; it has not been uploaded to the Shopify draft because the Shopify connector requested authentication. The older preview URL does not include this revision.

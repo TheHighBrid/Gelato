@@ -105,3 +105,14 @@
   .mrack__ticker-run { animation: none; }
   .mrack *, .mrack *::before, .mrack *::after { transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Independent rail displacement preserves each garment's swing transform. */
+.mrack__item { transition: translate .55s cubic-bezier(.22,.75,.22,1); }
+.mrack__stage { background: transparent; }
+.mrack__stage::backdrop { background: #faf9f6ed; transition: background .65s ease; }
+.mrack__stage.is-travelling::backdrop { background: #faf9f600; }
+.mrack__stage .mrack__info, .mrack__stage .mrack__close { transition: opacity .35s ease, translate .45s ease; }
+.mrack__stage.is-travelling .mrack__info, .mrack__stage.is-travelling .mrack__close { opacity: 0; translate: 0 12px; pointer-events: none; }
+.mrack__stage.has-baked-hanger .mrack__hanger-wrap, .mrack__item.has-baked-hanger .mrack__hanger-wrap { display: none; }
+.mrack__stage.has-angle-views .mrack__face--back { display: none; }
+.mrack__stage.has-angle-views .mrack__face { backface-visibility: visible; }

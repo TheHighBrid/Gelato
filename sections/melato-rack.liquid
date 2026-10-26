@@ -17,6 +17,11 @@
         {%- for product in rack_collection.products limit: max_items -%}
           {%- render 'melato-rack-item', product: product, index: forloop.index0, view_blocks: section.blocks -%}
         {%- endfor -%}
+        {%- assign rack_handles = rack_collection.products | map: 'handle' -%}
+        {%- unless rack_handles contains 'conquista-velour-track-jacket' -%}
+          {%- assign conquista = all_products['conquista-velour-track-jacket'] -%}
+          {%- if conquista != blank -%}{%- render 'melato-rack-item', product: conquista, index: max_items, view_blocks: section.blocks -%}{%- endif -%}
+        {%- endunless -%}
       </ul>
     </div>
     <div class="mrack__selection">
@@ -213,6 +218,10 @@
           "id": "front",
           "label": "Transparent front"
         },
+        { "type": "checkbox", "id": "baked_hanger", "label": "Photographs already include hanger", "default": false },
+        { "type": "image_picker", "id": "angle_30", "label": "Transparent 30 degree view" },
+        { "type": "image_picker", "id": "angle_60", "label": "Transparent 60 degree view" },
+        { "type": "image_picker", "id": "angle_90", "label": "Transparent side view" },
         {
           "type": "image_picker",
           "id": "back",
