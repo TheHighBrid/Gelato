@@ -6,10 +6,10 @@ const unification = fs.readFileSync('sections/melato-pdp-unification.liquid', 'u
 const defaultTemplate = fs.readFileSync('templates/product.json', 'utf8');
 const auditTemplate = fs.readFileSync('templates/product.melato-audit.json', 'utf8');
 
-test('duplicate PDP shipping and story surfaces are suppressed before paint', () => {
+test('canonical PDP shipping disclosure remains visible and only duplicate story is suppressed', () => {
   assert.match(unification, /\.pdp-shipping-returns[\s\S]*\.pdp-story[\s\S]*display:\s*none\s*!important/);
   const hiddenRules = [...unification.matchAll(/([^{}]+)\{([^{}]*display:\s*none\s*!important[^{}]*)\}/g)];
-  assert.ok(hiddenRules.some(rule => rule[1].includes('.pdp-shipping-returns') && rule[1].includes('.pdp-story')));
+  assert.ok(hiddenRules.some(rule => rule[1].includes('.pdp-story')));\n  assert.ok(hiddenRules.every(rule => !rule[1].includes('.pdp-shipping-returns')));
   assert.ok(hiddenRules.every(rule => !/(?:^|,)\s*[^,{}]*\.pdp-spec-grid\s*(?:,|$)/.test(rule[1])), 'No hiding rule may target the canonical specification grid');
 });
 
