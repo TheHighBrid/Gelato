@@ -10,7 +10,7 @@
     this.track = root.querySelector('[data-rack-track]');
     this.items = Array.from(root.querySelectorAll('[data-rack-item]'));
     if (!this.viewport || !this.track || !this.items.length) return;
-    this.data = this.items.map(function (item) {
+    this.data = this.items.map((item) => {
       try { return JSON.parse(item.querySelector('[data-rack-data]').textContent); } catch (_) { return null; }
     });
     this.abort = new AbortController();
@@ -26,9 +26,9 @@
     root.classList.add('mrack--js');
     this.measure(); this.snapTo(Math.min(2, this.items.length - 1), true); this.bind(); this.bindStage();
     var self = this;
-    this.resize = new ResizeObserver(function () { self.measure(); self.snapTo(Math.max(0, self.active), true); });
+    this.resize = new ResizeObserver(() => { self.measure(); self.snapTo(Math.max(0, self.active), true); });
     this.resize.observe(this.viewport);
-    this.observer = new IntersectionObserver(function (entries) {
+    this.observer = new IntersectionObserver((entries) => {
       self.visible = entries[0].isIntersecting;
       if (!self.visible) self.stop(); else self.tick();
     }, { rootMargin: '100px' });
@@ -39,7 +39,7 @@
   };
   Rack.prototype.measure = function () {
     this.vw = this.viewport.clientWidth;
-    this.centers = this.items.map(function (item) { return item.offsetLeft + item.offsetWidth / 2; });
+    this.centers = this.items.map((item) => { return item.offsetLeft + item.offsetWidth / 2; });
     this.maxPos = this.vw / 2 - this.centers[0];
     this.minPos = this.vw / 2 - this.centers[this.centers.length - 1];
     this.pos = clamp(this.pos, this.minPos, this.maxPos);
@@ -84,15 +84,15 @@
       var d = (this.centers[i] + this.pos - this.vw / 2) / Math.min(this.vw, 850);
       var distance = Math.min(Math.abs(d), 1);
       var angle = motion.matches ? 0 : clamp(-d * 82, -58, 58);
-      var views = this.data[i] && this.data[i].angles;
+      const views = this.data[i]?.angles;
       if (views && views.length) {
         var desired = Math.min(Math.abs(d) * 160, 90);
-        var view = views.reduce(function (best, candidate) { return Math.abs(candidate.degrees - desired) < Math.abs(best.degrees - desired) ? candidate : best; }, views[0]);
-        var image = this.items[i].querySelector('[data-rack-link] img');
+        const view = views.reduce((best, candidate) => { return Math.abs(candidate.degrees - desired) < Math.abs(best.degrees - desired) ? candidate : best; }, views[0]);
+        const image = this.items[i].querySelector('[data-rack-link] img');
         if (image.getAttribute('src') !== view.url) image.src = view.url;
         angle = motion.matches ? 0 : clamp(-d * 12, -8, 8);
       }
-      var sway = motion.matches ? 0 : this.swing * (1 - distance * 0.4);
+      const sway = motion.matches ? 0 : this.swing * (1 - distance * 0.4);
       this.items[i].style.transform = 'perspective(1100px) rotateY(' + angle.toFixed(2) + 'deg) rotateZ(' + sway.toFixed(2) + 'deg) scale(' + (1 - distance * 0.12).toFixed(3) + ')';
       this.items[i].style.zIndex = String(100 - Math.round(distance * 80));
       this.items[i].style.setProperty('--mrack-depth', (1 - distance * 0.22).toFixed(3));
@@ -100,8 +100,8 @@
     var active = this.nearest(this.pos);
     if (active !== this.active) {
       this.active = active;
-      this.items.forEach(function (item, index) { item.classList.toggle('is-active', index === active); });
-      var data = this.data[active];
+      this.items.forEach((item, index) => { item.classList.toggle('is-active', index === active); });
+      const data = this.data[active];
       if (this.caption && data) this.caption.textContent = data.title + ' / ' + data.price;
       if (this.counter) this.counter.textContent = String(active + 1).padStart(2, '0') + ' / ' + String(this.items.length).padStart(2, '0');
       if (this.prev) this.prev.disabled = active === 0;
@@ -113,15 +113,15 @@
   };
   Rack.prototype.bind = function () {
     var self = this, vp = this.viewport;
-    this.on(vp, 'pointerenter', function (e) {
+    this.on(vp, 'pointerenter', (e) => {
       if (e.pointerType === 'mouse' && fine.matches && !motion.matches) self.hover = { x: e.clientX, pos: self.target };
     });
-    this.on(vp, 'pointerdown', function (e) {
+    this.on(vp, 'pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       self.suppressClick = false; self.hover = null; self.edge = 0;
       self.drag = { id: e.pointerId, x: e.clientX, y: e.clientY, pos: self.pos, last: e.clientX, time: performance.now(), velocity: 0, moved: false };
     });
-    this.on(window, 'pointermove', function (e) {
+    this.on(window, 'pointermove', (e) => {
       if (!self.drag || self.drag.id !== e.pointerId) return;
       var drag = self.drag, dx = e.clientX - drag.x, dy = e.clientY - drag.y;
       if (!drag.moved && Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) { self.drag = null; return; }
@@ -142,33 +142,33 @@
       if (drag.moved) self.snapTo(self.nearest(clamp(self.target + v * 140, self.minPos, self.maxPos)));
     }
     this.on(window, 'pointerup', release); this.on(window, 'pointercancel', release);
-    this.on(vp, 'pointermove', function (e) {
+    this.on(vp, 'pointermove', (e) => {
       if (self.drag || !self.hover || e.pointerType !== 'mouse' || motion.matches || self.selected !== null) return;
       var bounds = vp.getBoundingClientRect(), x = (e.clientX - bounds.left) / bounds.width;
       self.target = clamp(self.hover.pos + (e.clientX - self.hover.x) * 1.8, self.minPos, self.maxPos);
       self.edge = x < 0.17 ? (0.17 - x) / 0.17 : x > 0.83 ? -(x - 0.83) / 0.17 : 0;
       self.tick();
     });
-    this.on(vp, 'pointerleave', function () { self.hover = null; self.edge = 0; if (!self.drag) self.snapTo(self.nearest(self.target)); });
-    this.items.forEach(function (item, index) {
-      self.on(item.querySelector('[data-rack-link]'), 'click', function (e) {
+    this.on(vp, 'pointerleave', () => { self.hover = null; self.edge = 0; if (!self.drag) self.snapTo(self.nearest(self.target)); });
+    this.items.forEach((item, index) => {
+      self.on(item.querySelector('[data-rack-link]'), 'click', (e) => {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         e.preventDefault();
         if (self.suppressClick) { self.suppressClick = false; return; }
         self.open(index);
       });
-      self.on(item.querySelector('[data-rack-link]'), 'focus', function () { if (self.selected === null) self.snapTo(index); });
+      self.on(item.querySelector('[data-rack-link]'), 'focus', () => { if (self.selected === null) self.snapTo(index); });
     });
-    this.on(vp, 'wheel', function (e) {
+    this.on(vp, 'wheel', (e) => {
       if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) || !e.deltaX) return;
       var multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? self.vw : 1;
       var next = clamp(self.target - e.deltaX * multiplier, self.minPos, self.maxPos);
       if (next === self.target) return;
       e.preventDefault(); self.hover = null; self.edge = 0; self.target = next; self.tick();
       clearTimeout(self.wheelTimer);
-      self.wheelTimer = setTimeout(function () { self.snapTo(self.nearest(self.target)); }, 150);
+      self.wheelTimer = setTimeout(() => { self.snapTo(self.nearest(self.target)); }, 150);
     }, { passive: false });
-    this.on(vp, 'keydown', function (e) {
+    this.on(vp, 'keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === 'ArrowLeft' || e.key === 'Home' || e.key === 'End') {
         e.preventDefault(); self.hover = null; self.edge = 0;
         var index = e.key === 'Home' ? 0 : e.key === 'End' ? self.items.length - 1 : self.nearest(self.target) + (e.key === 'ArrowRight' ? 1 : -1);
@@ -177,10 +177,10 @@
         if (activeLink && activeLink !== e.target) activeLink.focus({ preventScroll: true });
       } else if (e.key === 'Enter' && e.target === vp) { e.preventDefault(); self.open(self.active); }
     });
-    this.on(this.prev, 'click', function () { self.snapTo(self.nearest(self.target) - 1); });
-    this.on(this.next, 'click', function () { self.snapTo(self.nearest(self.target) + 1); });
-    this.on(document, 'visibilitychange', function () { if (document.hidden) self.stop(); else self.tick(); });
-    this.on(motion, 'change', function () { self.stop(); self.snapTo(self.active, true); });
+    this.on(this.prev, 'click', () => { self.snapTo(self.nearest(self.target) - 1); });
+    this.on(this.next, 'click', () => { self.snapTo(self.nearest(self.target) + 1); });
+    this.on(document, 'visibilitychange', () => { if (document.hidden) self.stop(); else self.tick(); });
+    this.on(motion, 'change', () => { self.stop(); self.snapTo(self.active, true); });
   };
   Rack.prototype.bindStage = function () {
     var self = this, s = this.stage;
@@ -194,30 +194,30 @@
     this.addBtn = s.querySelector('[data-rack-add]');
     this.msg = s.querySelector('[data-rack-msg]');
     this.turn = s.querySelector('[data-rack-turn]');
-    this.on(s.querySelector('[data-rack-close]'), 'click', function () { self.close(); });
-    this.on(s, 'cancel', function (e) { e.preventDefault(); self.close(); });
-    this.on(s.querySelector('[data-rack-stage-prev]'), 'click', function () { self.change(-1); });
-    this.on(s.querySelector('[data-rack-stage-next]'), 'click', function () { self.change(1); });
-    this.on(this.turn, 'input', function () { self.setTurn(Number(self.turn.value)); });
-    s.querySelectorAll('[data-rack-side]').forEach(function (b) { self.on(b, 'click', function () { self.setTurn(b.dataset.rackSide === 'back' ? 180 : b.dataset.rackSide === 'angle' ? 32 : 0); }); });
-    this.on(s.querySelector('[data-rack-zoom]'), 'click', function (e) {
+    this.on(s.querySelector('[data-rack-close]'), 'click', () => { self.close(); });
+    this.on(s, 'cancel', (e) => { e.preventDefault(); self.close(); });
+    this.on(s.querySelector('[data-rack-stage-prev]'), 'click', () => { self.change(-1); });
+    this.on(s.querySelector('[data-rack-stage-next]'), 'click', () => { self.change(1); });
+    this.on(this.turn, 'input', () => { self.setTurn(Number(self.turn.value)); });
+    s.querySelectorAll('[data-rack-side]').forEach((b) => { self.on(b, 'click', () => { self.setTurn(b.dataset.rackSide === 'back' ? 180 : b.dataset.rackSide === 'angle' ? 32 : 0); }); });
+    this.on(s.querySelector('[data-rack-zoom]'), 'click', (e) => {
       var zoom = self.art.classList.toggle('is-zoomed'); e.currentTarget.setAttribute('aria-pressed', String(zoom));
     });
-    this.on(this.art, 'pointerdown', function (e) {
+    this.on(this.art, 'pointerdown', (e) => {
       if (e.button !== 0 || self.busy) return;
       self.turnDrag = { id: e.pointerId, x: e.clientX, rotation: self.rotation };
       self.art.setPointerCapture(e.pointerId); self.art.classList.add('is-turning');
     });
-    this.on(this.art, 'pointermove', function (e) {
+    this.on(this.art, 'pointermove', (e) => {
       if (!self.turnDrag || self.turnDrag.id !== e.pointerId) return;
       self.setTurn(clamp(self.turnDrag.rotation + (e.clientX - self.turnDrag.x) * 0.65, Number(self.turn.min), Number(self.turn.max)));
     });
     function endTurn(e) { if (!self.turnDrag || self.turnDrag.id !== e.pointerId) return; self.turnDrag = null; self.art.classList.remove('is-turning'); if (self.art.hasPointerCapture(e.pointerId)) self.art.releasePointerCapture(e.pointerId); }
     this.on(this.art, 'pointerup', endTurn); this.on(this.art, 'pointercancel', endTurn);
-    this.on(s.querySelector('[data-rack-avail]'), 'click', function () { self.openDrawer(); });
-    this.on(s.querySelector('[data-rack-drawer-close]'), 'click', function () { self.closeDrawer(); });
-    this.on(this.addBtn, 'click', function () { self.addToCart(); });
-    this.on(s, 'keydown', function (e) {
+    this.on(s.querySelector('[data-rack-avail]'), 'click', () => { self.openDrawer(); });
+    this.on(s.querySelector('[data-rack-drawer-close]'), 'click', () => { self.closeDrawer(); });
+    this.on(this.addBtn, 'click', () => { self.addToCart(); });
+    this.on(s, 'keydown', (e) => {
       if (e.key === 'Escape') { e.preventDefault(); if (!self.drawer.hidden) self.closeDrawer(); else self.close(); }
       if (e.key === 'Tab' && !self.drawer.hidden) self.trapDrawer(e);
     });
@@ -226,13 +226,13 @@
     this.rotation = degrees; this.turn.value = degrees;
     var views = this.current && this.current.angles;
     if (views && views.length) {
-      var nearest = views.reduce(function (best, view) { return Math.abs(view.degrees - degrees) < Math.abs(best.degrees - degrees) ? view : best; }, views[0]);
+      var nearest = views.reduce((best, view) => { return Math.abs(view.degrees - degrees) < Math.abs(best.degrees - degrees) ? view : best; }, views[0]);
       if (this.imgFront.getAttribute('src') !== nearest.url) this.imgFront.src = nearest.url;
       this.imgFront.alt = this.current.title + ', ' + nearest.degrees + ' degree view';
       this.flip.style.setProperty('--mrack-turn', clamp(degrees - nearest.degrees, -8, 8) + 'deg');
     }
     if (!views || !views.length) this.flip.style.setProperty('--mrack-turn', degrees + 'deg');
-    this.stage.querySelectorAll('[data-rack-side]').forEach(function (b) {
+    this.stage.querySelectorAll('[data-rack-side]').forEach((b) => {
       var value = b.dataset.rackSide === 'back' ? 180 : b.dataset.rackSide === 'angle' ? 32 : 0;
       b.setAttribute('aria-pressed', String(Math.abs(degrees - value) < 1));
     });
@@ -240,10 +240,10 @@
   Rack.prototype.makeSpace = async function (index, returning) {
     this.root.classList.toggle('is-inspecting', !returning);
     var distance = Math.min(this.items[index].offsetWidth * 0.25, 90);
-    this.items.forEach(function (item, i) {
+    this.items.forEach((item, i) => {
       item.style.translate = returning || i === index ? '0px' : (i < index ? -distance : distance) + 'px';
     });
-    if (!motion.matches) await new Promise(function (resolve) { setTimeout(resolve, returning ? 380 : 240); });
+    if (!motion.matches) await new Promise((resolve) => { setTimeout(resolve, returning ? 380 : 240); });
   };
   Rack.prototype.travel = function (from, to, returning) {
     if (motion.matches || !this.art.animate || !from.width || !to.width) return Promise.resolve();
@@ -258,7 +258,7 @@
     this.stage.classList.add('is-travelling');
     this.animation = this.art.animate(frames, { duration: 900, direction: returning ? 'reverse' : 'normal', easing: 'cubic-bezier(.25,.1,.25,1)', fill: 'both' });
     var animation = this.animation, stage = this.stage;
-    return animation.finished.catch(function () {}).then(function () { animation.cancel(); stage.classList.remove('is-travelling'); });
+    return animation.finished.catch(() => {}).then(() => { animation.cancel(); stage.classList.remove('is-travelling'); });
   };
   Rack.prototype.open = async function (index, switching) {
     if (this.busy || this.selected !== null || !this.data[index] || !this.stage) return;
@@ -266,7 +266,7 @@
     var data = this.data[index], source = this.items[index];
     this.lastFocus = switching ? source.querySelector('[data-rack-link]') : document.activeElement;
     this.snapTo(index);
-    if (!motion.matches) await new Promise(function (resolve) { setTimeout(resolve, 320); });
+    if (!motion.matches) await new Promise((resolve) => { setTimeout(resolve, 320); });
     this.stop(); this.pos = this.target; this.render();
     await this.makeSpace(index, false);
     if (this.destroyed) return;
@@ -274,7 +274,7 @@
     this.selected = index; this.current = data;
     this.stage.classList.toggle('has-baked-hanger', !!data.bakedHanger);
     this.stage.classList.toggle('has-angle-views', !!(data.angles && data.angles.length));
-    if (data.angles) data.angles.forEach(function (view) { var img = new Image(); img.src = view.url; });
+    if (data.angles) data.angles.forEach((view) => { var img = new Image(); img.src = view.url; });
     this.stage.setAttribute('aria-label', data.title);
     this.imgFront.src = data.front; this.imgFront.alt = data.title + ', front';
     this.imgBack.hidden = !data.back;
@@ -294,7 +294,7 @@
     document.documentElement.style.overflow = 'hidden';
     this.stage.showModal(); this.stage.classList.add('is-open');
     source.classList.add('is-picked');
-    try { await Promise.race([this.imgFront.decode().catch(function () {}), new Promise(function (resolve) { setTimeout(resolve, 500); })]); } catch (_) {}
+    try { await Promise.race([this.imgFront.decode().catch(() => {}), new Promise((resolve) => { setTimeout(resolve, 500); })]); } catch (_) {}
     if (this.destroyed) return;
     this.art.style.visibility = '';
     await this.travel(from, this.art.getBoundingClientRect(), false);
@@ -323,7 +323,7 @@
     await this.open(next, true);
   };
   Rack.prototype.trapDrawer = function (e) {
-    var nodes = Array.from(this.drawer.querySelectorAll('button:not(:disabled),a[href]')).filter(function (n) { return n.getClientRects().length; });
+    var nodes = Array.from(this.drawer.querySelectorAll('button:not(:disabled),a[href]')).filter((n) => { return n.getClientRects().length; });
     var first = nodes[0], last = nodes[nodes.length - 1];
     if (!nodes.includes(document.activeElement)) { e.preventDefault(); first.focus(); }
     else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
@@ -334,14 +334,14 @@
     this.selectedVariant = null; this.msg.textContent = ''; this.addBtn.disabled = true; this.addBtn.textContent = this.addBtn.dataset.selectLabel;
     this.drawer.querySelector('[data-rack-drawer-title]').textContent = data.title;
     this.sizes.replaceChildren();
-    data.variants.forEach(function (variant) {
+    data.variants.forEach((variant) => {
       var li = document.createElement('li'), button = document.createElement('button');
       button.type = 'button'; button.textContent = variant.title === 'Default Title' ? 'ONE SIZE' : variant.title;
       button.setAttribute('aria-pressed', 'false'); button.disabled = !variant.available;
       if (!variant.available) button.setAttribute('aria-label', button.textContent + ', sold out');
-      button.addEventListener('click', function () {
+      button.addEventListener('click', () => {
         self.selectedVariant = variant;
-        self.sizes.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(b === button)); });
+        self.sizes.querySelectorAll('button').forEach((b) => { b.setAttribute('aria-pressed', String(b === button)); });
         self.addBtn.disabled = false; self.addBtn.textContent = self.addBtn.dataset.addLabel;
       });
       li.appendChild(button); self.sizes.appendChild(li);
@@ -378,9 +378,9 @@
     if (this.stage && this.stage.open) { this.stage.close(); document.documentElement.style.overflow = this.previousOverflow; }
     delete this.root.__mrack;
   };
-  function init() { document.querySelectorAll('[data-melato-rack]').forEach(function (root) { if (!root.__mrack) root.__mrack = new Rack(root); }); }
+  function init() { document.querySelectorAll('[data-melato-rack]').forEach((root) => { if (!root.__mrack) root.__mrack = new Rack(root); }); }
   window.MelatoRackAtelier = { init: init };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   document.addEventListener('shopify:section:load', init);
-  document.addEventListener('shopify:section:unload', function (event) { event.target.querySelectorAll('[data-melato-rack]').forEach(function (root) { if (root.__mrack) root.__mrack.destroy(); }); });
+  document.addEventListener('shopify:section:unload', (event) => { event.target.querySelectorAll('[data-melato-rack]').forEach((root) => { if (root.__mrack) root.__mrack.destroy(); }); });
 })();
