@@ -31,7 +31,7 @@
       },
       "sku": {{ current_variant.sku | default: product.handle | json }},
       "mpn": {{ current_variant.barcode | default: current_variant.sku | default: current_variant.id | json }},
-      "category": {{ product.type | default: product.type | default: 'Apparel' | json }}{% if product.featured_image != blank %},
+      "category": {{ product.type | default: 'Apparel' | json }}{% if product.featured_image != blank %},
       "image": [
         {%- assign emitted_image = false -%}
         {%- for media in product.media limit: 8 -%}
