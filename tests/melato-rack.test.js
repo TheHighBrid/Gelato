@@ -34,3 +34,41 @@ const existing=r;w.eval(source);assert.equal(r.root.__mrack,existing);r.destroy(
 const second=await create(true);second.r.snapTo(5);assert.equal(second.r.active,5);assert.equal(second.r.raf,0);await second.r.open(0);await second.r.close();second.r.destroy();second.dom.window.close();passed.push('reduced motion uses immediate transitions');
 console.log(passed.map((x,i)=>`${i+1}. PASS ${x}`).join('\n'));console.log(`${passed.length} rack behavior checks passed`);
 });
+
+require('node:test')('custom side photos preserve a verified back at 180 degrees', async () => {
+  const {dom,r}=await create(true);
+  const originalBack=r.data[0].back;
+  assert.ok(originalBack);
+  r.data[0].angles=[{degrees:0,url:r.data[0].front},{degrees:60,url:'/rack-side-60.webp'}];
+  await r.open(0);
+  assert.equal(r.turn.max,'180');
+  assert.equal(r.stage.querySelector('[data-rack-side="back"]').hidden,false);
+  r.setTurn(60);
+  assert.equal(r.imgFront.getAttribute('src'),'/rack-side-60.webp');
+  r.setTurn(180);
+  assert.equal(r.imgFront.getAttribute('src'),originalBack);
+  assert.equal(r.stage.querySelector('[data-rack-side="back"]').getAttribute('aria-pressed'),'true');
+  await r.close();
+  r.data[0].back=null;
+  r.data[0].angles=[{degrees:0,url:r.data[0].front},{degrees:90,url:'/rack-side-90.webp'},{degrees:180,url:'/rack-back-180.webp'}];
+  await r.open(0);
+  assert.equal(r.stage.querySelector('[data-rack-side="back"]').hidden,false);
+  r.setTurn(180);
+  assert.equal(r.imgFront.getAttribute('src'),'/rack-back-180.webp');
+  await r.close();r.destroy();dom.window.close();
+  const snippet=fs.readFileSync('snippets/melato-rack-item.liquid','utf8');
+  assert.match(snippet,/if angle_block.settings.angle_30 or angle_block.settings.angle_60 or angle_block.settings.angle_90/);
+  assert.match(snippet,/elsif has_custom_angles and front_url/);
+});
+
+require('node:test')('empty rack survives Shopify lifecycle without half-constructed instance', () => {
+  const dom=new JSDOM('<section data-melato-rack></section>',{url:'https://melato.test/',runScripts:'outside-only'});
+  const w=dom.window;
+  w.matchMedia=()=>({matches:false,addEventListener(){}});
+  w.eval(source);w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+  const root=w.document.querySelector('[data-melato-rack]');
+  assert.equal(root.__mrack,undefined);
+  w.document.dispatchEvent(new w.Event('shopify:section:unload'));
+  assert.equal(root.__mrack,undefined);
+  dom.window.close();
+});
