@@ -12,29 +12,64 @@
 .mrack__heading { text-transform: none; margin: 0; text-align: center; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(32px, 4vw, 54px); font-weight: 400; letter-spacing: -.025em; line-height: 1.1; }
 .mrack__hint { margin: 18px 16px 20px; text-align: center; font-size: 11px; letter-spacing: .04em; opacity: .65; }
 .mrack__empty { text-align: center; padding: 48px 16px; }
-.mrack__viewport { position: relative; padding: 72px 0 24px; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; outline-offset: -6px; }
+.mrack__viewport { position: relative; padding: 72px 0 34px; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; outline-offset: -6px; perspective: 1400px; }
 .mrack__viewport.is-dragging { cursor: grabbing; }
-.mrack__rail { position: absolute; left: 0; right: 0; top: 70px; height: 7px; border-radius: 5px; background: linear-gradient(#c2c3c1, #fff 22%, #acada9 48%, #737571 73%, #b7b9b4); box-shadow: 0 8px 10px -5px #0003; z-index: 1; pointer-events: none; }
-.mrack__track { position: relative; display: flex; align-items: flex-start; list-style: none; margin: 0; padding: 0 50%; width: max-content; min-width: 100%; }
-.mrack__item { position: relative; flex: 0 0 var(--mrack-item-w); width: var(--mrack-item-w); transform-origin: 50% 0; filter: brightness(var(--mrack-depth, 1)); }
+.mrack__rail {
+  position: absolute; left: 0; right: 0; top: 70px; height: 8px; border-radius: 5px;
+  background: linear-gradient(180deg, #b8bab7 0%, #ffffff 24%, #d3d5d1 44%, #6e706c 74%, #c4c6c2 100%);
+  box-shadow: 0 1px 0 #ffffff80 inset, 0 10px 14px -4px #00000038, 0 2px 4px #0000001f;
+  z-index: 1; pointer-events: none;
+}
+.mrack__rail::after {
+  content: ""; position: absolute; inset: 1px 0 auto 0; height: 2px;
+  background: linear-gradient(90deg, transparent 5%, #ffffffb3 28%, #ffffffe6 50%, #ffffffb3 72%, transparent 95%);
+  pointer-events: none;
+}
+.mrack__track { position: relative; display: flex; align-items: flex-start; list-style: none; margin: 0; padding: 0 50%; width: max-content; min-width: 100%; will-change: transform; }
+.mrack__item {
+  position: relative; flex: 0 0 var(--mrack-item-w); width: var(--mrack-item-w);
+  transform-origin: 50% 4px;
+  filter: brightness(var(--mrack-depth, 1)) contrast(calc(0.98 + var(--mrack-depth, 1) * 0.02));
+  will-change: transform, translate;
+}
 .mrack--js .mrack__item + .mrack__item { margin-left: calc(var(--mrack-item-w) * -.54); }
-.mrack__link { display: block; color: inherit; text-decoration: none; position: relative; aspect-ratio: 4 / 5; outline-offset: -8px; }
-.mrack__hanger-wrap { position: absolute; top: 0; left: 19%; width: 62%; z-index: 1; pointer-events: none; }
+.mrack__link { display: block; color: inherit; text-decoration: none; position: relative; aspect-ratio: 4 / 5; outline-offset: -8px; transform-origin: 50% 4px; }
+.mrack__hanger-wrap { position: absolute; top: 0; left: 19%; width: 62%; z-index: 1; pointer-events: none; transform-origin: 50% 4px; }
 .mrack__hanger { display: block; width: 100%; height: auto; overflow: visible; }
 .mrack__hook-edge { fill: none; stroke: #686b69; stroke-width: 5; stroke-linecap: round; }
 .mrack__hook-light { fill: none; stroke: #e4e4df; stroke-width: 1.6; stroke-linecap: round; }
 .mrack__shoulder { fill: #929592; stroke: #676b67; stroke-width: 1.8; stroke-linejoin: round; }
 .mrack__shoulder-light { fill: none; stroke: #ebebe6; stroke-width: 2; stroke-linecap: round; }
 .mrack__hanger-mark { fill: none; stroke: #626761; stroke-width: 1.1; }
-.mrack__garment { display: block; position: relative; z-index: 2; width: 100%; height: 100%; pointer-events: none; }
-.mrack__garment img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(6px 10px 7px #0000001a); -webkit-user-drag: none; }
+.mrack__garment { display: block; position: relative; z-index: 2; width: 100%; height: 100%; pointer-events: none; transform-origin: 50% 14px; }
+.mrack__garment img {
+  display: block; width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(var(--mrack-drop-x, 6px) var(--mrack-drop-y, 12px) 9px #00000021);
+  -webkit-user-drag: none; transition: opacity .15s ease;
+}
+.mrack__cloth-canvas {
+  position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%;
+  pointer-events: none; opacity: 0;
+  filter: drop-shadow(var(--mrack-drop-x, 6px) var(--mrack-drop-y, 12px) 10px #00000024);
+  transition: opacity .15s ease, scale .4s cubic-bezier(.22,.75,.22,1);
+}
+.mrack__garment.has-cloth-mesh img { opacity: 0; }
+.mrack__garment.has-cloth-mesh .mrack__cloth-canvas { opacity: 1; }
+.mrack__floor-shadow {
+  position: absolute; left: 18%; right: 18%; bottom: -10px; height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #1a181629 0%, #1a18160d 58%, transparent 100%);
+  transform: translate3d(var(--mrack-shadow-x, 0px), 0, 0) scaleX(var(--mrack-shadow-scale, 1));
+  opacity: var(--mrack-shadow-alpha, 0.75);
+  pointer-events: none; z-index: 0;
+}
 .mrack__item.is-picked .mrack__link { visibility: hidden; }
 .mrack__selection { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 12px 20px 0; min-height: 44px; }
 .mrack__caption { margin: 0; font-size: 12px; letter-spacing: .035em; text-align: center; }
 .mrack__counter { font-size: 10px; letter-spacing: .18em; font-variant-numeric: tabular-nums; opacity: .6; }
 .mrack__controls { display: flex; align-items: center; justify-content: center; gap: 30px; padding: 24px 16px 12px; }
-.mrack__arrow { width: 44px; height: 44px; display: grid; place-items: center; background: transparent; color: inherit; cursor: pointer; border: 1px solid #22201e30; border-radius: 50%; transition: background .2s; }
-.mrack__arrow:hover:not(:disabled) { background: #22201e0b; }
+.mrack__arrow { width: 44px; height: 44px; display: grid; place-items: center; background: transparent; color: inherit; cursor: pointer; border: 1px solid #22201e30; border-radius: 50%; transition: background .2s, transform .2s; }
+.mrack__arrow:hover:not(:disabled) { background: #22201e0b; transform: scale(1.04); }
 .mrack__arrow:disabled { opacity: .25; cursor: default; }
 .mrack__all { color: inherit; font-size: 11px; letter-spacing: .08em; text-decoration: none; border-bottom: 1px solid #22201e45; padding-bottom: 4px; }
 .mrack button:focus-visible, .mrack a:focus-visible, .mrack input:focus-visible, .mrack__viewport:focus-visible { outline: 2px solid var(--mrack-ink); outline-offset: 4px; }
@@ -44,25 +79,44 @@
 .mrack__ticker:hover .mrack__ticker-run { animation-play-state: paused; }
 .mrack__ticker-item { font-size: 10px; letter-spacing: .24em; opacity: .65; padding: 0 36px; }
 @keyframes mrack-ticker { to { transform: translateX(-50%); } }
-.mrack__stage { position: fixed; inset: 0; margin: 0; padding: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; border: 0; background: var(--mrack-bg, #faf9f6); color: var(--mrack-ink, #22201e); overflow: auto; overscroll-behavior: contain; }
-.mrack__stage::backdrop { background: #faf9f6eb; }
+.mrack__stage { position: fixed; inset: 0; margin: 0; padding: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; border: 0; background: transparent; color: var(--mrack-ink, #22201e); overflow: auto; overscroll-behavior: contain; }
+.mrack__stage::backdrop { background: #faf9f6ed; transition: background .65s ease; }
+.mrack__stage.is-travelling::backdrop { background: #faf9f600; }
 .mrack__stage[open] { display: grid; place-items: center; }
 .mrack__close { position: fixed; top: max(16px, env(safe-area-inset-top)); right: max(20px, env(safe-area-inset-right)); z-index: 3; display: flex; gap: 12px; align-items: center; min-height: 44px; padding: 0 12px; border: 0; background: var(--mrack-bg); color: inherit; font: inherit; font-size: 11px; cursor: pointer; }
 .mrack__stage-body { width: min(1080px, 94vw); min-height: min(760px, 100dvh); display: grid; grid-template-columns: 1.25fr 1fr; align-items: center; gap: clamp(30px, 6vw, 100px); padding: 76px 28px 48px; }
-.mrack__art { width: 100%; max-width: min(520px, 60vh); aspect-ratio: 4 / 5; position: relative; transform-origin: center top; margin-inline: auto; touch-action: pan-y; cursor: ew-resize; }
-.mrack__flip { position: absolute; inset: 0; transform: perspective(1400px) rotateY(var(--mrack-turn, 0deg)); transform-style: preserve-3d; transition: transform .6s cubic-bezier(.22,.75,.22,1); }
+.mrack__art { width: 100%; max-width: min(520px, 60vh); aspect-ratio: 4 / 5; position: relative; transform-origin: 50% 14px; margin-inline: auto; touch-action: pan-y; cursor: ew-resize; will-change: transform; }
+.mrack__stage-shadow {
+  position: absolute; left: 16%; right: 16%; bottom: -18px; height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #1a18162b 0%, #1a18160c 62%, transparent 100%);
+  transform: translate3d(var(--mrack-stage-shadow-x, 0px), 0, 0) scaleX(var(--mrack-stage-shadow-scale, 1));
+  transition: opacity .35s ease;
+  pointer-events: none;
+}
+.mrack__stage.is-travelling .mrack__stage-shadow { opacity: 0; }
+.mrack__flip { position: absolute; inset: 0; transform: perspective(1400px) rotateY(var(--mrack-turn, 0deg)) rotateZ(var(--mrack-stage-sway, 0deg)); transform-style: preserve-3d; transform-origin: 50% 14px; transition: transform .52s cubic-bezier(.22,.75,.22,1); }
 .mrack__art.is-turning .mrack__flip { transition: none; }
 .mrack__face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .mrack__face--back { transform: rotateY(180deg); }
-.mrack__face img { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(10px 16px 12px #0000001c); -webkit-user-drag: none; user-select: none; pointer-events: none; transition: scale .4s; }
-.mrack__art.is-zoomed .mrack__face img { scale: 1.4; }
+.mrack__face img { position: absolute; inset: 0; z-index: 2; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(10px 18px 14px #00000021); -webkit-user-drag: none; user-select: none; pointer-events: none; transition: scale .4s cubic-bezier(.22,.75,.22,1), opacity .12s linear; }
+.mrack__face .mrack__img-blend { z-index: 3; opacity: var(--mrack-blend, 0); }
+.mrack__face.has-cloth-mesh img { opacity: 0 !important; }
+.mrack__face.has-cloth-mesh .mrack__cloth-canvas { opacity: 1; z-index: 4; filter: drop-shadow(10px 18px 14px #00000024); }
+.mrack__art.is-zoomed .mrack__face img,
+.mrack__art.is-zoomed .mrack__face .mrack__cloth-canvas { scale: 1.4; }
 .mrack__info { position: relative; z-index: 1; padding: 24px 0; }
 .mrack__stage-kicker { margin: 0 0 28px; font-size: 10px; letter-spacing: .24em; text-transform: uppercase; opacity: .6; }
 .mrack__name { text-transform: none; margin: 0; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(26px, 3vw, 38px); font-weight: 400; line-height: 1.2; }
 .mrack__price { margin: 16px 0 30px; font-size: 13px; }
 .mrack__toggle { display: flex; flex-wrap: wrap; gap: 18px; }
-.mrack__toggle button, .mrack__zoom { min-height: 44px; padding: 8px 0; border: 0; border-bottom: 1px solid transparent; background: none; color: inherit; cursor: pointer; font: inherit; font-size: 11px; }
+.mrack__toggle button, .mrack__zoom { min-height: 44px; padding: 8px 0; border: 0; border-bottom: 1px solid transparent; background: none; color: inherit; cursor: pointer; font: inherit; font-size: 11px; letter-spacing: .04em; transition: opacity .2s, border-color .2s; }
 .mrack__toggle button[aria-pressed="true"] { border-bottom-color: currentColor; }
+.mrack__toggle button[data-rack-side="open"] { position: relative; padding-left: 14px; }
+.mrack__toggle button[data-rack-side="open"]::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 6px; height: 6px;
+  border-radius: 50%; background: var(--mrack-accent, #9c8765); transform: translateY(-50%);
+}
 .mrack__turn-label { display: block; margin: 24px 0 8px; font-size: 10px; opacity: .65; }
 .mrack__turn { display: block; width: 100%; height: 24px; accent-color: var(--mrack-ink); cursor: ew-resize; }
 .mrack__zoom { margin: 8px 0 16px; text-decoration: underline; text-underline-offset: 4px; }
@@ -87,7 +141,7 @@
   .mrack__viewport { padding-top: 48px; }
   .mrack__rail { top: 46px; }
   .mrack__stage-body { grid-template-columns: 1fr; gap: 12px; padding: 78px 12px 30px; min-height: 100dvh; }
-  .mrack__art { max-width: min(78vw, 32dvh); }
+  .mrack__art { max-width: min(78vw, 36dvh); }
   .mrack__info { padding: 0 12px; width: min(100%, 420px); margin-inline: auto; }
   .mrack__stage-kicker { margin-bottom: 12px; }
   .mrack__name { font-size: 25px; }
@@ -108,9 +162,6 @@
 
 /* Independent rail displacement preserves each garment's swing transform. */
 .mrack__item { transition: translate .55s cubic-bezier(.22,.75,.22,1); }
-.mrack__stage { background: transparent; }
-.mrack__stage::backdrop { background: #faf9f6ed; transition: background .65s ease; }
-.mrack__stage.is-travelling::backdrop { background: #faf9f600; }
 .mrack__stage .mrack__info, .mrack__stage .mrack__close { transition: opacity .35s ease, translate .45s ease; }
 .mrack__stage.is-travelling .mrack__info, .mrack__stage.is-travelling .mrack__close { opacity: 0; translate: 0 12px; pointer-events: none; }
 .mrack__stage.has-baked-hanger .mrack__hanger-wrap, .mrack__item.has-baked-hanger .mrack__hanger-wrap { display: none; }

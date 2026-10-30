@@ -18,10 +18,18 @@
           {%- render 'melato-rack-item', product: product, index: forloop.index0, view_blocks: section.blocks -%}
         {%- endfor -%}
         {%- assign rack_handles = rack_collection.products | map: 'handle' -%}
-        {%- unless rack_handles contains 'conquista-velour-track-jacket' -%}
-          {%- assign conquista = all_products['conquista-velour-track-jacket'] -%}
-          {%- if conquista != blank -%}{%- render 'melato-rack-item', product: conquista, index: max_items, view_blocks: section.blocks -%}{%- endif -%}
-        {%- endunless -%}
+        {%- assign extra_360_handles = 'conquista-velour-track-jacket,ojos-velour-track-jacket,crush-theory-velour-track-jacket,chu-velour-track-jacket,divididos-velour-track-jacket,shell-company-technical-track-jacket' | split: ',' -%}
+        {%- assign extra_offset = 0 -%}
+        {%- for extra_handle in extra_360_handles -%}
+          {%- unless rack_handles contains extra_handle -%}
+            {%- assign extra_product = all_products[extra_handle] -%}
+            {%- if extra_product != blank -%}
+              {%- assign extra_index = max_items | plus: extra_offset -%}
+              {%- render 'melato-rack-item', product: extra_product, index: extra_index, view_blocks: section.blocks -%}
+              {%- assign extra_offset = extra_offset | plus: 1 -%}
+            {%- endif -%}
+          {%- endunless -%}
+        {%- endfor -%}
       </ul>
     </div>
     <div class="mrack__selection">
@@ -38,8 +46,9 @@
       <button type="button" class="mrack__close" data-rack-close><span>{{ 'melato_rack.return' | t }}</span><span aria-hidden="true">&#10005;</span></button>
       <div class="mrack__stage-body" data-rack-stage-body>
         <div class="mrack__art" data-rack-art>
+          <div class="mrack__stage-shadow" data-rack-stage-shadow aria-hidden="true"></div>
           <div class="mrack__flip" data-rack-flip>
-            <div class="mrack__face mrack__face--front"><span class="mrack__hanger-wrap" aria-hidden="true">{% render 'melato-rack-hanger' %}</span><img data-rack-img-front alt="" width="1200" height="1500" decoding="async" draggable="false"></div>
+            <div class="mrack__face mrack__face--front"><span class="mrack__hanger-wrap" aria-hidden="true">{% render 'melato-rack-hanger' %}</span><img data-rack-img-front alt="" width="1200" height="1500" decoding="async" draggable="false"><img class="mrack__img-blend" data-rack-img-blend alt="" width="1200" height="1500" decoding="async" draggable="false" hidden><canvas class="mrack__cloth-canvas" data-rack-stage-canvas width="560" height="700" aria-hidden="true"></canvas></div>
             <div class="mrack__face mrack__face--back"><span class="mrack__hanger-wrap" aria-hidden="true">{% render 'melato-rack-hanger' %}</span><img data-rack-img-back alt="" width="1200" height="1500" decoding="async" draggable="false"></div>
           </div>
         </div>
@@ -51,6 +60,7 @@
             <button type="button" data-rack-side="front" aria-pressed="true">{{ 'melato_rack.front' | t }}</button>
             <button type="button" data-rack-side="angle" aria-pressed="false">{{ 'melato_rack.angle' | t }}</button>
             <button type="button" data-rack-side="back" aria-pressed="false">{{ 'melato_rack.back' | t }}</button>
+            <button type="button" data-rack-side="open" aria-pressed="false" hidden>{{ 'melato_rack.inside' | t }}</button>
           </div>
           <label class="mrack__turn-label">{{ 'melato_rack.turn_hint' | t }}<input class="mrack__turn" data-rack-turn type="range" min="0" max="180" value="0" step="1"></label>
           <button class="mrack__zoom" type="button" data-rack-zoom aria-pressed="false">{{ 'melato_rack.zoom' | t }}</button>
