@@ -71,7 +71,7 @@
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}{% render 'melato-global-polish' %}
 </head>
-<body class="template-{{ template.name }}{%- if template.suffix %} template-{{ template.name }}--{{ template.suffix }}{% endif %}{%- if settings.animations_enabled %} animations-enabled{% endif %}{%- if settings.high_contrast %} high-contrast{% endif %}" data-theme="{{ settings.color_scheme }}" data-product-handle="{% if product %}{{ product.handle | escape }}{% endif %}" data-product-type="{% if product %}{{ product.product_type | escape }}{% endif %}">
+<body class="template-{{ template.name }}{%- if template.suffix %} template-{{ template.name }}--{{ template.suffix }}{% endif %}{%- if settings.animations_enabled %} animations-enabled{% endif %}{%- if settings.high_contrast %} high-contrast{% endif %}" data-theme="{{ settings.color_scheme }}" data-product-handle="{% if product %}{{ product.handle | escape }}{% endif %}" data-product-type="{% if product %}{{ product.type | escape }}{% endif %}">
   <a href="#main-content" class="skip-to-content">{{ 'accessibility.skip_to_content' | t }}</a>
   {%- capture melato_announcement_output -%}{%- section 'melato-announcement-bar' -%}{%- endcapture -%}{% render 'melato-rendered-output-filters', html:melato_announcement_output, context:'announcement' %}
   {%- section 'melato-header' -%}

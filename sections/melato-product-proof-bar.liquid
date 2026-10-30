@@ -2,7 +2,7 @@
 
 {%- liquid
   assign product_title_down = product.title | downcase
-  assign product_type_down = product.product_type | downcase
+  assign product_type_down = product.type | downcase
 
   assign material_title = product.metafields.custom.material.value | default: 'Material'
   assign material_text = product.metafields.custom.composition.value | default: 'Premium construction selected for clean movement, everyday wearability, and a composed finish.'

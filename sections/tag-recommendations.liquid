@@ -15,7 +15,7 @@
   endif
   assign curated_products = product.metafields.custom.pdp_recommendations.value
 
-  assign current_type = product.product_type | downcase | strip
+  assign current_type = product.type | downcase | strip
   assign theme_primary = product.metafields.custom.palette_1.value | default: '#d3a74a'
   assign theme_secondary = product.metafields.custom.palette_2.value | default: '#f5f1e8'
   assign theme_border = 'rgba(255,255,255,.14)'
