@@ -7,7 +7,7 @@
   assign current_variant = product.selected_or_first_available_variant
   assign featured_media = current_variant.featured_media | default: product.featured_media
   assign product_title_down = product.title | downcase
-  assign product_type_down = product.product_type | downcase
+  assign product_type_down = product.type | downcase
   assign pdp_hook = product.metafields.custom.pdp_hook.value
   assign pdp_context = product.metafields.custom.pdp_proof_context.value | default: product.metafields.custom.story.value | default: product.metafields.custom.product_story.value
   assign pdp_details = product.metafields.custom.pdp_technical_details.value | default: product.metafields.custom.design_features.value
