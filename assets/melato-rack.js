@@ -279,6 +279,11 @@
     this.imgFront.src = data.front; this.imgFront.alt = data.title + ', front';
     this.imgBack.hidden = !data.back;
     if (data.back) { this.imgBack.src = data.back; this.imgBack.alt = data.title + ', back'; } else this.imgBack.removeAttribute('src');
+    // Use the authenticated back photograph as the terminal 180-degree view,
+    // even when intermediate angle photographs are configured.
+    if (data.back && data.angles && data.angles.length && !data.angles.some((view) => view.degrees === 180)) {
+      data.angles = [...data.angles, { degrees: 180, url: data.back }].sort((a, b) => a.degrees - b.degrees);
+    }
     this.stage.querySelector('[data-rack-side="back"]').hidden = !data.back;
     this.turn.min = data.angles && data.angles.length ? data.angles[0].degrees : data.back ? 0 : -35; this.turn.max = data.angles && data.angles.length ? data.angles[data.angles.length - 1].degrees : data.back ? 180 : 35;
     this.setTurn(0); this.art.classList.remove('is-zoomed');
@@ -378,7 +383,7 @@
     if (this.stage && this.stage.open) { this.stage.close(); document.documentElement.style.overflow = this.previousOverflow; }
     delete this.root.__mrack;
   };
-  function init() { document.querySelectorAll('[data-melato-rack]').forEach((root) => { if (!root.__mrack) root.__mrack = new Rack(root); }); }
+  function init() { document.querySelectorAll('[data-melato-rack]').forEach((root) => { if (root.__mrack) return; const rack = new Rack(root); if (rack.abort) root.__mrack = rack; }); }
   window.MelatoRackAtelier = { init: init };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   document.addEventListener('shopify:section:load', init);
