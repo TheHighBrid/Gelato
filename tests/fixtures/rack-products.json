@@ -1,0 +1,372 @@
+[
+  {
+    "handle": "divididos-velour-track-jacket",
+    "title": "Divididos Track Jacket",
+    "price": "$89.99",
+    "url": "/products/divididos-velour-track-jacket",
+    "front": "//melato.ca/cdn/shop/files/divididos-velour-track-jacket-view-01.jpg?v=1786664058&width=1200",
+    "back": "//melato.ca/cdn/shop/files/divididos-velour-track-jacket-view-03.jpg?v=1786664058&width=1200",
+    "variants": [
+      {
+        "id": 48298735108351,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 48298735141119,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 48298735173887,
+        "title": "L",
+        "available": false
+      },
+      {
+        "id": 48298735206655,
+        "title": "XL",
+        "available": false
+      }
+    ]
+  },
+  {
+    "handle": "shell-company-technical-track-jacket",
+    "title": "Shell Company Technical Track Jacket",
+    "price": "$139.99",
+    "url": "/products/shell-company-technical-track-jacket",
+    "front": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_247b1980-9a08-486e-a4c9-0734d8c72586.jpg?v=1791328633&width=1200",
+    "back": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_2663ff63-197b-4008-a488-b1eb68a5c60f.png?v=1792028500&width=1200",
+    "variants": [
+      {
+        "id": 50605745012991,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 50605745045759,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 50605745078527,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "offshore-account-panel-track-jacket",
+    "title": "Offshore Account Panel Track Jacket",
+    "price": "$159.99",
+    "url": "/products/offshore-account-panel-track-jacket",
+    "front": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_92d4c64c-fa1f-4609-bb91-c10ee288803f.png?v=1791420571&width=1200",
+    "back": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_b3514bc1-9c0c-4b9a-bd86-baeac5a9c7ae.jpg?v=1791506388&width=1200",
+    "variants": [
+      {
+        "id": 50605743964415,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 50605743997183,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 50605744029951,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "hot-pursuit-panel-track-jacket",
+    "title": "Hot Pursuit Panel Track Jacket",
+    "price": "$139.99",
+    "url": "/products/hot-pursuit-panel-track-jacket",
+    "front": "//melato.ca/cdn/shop/files/hot-pursuit-track-jacket.jpg?v=1791273692&width=1200",
+    "back": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_d487be34-b0de-4c68-a2cb-814089352b23.jpg?v=1791506945&width=1200",
+    "variants": [
+      {
+        "id": 50605743735039,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 50605743767807,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 50605743800575,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "burden-of-plush-velour-track-jacket",
+    "title": "Burden of Plush Velour Track Jacket",
+    "price": "$149.99",
+    "url": "/products/burden-of-plush-velour-track-jacket",
+    "front": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_52f3499d-61a6-43e9-b863-28a8d71c203f.jpg?v=1791420424&width=1200",
+    "back": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_4935e5fc-2a5f-46d8-985a-2ec1e4f22a14.jpg?v=1791507312&width=1200",
+    "variants": [
+      {
+        "id": 50602357620991,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 50602357653759,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 50602357686527,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "ryu-velour-track-jacket",
+    "title": "Ry\u016b Track Jacket",
+    "price": "$345.00",
+    "url": "/products/ryu-velour-track-jacket",
+    "front": "//melato.ca/cdn/shop/files/melato-ryu-velour-track-jacket-back.png?v=1791630460&width=1200",
+    "back": "//melato.ca/cdn/shop/files/melato-ryu-velour-track-jacket-front.png?v=1791630460&width=1200",
+    "variants": [
+      {
+        "id": 50528218185983,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 50528218218751,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 50528218251519,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "reasonable-doubt-track-jacket",
+    "title": "Reasonable Doubt Track Jacket",
+    "price": "$169.99",
+    "url": "/products/reasonable-doubt-track-jacket",
+    "front": "//melato.ca/cdn/shop/files/melato-reasonable-doubt-track-jacket-front.jpg?v=1791630460&width=1200",
+    "back": "//melato.ca/cdn/shop/files/melato-reasonable-doubt-track-jacket-model.jpg?v=1791630460&width=1200",
+    "variants": [
+      {
+        "id": 49227093934335,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 49227093967103,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 49227093999871,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "cho-velour-track-jacket",
+    "title": "Ch\u014d Velour Track Jacket",
+    "price": "$315.00",
+    "url": "/products/cho-velour-track-jacket",
+    "front": "//melato.ca/cdn/shop/files/melato-cho-velour-track-jacket-back.jpg?v=1791630460&width=1200",
+    "back": "//melato.ca/cdn/shop/files/melato-cho-velour-track-jacket-front.jpg?v=1791630460&width=1200",
+    "variants": [
+      {
+        "id": 49227093541119,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 49227093573887,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 49227093606655,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "rex-x-fur-jacket-1",
+    "title": "Rex X Fur Jacket",
+    "price": "$1,495.00",
+    "url": "/products/rex-x-fur-jacket-1",
+    "front": "//melato.ca/cdn/shop/files/rex-x-fur-jacket-view-05.jpg?v=1787707972&width=1200",
+    "back": "//melato.ca/cdn/shop/files/rex-x-fur-jacket-view-02.png?v=1787707972&width=1200",
+    "variants": [
+      {
+        "id": 49138180227327,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 49138180260095,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 49138180292863,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "dress-code-rib-knit-zip-mini-dress",
+    "title": "Dress Code Violation Rib Knit Mini Dress",
+    "price": "$245.00",
+    "url": "/products/dress-code-rib-knit-zip-mini-dress",
+    "front": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_34edcd6c-b748-4d4e-865c-64ce4d100f91.jpg?v=1788050362&width=1200",
+    "back": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_e7b10038-6f81-4f81-9379-ceb540562da7.jpg?v=1788050363&width=1200",
+    "variants": [
+      {
+        "id": 49123727507711,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 49123727540479,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 49123727573247,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "detour-tee",
+    "title": "Detour Tee",
+    "price": "$89.99",
+    "url": "/products/detour-tee",
+    "front": "//melato.ca/cdn/shop/files/detour-case-001-tee-front.jpg?v=1786439152&width=1200",
+    "back": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_61398881-f799-4fb0-8f21-31cb9d4ed905.png?v=1786583426&width=1200",
+    "variants": [
+      {
+        "id": 48989885825279,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 48989885858047,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 48989885890815,
+        "title": "L",
+        "available": true
+      },
+      {
+        "id": 48989885923583,
+        "title": "XL",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "bordeaux-line-knit-polo",
+    "title": "Bordeaux Line Knit Polo",
+    "price": "$195.00",
+    "url": "/products/bordeaux-line-knit-polo",
+    "front": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_5c47b932-eeb7-4a8f-b838-34d1c3b02484.jpg?v=1787471539&width=1200",
+    "back": "//melato.ca/cdn/shop/files/rn-image_picker_lib_temp_0ce0cac8-fa42-4de2-8b1a-87c2f89003dc.jpg?v=1787449525&width=1200",
+    "variants": [
+      {
+        "id": 48937323856127,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 48937323888895,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 48937323921663,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "cold-shoulder-mockneck-top",
+    "title": "Cold Shoulder Mockneck Top",
+    "price": "$145.00",
+    "url": "/products/cold-shoulder-mockneck-top",
+    "front": "//melato.ca/cdn/shop/files/cold-shoulder-mockneck-top-view-04.jpg?v=1787708084&width=1200",
+    "back": "//melato.ca/cdn/shop/files/cold-shoulder-mockneck-top-view-02.jpg?v=1787708084&width=1200",
+    "variants": [
+      {
+        "id": 48890905264383,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 48890905297151,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 48890905329919,
+        "title": "L",
+        "available": true
+      }
+    ]
+  },
+  {
+    "handle": "blush-ledger-satin-shirt",
+    "title": "Blush Ledger Satin Shirt",
+    "price": "$129.99",
+    "url": "/products/blush-ledger-satin-shirt",
+    "front": "//melato.ca/cdn/shop/files/blush-ledger-satin-shirt-view-04.jpg?v=1787707971&width=1200",
+    "back": "//melato.ca/cdn/shop/files/blush-ledger-satin-shirt-view-02.jpg?v=1787707971&width=1200",
+    "variants": [
+      {
+        "id": 48859857420543,
+        "title": "XS",
+        "available": true
+      },
+      {
+        "id": 48859857453311,
+        "title": "S",
+        "available": true
+      },
+      {
+        "id": 48859857486079,
+        "title": "M",
+        "available": true
+      },
+      {
+        "id": 48859857518847,
+        "title": "L",
+        "available": true
+      },
+      {
+        "id": 48859857551615,
+        "title": "XL",
+        "available": true
+      }
+    ]
+  }
+]
