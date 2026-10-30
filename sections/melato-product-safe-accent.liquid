@@ -59,7 +59,7 @@
 
   body.template-product .melato-pdp-rebuild,
   body[class*="template-product"] .melato-pdp-rebuild{
-    --pdp-title-accent: {{ readable_accent }} !important;
+    --pdp-title-accent: var(--melato-product-accent-readable, var(--text-primary)) !important;
     --pdp-accent-2: {{ raw_accent }} !important;
   }
 
@@ -80,7 +80,7 @@
   body[class*="template-product"] .melato-pdp-rebuild .pdp-set-label,
   body[class*="template-product"] .melato-pdp-rebuild .pdp-sticky-atc span,
   body[class*="template-product"] .melato-pdp-rebuild .pdp-section-head .pdp-kicker{
-    color: {{ readable_accent }} !important;
+    color: var(--melato-product-accent-readable, var(--text-primary)) !important;
   }
 
   /* Big headings: always white and bold */
@@ -92,8 +92,8 @@
   body[class*="template-product"] .melato-pdp-rebuild .pdp-section-head h2,
   body[class*="template-product"] .melato-pdp-rebuild [id^="PDPStory-"],
   body[class*="template-product"] .melato-pdp-rebuild [id^="PDPTech-"]{
-    color: #f5f1e8 !important;
-    font-weight: 950 !important;
+    color: var(--text-primary) !important;
+    font-weight: 400 !important;
   }
 
   body.template-product .melato-pdp-rebuild .pdp-detail-list li:before,
@@ -117,7 +117,7 @@
   body[class*="template-product"] .announcement-bar *,
   body[class*="template-product"] [class*="announcement"],
   body[class*="template-product"] [class*="announcement"] *{
-    color: {{ readable_accent }} !important;
+    color: var(--melato-product-accent-readable, var(--text-primary)) !important;
     border-color: color-mix(in srgb, {{ raw_accent }} 50%, transparent) !important;
   }
 </style>
@@ -129,12 +129,12 @@
         if ((el.textContent || '').trim().toLowerCase() === 'cut with intent.') {
           el.textContent = 'The story.';
         }
-        el.style.color = '#f5f1e8';
-        el.style.fontWeight = '950';
+        el.style.color = 'var(--text-primary)';
+        el.style.fontWeight = '400';
       });
       document.querySelectorAll('.melato-pdp-rebuild [id^="PDPTech-"]').forEach(function(el){
-        el.style.color = '#f5f1e8';
-        el.style.fontWeight = '950';
+        el.style.color = 'var(--text-primary)';
+        el.style.fontWeight = '400';
       });
     }
     if (document.readyState === 'loading') {

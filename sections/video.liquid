@@ -58,6 +58,8 @@
         <img
           src="{{ section.settings.cover_image | image_url: width: 1600 }}"
           alt="{{ section.settings.cover_image.alt | escape }}"
+          width="{{ section.settings.cover_image.width }}"
+          height="{{ section.settings.cover_image.height }}"
           loading="lazy"
           style="width:100%;height:100%;object-fit:cover;"
         >
@@ -88,7 +90,7 @@
   #MelatoVideo-{{ section.id }} {padding-block:0}
   #MelatoVideo-{{ section.id }} .melato-video-frame {aspect-ratio:auto!important;height:clamp(440px,68svh,760px)}
   #MelatoVideo-{{ section.id }} .melato-video-hero-content {position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;padding:clamp(28px,5vw,80px);padding-bottom:80px;color:#f5f1e8;background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.72));}
-  #MelatoVideo-{{ section.id }} h1 {max-width:900px;margin:0;font-family:var(--font-heading-family,sans-serif);font-size:clamp(48px,8vw,120px);line-height:.95;text-wrap:balance}
+  #MelatoVideo-{{ section.id }} h1 {color:#ffffff;max-width:900px;margin:0;font-family:var(--font-heading-family,sans-serif);font-size:clamp(48px,8vw,120px);line-height:.95;text-wrap:balance}
   #MelatoVideo-{{ section.id }} .melato-video-hero-actions {display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
   #MelatoVideo-{{ section.id }} .melato-video-hero-link {display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 22px;border:1px solid #f5f1e8;color:#f5f1e8;background:rgba(0,0,0,.4);text-decoration:none;font-size:12px;font-weight:700;letter-spacing:.08em}
   #MelatoVideo-{{ section.id }} .melato-video-hero-link--primary {background:#f5f1e8;color:#080808}

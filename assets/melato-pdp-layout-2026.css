@@ -26,13 +26,13 @@
 body.template-product,
 body.template-product .main-content,
 body.template-product .melato-pdp-rebuild {
-  background: #080808 !important;
+  background:var(--surface-page) !important;
 }
 
 body.template-product .melato-pdp-rebuild {
-  --pdp-bg: #080808 !important;
-  --pdp-surface: #111214 !important;
-  --pdp-text: #f5f1e8 !important;
+  --pdp-bg:var(--surface-page) !important;
+  --pdp-surface:var(--surface-studio) !important;
+  --pdp-text:var(--text-primary) !important;
 }
 
 @media (min-width: 1001px) {
@@ -45,8 +45,8 @@ body.template-product .melato-pdp-rebuild {
       "gallery specs"
       "gallery set"
       "gallery editorial" !important;
-    column-gap: 30px !important;
-    row-gap: 18px !important;
+    column-gap:var(--space-module) !important;
+    row-gap:32px !important;
     align-items: start !important;
   }
 

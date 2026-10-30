@@ -18,11 +18,11 @@
   --duration-sheet: 380ms;
 
   /* Specular Light & Translucent Materials */
-  --glass-header-bg: rgba(7, 7, 9, 0.82);
-  --glass-header-scrolled: rgba(5, 5, 7, 0.92);
-  --glass-drawer-bg: rgba(11, 11, 14, 0.88);
-  --glass-specular-border: 1px solid rgba(255, 255, 255, 0.08);
-  --glass-specular-top: 1px solid rgba(255, 255, 255, 0.12);
+  --glass-header-bg: var(--surface-page);
+  --glass-header-scrolled: var(--surface-page);
+  --glass-drawer-bg: var(--surface-page);
+  --glass-specular-border: 1px solid var(--border-subtle);
+  --glass-specular-top: 1px solid var(--border-subtle);
   --glass-blur-header: blur(24px) saturate(180%);
   --glass-blur-sheet: blur(28px) saturate(160%);
   --glass-blur-scrim: blur(14px) saturate(120%);
@@ -131,8 +131,8 @@ a.button-light:active,
 .mxh.is-scrolled,
 [data-mxh].is-scrolled {
   background: var(--glass-header-scrolled) !important;
-  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.5) !important;
+  border-bottom-color: var(--border-subtle) !important;
+  box-shadow: none !important;
 }
 
 /* Dimming & Depth Scrim Overlay */
@@ -170,7 +170,7 @@ a.button-light:active,
 
 /* Fullscreen Navigation Atelier Drawer Polish */
 .mxh__drawer {
-  background: rgba(8, 8, 10, 0.94) !important;
+  background: var(--surface-page) !important;
   backdrop-filter: var(--glass-blur-sheet) !important;
   -webkit-backdrop-filter: var(--glass-blur-sheet) !important;
   transition: opacity 320ms var(--ease-apple-spring),
@@ -280,7 +280,7 @@ h1,
 .melato-product-card .product-card__media {
   border-radius: 4px;
   overflow: hidden;
-  background: var(--color-surface, #121214);
+  background: var(--color-surface, var(--surface-page));
 }
 
 .product-card__img,
@@ -319,7 +319,7 @@ h1,
    ========================================================================== */
 
 .melato-accordion {
-  border-bottom: 1px solid var(--melato-line, rgba(255, 255, 255, 0.12));
+  border-bottom: 1px solid var(--melato-line, var(--border-subtle));
 }
 
 .melato-accordion summary {
@@ -434,10 +434,10 @@ h1,
   .drip-overlay {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    background-color: #08080a !important;
+    background-color: var(--surface-page) !important;
   }
 
   .drip-toast {
-    background-color: #f6f0e5 !important;
+    background-color: var(--surface-studio) !important;
   }
 }
