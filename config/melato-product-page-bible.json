@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0.0",
+  "schemaVersion": "1.1.0",
   "adopted": "2026-09-08",
   "status": "MANDATORY",
   "authority": "docs/MELATO_PRODUCT_PAGE_BIBLE.md",
@@ -12,8 +12,12 @@
     "maxContextualMerchandisingModules": 2,
     "relatedProductsLimit": 4,
     "fitGuideFallbackUrl": "/pages/size-guide",
-    "descriptionWordTarget": {"min": 35, "max": 80, "hardMaxWithoutOwnerApproval": 110},
-    "pdpBibleVersionMetafieldValue": "1.0.0"
+    "descriptionWordTarget": {
+      "min": 35,
+      "max": 80,
+      "hardMaxWithoutOwnerApproval": 110
+    },
+    "pdpBibleVersionMetafieldValue": "1.1.0"
   },
   "canonicalProductMetafields": {
     "subtitle": "single_line_text_field",
@@ -54,16 +58,65 @@
     "verifiedTechnicalEvidence": "melato_product_specification",
     "pdpPresentationAndRelationships": "product_metafields_custom_namespace"
   },
-  "photoStyles": ["Front", "Back", "Macro / Close-up", "Side", "Inside Look", "Model Posing"],
+  "photoStyles": [
+    "Front",
+    "Back",
+    "Macro / Close-up",
+    "Side",
+    "Inside Look",
+    "Model Posing"
+  ],
   "altTextPattern": "[Product Name] - [View Type] - [Colorway]",
   "sizes": {
-    "alphaApparel": ["XS", "S", "M", "L", "XL", "XXL"],
-    "waist": ["28", "29", "30", "31", "32", "34", "36", "38", "40"],
-    "footwear": ["6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "11.5", "12"],
-    "universal": ["ONE SIZE"],
-    "volume": ["10 mL", "30 mL", "50 mL", "100 mL"]
+    "alphaApparel": [
+      "XS",
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "waist": [
+      "28",
+      "29",
+      "30",
+      "31",
+      "32",
+      "34",
+      "36",
+      "38",
+      "40"
+    ],
+    "footwear": [
+      "6",
+      "6.5",
+      "7",
+      "7.5",
+      "8",
+      "8.5",
+      "9",
+      "9.5",
+      "10",
+      "10.5",
+      "11",
+      "11.5",
+      "12"
+    ],
+    "universal": [
+      "ONE SIZE"
+    ],
+    "volume": [
+      "10 mL",
+      "30 mL",
+      "50 mL",
+      "100 mL"
+    ]
   },
-  "optionNames": ["Size", "Color", "Volume"],
+  "optionNames": [
+    "Size",
+    "Color",
+    "Volume"
+  ],
   "pdpOrder": [
     "media",
     "name",
@@ -80,35 +133,153 @@
     "footer"
   ],
   "categoryMatrix": {
-    "apparel": {"required": ["Material", "Care", "Fit"], "conditional": ["Construction", "Complete the Set"]},
-    "denim": {"required": ["Material", "Care", "Fit", "Construction"], "conditional": ["Complete the Set"]},
-    "footwear": {"required": ["Material", "Care", "Fit", "Construction"], "conditional": ["Complete the Set"]},
-    "bags": {"required": ["Material", "Care"], "conditional": ["Construction", "Use"]},
-    "accessories": {"required": ["Material", "Care"], "conditional": ["Construction", "Fit", "Use"]},
-    "fragrance": {"required": ["Ingredients", "Use"], "conditional": []},
-    "other": {"required": [], "conditional": ["Material", "Care", "Fit", "Construction", "Use"]}
+    "apparel": {
+      "required": [
+        "Material",
+        "Care",
+        "Fit"
+      ],
+      "conditional": [
+        "Construction",
+        "Complete the Set"
+      ]
+    },
+    "denim": {
+      "required": [
+        "Material",
+        "Care",
+        "Fit",
+        "Construction"
+      ],
+      "conditional": [
+        "Complete the Set"
+      ]
+    },
+    "footwear": {
+      "required": [
+        "Material",
+        "Care",
+        "Fit",
+        "Construction"
+      ],
+      "conditional": [
+        "Complete the Set"
+      ]
+    },
+    "bags": {
+      "required": [
+        "Material",
+        "Care"
+      ],
+      "conditional": [
+        "Construction",
+        "Use"
+      ]
+    },
+    "accessories": {
+      "required": [
+        "Material",
+        "Care"
+      ],
+      "conditional": [
+        "Construction",
+        "Fit",
+        "Use"
+      ]
+    },
+    "fragrance": {
+      "required": [
+        "Ingredients",
+        "Use"
+      ],
+      "conditional": []
+    },
+    "other": {
+      "required": [],
+      "conditional": [
+        "Material",
+        "Care",
+        "Fit",
+        "Construction",
+        "Use"
+      ]
+    }
   },
   "recommendations": {
     "heading": "You might also like",
-    "priority": ["custom.related_products", "shopify_recommendations"],
-    "limit": 4
+    "priority": [
+      "custom.related_products",
+      "shopify_same_type_recommendations",
+      "new_arrivals_same_type",
+      "best_sellers_same_type"
+    ],
+    "limit": 4,
+    "curatedCrossTypeOverride": true,
+    "automaticSameTypeField": "product.type",
+    "fallbackWhenNoEligibleCandidates": true
   },
-  "recentlyViewed": {"heading": "Recently viewed", "required": true},
-  "completeTheSet": {"canonicalRelationship": "custom.companion_product"},
+  "recentlyViewed": {
+    "heading": "Recently viewed",
+    "required": true
+  },
+  "completeTheSet": {
+    "canonicalRelationship": "custom.companion_product"
+  },
   "contextualMerchandising": {
-    "approved": ["New Arrivals", "Accessories", "Fragrance", "Bags", "Denim", "The Uniform"],
-    "densityRule": {"fourOrMoreEnrichmentSections": 1, "threeOrFewerEnrichmentSections": 2},
-    "selection": {
-      "fragrance": ["New Arrivals", "Accessories"],
-      "bags": ["New Arrivals", "The Uniform"],
-      "accessories": ["New Arrivals", "The Uniform"],
-      "denim": ["New Arrivals", "The Uniform"],
-      "uniform": ["New Arrivals", "Accessories"],
-      "apparel": ["New Arrivals", "Accessories"],
-      "footwear": ["New Arrivals", "The Uniform"],
-      "other": ["New Arrivals", "Accessories"]
+    "approved": [
+      "New Arrivals",
+      "Accessories",
+      "Fragrance",
+      "Bags",
+      "Denim",
+      "The Uniform"
+    ],
+    "densityRule": {
+      "fourOrMoreEnrichmentSections": 1,
+      "threeOrFewerEnrichmentSections": 2
     },
-    "fallback": ["New Arrivals", "Accessories", "The Uniform", "Denim", "Bags", "Fragrance"],
+    "selection": {
+      "fragrance": [
+        "New Arrivals",
+        "Accessories"
+      ],
+      "bags": [
+        "New Arrivals",
+        "The Uniform"
+      ],
+      "accessories": [
+        "New Arrivals",
+        "The Uniform"
+      ],
+      "denim": [
+        "New Arrivals",
+        "The Uniform"
+      ],
+      "uniform": [
+        "New Arrivals",
+        "Accessories"
+      ],
+      "apparel": [
+        "New Arrivals",
+        "Accessories"
+      ],
+      "footwear": [
+        "New Arrivals",
+        "The Uniform"
+      ],
+      "other": [
+        "New Arrivals",
+        "Accessories"
+      ]
+    },
+    "fallback": [
+      "New Arrivals",
+      "Accessories",
+      "The Uniform",
+      "Denim",
+      "Bags",
+      "Fragrance"
+    ],
     "collectionHandles": {
       "New Arrivals": "new-arrivals",
       "Accessories": "accessories",
@@ -121,25 +292,61 @@
   "colorContract": {
     "background": "custom.background_hex_color_code",
     "foreground": "custom.foreground_hex_color_code",
-    "palette": ["custom.palette_1", "custom.palette_2", "custom.palette_3"],
+    "palette": [
+      "custom.palette_1",
+      "custom.palette_2",
+      "custom.palette_3"
+    ],
     "minimumTextContrast": 4.5,
     "rotationIntervalMs": 4200,
     "reducedMotionDisablesRotation": true,
-    "consumers": ["announcement_bar", "sticky_header_tint", "pdp_section_titles"]
+    "consumers": [
+      "announcement_bar",
+      "sticky_header_tint",
+      "pdp_section_titles"
+    ]
   },
   "shippingReturnsCopy": "Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.",
-  "prohibitedDuplicateClaims": ["secure checkout", "complimentary delivery", "returns accepted"],
+  "prohibitedDuplicateClaims": [
+    "secure checkout",
+    "complimentary delivery",
+    "returns accepted"
+  ],
   "qualityCopy": {
-    "allowedSparingly": ["premium", "refined", "distinctive", "high-quality", "sculpted", "structured", "soft", "dense", "lightweight", "limited"],
-    "prohibitedUnsubstantiated": ["best", "perfect", "top shelf", "world-class", "unmatched", "ultimate"]
+    "allowedSparingly": [
+      "premium",
+      "refined",
+      "distinctive",
+      "high-quality",
+      "sculpted",
+      "structured",
+      "soft",
+      "dense",
+      "lightweight",
+      "limited"
+    ],
+    "prohibitedUnsubstantiated": [
+      "best",
+      "perfect",
+      "top shelf",
+      "world-class",
+      "unmatched",
+      "ultimate"
+    ]
   },
   "seo": {
     "titlePattern": "[Product Name] | [Product Type] | Melato",
     "preferredTitleMaxCharacters": 60,
-    "metaDescriptionCharacters": {"min": 140, "max": 160}
+    "metaDescriptionCharacters": {
+      "min": 140,
+      "max": 160
+    }
   },
   "soldOutVariantPolicy": "VISIBLE_DISABLED",
-  "mediaPolicy": {"collages": "FORBIDDEN", "ghostMannequinDefault": "FORBIDDEN"},
+  "mediaPolicy": {
+    "collages": "FORBIDDEN",
+    "ghostMannequinDefault": "FORBIDDEN"
+  },
   "qa": {
     "requiresCategory": true,
     "requiresCollection": true,
