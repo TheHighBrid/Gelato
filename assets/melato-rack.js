@@ -739,6 +739,11 @@
     if (this.destroyed) return;
     var from = source.querySelector('[data-rack-link]').getBoundingClientRect();
     this.selected = index; this.current = data;
+    // A verified reverse photo remains accessible when intermediate angles are supplied.
+    // Do not overwrite a genuine 180-degree photograph in a 360-degree sequence.
+    if (data.back && data.angles && data.angles.length && !data.angles.some((view) => Number(view.degrees) === 180)) {
+      data.angles = [...data.angles, { degrees: 180, url: data.back }].sort((a, b) => Number(a.degrees) - Number(b.degrees));
+    }
     this.stage.classList.toggle('has-baked-hanger', !!data.bakedHanger);
     this.stage.classList.toggle('has-angle-views', !!(data.angles && data.angles.length));
     this.stage.setAttribute('aria-label', data.title);
@@ -746,7 +751,7 @@
     if (this.imgBlend) { this.imgBlend.hidden = true; this.imgBlend.removeAttribute('src'); }
     this.imgBack.hidden = !data.back;
     if (data.back) { this.imgBack.src = data.back; this.imgBack.alt = data.title + ', back'; } else this.imgBack.removeAttribute('src');
-    this.stage.querySelector('[data-rack-side="back"]').hidden = !data.back;
+    this.stage.querySelector('[data-rack-side="back"]').hidden = !data.back && !(data.angles && data.angles.some((view) => Number(view.degrees) === 180));
     if (this.openBtn) {
       this.openBtn.hidden = !(data.openViews && data.openViews.length);
       this.openBtn.setAttribute('aria-pressed', 'false');
@@ -872,7 +877,7 @@
     delete this.root.__mrack;
   };
 
-  function init() { document.querySelectorAll('[data-melato-rack]').forEach(function (root) { if (!root.__mrack) root.__mrack = new Rack(root); }); }
+  function init() { document.querySelectorAll('[data-melato-rack]').forEach((root) => { if (root.__mrack) return; const rack = new Rack(root); if (rack.abort) root.__mrack = rack; }); }
   window.MelatoRackAtelier = { init: init };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
   document.addEventListener('shopify:section:load', init);
