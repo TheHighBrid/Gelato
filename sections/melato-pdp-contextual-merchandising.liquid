@@ -5,7 +5,7 @@
 {% endcomment %}
 
 {%- liquid
-  assign type_down = product.product_type | downcase
+  assign type_down = product.type | downcase
   assign tags_down = product.tags | join: '|' | downcase
 
   assign family = 'other'
