@@ -84,3 +84,9 @@ test('assembly refuses output inside repository and source symlinks', async t =>
   assert.throws(() => f.prepareTheme(f), /symlink rejected/);
   assert.equal(f.temporaryFiles.exists('candidate'), false);
 });
+
+test('site header white chrome must not override collection masthead headers', () => {
+  const tail=read('assets/melato-storefront-tail.css');
+  assert.doesNotMatch(tail, /\.site-header,header\{/);
+  assert.match(tail, /\.shopify-section-header,#shopify-section-header,\.header-wrapper,\.site-header\{background:var\(--surface-page,#ffffff\)!important/);
+});
