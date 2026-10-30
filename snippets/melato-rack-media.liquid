@@ -1,0 +1,26 @@
+{% doc %}
+  Explicit approved transparent rack assets and multi-angle 360/open-view registries.
+  Format: front_asset|back_asset|angle_prefix:deg1,deg2,...|open_prefix:stage1,stage2
+  Unprepared products remain in their collection.
+  @param {product} product - Product whose rack views are requested
+{% enddoc %}
+{%- case product.handle -%}
+{%- when 'conquista-velour-track-jacket' -%}rack-conquista-view-0.webp|rack-conquista-view-135.webp|conquista:0,30,45,90,135|
+{%- when 'ojos-velour-track-jacket' -%}rack-ojos-view-0.webp|rack-ojos-view-180.webp|ojos:0,25,50,90,135,155,180,225,270,295,310,335|ojos:open
+{%- when 'crush-theory-velour-track-jacket' -%}rack-crush-view-0.webp|rack-crush-view-180.webp|crush:0,25,90,135,155,180,225,270,335|crush:open-half,open
+{%- when 'chu-velour-track-jacket' -%}rack-chu-view-0.webp|rack-chu-view-180.webp|chu:0,30,90,135,155,180,205,235,270,330|chu:open
+{%- when 'divididos-velour-track-jacket' -%}rack-divididos-velour-track-jacket-front.webp|rack-divididos-velour-track-jacket-back.webp|divididos:0,30,90,135,160,180,225,270,330|divididos:open-half,open
+{%- when 'shell-company-technical-track-jacket' -%}rack-shell-company-technical-track-jacket-front.webp|rack-shell-company-technical-track-jacket-back.webp|shell:0,25,45,90,135,180,225,270,315,335|shell:open-half,open
+{%- when 'offshore-account-panel-track-jacket' -%}rack-offshore-account-panel-track-jacket-front.webp|rack-offshore-account-panel-track-jacket-back.webp||
+{%- when 'hot-pursuit-panel-track-jacket' -%}rack-hot-pursuit-panel-track-jacket-front.webp|rack-hot-pursuit-panel-track-jacket-back.webp||
+{%- when 'burden-of-plush-velour-track-jacket' -%}rack-burden-of-plush-velour-track-jacket-front.webp|rack-burden-of-plush-velour-track-jacket-back.webp||
+{%- when 'ryu-velour-track-jacket' -%}rack-ryu-velour-track-jacket-front.webp|rack-ryu-velour-track-jacket-back.webp||
+{%- when 'reasonable-doubt-track-jacket' -%}rack-reasonable-doubt-track-jacket-front.webp|||
+{%- when 'cho-velour-track-jacket' -%}rack-cho-velour-track-jacket-front.webp|rack-cho-velour-track-jacket-back.webp||
+{%- when 'rex-x-fur-jacket-1' -%}rack-rex-x-fur-jacket-1-front.webp|||
+{%- when 'dress-code-rib-knit-zip-mini-dress' -%}rack-dress-code-rib-knit-zip-mini-dress-front.webp|||
+{%- when 'detour-tee' -%}rack-detour-tee-front.webp|||
+{%- when 'bordeaux-line-knit-polo' -%}rack-bordeaux-line-knit-polo-front.webp|||
+{%- when 'cold-shoulder-mockneck-top' -%}rack-cold-shoulder-mockneck-top-front.webp|||
+{%- when 'blush-ledger-satin-shirt' -%}rack-blush-ledger-satin-shirt-front.webp|||
+{%- endcase -%}

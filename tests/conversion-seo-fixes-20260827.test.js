@@ -32,7 +32,7 @@ test('trust and returns copy advertises complimentary delivery and protected fre
 
   assert.doesNotMatch(layout, /Secure checkout/i);
   assert.doesNotMatch(cart, /Secure checkout/i);
-  assert.ok(cart.includes('free returns within 30 days'));
+  assert.ok(cart.includes('returns on eligible items within 30 days'));
   assert.ok(cart.includes(freeReturnMethod));
   assert.ok(filters.includes(freeReturnMethod));
   assert.ok(filters.includes('Fair Use &amp; Return Protection'));

@@ -76,5 +76,10 @@ jobs:
       - name: Validate canonical Melato PDP contract
         run: node scripts/validate-melato-product-page-bible.mjs
 
+      - name: Install rack render test dependencies
+        run: npm install --prefix "$RUNNER_TEMP/melato-rack-tests" jsdom@26.1.0 liquidjs@10.30.0 --no-audit --no-fund
+
       - name: Verify luxury audit and live-theme reconciliation
         run: npm test
+        env:
+          NODE_PATH: ${{ runner.temp }}/melato-rack-tests/node_modules

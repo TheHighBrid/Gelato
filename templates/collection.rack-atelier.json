@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "rack": {
+      "type": "melato-rack",
+      "settings": {
+        "collection": "rack",
+        "max_items": 14,
+        "heading": "Off the rail",
+        "cta_label": "See availability",
+        "show_ticker": false,
+        "bg_color": "#FAF9F6",
+        "ink_color": "#22201E",
+        "padding_top": 64,
+        "padding_bottom": 40
+      }
+    }
+  },
+  "order": ["rack"]
+}

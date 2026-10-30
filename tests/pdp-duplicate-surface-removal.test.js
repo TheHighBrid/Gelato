@@ -6,16 +6,17 @@ const unification = fs.readFileSync('sections/melato-pdp-unification.liquid', 'u
 const defaultTemplate = fs.readFileSync('templates/product.json', 'utf8');
 const auditTemplate = fs.readFileSync('templates/product.melato-audit.json', 'utf8');
 
-test('duplicate PDP shipping and story surfaces are suppressed before paint', () => {
-  assert.match(unification, /\.pdp-shipping-returns[\s\S]*\.pdp-story[\s\S]*display:\s*none\s*!important/);
+test('canonical shipping microcopy remains visible while duplicate story is suppressed', () => {
+  assert.match(unification, /\.pdp-story\s*\{\s*display:\s*none\s*!important/);
   const hiddenRules = [...unification.matchAll(/([^{}]+)\{([^{}]*display:\s*none\s*!important[^{}]*)\}/g)];
-  assert.ok(hiddenRules.some(rule => rule[1].includes('.pdp-shipping-returns') && rule[1].includes('.pdp-story')));
+  assert.ok(hiddenRules.some(rule => rule[1].includes('.pdp-story')));
+  assert.ok(hiddenRules.every(rule => !rule[1].includes('.pdp-shipping-returns')));
   assert.ok(hiddenRules.every(rule => !/(?:^|,)\s*[^,{}]*\.pdp-spec-grid\s*(?:,|$)/.test(rule[1])), 'No hiding rule may target the canonical specification grid');
 });
 
 test('canonical Material Fit and Care specification grid remains in the live DOM', () => {
-  assert.match(unification, /querySelectorAll\('\.pdp-shipping-returns, \.pdp-story'\)/);
-  assert.doesNotMatch(unification, /querySelectorAll\('\.pdp-shipping-returns, \.pdp-story, \.pdp-spec-grid'\)/);
+  assert.match(unification, /querySelectorAll\('\.pdp-story'\)/);
+  assert.doesNotMatch(unification, /querySelectorAll\('\.pdp-shipping-returns/);
   assert.match(unification, /cleanText\(summary\) === 'construction'/);
   assert.match(unification, /details\.remove\(\)/);
 });
