@@ -1,0 +1,465 @@
+{
+  "date": "2026-10-23",
+  "project": "MDP",
+  "repository": "TheHighBrid/Gelato",
+  "branch": "feat/melato-luxury-transition",
+  "baseSha": "de423eebbe035108e3815298354388db93505c09",
+  "pullRequest": "https://github.com/TheHighBrid/Gelato/pull/111",
+  "issues": [
+    {
+      "key": "MDP-7",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: Method escapeHtml has 186 lines of code (limit is 50)",
+      "disposition": "implemented-pending-review",
+      "evidence": "Removed the object-indexed escapeHtml helper. Service-plan DOM construction uses short heading/details/actions helpers and textContent; no HTML escaping lookup or dynamic HTML string sink remains."
+    },
+    {
+      "key": "MDP-8",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-9",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-10",
+      "file": "scripts/audit-luxury-colors.mjs",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-11",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-12",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-13",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-14",
+      "file": "scripts/audit-luxury-colors.mjs",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-15",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-16",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-17",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: User controlled data in a `planResult.innerHTML` is an anti-pattern that can lead to XSS vulnerabilities",
+      "disposition": "implemented-pending-review",
+      "evidence": "Removed service-plan innerHTML rendering. Dynamic text is assigned through textContent, DOM nodes are constructed explicitly, and CTA protocols are restricted to http/https/mailto. Browser regression fails on the old javascript: URL and passes on the patch."
+    },
+    {
+      "key": "MDP-18",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-19",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-20",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-21",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This function expression can be turned into an arrow function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Accordion iteration callback changed to an arrow function without altering behavior."
+    },
+    {
+      "key": "MDP-22",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: This callback passed to forEach() iterable method should not return a value.",
+      "disposition": "implemented-pending-review",
+      "evidence": "forEach and event callbacks now use block bodies without accidentally returning classList.toggle/addEventListener results."
+    },
+    {
+      "key": "MDP-23",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-24",
+      "file": "assets/melato-dynamic-announcement.css",
+      "originalSummary": "Fix: Unknown rule scss_function-disallowed-list. Did you mean function-disallowed-list?",
+      "disposition": "blocked-analyzer-configuration",
+      "evidence": "Reproduced Stylelint unknown-rule failure with scss_function-disallowed-list and zero warnings with the supported function-disallowed-list on unchanged CSS. The invalid rule is absent from repository configuration and source. Codacy hosted configuration must be corrected; no code suppression was added."
+    },
+    {
+      "key": "MDP-25",
+      "file": "scripts/audit-luxury-colors.mjs",
+      "originalSummary": "Fix: The application dynamically constructs file or path information.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-26",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: User controlled data in methods like `innerHTML`, `outerHTML` or `document.write` is an anti-pattern that can lead to XSS vulnerabilities",
+      "disposition": "implemented-pending-review",
+      "evidence": "Removed service-plan innerHTML rendering. Dynamic text is assigned through textContent, DOM nodes are constructed explicitly, and CTA protocols are restricted to http/https/mailto. Browser regression fails on the old javascript: URL and passes on the patch."
+    },
+    {
+      "key": "MDP-27",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found mkdirSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-28",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Non-serializable expression must be wrapped with $(...)",
+      "disposition": "analyzer-false-positive",
+      "evidence": "Qwik serialization/$() rules applied to ordinary Node/browser JavaScript. This repository uses Next/React, plain DOM scripts and node:test, not Qwik resumability. Adding $() would introduce an undefined runtime dependency."
+    },
+    {
+      "key": "MDP-29",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: This callback passed to forEach() iterable method should not return a value.",
+      "disposition": "implemented-pending-review",
+      "evidence": "forEach and event callbacks now use block bodies without accidentally returning classList.toggle/addEventListener results."
+    },
+    {
+      "key": "MDP-30",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-31",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Non-serializable expression must be wrapped with $(...)",
+      "disposition": "analyzer-false-positive",
+      "evidence": "Qwik serialization/$() rules applied to ordinary Node/browser JavaScript. This repository uses Next/React, plain DOM scripts and node:test, not Qwik resumability. Adding $() would introduce an undefined runtime dependency."
+    },
+    {
+      "key": "MDP-32",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-33",
+      "file": "assets/melato-dynamic-announcement.js",
+      "originalSummary": "Fix: This variable e is unused.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Removed unused catch bindings and documented the storage-disabled fallback."
+    },
+    {
+      "key": "MDP-34",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-35",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: Non-serializable expression must be wrapped with $(...)",
+      "disposition": "analyzer-false-positive",
+      "evidence": "Qwik serialization/$() rules applied to ordinary Node/browser JavaScript. This repository uses Next/React, plain DOM scripts and node:test, not Qwik resumability. Adding $() would introduce an undefined runtime dependency."
+    },
+    {
+      "key": "MDP-36",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: This callback passed to forEach() iterable method should not return a value.",
+      "disposition": "implemented-pending-review",
+      "evidence": "forEach and event callbacks now use block bodies without accidentally returning classList.toggle/addEventListener results."
+    },
+    {
+      "key": "MDP-37",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: Non-serializable expression must be wrapped with $(...)",
+      "disposition": "analyzer-false-positive",
+      "evidence": "Qwik serialization/$() rules applied to ordinary Node/browser JavaScript. This repository uses Next/React, plain DOM scripts and node:test, not Qwik resumability. Adding $() would introduce an undefined runtime dependency."
+    },
+    {
+      "key": "MDP-38",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-39",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: This callback passed to forEach() iterable method should not return a value.",
+      "disposition": "implemented-pending-review",
+      "evidence": "forEach and event callbacks now use block bodies without accidentally returning classList.toggle/addEventListener results."
+    },
+    {
+      "key": "MDP-40",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-41",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-42",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-43",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-44",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: This callback passed to forEach() iterable method should not return a value.",
+      "disposition": "implemented-pending-review",
+      "evidence": "forEach and event callbacks now use block bodies without accidentally returning classList.toggle/addEventListener results."
+    },
+    {
+      "key": "MDP-45",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-46",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-47",
+      "file": "assets/melato-dynamic-announcement.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-48",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-49",
+      "file": "tests/theme-reconciliation.test.js",
+      "originalSummary": "Fix: Non-serializable expression must be wrapped with $(...)",
+      "disposition": "analyzer-false-positive",
+      "evidence": "Qwik serialization/$() rules applied to ordinary Node/browser JavaScript. This repository uses Next/React, plain DOM scripts and node:test, not Qwik resumability. Adding $() would introduce an undefined runtime dependency."
+    },
+    {
+      "key": "MDP-50",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: Non-serializable expression must be wrapped with $(...)",
+      "disposition": "analyzer-false-positive",
+      "evidence": "Qwik serialization/$() rules applied to ordinary Node/browser JavaScript. This repository uses Next/React, plain DOM scripts and node:test, not Qwik resumability. Adding $() would introduce an undefined runtime dependency."
+    },
+    {
+      "key": "MDP-51",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-52",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: This var should be declared at the root of the enclosing function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Replaced function-scoped var declarations with block-scoped let declarations in the flagged motion/announcement controllers; syntax and focused ESLint checks pass."
+    },
+    {
+      "key": "MDP-53",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found realpathSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-54",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found writeFileSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-55",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: Variable Assigned to Object Injection Sink",
+      "disposition": "implemented-pending-review",
+      "evidence": "Removed arbitrary property lookup on SERVICE_META. Only an own entry from Object.entries can select service metadata; __proto__ and constructor inputs fall back to fit. Both tested in Chromium."
+    },
+    {
+      "key": "MDP-56",
+      "file": "scripts/audit-luxury-colors.mjs",
+      "originalSummary": "Fix: Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-57",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found realpathSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-58",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found mkdirSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-59",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found readdirSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-60",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: Generic Object Injection Sink",
+      "disposition": "implemented-pending-review",
+      "evidence": "Removed arbitrary property lookup on SERVICE_META. Only an own entry from Object.entries can select service metadata; __proto__ and constructor inputs fall back to fit. Both tested in Chromium."
+    },
+    {
+      "key": "MDP-61",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found existsSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-62",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: Generic Object Injection Sink",
+      "disposition": "implemented-pending-review",
+      "evidence": "Removed the object-indexed escapeHtml helper. Service-plan DOM construction uses short heading/details/actions helpers and textContent; no HTML escaping lookup or dynamic HTML string sink remains."
+    },
+    {
+      "key": "MDP-63",
+      "file": "assets/melato-apple-design.js",
+      "originalSummary": "Fix: Generic Object Injection Sink",
+      "disposition": "implemented-pending-review",
+      "evidence": "Header traversal now uses for...of over the actual NodeList instead of dynamic indexed property access."
+    },
+    {
+      "key": "MDP-64",
+      "file": "scripts/audit-luxury-colors.mjs",
+      "originalSummary": "Fix: Found readdirSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-65",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found realpathSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-66",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: Unsafe assignment to innerHTML",
+      "disposition": "implemented-pending-review",
+      "evidence": "Removed service-plan innerHTML rendering. Dynamic text is assigned through textContent, DOM nodes are constructed explicitly, and CTA protocols are restricted to http/https/mailto. Browser regression fails on the old javascript: URL and passes on the patch."
+    },
+    {
+      "key": "MDP-67",
+      "file": "scripts/audit-luxury-colors.mjs",
+      "originalSummary": "Fix: Found existsSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-68",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-69",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found readFileSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    },
+    {
+      "key": "MDP-70",
+      "file": "assets/app.js",
+      "originalSummary": "Fix: Unexpected empty arrow function.",
+      "disposition": "implemented-pending-review",
+      "evidence": "Service worker rejection now emits a scoped console warning rather than an empty callback."
+    },
+    {
+      "key": "MDP-71",
+      "file": "scripts/prepare-reconciled-theme.mjs",
+      "originalSummary": "Fix: Found existsSync from package \"node:fs\" with non literal argument at index 0",
+      "disposition": "implemented-pending-review",
+      "evidence": "Filesystem operations now use a root-contained boundary with relative-path validation, traversal/absolute/NUL/drive/backslash rejection, component symlink checks, regular-file reads, exclusive new writes and private permissions. Test fixture reads/writes also use this boundary. Dynamic filenames are necessary for local theme traversal, not remote request inputs; syntactic scanner warnings may still need reviewed dismissal."
+    }
+  ]
+}

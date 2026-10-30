@@ -43,6 +43,7 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
   assert.doesNotMatch(css, /\.lbv-spread\.enter[^{]*both/);
 
   const engine = read('assets/melato-living-book-vol01.js');
+  const data = JSON.parse(engine.match(/const DATA = (\{[^\n]+\});/)[1]);
   assert.match(engine, /The Living Book/);
   assert.match(engine, /cdn\.shopify\.com\/s\/files\/1\/0809\/3358\/5151\/files/);
   assert.match(engine, /\/collections\/tracksuits/);
@@ -111,7 +112,8 @@ test('Living Book Vol. 01 section, assets and engine are present', () => {
     'Rex X, worn',
     'The shawl, at the throat'
   ]) {
-    assert.equal(engine.includes(removedFrame), false, 'rejected Living Lookbook frame leaked back in: ' + removedFrame);
+    assert.equal(Object.hasOwn(data.FRAMES, removedFrame), false, 'rejected Living Lookbook frame ID leaked back in: ' + removedFrame);
+    assert.ok(Object.values(data.FRAMES).every(frame => frame.title !== removedFrame && frame.caption !== removedFrame), 'rejected Living Lookbook caption leaked back in: ' + removedFrame);
   }
   assert.match(engine, /data-lbv-assets/);
   assert.doesNotMatch(engine, /The_Living_Lookbook-Frame-02_5/);

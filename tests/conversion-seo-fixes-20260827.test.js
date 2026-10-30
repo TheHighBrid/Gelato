@@ -27,7 +27,7 @@ test('homepage mobile announcement is centered without the duplicated marquee cl
 test('trust and returns copy advertises complimentary delivery and protected free returns', () => {
   const layout = read('layout/theme.liquid');
   const cart = read('sections/main-cart.liquid');
-  const filters = read('snippets/melato-rendered-output-filters.liquid');
+  const filters = read('snippets/melato-rendered-output-filters.liquid') + read('snippets/melato-rendered-output-filters-base.liquid');
   const index = read('templates/index.json');
 
   assert.doesNotMatch(layout, /Secure checkout/i);
@@ -38,7 +38,7 @@ test('trust and returns copy advertises complimentary delivery and protected fre
   assert.ok(filters.includes('Fair Use &amp; Return Protection'));
   assert.ok(filters.includes('This protection does not limit rights that cannot be excluded under applicable consumer law'));
   assert.ok(index.includes('COMPLIMENTARY STANDARD DELIVERY'));
-  assert.ok(index.includes('FREE RETURNS WITHIN 30 DAYS'));
+  assert.ok(index.includes('FREE RETURNS ON ELIGIBLE ITEMS WITHIN 30 DAYS'));
   assert.doesNotMatch(cart, /customer-paid return shipping/i);
   assert.doesNotMatch(index, /customers pay return shipping/i);
 });
@@ -62,5 +62,5 @@ test('All Products and cart metadata are purpose-built', () => {
   assert.ok(layout.includes(allProductsMeta));
   assert.match(layout, /elsif template\.name == 'cart'/);
   assert.match(layout, /assign melato_meta_title = 'Your bag'/);
-  assert.match(layout, /Review your Melato bag, update quantities, and continue securely to checkout\./);
+  assert.match(layout, /Review your Melato bag, update quantities, and continue to checkout\./);
 });

@@ -40,6 +40,7 @@
       assign collection_intro = 'Men’s clothing and accessories from the current Melato edit.'
   endcase
 -%}
+{% render "melato-collection-tabs" %}
 <section class="melato-collection" data-collection-root>
   <header class="melato-collection-header">
     {%- if collection.image -%}<div class="melato-collection-hero">{{ collection.image | image_url: width: 2000 | image_tag: class:'melato-collection-hero__image', loading:'eager', fetchpriority:'high', widths:'750,1100,1500,2000', sizes:'100vw', alt: collection.image.alt | default: collection.title }}<div class="melato-collection-hero__overlay" aria-hidden="true"></div><div class="melato-collection-hero__content">{%- else -%}<div class="melato-collection-header__text">{%- endif -%}

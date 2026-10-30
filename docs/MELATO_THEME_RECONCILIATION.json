@@ -1,0 +1,2277 @@
+{
+  "version": 1,
+  "capturedDate": "2026-10-23",
+  "repositoryBaseSha": "4581c1c676aad82bbf92bf5bee76acafe791e1ab",
+  "mainSha": "012a73fcca2e63e04e5a7c8e1e4afe8c9e45d3f9",
+  "themeId": "167790772479",
+  "themeName": "gelato-v1-00",
+  "themeUpdatedAt": "2026-10-15T18:19:13Z",
+  "completeInventory": true,
+  "settingsOverlay": "config/settings_data.json",
+  "decisions": [
+    {
+      "path": "assets/app.css",
+      "liveMd5": "35242df6e38eec67732fab4b28e53a08",
+      "liveBodySha256": "95fdb1fa3b8fdb233acdb288691f5cd17caa2eeffe83d134e091a3b61cc10151",
+      "decision": "remediate-live",
+      "reason": "Existing live dashboard styling retained with reviewed active/hover label contrast and screen-reader clipping corrections. Original liveBodySha256 remains immutable provenance.",
+      "candidateSha256": "1df850babf32a8067884840bc0615c71e94016d08fff511f26073c7920582732"
+    },
+    {
+      "path": "assets/app.js",
+      "liveMd5": "d0de65cde49d8e0e253ea4eb99cb1b0d",
+      "liveBodySha256": "d0f2e6f0a73037f0fdb937851aece54d664237caac0f7bff6e39ad78a732c742",
+      "decision": "remediate-live",
+      "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
+      "candidateSha256": "e51d4e64b552bd009f1dbe00eb48627149e7aed6f1f22d8ebb0f2c88ff517583"
+    },
+    {
+      "path": "assets/icon.svg",
+      "liveMd5": "afba34b2e2e1382ed7c20e9b9f57c33f",
+      "liveBodySha256": "3aa31627605e85ed5d2c41e6b37976827ec80af5d9407b83b5a204c21a3a73fd",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "3aa31627605e85ed5d2c41e6b37976827ec80af5d9407b83b5a204c21a3a73fd"
+    },
+    {
+      "path": "assets/lbv-astro-front.jpg",
+      "liveMd5": "5e136fc82c69589c0c7cae151a43a440",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "84467d2b494a98bd7e670d569f9943c474be3e81251d92cd26cdd6ba8d2c185c"
+    },
+    {
+      "path": "assets/lbv-astro-profile.jpg",
+      "liveMd5": "a83bead73d37513e33cc935fb6b19728",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b24ee195a1297962c4deef1b952b8f2d68059d71ff69978f7c9498054ccf6a3e"
+    },
+    {
+      "path": "assets/lbv-divididos-cast.jpg",
+      "liveMd5": "4ffca137b2380520fffa41d33668e0c1",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "42b7bee53acc50944c0769e8cdb561af0f3dc72530e3ceedbce1914106e2ecff"
+    },
+    {
+      "path": "assets/lbv-divididos-exit.jpg",
+      "liveMd5": "78c23e2a3e6b6ffe44c8bf86d186f7a5",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a1617910149e9c334a88229ca15ce4e470546c5e70e246294bc305f29d05cd6e"
+    },
+    {
+      "path": "assets/lbv-goldset-back.jpg",
+      "liveMd5": "1804e6922e145d3f54d9403230492c17",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b9706e586a3e04433504053562b4edb5764fe000e0cbc8ee3f42d38a5aa9ee9d"
+    },
+    {
+      "path": "assets/lbv-goldset-front.jpg",
+      "liveMd5": "ee550952cd12ba6c5e48f57f5b6d8851",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a673598001f28d0f252ad7a93bdbf1840b702c7ff8703be2f9102b21c75ea4d7"
+    },
+    {
+      "path": "assets/lbv-sidetape-back.jpg",
+      "liveMd5": "84d194a86a3a0e6061524ef243724348",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "73f677a85a9c2b41eaa4434f1db3427474e58358016dcdd49e1baa61feccc8c8"
+    },
+    {
+      "path": "assets/lbv-suit-back.jpg",
+      "liveMd5": "939311cab792c115907a887e037dc91b",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "5c32f8de9cd7854f3b323f629e184ae6e8f8d00ccf9507201756aec572897d87"
+    },
+    {
+      "path": "assets/lbv-waqaa-front.jpg",
+      "liveMd5": "a1e228d41ae3dacc7f95d76116a04f5f",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "611ea057e16a08c196a770bd9a85cd90ec9b58146ca554ebfae796fbec085259"
+    },
+    {
+      "path": "assets/melato-ai-concierge-widget.js",
+      "liveMd5": "2454530fc60b70200963f259ddac0cec",
+      "liveBodySha256": "d52b47acc0b6fbb8be73030a82cfdb8b1a70619a1f7b3a82577954904593505c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d52b47acc0b6fbb8be73030a82cfdb8b1a70619a1f7b3a82577954904593505c"
+    },
+    {
+      "path": "assets/melato-ann-color.js",
+      "liveMd5": "4049277da665d2cf8976a0449edb338a",
+      "liveBodySha256": "a9d9e7d90f9fb6899e71dd2e652a3613733621925d1a8b06d2539a18a9b36bcf",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a9d9e7d90f9fb6899e71dd2e652a3613733621925d1a8b06d2539a18a9b36bcf"
+    },
+    {
+      "path": "assets/melato-apple-design.css",
+      "liveMd5": "91fb9c866d38a4aa99977e858a3d4781",
+      "liveBodySha256": "cbfe39a7890969e227bdec58859b2d92070ae9d53602f2101604e7a0f46f463c",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "cbfe39a7890969e227bdec58859b2d92070ae9d53602f2101604e7a0f46f463c"
+    },
+    {
+      "path": "assets/melato-apple-design.js",
+      "liveMd5": "6a66cce00b61971a075c004ddcbf8c64",
+      "liveBodySha256": "177cd16017c4f3ccb7d80b98fe468dd74403778ea563530d69e205c187538de9",
+      "decision": "remediate-live",
+      "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
+      "candidateSha256": "3f915a0ad3e00c39084fa3c0fd3718e05ec6a60c9deecdfaa05cd5286d4b94fa"
+    },
+    {
+      "path": "assets/melato-audit-completion-2026.css",
+      "liveMd5": "c46a4ef699065bec65d872643fa5aeee",
+      "liveBodySha256": "95a481993d29d3d6af75163de0cdcb353cf2e378894ffcfa6809db69b7610eaf",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "95a481993d29d3d6af75163de0cdcb353cf2e378894ffcfa6809db69b7610eaf"
+    },
+    {
+      "path": "assets/melato-audit-completion-2026.js",
+      "liveMd5": "9383765881dd98bc7c28ba05dca6e1c7",
+      "liveBodySha256": "04e0810aea270f94abd627a3d2ecbcca92e82e494638e32760a46ae78511f5cf",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "04e0810aea270f94abd627a3d2ecbcca92e82e494638e32760a46ae78511f5cf"
+    },
+    {
+      "path": "assets/melato-audit-guard.js",
+      "liveMd5": "985b82afee06464d945a5ba0cac3b5ef",
+      "liveBodySha256": "cfbad89fdfa998bf09fc93069afda2f3ce53a7be39b445c7d625897699151de2",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "cfbad89fdfa998bf09fc93069afda2f3ce53a7be39b445c7d625897699151de2"
+    },
+    {
+      "path": "assets/melato-audit-nav-collections.js",
+      "liveMd5": "5462c0672a5012b4e92c412ee236203c",
+      "liveBodySha256": "6a40b01cecef63a38110a97ee2e47fbefa988766b8303ff46a17a6e740652aba",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository non-clipping desktop announcement layout, visible category links and full six-link navigation.",
+      "candidateSha256": "4eb1b4b854acee0ebf0d345a1abd1eef7a552f2f63e03c00d49a5c806b3b198c"
+    },
+    {
+      "path": "assets/melato-audit-ui-20260818.js",
+      "liveMd5": "c3122c6351b680ec22a701889a521e98",
+      "liveBodySha256": "4c67d1cc62f824df2a4af418f6594cfa14f4cdeaa9a6c914d2d51b91a4e3a254",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "4c67d1cc62f824df2a4af418f6594cfa14f4cdeaa9a6c914d2d51b91a4e3a254"
+    },
+    {
+      "path": "assets/melato-audit-upgrades.css",
+      "liveMd5": "c57202949ca56b9423d65aa928f8dd64",
+      "liveBodySha256": "2f29582a7f94acc03231bc352674a5f6f903c3712121b559d6b3470576c38fc5",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2f29582a7f94acc03231bc352674a5f6f903c3712121b559d6b3470576c38fc5"
+    },
+    {
+      "path": "assets/melato-audit-upgrades.js",
+      "liveMd5": "b79dad4a322cac2a5dc43b1d79e5d06e",
+      "liveBodySha256": "c29c7cc23f7c5bcf07bb104c63864401d1136eae117b14880960be418eaa5d3c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c29c7cc23f7c5bcf07bb104c63864401d1136eae117b14880960be418eaa5d3c"
+    },
+    {
+      "path": "assets/melato-august-2026-audit-fixes.css",
+      "liveMd5": "95dc266c4903f5564a6ac7980031d1e6",
+      "liveBodySha256": "f8f80ba8f9046109e1f062f43e618c4b01d0c9c1c691534cd9d55f60eaf9c5f6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "f8f80ba8f9046109e1f062f43e618c4b01d0c9c1c691534cd9d55f60eaf9c5f6"
+    },
+    {
+      "path": "assets/melato-august-2026-audit-fixes.js",
+      "liveMd5": "2569b413ceb7fe1b911f17767fb1ac20",
+      "liveBodySha256": "45d3b521ceb7a378cef8f7870a5eb74ee3bb3fe29f6e068aa7153ddde301c4b5",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "45d3b521ceb7a378cef8f7870a5eb74ee3bb3fe29f6e068aa7153ddde301c4b5"
+    },
+    {
+      "path": "assets/melato-back-in-stock.js",
+      "liveMd5": "d200e2c323d9defccf47dc957c3c75ae",
+      "liveBodySha256": "39f47ef2823868354f2b32e5e43ab7a1959c0b1284a5f18830cf81cd1bd607af",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "39f47ef2823868354f2b32e5e43ab7a1959c0b1284a5f18830cf81cd1bd607af"
+    },
+    {
+      "path": "assets/melato-cart-drawer.js",
+      "liveMd5": "6865a1ad16599e977eb9c0dbabc634b0",
+      "liveBodySha256": "03b33c365d68190137459a132eb8d216d2360f39ea9ca7de208558dd182257b7",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "03b33c365d68190137459a132eb8d216d2360f39ea9ca7de208558dd182257b7"
+    },
+    {
+      "path": "assets/melato-collection-filters.js",
+      "liveMd5": "64a459de9d9d9adaa0305c0e89783102",
+      "liveBodySha256": "0921993951be3e5873ba22535a2b16290a40928c6c26e839663145076e6779bf",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0921993951be3e5873ba22535a2b16290a40928c6c26e839663145076e6779bf"
+    },
+    {
+      "path": "assets/melato-collection-navigation.css",
+      "liveMd5": "e739cfe07d0f4644cb7c7341dd7ae2d8",
+      "liveBodySha256": "4399bc4726ad97aa1a2599883a9fd4fca35b4e28dab9fa69bce2137ad90daea6",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "4399bc4726ad97aa1a2599883a9fd4fca35b4e28dab9fa69bce2137ad90daea6"
+    },
+    {
+      "path": "assets/melato-complete-set.js",
+      "liveMd5": "415dea49ac7151be64c7115be18908aa",
+      "liveBodySha256": "21d51edc99806d4b5016a3cb092b6082885c099c6449ede03cc57a6bf3e41f3f",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "21d51edc99806d4b5016a3cb092b6082885c099c6449ede03cc57a6bf3e41f3f"
+    },
+    {
+      "path": "assets/melato-concierge.css",
+      "liveMd5": "161495b12fc4a7fed83f3b2c7b123c11",
+      "liveBodySha256": "b70b85baf26196b4b8727c034a7483e44fedfac672b084e4e348ba99ff322549",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b70b85baf26196b4b8727c034a7483e44fedfac672b084e4e348ba99ff322549"
+    },
+    {
+      "path": "assets/melato-concierge.js",
+      "liveMd5": "cb5cbae019cea1c4940377bd326d565b",
+      "liveBodySha256": "a4921345a75ba87654c2f6b5db2fe39eaf2a57480edbc2703d2318b9c268ec38",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a4921345a75ba87654c2f6b5db2fe39eaf2a57480edbc2703d2318b9c268ec38"
+    },
+    {
+      "path": "assets/melato-contact-gate.css",
+      "liveMd5": "1c2d4b031d51e14ea909017029c4393a",
+      "liveBodySha256": "bd45ef833ad579922c5333ab57b8daae0af299ad5e04f54122f96aff4f2684db",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "bd45ef833ad579922c5333ab57b8daae0af299ad5e04f54122f96aff4f2684db"
+    },
+    {
+      "path": "assets/melato-contact-gate.js",
+      "liveMd5": "1c2d4b031d51e14ea909017029c4393a",
+      "liveBodySha256": "bd45ef833ad579922c5333ab57b8daae0af299ad5e04f54122f96aff4f2684db",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "bd45ef833ad579922c5333ab57b8daae0af299ad5e04f54122f96aff4f2684db"
+    },
+    {
+      "path": "assets/melato-content-policy-20260811.js",
+      "liveMd5": "3cc559638fcba30b0b39d8a3b3de333a",
+      "liveBodySha256": "5e8b7496e754cef16d57f7ba5448c5f239e65391d9e5709665951769cf3a2383",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "5e8b7496e754cef16d57f7ba5448c5f239e65391d9e5709665951769cf3a2383"
+    },
+    {
+      "path": "assets/melato-dynamic-announcement.css",
+      "liveMd5": "234d848194b2c97f52513126baa9a773",
+      "liveBodySha256": "c8f9fa30e24318001ef20bd3e1bcaec3c316f34024c9fec61a07417d60372cd2",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "c8f9fa30e24318001ef20bd3e1bcaec3c316f34024c9fec61a07417d60372cd2"
+    },
+    {
+      "path": "assets/melato-dynamic-announcement.js",
+      "liveMd5": "63af7fc79e452345098476e35d2fc01f",
+      "liveBodySha256": "1df39442502305a19947ddf79f2c5d95b8c59d6b50d79bc1ffe65c1c21ca916d",
+      "decision": "remediate-live",
+      "reason": "Existing live source retained with MDP security/maintainability remediation. Original liveBodySha256 is immutable provenance; candidateSha256 identifies reviewed branch bytes. See docs/MDP_CODACY_REMEDIATION.md.",
+      "candidateSha256": "f7ea8856c5d59301637d60782a1975dad9c3368fdd8cad10e071b1056e4a7f0a"
+    },
+    {
+      "path": "assets/melato-dynamic-bar.js",
+      "liveMd5": "1f6463bbaede6e4736159c6ae9c89fad",
+      "liveBodySha256": "57c53d108e9eb2ae7562c842b2f8ac838af109f9ddb3cb01936b64c024911164",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "57c53d108e9eb2ae7562c842b2f8ac838af109f9ddb3cb01936b64c024911164"
+    },
+    {
+      "path": "assets/melato-enhancements.css",
+      "liveMd5": "11d8b242df7dc5d51cf754db19374667",
+      "liveBodySha256": "e35a29f181ef4d035925fa81183885f035c3c6fb34a87814298759e0ce60fba6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e35a29f181ef4d035925fa81183885f035c3c6fb34a87814298759e0ce60fba6"
+    },
+    {
+      "path": "assets/melato-enhancements.js",
+      "liveMd5": "ce52b95a7b370e87ba87c4ab77e64e77",
+      "liveBodySha256": "db2ecda0a856be83b948285178966a978c8c97cd9982e053306ee0cb27da6840",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "db2ecda0a856be83b948285178966a978c8c97cd9982e053306ee0cb27da6840"
+    },
+    {
+      "path": "assets/melato-gelato-hotfix-20260811.css",
+      "liveMd5": "cafb5ceb59cb9030cb4339caea8fb7ed",
+      "liveBodySha256": "bf7253eaa458a958b4bf8bfc3bdd9c48391efd2a8b00ae883c0a34c70e999c79",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "bf7253eaa458a958b4bf8bfc3bdd9c48391efd2a8b00ae883c0a34c70e999c79"
+    },
+    {
+      "path": "assets/melato-gelato-hotfix-20260811.js",
+      "liveMd5": "2fe55433f3e4d9138e739a823f71e175",
+      "liveBodySha256": "adbc5f39b13c94f6cb6e414d8d5bbcf03ee23b65fb3fffb399d6c3711debde12",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "adbc5f39b13c94f6cb6e414d8d5bbcf03ee23b65fb3fffb399d6c3711debde12"
+    },
+    {
+      "path": "assets/melato-header-footer-fix.css",
+      "liveMd5": "cf12782ea59c25ba92e7d11f435816fc",
+      "liveBodySha256": "1a4d4a91c88a9e298a0f53da6b0f33238f70f3c630d3112c8cb4f6f577cafbf8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "1a4d4a91c88a9e298a0f53da6b0f33238f70f3c630d3112c8cb4f6f577cafbf8"
+    },
+    {
+      "path": "assets/melato-header-footer-fix.js",
+      "liveMd5": "c660d76d410c6ea5ac8e28bbfd2990d0",
+      "liveBodySha256": "090f01b59e8bce7c34f0d13b4c00be9bd3e159c93a29f619b9fee5eef11483a7",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "090f01b59e8bce7c34f0d13b4c00be9bd3e159c93a29f619b9fee5eef11483a7"
+    },
+    {
+      "path": "assets/melato-header-logo-bigger.css",
+      "liveMd5": "deb8ebc82d49aff371252594106dc47a",
+      "liveBodySha256": "82c92e55b49fd44cae7eee22b496f32c7063f75c2a329a8fc4ca13bc8349ec6b",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "82c92e55b49fd44cae7eee22b496f32c7063f75c2a329a8fc4ca13bc8349ec6b"
+    },
+    {
+      "path": "assets/melato-hidden-ui-cleanup.css",
+      "liveMd5": "683e3dc5f6cc4425c6801c11d76748b4",
+      "liveBodySha256": "5ca78000d30072a24bd4014d06fcfb3e91842646d1a530bb24c816a0ce19eb02",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "5ca78000d30072a24bd4014d06fcfb3e91842646d1a530bb24c816a0ce19eb02"
+    },
+    {
+      "path": "assets/melato-house-collection.css",
+      "liveMd5": "149c24d745e3e907be5f2ab2685ce070",
+      "liveBodySha256": "1d27cc617d899f8487f9ce4bfc09c3e553a761e8df3172360bde20f195ff9801",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "1d27cc617d899f8487f9ce4bfc09c3e553a761e8df3172360bde20f195ff9801"
+    },
+    {
+      "path": "assets/melato-house-collection.js",
+      "liveMd5": "f4528c8f5ded44696518958d605d67a3",
+      "liveBodySha256": "1d44b2e754f194c2b8e1d8e7e087b8c9ec422dda640fe7643b8103111e2d86b2",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "1d44b2e754f194c2b8e1d8e7e087b8c9ec422dda640fe7643b8103111e2d86b2"
+    },
+    {
+      "path": "assets/melato-house-home.css",
+      "liveMd5": "a8f50ccac10b5e455a1f9c43596b9696",
+      "liveBodySha256": "b3011f5de135254f2801d49b3dc4c9883e7e9c36f597648c54ecf744178f0fbb",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b3011f5de135254f2801d49b3dc4c9883e7e9c36f597648c54ecf744178f0fbb"
+    },
+    {
+      "path": "assets/melato-house-home.js",
+      "liveMd5": "0561085b624c2b9a3d01398d900ba616",
+      "liveBodySha256": "a97adb00667256b5ee92916a34f197b5eecd2a8902cc2b53d01c58b2f795299a",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a97adb00667256b5ee92916a34f197b5eecd2a8902cc2b53d01c58b2f795299a"
+    },
+    {
+      "path": "assets/melato-house-legacy-bridge.js",
+      "liveMd5": "033b808781ca1cdb947f4ea50156e1ad",
+      "liveBodySha256": "3eece1077341bb7230cbc2fb6e0c32ce288d14c8befdb0f46797bbee5c960b7c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "3eece1077341bb7230cbc2fb6e0c32ce288d14c8befdb0f46797bbee5c960b7c"
+    },
+    {
+      "path": "assets/melato-house-pdp.css",
+      "liveMd5": "a4f55a1b829dc7286839418debeba10a",
+      "liveBodySha256": "ce9229955d44c0e566573716d5e8a761ba764fd106aa2a2dee047cad2079e597",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "ce9229955d44c0e566573716d5e8a761ba764fd106aa2a2dee047cad2079e597"
+    },
+    {
+      "path": "assets/melato-house-release-fixes.css",
+      "liveMd5": "7b88ea8f7b7453b0c1c8adf4277e5f84",
+      "liveBodySha256": "69580211aeed443a495ab355d090f2cd75f561be5d1cef0b5e45fce5e6501db6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "69580211aeed443a495ab355d090f2cd75f561be5d1cef0b5e45fce5e6501db6"
+    },
+    {
+      "path": "assets/melato-house-service.css",
+      "liveMd5": "63cbcb575a22ae7519e294bd57806339",
+      "liveBodySha256": "4852532225aa3b17faae587323e527ad76f02674cb595d1b26474d9a22fb8bb1",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "4852532225aa3b17faae587323e527ad76f02674cb595d1b26474d9a22fb8bb1"
+    },
+    {
+      "path": "assets/melato-house-utility.css",
+      "liveMd5": "d9a1bc6d5d826d881485906742aa0aaa",
+      "liveBodySha256": "37f4a852b65a0701ee419b879abccd29fae7601cf31a4f24f0cbd30ae3d3074a",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "37f4a852b65a0701ee419b879abccd29fae7601cf31a4f24f0cbd30ae3d3074a"
+    },
+    {
+      "path": "assets/melato-house-world.css",
+      "liveMd5": "586baf60de37228cf95ea1163655d8b0",
+      "liveBodySha256": "53948da7b338b2bb031add41c4c7cec79ae1b78c30916392134870e0e1b06f15",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "53948da7b338b2bb031add41c4c7cec79ae1b78c30916392134870e0e1b06f15"
+    },
+    {
+      "path": "assets/melato-house-world.js",
+      "liveMd5": "bdce17de98e9184f69e2a000ca044346",
+      "liveBodySha256": "cd26988ad160bcb0f943c64b3cefdb9a2e0629ef32f2c4a1f10a0bb74e5769b4",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "cd26988ad160bcb0f943c64b3cefdb9a2e0629ef32f2c4a1f10a0bb74e5769b4"
+    },
+    {
+      "path": "assets/melato-house.css",
+      "liveMd5": "49b2b19dbfca8928f5ce8e8435420289",
+      "liveBodySha256": "b48ec1acf30e45c8223ebc21d8d4504af44c1c9ec15eb5885a4739900369c058",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b48ec1acf30e45c8223ebc21d8d4504af44c1c9ec15eb5885a4739900369c058"
+    },
+    {
+      "path": "assets/melato-house.js",
+      "liveMd5": "d713e05229ceecd7dc50f38672d61cfc",
+      "liveBodySha256": "db26eb782b5d925633ee98204767d85a50dc1fa4212f016335ca63f28be1d8d3",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "db26eb782b5d925633ee98204767d85a50dc1fa4212f016335ca63f28be1d8d3"
+    },
+    {
+      "path": "assets/melato-info-legal-pages.css",
+      "liveMd5": "ec31f9154ce1babf7c4f93bea02f0eca",
+      "liveBodySha256": "d6a10677dcd9e9bea15bd3a95543e33d3c11cc7571d023c9a234e6742452adbe",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d6a10677dcd9e9bea15bd3a95543e33d3c11cc7571d023c9a234e6742452adbe"
+    },
+    {
+      "path": "assets/melato-living-book-casefile.css",
+      "liveMd5": "6407e39f213b0615d178184c50db735b",
+      "liveBodySha256": "c05e147a01d94d881519293cfbd90e1c079926652d8a7bc554ea8711d7fda8af",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c05e147a01d94d881519293cfbd90e1c079926652d8a7bc554ea8711d7fda8af"
+    },
+    {
+      "path": "assets/melato-living-book-casefile.js",
+      "liveMd5": "9864210f3cf08f7032ac9ab75db0e3ba",
+      "liveBodySha256": "37d4c55c7657cc36c3e7f700b2a11e08fe2bb086516bfed492b0ea902bd9837c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "37d4c55c7657cc36c3e7f700b2a11e08fe2bb086516bfed492b0ea902bd9837c"
+    },
+    {
+      "path": "assets/melato-living-book-director.css",
+      "liveMd5": "2cd98c44f5a21a809d305569c23ec815",
+      "liveBodySha256": "7ec142c53b4ee7f07539f9604bac0ebc2686f762482d557d732e47527ea1587c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "7ec142c53b4ee7f07539f9604bac0ebc2686f762482d557d732e47527ea1587c"
+    },
+    {
+      "path": "assets/melato-living-book-director.js",
+      "liveMd5": "d9456bbd24349347bb560783c464759f",
+      "liveBodySha256": "a15c56cbe936eaeeacc488cb6dbff6534c5232a8e5202651582badca4efec704",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a15c56cbe936eaeeacc488cb6dbff6534c5232a8e5202651582badca4efec704"
+    },
+    {
+      "path": "assets/melato-living-book-vol01.css",
+      "liveMd5": "4edf1a613ba4ba1b99501308abfdff19",
+      "liveBodySha256": "b7f4d876a7a659fad08b7d18ee802295bbfe36c0e28a5d3e8b85a2822439f5c3",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b7f4d876a7a659fad08b7d18ee802295bbfe36c0e28a5d3e8b85a2822439f5c3"
+    },
+    {
+      "path": "assets/melato-living-book-vol01.js",
+      "liveMd5": "93936cea052312bc08804d08332066bf",
+      "liveBodySha256": "7d5ab8eae7a2f3c55ed275d6a37be35dc1b7926b9b61472941221919995251e6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "7d5ab8eae7a2f3c55ed275d6a37be35dc1b7926b9b61472941221919995251e6"
+    },
+    {
+      "path": "assets/melato-living-look-drawer-legacy.js",
+      "liveMd5": "8e589de52b7af6ff7fecd407755bf322",
+      "liveBodySha256": "4513779add2bc57b6bdfdc59de0b2b2d2bef28b3af151ef25709082e8709dfbd",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "4513779add2bc57b6bdfdc59de0b2b2d2bef28b3af151ef25709082e8709dfbd"
+    },
+    {
+      "path": "assets/melato-living-look-drawer.css",
+      "liveMd5": "5e5f0583eb325656f82147ed00dbf403",
+      "liveBodySha256": "01b2aebd98c691669fce826dec0e213951cc71b81abd7453eae5004c23591675",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "01b2aebd98c691669fce826dec0e213951cc71b81abd7453eae5004c23591675"
+    },
+    {
+      "path": "assets/melato-living-look-drawer.js",
+      "liveMd5": "fb0efa25e35fe2cde2cd9f4fe6dd2738",
+      "liveBodySha256": "55cb4e98b9c0aa6ef2728498e73d3b1c1c46760d32ce2a5a73e3e83cebe7133e",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "55cb4e98b9c0aa6ef2728498e73d3b1c1c46760d32ce2a5a73e3e83cebe7133e"
+    },
+    {
+      "path": "assets/melato-living-lookbook-evidence.css",
+      "liveMd5": "69755542f3b283cb366f0369baf001d1",
+      "liveBodySha256": "656b7a14990cbf9d5b5d79a8f2b5ac27da6252304f69a8a5ee9e4467ebb770fb",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "656b7a14990cbf9d5b5d79a8f2b5ac27da6252304f69a8a5ee9e4467ebb770fb"
+    },
+    {
+      "path": "assets/melato-living-lookbook-evidence.js",
+      "liveMd5": "f88cf004baa11ebcfd534106df66bf1a",
+      "liveBodySha256": "9bf1c08b199a3f638c9fd08e7f13e8a27ae1040b11867c88030d8ae076614cab",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "9bf1c08b199a3f638c9fd08e7f13e8a27ae1040b11867c88030d8ae076614cab"
+    },
+    {
+      "path": "assets/melato-living-lookbook-image-repair.js",
+      "liveMd5": "c585270ebf1998ff79f126bb2b6e7ded",
+      "liveBodySha256": "c2afb36ee9d4a4c6d482deb15ef965acd3cc6756468bce44cf045ac5adabcd12",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c2afb36ee9d4a4c6d482deb15ef965acd3cc6756468bce44cf045ac5adabcd12"
+    },
+    {
+      "path": "assets/melato-living-lookbook-shop-v5.js",
+      "liveMd5": "bdd682297f2d7ea019dd718f12c24233",
+      "liveBodySha256": "56037f1f375ae512e9409f9429808f0f75af7c92c1b34849e67929abf0fbe0c0",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "56037f1f375ae512e9409f9429808f0f75af7c92c1b34849e67929abf0fbe0c0"
+    },
+    {
+      "path": "assets/melato-living-lookbook-shop.js",
+      "liveMd5": "ca0c056d694d0fe19b310cb941c2853f",
+      "liveBodySha256": "eb2393a4ec6cef45e786d244fb0aed20302f3a44619c4415d1d1f801465befa3",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "eb2393a4ec6cef45e786d244fb0aed20302f3a44619c4415d1d1f801465befa3"
+    },
+    {
+      "path": "assets/melato-mobile-collection-header-20260818.css",
+      "liveMd5": "61e4d9d7b7ebf393008dcfd0d94d56d2",
+      "liveBodySha256": "f37f20620994f8dc7e998a2333edf6d2a794cb13046f0af151a455a0c5989b9c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "f37f20620994f8dc7e998a2333edf6d2a794cb13046f0af151a455a0c5989b9c"
+    },
+    {
+      "path": "assets/melato-mobile-header-priority-20260818.css",
+      "liveMd5": "2f94a8ad49319dbf38e315031761aa2f",
+      "liveBodySha256": "0fdf5d7f397a6070a61acad1fe46b43e340ff0a1fe5d18aa113f20d2c76969e6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0fdf5d7f397a6070a61acad1fe46b43e340ff0a1fe5d18aa113f20d2c76969e6"
+    },
+    {
+      "path": "assets/melato-mobile-pdp-hotfix.css",
+      "liveMd5": "d64a49ab2497b934c02239e6a20526d7",
+      "liveBodySha256": "34b30945c1b5baa41d18ce4f0a27a3d0e1fb86260ee725d71bbc181aa7b146e9",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "34b30945c1b5baa41d18ce4f0a27a3d0e1fb86260ee725d71bbc181aa7b146e9"
+    },
+    {
+      "path": "assets/melato-mobile-qa-20260826.js",
+      "liveMd5": "abdc1dadc8b6400cffa37aeeb23573fe",
+      "liveBodySha256": "0465cb654a2712616757a3bf0565b8319349e74b0ca49ac94574bc98c7db8d33",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0465cb654a2712616757a3bf0565b8319349e74b0ca49ac94574bc98c7db8d33"
+    },
+    {
+      "path": "assets/melato-optimization-2026.css",
+      "liveMd5": "f7b344bad8a3074808599f1558d52f98",
+      "liveBodySha256": "fdf0f119b194f1489861cb4bf31875a3bda63f204c9a75fbcc09595aae494a0b",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "fdf0f119b194f1489861cb4bf31875a3bda63f204c9a75fbcc09595aae494a0b"
+    },
+    {
+      "path": "assets/melato-optimization-2026.js",
+      "liveMd5": "0b8e6deaad5ed8a729b9b5125f534808",
+      "liveBodySha256": "2f7e12bab41443ac990ed5463ebcf459ec0af197dd8212cf6dc9a4e686d51a3b",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2f7e12bab41443ac990ed5463ebcf459ec0af197dd8212cf6dc9a4e686d51a3b"
+    },
+    {
+      "path": "assets/melato-palette-logo-updated.css",
+      "liveMd5": "53240ff1d3f1a25aa764af846185e461",
+      "liveBodySha256": "6c951877565c0ec2ce546d5b55cfe8ce3e73a9b53a908b28f2410e142b582ec6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "6c951877565c0ec2ce546d5b55cfe8ce3e73a9b53a908b28f2410e142b582ec6"
+    },
+    {
+      "path": "assets/melato-palette-v3.css",
+      "liveMd5": "847754deb177cb12bdb860010d922bde",
+      "liveBodySha256": "ea0dcb3148fb060031eb1aa0c92f4f7dd86fa2de90016a983417efd253c7f381",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "ea0dcb3148fb060031eb1aa0c92f4f7dd86fa2de90016a983417efd253c7f381"
+    },
+    {
+      "path": "assets/melato-palette.css",
+      "liveMd5": "907c2141de5451f482ef1b861cd402b9",
+      "liveBodySha256": "f1d2b2453a7d34b8e636d1d5352b7774d6283a46fd7c80555ff226a9caa106ee",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "f1d2b2453a7d34b8e636d1d5352b7774d6283a46fd7c80555ff226a9caa106ee"
+    },
+    {
+      "path": "assets/melato-pdp-cleanup-20260818.css",
+      "liveMd5": "2822192f177051d3153623b174dd4f80",
+      "liveBodySha256": "411f25772ceb02532405d49df87888a7f752a5dc2563c409df2ad3afbe7b4c6a",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository static cleanup rules rather than relying on the obsolete document-wide mutation runtime.",
+      "candidateSha256": "39c3bc64c4fa809ec45620bdb365ec60470ce98ba8524869462dcbced08ca2ba"
+    },
+    {
+      "path": "assets/melato-pdp-cleanup-20260818.js",
+      "liveMd5": "50ed40acb54cd0e13412e7e8a9436f11",
+      "liveBodySha256": "d9a17bb95cdc41a2ae71de05c7147233b57f5e63372ac35706dc2daf727d68f5",
+      "decision": "retain-repository-fix",
+      "reason": "Keep deliberately inert P0 compatibility stub. Do not reintroduce the live DOM-removal MutationObserver loop.",
+      "candidateSha256": "f0106fbed3c5b77eab6d911b60b790dfc75a343a150019e8a391a9c90f73f239"
+    },
+    {
+      "path": "assets/melato-pdp-fit-sync-diagnostics.js",
+      "liveMd5": "2cdbbf68b01c90425c21b806b0dbb890",
+      "liveBodySha256": "5e53d2fdc7a53c69834e0ba303034147a7a4aa45a67f365e489a59651f028c0d",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "5e53d2fdc7a53c69834e0ba303034147a7a4aa45a67f365e489a59651f028c0d"
+    },
+    {
+      "path": "assets/melato-pdp-fit-sync.css",
+      "liveMd5": "7f1aee9d6c8fa000ae915620543423ac",
+      "liveBodySha256": "2818f2ae2bcbd1e855b1369a5d3e07d638fd84cec8331733a17e6bd735eff0f0",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2818f2ae2bcbd1e855b1369a5d3e07d638fd84cec8331733a17e6bd735eff0f0"
+    },
+    {
+      "path": "assets/melato-pdp-layout-2026.css",
+      "liveMd5": "c10724a168d5ca8716defbc3bd06a778",
+      "liveBodySha256": "97dc4ae256144cecde2c75ec0249ed1c686e99551f5bd30c5e3660dfd8db90b6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "97dc4ae256144cecde2c75ec0249ed1c686e99551f5bd30c5e3660dfd8db90b6"
+    },
+    {
+      "path": "assets/melato-pdp-polish.js",
+      "liveMd5": "601c23cee30cf7771cc29a32435c4f5a",
+      "liveBodySha256": "3fec5e64f948c8027dcaadc1ca6eedf2ff9f2bc2f0b2c67ca3a12f0e4791c284",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "3fec5e64f948c8027dcaadc1ca6eedf2ff9f2bc2f0b2c67ca3a12f0e4791c284"
+    },
+    {
+      "path": "assets/melato-premium-audit-fixes.css",
+      "liveMd5": "4c160133e2cfef950c90efdf7022c60f",
+      "liveBodySha256": "bb004e20253a408cb00b6dcd092a1e3f27112a04f8a6339ac6992c590dd1cd81",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "bb004e20253a408cb00b6dcd092a1e3f27112a04f8a6339ac6992c590dd1cd81"
+    },
+    {
+      "path": "assets/melato-site-cleanup-20260811.css",
+      "liveMd5": "0358295ce60aec053139fd47cb2d611a",
+      "liveBodySha256": "b1b2ce65e15eb39fba8b69c3e0dca5684e599dcaefc5a8413f6f285ee2f419ef",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "b1b2ce65e15eb39fba8b69c3e0dca5684e599dcaefc5a8413f6f285ee2f419ef"
+    },
+    {
+      "path": "assets/melato-site-cleanup-20260811.js",
+      "liveMd5": "2672a395143e54bca9fad64d9dc6011a",
+      "liveBodySha256": "d6552324da45e9862065e666fcbed232e7e055061586ae4cd21bc1208f85b0a4",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d6552324da45e9862065e666fcbed232e7e055061586ae4cd21bc1208f85b0a4"
+    },
+    {
+      "path": "assets/melato-storefront-tail.css",
+      "liveMd5": "bf2da51246771e3fd03076ca049a27bd",
+      "liveBodySha256": "907b17795bb0724511964c735f8c36d40ef67726f2b67a7338701cab3edcf011",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "907b17795bb0724511964c735f8c36d40ef67726f2b67a7338701cab3edcf011"
+    },
+    {
+      "path": "assets/melato-theme.css",
+      "liveMd5": "f3eb2e3db3dca8dd2ecbc930737bb075",
+      "liveBodySha256": "cf244e3368dfc01379cc627a8f183bc2f26a8b67c239ab599b468d55a854beb6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "cf244e3368dfc01379cc627a8f183bc2f26a8b67c239ab599b468d55a854beb6"
+    },
+    {
+      "path": "assets/melato-theme.js",
+      "liveMd5": "f3fb7de873af8916967cf9a1dcec60cc",
+      "liveBodySha256": "7f0c6d943ca34f73952eaf7c330bfec5ae529f6054ede37508e8dc0b1abdc375",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "7f0c6d943ca34f73952eaf7c330bfec5ae529f6054ede37508e8dc0b1abdc375"
+    },
+    {
+      "path": "assets/melato-ui-enhancements-check.txt",
+      "liveMd5": "6b76aa15f961db85e3145d7491107f42",
+      "liveBodySha256": "d5117e048a7bb2b6778a7b27e964eda0bef06afe2edb71c448c92e0dc0745eaf",
+      "decision": "exclude-probe",
+      "reason": "Unreferenced one-off text probe; no storefront behavior or theme configuration.",
+      "candidateSha256": null
+    },
+    {
+      "path": "assets/melato-world-orb.css",
+      "liveMd5": "3d46ca09840b55f2d9084f673a5c562a",
+      "liveBodySha256": "34c18026e6add12ec14ae1e048c6703848616d9a5a837393a20c08741a61e9ee",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "34c18026e6add12ec14ae1e048c6703848616d9a5a837393a20c08741a61e9ee"
+    },
+    {
+      "path": "assets/melato-world-orb.js",
+      "liveMd5": "8890cc6f3e2896e728e7852ff5835629",
+      "liveBodySha256": "f4613720f58c7b06a852b854d73b4dd63d13612acd49e17819fbce87c364d065",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "f4613720f58c7b06a852b854d73b4dd63d13612acd49e17819fbce87c364d065"
+    },
+    {
+      "path": "assets/melato-zara-product.css",
+      "liveMd5": "5c0dbcdaa0e7e6c179d275f91117365c",
+      "liveBodySha256": "fae82bc77769817ef6038d8e100230522420ab65100972b6a39a9f8efb91878a",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "fae82bc77769817ef6038d8e100230522420ab65100972b6a39a9f8efb91878a"
+    },
+    {
+      "path": "assets/melato-zara-product.js",
+      "liveMd5": "3b67658defe16c8c58eb605a3df86013",
+      "liveBodySha256": "54ca62595f4e4c29bb4a5f5e5d7a9fcf872275b6e34d919be45ebab3bc685310",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "54ca62595f4e4c29bb4a5f5e5d7a9fcf872275b6e34d919be45ebab3bc685310"
+    },
+    {
+      "path": "assets/premium-enhancements.css",
+      "liveMd5": "1191a5c4911e9b608d1bf459d122356c",
+      "liveBodySha256": "18dba2bb8a52ebcfea5ae935a703c6fe8b927d88bd69d790852ab96f3fecc673",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "18dba2bb8a52ebcfea5ae935a703c6fe8b927d88bd69d790852ab96f3fecc673"
+    },
+    {
+      "path": "assets/premium-enhancements.js",
+      "liveMd5": "0084d39d17955723b789ec66292001b9",
+      "liveBodySha256": "0b4b5dcef62e3fc1348ea1c52163edc401556ec202b36cc451ac6e16afbfd13f",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0b4b5dcef62e3fc1348ea1c52163edc401556ec202b36cc451ac6e16afbfd13f"
+    },
+    {
+      "path": "assets/theme.css",
+      "liveMd5": "de2bab941a0b731c5f03f377155648f0",
+      "liveBodySha256": "b9655ae6ff2d3bdb65e8bd35b669b5e71898e52b500ad8326457cc4437d43f59",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b9655ae6ff2d3bdb65e8bd35b669b5e71898e52b500ad8326457cc4437d43f59"
+    },
+    {
+      "path": "assets/theme.js",
+      "liveMd5": "3401a0041db36fb19e95491c680351c2",
+      "liveBodySha256": "11b9034e9c0fd11bfe27be659ee54c5be6bec310fb980625a50865d4806a64c5",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "11b9034e9c0fd11bfe27be659ee54c5be6bec310fb980625a50865d4806a64c5"
+    },
+    {
+      "path": "blocks/ai_gen_block_1462ce9.liquid",
+      "liveMd5": "158bede07676ee17b2a59798303e1433",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a59bd44ec6cd6758860fdb9e8961d7e279432195652a7f0fcb0ea47bdea53e15"
+    },
+    {
+      "path": "blocks/ai_gen_block_264325d.liquid",
+      "liveMd5": "fb1696aaf75e20eeef31c545568c638a",
+      "liveBodySha256": null,
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e757a02a0e2fbaa999744744e57fb1a50b6cf5f135a3d554008d686ca6195993"
+    },
+    {
+      "path": "config/settings_data.json",
+      "liveMd5": "27f70bfbd085ddb0bdeae0a6aeb99454",
+      "liveBodySha256": "9b5d49f254b44940cac43d61f6181e8b7baca01ac5e5fd889c8146f37e7fdf46",
+      "decision": "private-overlay",
+      "reason": "Keep live merchant values out of Git. Candidate assembler requires the exact captured live settings checksum and overlays those bytes locally.",
+      "candidateSha256": null
+    },
+    {
+      "path": "config/settings_schema.json",
+      "liveMd5": "bcc0031dd8667c8f4115771c44cfe55d",
+      "liveBodySha256": "c728690d34aa354d73d74478ddfd520be5f4dc9cb35fb787898f94ce39ca45c7",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c728690d34aa354d73d74478ddfd520be5f4dc9cb35fb787898f94ce39ca45c7"
+    },
+    {
+      "path": "layout/password.liquid",
+      "liveMd5": "9d9ba75930a99f52f993731bd21f6296",
+      "liveBodySha256": "2bd84e7e8e34c9278dd5662588aa6df08302969d82a895ec866d13c40e07a723",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2bd84e7e8e34c9278dd5662588aa6df08302969d82a895ec866d13c40e07a723"
+    },
+    {
+      "path": "layout/theme.liquid",
+      "liveMd5": "ece3feaea1dfb8b7615b8c1e9cbf6819",
+      "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
+      "decision": "import-live",
+      "reason": "Preserve five existing live resource inclusions with their relative load order; keep main layout content otherwise unchanged.",
+      "candidateSha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b"
+    },
+    {
+      "path": "locales/ar.json",
+      "liveMd5": "f99042591b38107477bbf0e9010b4d0b",
+      "liveBodySha256": "22c6411af39e56a6e6f18ca50116ae215d3a3da0a0d201722ebe2bb93b3e1a9e",
+      "decision": "import-live",
+      "reason": "Preserve current Arabic secure-checkout translation; no other locale values differ.",
+      "candidateSha256": "22c6411af39e56a6e6f18ca50116ae215d3a3da0a0d201722ebe2bb93b3e1a9e"
+    },
+    {
+      "path": "locales/en.default.json",
+      "liveMd5": "8a7b5e36964ba508c8447cef6b1b7802",
+      "liveBodySha256": "6d600dd01f1dcfe156c49e77ebe5c403fc39db006999fd7aac3aee9baacc5ee8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "6d600dd01f1dcfe156c49e77ebe5c403fc39db006999fd7aac3aee9baacc5ee8"
+    },
+    {
+      "path": "locales/en.default.schema.json",
+      "liveMd5": "332517c022ac08a5c8f170251c000df5",
+      "liveBodySha256": "b42895ffb48039e01f5230c5006ec2a3786c2e8d1775efe2fe3677b80fbeaba0",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "58e26976111191f026eb15742eb24b31b197c84771ebf0469c6b48d024e81b5d"
+    },
+    {
+      "path": "locales/fr.json",
+      "liveMd5": "d014ca80d6c6b13f37e3d9ee913899b0",
+      "liveBodySha256": "4ea2c11cbc4a1c5a8dfbaea03e4e229e38925a5c5afd3aede180068105fe98d5",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "4ea2c11cbc4a1c5a8dfbaea03e4e229e38925a5c5afd3aede180068105fe98d5"
+    },
+    {
+      "path": "sections/announcement-marquee.liquid",
+      "liveMd5": "907bdbd9fb145ddb5b84ad4de6769609",
+      "liveBodySha256": "41b2d6723162d3d2775823dff87fe83c5498fdb8103066f20e674c4d408441f0",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "41b2d6723162d3d2775823dff87fe83c5498fdb8103066f20e674c4d408441f0"
+    },
+    {
+      "path": "sections/brand-story.liquid",
+      "liveMd5": "ccbaba1a1a9e08ccd2e55a235953ba62",
+      "liveBodySha256": "47a0e51b9eb60f2c068cf262be46dacc9460ebe95e8ec667484665802a3ee686",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "47a0e51b9eb60f2c068cf262be46dacc9460ebe95e8ec667484665802a3ee686"
+    },
+    {
+      "path": "sections/complete-the-set.liquid",
+      "liveMd5": "dfa95519cd42af1d60230040f3c377fa",
+      "liveBodySha256": "a94164937728611bdf2be88db6ffe4d062d301cb6aa10cba5079815cd06390f8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a94164937728611bdf2be88db6ffe4d062d301cb6aa10cba5079815cd06390f8"
+    },
+    {
+      "path": "sections/concierge-strip.liquid",
+      "liveMd5": "7acacd83471268865152ff55489c61bd",
+      "liveBodySha256": "e16201c579b00b736e94143bdbb73faf06c3f365d0269d67a83e588436d249a2",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e16201c579b00b736e94143bdbb73faf06c3f365d0269d67a83e588436d249a2"
+    },
+    {
+      "path": "sections/drop-countdown.liquid",
+      "liveMd5": "5b346440e008d487ac975d4207c59f13",
+      "liveBodySha256": "e2d3bf290ca0b80865754ed553041b4ecf68b458cb38b2e66394d033954e1099",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e2d3bf290ca0b80865754ed553041b4ecf68b458cb38b2e66394d033954e1099"
+    },
+    {
+      "path": "sections/drop-signup.liquid",
+      "liveMd5": "5bba0fb66d9c91602a1f66b32aa23763",
+      "liveBodySha256": "0203113971f19652b2a343e0e5b834aeeeed302bf9c1811221207d4cf197560e",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0203113971f19652b2a343e0e5b834aeeeed302bf9c1811221207d4cf197560e"
+    },
+    {
+      "path": "sections/featured-collection.liquid",
+      "liveMd5": "f27fe33b866b41ae44da8e9ae0a33c0f",
+      "liveBodySha256": "d0b12fe5c0739af27b98905cc4404470bc6f46ad12ae75c04170b66ffc7d7da8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d0b12fe5c0739af27b98905cc4404470bc6f46ad12ae75c04170b66ffc7d7da8"
+    },
+    {
+      "path": "sections/FIX-04_seo-meta-patches.liquid",
+      "liveMd5": "45c7cd5dea653366c79128508ecaf3ac",
+      "liveBodySha256": "a5e48633a32793d33ee7c840f631b245f789ff8bd3850a06ce7e49caf84b9b30",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a5e48633a32793d33ee7c840f631b245f789ff8bd3850a06ce7e49caf84b9b30"
+    },
+    {
+      "path": "sections/hero-video.liquid",
+      "liveMd5": "fa196a756784d68bebc92b7f127b3a5f",
+      "liveBodySha256": "f7e8bf4680b8cb1f40e89da338f27f06d4db2414bf1d047504a7f29595f4fa14",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository secondary h2; primary shopping hero already owns h1. No asset or creative change.",
+      "candidateSha256": "e93f0c6cb0462ea897ce7ceb8b53840116632b046041d0ba8025b21398aa1441"
+    },
+    {
+      "path": "sections/image-with-text.liquid",
+      "liveMd5": "493147298ebfa15210b3fc8cc4d0afad",
+      "liveBodySha256": "43128e78c54a8dd1637ad34c329c11e36f8781727d03e0e34f57f0feae72faf0",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "43128e78c54a8dd1637ad34c329c11e36f8781727d03e0e34f57f0feae72faf0"
+    },
+    {
+      "path": "sections/living-lookbook-contact-gate.liquid",
+      "liveMd5": "f88b3567cfa6fdce3d2a60c04a2397ed",
+      "liveBodySha256": "c2461afcc7e838016a4dc69c17cc304e5fc0ec27c1389851df2968ebe98b9ca6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c2461afcc7e838016a4dc69c17cc304e5fc0ec27c1389851df2968ebe98b9ca6"
+    },
+    {
+      "path": "sections/main-404.liquid",
+      "liveMd5": "ba2781c28686c2701f9bdd563b419b9c",
+      "liveBodySha256": "c427b5c8557164628f28a5954ddb7b324d1e6ff6ecc9819142e25a271084a0fe",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c427b5c8557164628f28a5954ddb7b324d1e6ff6ecc9819142e25a271084a0fe"
+    },
+    {
+      "path": "sections/main-account.liquid",
+      "liveMd5": "880a6d8a133ab72497137dbb704900cf",
+      "liveBodySha256": "2b480593bedd73d2503dfdbda5bf8790567c09a46575322213ccfe291b566855",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2b480593bedd73d2503dfdbda5bf8790567c09a46575322213ccfe291b566855"
+    },
+    {
+      "path": "sections/main-addresses.liquid",
+      "liveMd5": "6e4c5849167a81b8476c2f8e7db89fa1",
+      "liveBodySha256": "00f6349dc0a44403c033902946dee44d16e82b008430e7d4bb369ab4d6bf5fb5",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "00f6349dc0a44403c033902946dee44d16e82b008430e7d4bb369ab4d6bf5fb5"
+    },
+    {
+      "path": "sections/main-article.liquid",
+      "liveMd5": "c3d402dd67433904ae82e801d90b2bd5",
+      "liveBodySha256": "54dde4ab42ba2c218c1adf96f43bf0d22a824a0b8a4f938c66bb030706049dc8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "54dde4ab42ba2c218c1adf96f43bf0d22a824a0b8a4f938c66bb030706049dc8"
+    },
+    {
+      "path": "sections/main-blog.liquid",
+      "liveMd5": "aa191cc15d05f31880143627d32fe52a",
+      "liveBodySha256": "5bd0b23e0c4bc282d56e2db27e8e211e4bace858fa7fc81b27061df24bebf91c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "5bd0b23e0c4bc282d56e2db27e8e211e4bace858fa7fc81b27061df24bebf91c"
+    },
+    {
+      "path": "sections/main-cart.liquid",
+      "liveMd5": "385231c829e64cec32f80a7c9115ea79",
+      "liveBodySha256": "75ecf01b2d0e9b2aafd94b0709af1941a11b010cac6aa044c34a62e5a4eb84c1",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "75ecf01b2d0e9b2aafd94b0709af1941a11b010cac6aa044c34a62e5a4eb84c1"
+    },
+    {
+      "path": "sections/main-collection.liquid",
+      "liveMd5": "f6d5723af87fe6a72d8a1aea0a584c5f",
+      "liveBodySha256": "37288f17f6556e9697fe4d166fba35b4c82bf90477884b0871f6a8b37e00ecc2",
+      "decision": "import-live",
+      "reason": "Preserve live collection navigation snippet inclusion; retain all repository collection behavior.",
+      "candidateSha256": "37288f17f6556e9697fe4d166fba35b4c82bf90477884b0871f6a8b37e00ecc2"
+    },
+    {
+      "path": "sections/main-login.liquid",
+      "liveMd5": "d855489003a7649e01b189d35e9ad1e8",
+      "liveBodySha256": "4f342e811a062b0f046cd48e8e24aa8bf12ceb60bbed52eaa515aed7f4fe942d",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "4f342e811a062b0f046cd48e8e24aa8bf12ceb60bbed52eaa515aed7f4fe942d"
+    },
+    {
+      "path": "sections/main-order.liquid",
+      "liveMd5": "1e4045bd2bc75b3dc039929060bd1312",
+      "liveBodySha256": "5de79a9739990e8d04d4986cec4026697e29cf014f1a5bc371734d054a8f3a65",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "5de79a9739990e8d04d4986cec4026697e29cf014f1a5bc371734d054a8f3a65"
+    },
+    {
+      "path": "sections/main-page.liquid",
+      "liveMd5": "dbc234c1fac849edd9bb44a2e0496980",
+      "liveBodySha256": "cc240551fa0f18684051ec3dd6f7fef884189e4ded29acd29877cc07999c60d5",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "cc240551fa0f18684051ec3dd6f7fef884189e4ded29acd29877cc07999c60d5"
+    },
+    {
+      "path": "sections/main-product.liquid",
+      "liveMd5": "bc8ea8318069681de5fb935a6bf767c5",
+      "liveBodySha256": "8f4249e73146f06ecd394ba1907a2884e34e4e1c97126ac5a39acd7a43c2ef97",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "8f4249e73146f06ecd394ba1907a2884e34e4e1c97126ac5a39acd7a43c2ef97"
+    },
+    {
+      "path": "sections/main-register.liquid",
+      "liveMd5": "0a66403479c0ac47682c79796433b8e2",
+      "liveBodySha256": "c0c51f8840cc57643a87209361e52c4fa1fcb340a4b7fedffe4b364412712078",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c0c51f8840cc57643a87209361e52c4fa1fcb340a4b7fedffe4b364412712078"
+    },
+    {
+      "path": "sections/melato-ai-concierge-section.liquid",
+      "liveMd5": "d41d8cd98f00b204e9800998ecf8427e",
+      "liveBodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sections/melato-announcement-bar.liquid",
+      "liveMd5": "099664e798de4ede127ecfe75540293d",
+      "liveBodySha256": "2af76cad21c626ede64810b3a28574955a955c5c5c51175ae685a916161c6689",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository desktop full-message readability fix; preserve live dismissal/rotation resources separately.",
+      "candidateSha256": "f2b3865debb6c411987ccc06ddbf6f9265d660a61018af3e3a39382dae338d94"
+    },
+    {
+      "path": "sections/melato-brand-editorial-block.liquid",
+      "liveMd5": "59955d79f4f93fc46bb0f4e0287800ca",
+      "liveBodySha256": "7a64852ab8f74d566601cd70623e9ff2a00fbf842d022560ffd5b41d9d5e86f0",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "7a64852ab8f74d566601cd70623e9ff2a00fbf842d022560ffd5b41d9d5e86f0"
+    },
+    {
+      "path": "sections/melato-care-library.liquid",
+      "liveMd5": "1fa456034132b2d1fd6a382362f5d8ad",
+      "liveBodySha256": "ae3ff87e54bce32f13a41ee3a29528889fa356561202d2bb3a929f56dfe2325f",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "ae3ff87e54bce32f13a41ee3a29528889fa356561202d2bb3a929f56dfe2325f"
+    },
+    {
+      "path": "sections/melato-collection-cro-fixes.liquid",
+      "liveMd5": "ed6748f6fd98e4aad70236f2b1235135",
+      "liveBodySha256": "070a3c8767b1e39bf32d9db7ee4885b67f096d092dc3f7f84949b866efb3c214",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "070a3c8767b1e39bf32d9db7ee4885b67f096d092dc3f7f84949b866efb3c214"
+    },
+    {
+      "path": "sections/melato-complete-the-set.liquid",
+      "liveMd5": "90512777a8fcbdcae67d8685622ae57d",
+      "liveBodySha256": "41d76bbd4daad88692a295e8a4ed91e5d3d3e946972367ee2bc7a59a203b7207",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "41d76bbd4daad88692a295e8a4ed91e5d3d3e946972367ee2bc7a59a203b7207"
+    },
+    {
+      "path": "sections/melato-complete-uniform.liquid",
+      "liveMd5": "fa879461db0adba27a97dad571674c98",
+      "liveBodySha256": "26b84c2a948cec423987b232d9c9bb6a7cec8d88763a2bc30b1fcd314331f703",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "26b84c2a948cec423987b232d9c9bb6a7cec8d88763a2bc30b1fcd314331f703"
+    },
+    {
+      "path": "sections/melato-contact-upgrade.liquid",
+      "liveMd5": "b503c25bae06caa2d8522e9826367e6b",
+      "liveBodySha256": "2e2f10b97e4d7e8012a12aadc425175fc3922ff4244cd694f33c16776ea435d2",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2e2f10b97e4d7e8012a12aadc425175fc3922ff4244cd694f33c16776ea435d2"
+    },
+    {
+      "path": "sections/melato-digital-maison-suite.liquid",
+      "liveMd5": "29e2802b182b5fcb2d445af10cebcc19",
+      "liveBodySha256": "a94f397a16e987592b97e9fe0539e04ce459373abc79cf5d1e9e8ac4ab87d697",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a94f397a16e987592b97e9fe0539e04ce459373abc79cf5d1e9e8ac4ab87d697"
+    },
+    {
+      "path": "sections/melato-faq-upgrade.liquid",
+      "liveMd5": "dd93330b2bb046f730a006a914bec528",
+      "liveBodySha256": "9228364f2c848dfd99b9d542b5b6cd0462eb7013d2cb73800307c7d3c6a50f7b",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "9228364f2c848dfd99b9d542b5b6cd0462eb7013d2cb73800307c7d3c6a50f7b"
+    },
+    {
+      "path": "sections/melato-fit-quiz.liquid",
+      "liveMd5": "9b06abfff1ca0f1ff48df16f2ab4431f",
+      "liveBodySha256": "405fc73629c7f48c3c0c8db69b807ee597d0f4ea3d1d26b39396db353e5e46b2",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "405fc73629c7f48c3c0c8db69b807ee597d0f4ea3d1d26b39396db353e5e46b2"
+    },
+    {
+      "path": "sections/melato-footer.liquid",
+      "liveMd5": "d02575db9391845edf308af795510075",
+      "liveBodySha256": "c605189a651e73e81e6e2180462677ffd6216a1365708fdb09c8d6d8e271c039",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c605189a651e73e81e6e2180462677ffd6216a1365708fdb09c8d6d8e271c039"
+    },
+    {
+      "path": "sections/melato-fragrance-product.liquid",
+      "liveMd5": "8c538d9ee21c04a1aef1f0abafc326f6",
+      "liveBodySha256": "0ca144bac8169977ea14d88148010de6034225b9538b2f4bdfd663044419ac4b",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0ca144bac8169977ea14d88148010de6034225b9538b2f4bdfd663044419ac4b"
+    },
+    {
+      "path": "sections/melato-header.liquid",
+      "liveMd5": "f6f61c598ab1e375e788687a3ad53b1d",
+      "liveBodySha256": "e3ccaa8f546f64f0cc1216ea39eb7b212e8261e5d5b7a415321dcc139817b1bc",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e3ccaa8f546f64f0cc1216ea39eb7b212e8261e5d5b7a415321dcc139817b1bc"
+    },
+    {
+      "path": "sections/melato-hero.liquid",
+      "liveMd5": "82e25ce57a3f4cb168f3e7bade7bd552",
+      "liveBodySha256": "8980c7e4f8b07510a29f0e461adc3856f1ff4913ab638c361864862303a6deed",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "8980c7e4f8b07510a29f0e461adc3856f1ff4913ab638c361864862303a6deed"
+    },
+    {
+      "path": "sections/melato-home-conversion.liquid",
+      "liveMd5": "edd40b41bd4a76abb37a69e3f4bf32f9",
+      "liveBodySha256": "ca3075328a287922358997454bd88f545290c2a533d157db89ff33202daa2e1b",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository secondary h2 and its matching CSS; no new hero design.",
+      "candidateSha256": "55f8d94e18a10a3bfae48db46fb3655ae3b27fc7b239735cf2a8db4969041818"
+    },
+    {
+      "path": "sections/melato-home-house.liquid",
+      "liveMd5": "4b7a67b0785fcb4c2fdc30a10a72760c",
+      "liveBodySha256": "95b790d9ac738dba959234956a10bd0fbf55e298490c3d22ec803f336bbada57",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "95b790d9ac738dba959234956a10bd0fbf55e298490c3d22ec803f336bbada57"
+    },
+    {
+      "path": "sections/melato-living-book-casefile.liquid",
+      "liveMd5": "e88537160300485de24b4458dcfdc01c",
+      "liveBodySha256": "349337c13f51f26ee03bc04754ccf649d3d5d384a67fc5716cc792e06d04f0aa",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "349337c13f51f26ee03bc04754ccf649d3d5d384a67fc5716cc792e06d04f0aa"
+    },
+    {
+      "path": "sections/melato-living-book-director.liquid",
+      "liveMd5": "14bcd38e9aa80bab90907bfb4806e490",
+      "liveBodySha256": "a430ba8465de497aab656cd3b12c5c7a799887763e49e8fe5a51bbe706aff251",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a430ba8465de497aab656cd3b12c5c7a799887763e49e8fe5a51bbe706aff251"
+    },
+    {
+      "path": "sections/melato-living-book-vol01.liquid",
+      "liveMd5": "021d94a5e1c8186b207e9dfe594e7ddb",
+      "liveBodySha256": "96295646cf3e99670ae04fbcc0cffdf5bfe3fc2640166c34eb4cd7cdc5028a0f",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "96295646cf3e99670ae04fbcc0cffdf5bfe3fc2640166c34eb4cd7cdc5028a0f"
+    },
+    {
+      "path": "sections/melato-living-lookbook-20260901.liquid",
+      "liveMd5": "9d5025431560bb7855a9c791a7dc1397",
+      "liveBodySha256": "688b275017b6b5d1cc0f3b8e66dcd59ec92e6f5074dd22e49b235b56a3ab4caf",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "688b275017b6b5d1cc0f3b8e66dcd59ec92e6f5074dd22e49b235b56a3ab4caf"
+    },
+    {
+      "path": "sections/melato-living-lookbook-curation-fixes.liquid",
+      "liveMd5": "649ce565a75b757c3dfd938052ef7fe3",
+      "liveBodySha256": "e597350132767f8624894057fb6a4b1f601843c9b2698f5f44335872940a9e41",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e597350132767f8624894057fb6a4b1f601843c9b2698f5f44335872940a9e41"
+    },
+    {
+      "path": "sections/melato-living-lookbook-evidence.liquid",
+      "liveMd5": "ff6e07e2cb94846d2d563d830467a21f",
+      "liveBodySha256": "b79c5a7a1658a1612c5c7353a2ecbcad143c0461f21d726b2d76234b069479f4",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b79c5a7a1658a1612c5c7353a2ecbcad143c0461f21d726b2d76234b069479f4"
+    },
+    {
+      "path": "sections/melato-living-lookbook-frame-blocklist.liquid",
+      "liveMd5": "d5fcb561e90d3fca34ad13542ff766b7",
+      "liveBodySha256": "c87b849a81067a0680a5fbbbbb1e92d8db1eb04172d38565adf5491a84c0908e",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c87b849a81067a0680a5fbbbbb1e92d8db1eb04172d38565adf5491a84c0908e"
+    },
+    {
+      "path": "sections/melato-living-lookbook-old.liquid",
+      "liveMd5": "5f65176e6620a2fd8b4c022a840b32db",
+      "liveBodySha256": "d9c06df952c0c6d18e19ed88c5a429f100b25a39ea2626a81ab5e43a80d7e8b3",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d9c06df952c0c6d18e19ed88c5a429f100b25a39ea2626a81ab5e43a80d7e8b3"
+    },
+    {
+      "path": "sections/melato-living-lookbook.liquid",
+      "liveMd5": "60a96d8ce5f13a6b5284f4de2010f39a",
+      "liveBodySha256": "7b34953dba2f00e95a4eaeabcf53e681fb91b7e8ea075ffb7a1ce95f2cea31ba",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "7b34953dba2f00e95a4eaeabcf53e681fb91b7e8ea075ffb7a1ce95f2cea31ba"
+    },
+    {
+      "path": "sections/melato-lookbook.liquid",
+      "liveMd5": "779a2ea451cabcf0a6144e887718bdff",
+      "liveBodySha256": "af9508e7e0028aeb0d4ae6235e85c1a14bcd95c06909f09336a09fe04424dcde",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "af9508e7e0028aeb0d4ae6235e85c1a14bcd95c06909f09336a09fe04424dcde"
+    },
+    {
+      "path": "sections/melato-luxury-product-page.liquid",
+      "liveMd5": "9bf9b6c2574dbbf0988fcfe53bf7210e",
+      "liveBodySha256": "e1331330c14259385a405879adf82bcdd1a5c113bb3c5f871a6cb6c6ae9913b8",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository evidence-driven technical/category sections and safer policies; reject the older generic live 30-day-return surface.",
+      "candidateSha256": "0b1482eb82584efeb031c5ae929a902858e8064f1c9273086b36621535a164ad"
+    },
+    {
+      "path": "sections/melato-main-search.liquid",
+      "liveMd5": "ca67037763ed87fe14c4c697471849e4",
+      "liveBodySha256": "8a5dd2e008c5b3ff822c76406e81b68fd8b9c9fc1af0140e54cf7aedbfe8c184",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "8a5dd2e008c5b3ff822c76406e81b68fd8b9c9fc1af0140e54cf7aedbfe8c184"
+    },
+    {
+      "path": "sections/melato-ovum-home-redesign.liquid",
+      "liveMd5": "d41d8cd98f00b204e9800998ecf8427e",
+      "liveBodySha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "sections/melato-pdp-content-patch.liquid",
+      "liveMd5": "990856bc2e39fe9de7ae26b41406fbef",
+      "liveBodySha256": "93e654eb98d283d065b4f9ed1d49f02d9f30943b26198fad14fb77c5b0c90268",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "93e654eb98d283d065b4f9ed1d49f02d9f30943b26198fad14fb77c5b0c90268"
+    },
+    {
+      "path": "sections/melato-pdp-contextual-merchandising.liquid",
+      "liveMd5": "cbbb7ff5935c8f2bf866842000890131",
+      "liveBodySha256": "405087ff07a89d52105b0cc2ab1124940b141169d637f42b4c8aae23a2f68b90",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "405087ff07a89d52105b0cc2ab1124940b141169d637f42b4c8aae23a2f68b90"
+    },
+    {
+      "path": "sections/melato-pdp-currency-enforcer.liquid",
+      "liveMd5": "030375718fd20144451a30b14303fa85",
+      "liveBodySha256": "7c9e8688c3e5da47156d18258ac0192b2a72f8d74a3d6f872163ddd0f2a3bac1",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "7c9e8688c3e5da47156d18258ac0192b2a72f8d74a3d6f872163ddd0f2a3bac1"
+    },
+    {
+      "path": "sections/melato-pdp-product-type-semantics.liquid",
+      "liveMd5": "937266b0e2f3045234dff294eca7a349",
+      "liveBodySha256": "8dd0e479900028b1789f0796f0b243e673ac0f26c3f09b1d3c942b7c9caf45ff",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "8dd0e479900028b1789f0796f0b243e673ac0f26c3f09b1d3c942b7c9caf45ff"
+    },
+    {
+      "path": "sections/melato-pdp-story-tech-minimized.liquid",
+      "liveMd5": "0c617f11b6d9f42d5cdbc297178b28f0",
+      "liveBodySha256": "11fd7301c1fac180e7ab72a435757b838c652470556ec211d18e644580dd3f2c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "11fd7301c1fac180e7ab72a435757b838c652470556ec211d18e644580dd3f2c"
+    },
+    {
+      "path": "sections/melato-pdp-unification.liquid",
+      "liveMd5": "a02b162a2751d09e4fd431bd4c586cb7",
+      "liveBodySha256": "b094e0f5ea84a38013016f79a9e6c36a2702fa98ebcdfd98d6b2fdee34dfb1cc",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "b094e0f5ea84a38013016f79a9e6c36a2702fa98ebcdfd98d6b2fdee34dfb1cc"
+    },
+    {
+      "path": "sections/melato-popup-calendar.liquid",
+      "liveMd5": "76ad85458554fe5bec04c8fdd1153f1c",
+      "liveBodySha256": "263ca4cb5b9b7c9b9230c5c15e5f09b22cb33c0035ee30cdca4681b2023e3714",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository ISO-date rollover and archive logic; do not restore past dates as upcoming.",
+      "candidateSha256": "c30680745b6f48659f2b5ddcef04c5fd10eee1b5e6311deafa3d3707c90cc2f6"
+    },
+    {
+      "path": "sections/melato-preview-products.liquid",
+      "liveMd5": "e60ef72e93e88b8720b24edb9eb6e4df",
+      "liveBodySha256": "8e4abaa3a4996b686cc13ae4162d88f7e03c78140a163f9c15980fc2754f3d13",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "8e4abaa3a4996b686cc13ae4162d88f7e03c78140a163f9c15980fc2754f3d13"
+    },
+    {
+      "path": "sections/melato-product-page-clean.liquid",
+      "liveMd5": "9227f13d13a7cdf4ef1ed98f9c90d051",
+      "liveBodySha256": "ea29f87cff61869e6c5c08c9463d0239b75ac79aa718d2cc56f0583d6035da9d",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "ea29f87cff61869e6c5c08c9463d0239b75ac79aa718d2cc56f0583d6035da9d"
+    },
+    {
+      "path": "sections/melato-product-page-rebuild.liquid",
+      "liveMd5": "7db420d6bae690a3f04b96bced65566c",
+      "liveBodySha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "dee5898b9960f43937cdd65467c9d4a84ff66dabc83f120f93ecc8c9a90fa760"
+    },
+    {
+      "path": "sections/melato-product-proof-bar.liquid",
+      "liveMd5": "13e4edc1e066b7f26003cd9c7189c5d9",
+      "liveBodySha256": "11c51d16a6ca22ca7eef5644310dbbb1e69548eee3fb751035336f5c7b5fce7e",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "11c51d16a6ca22ca7eef5644310dbbb1e69548eee3fb751035336f5c7b5fce7e"
+    },
+    {
+      "path": "sections/melato-product-proof-integrity.liquid",
+      "liveMd5": "af8661ea1f387e41ff616d11d3137c49",
+      "liveBodySha256": "d98f6519291fca00934e57070f2fd594611091ccf11fc0293d0e436bf413ad2a",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d98f6519291fca00934e57070f2fd594611091ccf11fc0293d0e436bf413ad2a"
+    },
+    {
+      "path": "sections/melato-product-safe-accent.liquid",
+      "liveMd5": "ffd2b503ef1b17495dbe27617b6389a6",
+      "liveBodySha256": "7792acad8db40c261cbe5d123e8244e092267e27ccabdc939bf640e2dfbf76b2",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "7792acad8db40c261cbe5d123e8244e092267e27ccabdc939bf640e2dfbf76b2"
+    },
+    {
+      "path": "sections/melato-product-trust-accordions.liquid",
+      "liveMd5": "b22060c594a92c09bbebdcb3863b5be9",
+      "liveBodySha256": "48fe373176b0b028928b6d3f28eb90d6fb76522b99b46c8ae6fb8db14d7cd8bf",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "48fe373176b0b028928b6d3f28eb90d6fb76522b99b46c8ae6fb8db14d7cd8bf"
+    },
+    {
+      "path": "sections/melato-related-products.liquid",
+      "liveMd5": "88e8ba90c8ea6d89367a3ef094480cdc",
+      "liveBodySha256": "061fabe22bec2422a87be919f2575d6392df48cc8114862cddd6bf771867cd49",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "061fabe22bec2422a87be919f2575d6392df48cc8114862cddd6bf771867cd49"
+    },
+    {
+      "path": "sections/melato-service-hero.liquid",
+      "liveMd5": "24afbca4ee23f9c95c6a3bdc9a2d8222",
+      "liveBodySha256": "588b51cb2704be424ebcfc471f374e8186e6a742fc17d8b905ce98ec51bf1592",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "588b51cb2704be424ebcfc471f374e8186e6a742fc17d8b905ce98ec51bf1592"
+    },
+    {
+      "path": "sections/melato-support-form.liquid",
+      "liveMd5": "03199d53241a4e98fc7618dce26cfcfb",
+      "liveBodySha256": "e818f25fef3e923af196ca7c690ce51f2b43c6b130e398eb8199291f291060b5",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e818f25fef3e923af196ca7c690ce51f2b43c6b130e398eb8199291f291060b5"
+    },
+    {
+      "path": "sections/melato-variant-media-sync.liquid",
+      "liveMd5": "0bfa4588875c45fd7aa9ec71ee6cba08",
+      "liveBodySha256": "a49cb1ff443c4a02c6ed184e55d0f872fe87d3b13edd16afbaa3db6b4231205c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a49cb1ff443c4a02c6ed184e55d0f872fe87d3b13edd16afbaa3db6b4231205c"
+    },
+    {
+      "path": "sections/melato-world-living-intro.liquid",
+      "liveMd5": "6469b188e4dbd9f68e8dffc4dc983272",
+      "liveBodySha256": "67c64baa8de2171f8e860d0ae6b2e7aac544fb498e28804d7bb7674ef5e274d7",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "67c64baa8de2171f8e860d0ae6b2e7aac544fb498e28804d7bb7674ef5e274d7"
+    },
+    {
+      "path": "sections/melato-world-orb.liquid",
+      "liveMd5": "bc102433686f8ec225689939091c5001",
+      "liveBodySha256": "c13f276c97438f4bad29f860d69c6e498a7d1a3c2e7828abac76ca380c0c459b",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c13f276c97438f4bad29f860d69c6e498a7d1a3c2e7828abac76ca380c0c459b"
+    },
+    {
+      "path": "sections/melato-world-page.liquid",
+      "liveMd5": "080a7e5d326047aea1b02294afd0df53",
+      "liveBodySha256": "9db51a5056bfb4639ed4713b4a35312c44a7df773dc79fa3141930901a905fb9",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "9db51a5056bfb4639ed4713b4a35312c44a7df773dc79fa3141930901a905fb9"
+    },
+    {
+      "path": "sections/melato-zara-product.liquid",
+      "liveMd5": "2d6185e0c09495d7eeba635775143253",
+      "liveBodySha256": "e0a02afab6a9a937f6027b73d32964f3e330314339a9284a6630f565ec660e21",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e0a02afab6a9a937f6027b73d32964f3e330314339a9284a6630f565ec660e21"
+    },
+    {
+      "path": "sections/mll.liquid",
+      "liveMd5": "6edfd4a890d6325590442c1159b92db5",
+      "liveBodySha256": "e2f4f5e89b05db7964e0aed2bc62c0afec06e33a7dcb1636526bbab3a1f9bfe9",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e2f4f5e89b05db7964e0aed2bc62c0afec06e33a7dcb1636526bbab3a1f9bfe9"
+    },
+    {
+      "path": "sections/newsletter.liquid",
+      "liveMd5": "b7038691499db0541d7b1eee64ba90ce",
+      "liveBodySha256": "8e342d3b0a51bb9696d53f3c94ba7380fc059d76df9144966bdf0de05ba6c4e7",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "8e342d3b0a51bb9696d53f3c94ba7380fc059d76df9144966bdf0de05ba6c4e7"
+    },
+    {
+      "path": "sections/product-tabs.liquid",
+      "liveMd5": "2717218bc0527bb333225cf9a42e3517",
+      "liveBodySha256": "43629d9d4293e0c0efce70cba09b56266337b07f0c4cac1e1c6b4fb21eb5476c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "43629d9d4293e0c0efce70cba09b56266337b07f0c4cac1e1c6b4fb21eb5476c"
+    },
+    {
+      "path": "sections/recently-viewed.liquid",
+      "liveMd5": "e3801458a02158dbe675e3016a92a93a",
+      "liveBodySha256": "a1cdc76576ab2c4af826086b77fd3ca228c173d29794530ad683a7721b990690",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a1cdc76576ab2c4af826086b77fd3ca228c173d29794530ad683a7721b990690"
+    },
+    {
+      "path": "sections/related-products.liquid",
+      "liveMd5": "0da61f14b7bdd8625204cc885eceb87b",
+      "liveBodySha256": "9321ac434a1f7c67d5eec493aadba88844f24d6426d829797c285ad11529e929",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "9321ac434a1f7c67d5eec493aadba88844f24d6426d829797c285ad11529e929"
+    },
+    {
+      "path": "sections/tag-recommendations.liquid",
+      "liveMd5": "1b17b7f2bf11610746a5f6dc13b9800b",
+      "liveBodySha256": "db495fcc9957cd68ec373410e07b7dabecac2d31e40a29745fa8b98be5a634d3",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "db495fcc9957cd68ec373410e07b7dabecac2d31e40a29745fa8b98be5a634d3"
+    },
+    {
+      "path": "sections/testimonials.liquid",
+      "liveMd5": "7c51b7f9ca1f86fef3f1f3300a5e18f6",
+      "liveBodySha256": "043aa4431c2d7c2ae773255d9eeb7da5fea16cab1e2c6e0cee2d496142722ffd",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "043aa4431c2d7c2ae773255d9eeb7da5fea16cab1e2c6e0cee2d496142722ffd"
+    },
+    {
+      "path": "sections/ticker.liquid",
+      "liveMd5": "12bfb9504e57bf8977116c363e356dde",
+      "liveBodySha256": "6385101d2f0b443fb6865d6b46e9953970caab2f740b7e7079a6c45e07ee4b6b",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "6385101d2f0b443fb6865d6b46e9953970caab2f740b7e7079a6c45e07ee4b6b"
+    },
+    {
+      "path": "sections/ugc-wall.liquid",
+      "liveMd5": "f5976a3d9780ea18445a4ab3ffc77f3c",
+      "liveBodySha256": "4c2aed4b7efec5655931cc536fb456b6a50909438e4a0448cd9fa86f32ade4f4",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "4c2aed4b7efec5655931cc536fb456b6a50909438e4a0448cd9fa86f32ade4f4"
+    },
+    {
+      "path": "sections/video.liquid",
+      "liveMd5": "b4d25334251e779ac50fefcca47c39c8",
+      "liveBodySha256": "a121443c8367cf2fbaba52b73a3e0d481e5fd087cbe113675bf69c13d2946d18",
+      "decision": "retain-repository-fix",
+      "reason": "Keep backward-compatible poster and shopping-control support already present on main; no video source or playback redesign.",
+      "candidateSha256": "9139820378cdec4d2698c16056cf3cb6a4c9788f1314285d74ef2e4e1eaf3b5a"
+    },
+    {
+      "path": "snippets/back-in-stock-form.liquid",
+      "liveMd5": "b9b90b1bb514b9744c6caf8c0129ce18",
+      "liveBodySha256": "c5ae91d9afb23e2fa8c03f8c94d0bf2d04ed71ea42b4a35104dd67db30c549b5",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c5ae91d9afb23e2fa8c03f8c94d0bf2d04ed71ea42b4a35104dd67db30c549b5"
+    },
+    {
+      "path": "snippets/cart-drawer.liquid",
+      "liveMd5": "f7065300aef6e71b25232e410c66080d",
+      "liveBodySha256": "e040b42df82cd356cc0e86f565456635e0f0e7ed1e2ca8e000fda03d6e4604ef",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository explicit currency helper and accessible labels; the live direct filter does not add a capability.",
+      "candidateSha256": "34bbc63da2f15eed6cea8aded2df0e3ff8ef36c432a0038779ff6e95911b6478"
+    },
+    {
+      "path": "snippets/contact-gate-boot.liquid",
+      "liveMd5": "9d825caf7295a9fa1d827a20476b4cd8",
+      "liveBodySha256": "e395956ceed9e6d9627c9d7a6b9b694dd601e1ed1fdeed589e947bf457e24a00",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e395956ceed9e6d9627c9d7a6b9b694dd601e1ed1fdeed589e947bf457e24a00"
+    },
+    {
+      "path": "snippets/melato-back-in-stock-loader.liquid",
+      "liveMd5": "3835c44004821e25f46feadcb2439367",
+      "liveBodySha256": "1a4f0c866f6f3ddce56d31bb4432319b1f6ff38b6b87185f99a192d865b89ac3",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "1a4f0c866f6f3ddce56d31bb4432319b1f6ff38b6b87185f99a192d865b89ac3"
+    },
+    {
+      "path": "snippets/melato-care-note.liquid",
+      "liveMd5": "f21ed63b7cf9c303fd0723e224f2d368",
+      "liveBodySha256": "3bef073547aa85715871a86b2c7a4eed69539498d0c0bf82d7ede6ec065fd680",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "3bef073547aa85715871a86b2c7a4eed69539498d0c0bf82d7ede6ec065fd680"
+    },
+    {
+      "path": "snippets/melato-cart-empty-state.liquid",
+      "liveMd5": "fe56444f13b0830a721be7f5980b5e62",
+      "liveBodySha256": "889b7aa479fc0dffde36b17595d79c7eda2b34b93c08e5c63c41e276a9840e6b",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository explicit currency helper for recovery rail.",
+      "candidateSha256": "200ef9281ad7d4a69e68368b535b8b70e7a9a649ed73ddb79411f6e7ee5f2163"
+    },
+    {
+      "path": "snippets/melato-collection-tabs.liquid",
+      "liveMd5": "6abbe2d3da2b20d16d4965ebe39ce58a",
+      "liveBodySha256": "0f84e3602b57817e00a9ae5ac1dbfbbce204457c5dd950b8f2f78fd84d4a3135",
+      "decision": "import-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
+      "candidateSha256": "0f84e3602b57817e00a9ae5ac1dbfbbce204457c5dd950b8f2f78fd84d4a3135"
+    },
+    {
+      "path": "snippets/melato-concierge-icon-access.liquid",
+      "liveMd5": "2a8d55aef45cacb2085d9d0c24381cf7",
+      "liveBodySha256": "f983dcb3568515d66a18071bbdcb22391cf1afe795f906bd96eeb0789c4cd8b3",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "f983dcb3568515d66a18071bbdcb22391cf1afe795f906bd96eeb0789c4cd8b3"
+    },
+    {
+      "path": "snippets/melato-concierge-icon-care.liquid",
+      "liveMd5": "3c33a6b40980ce1595dd34f50162371f",
+      "liveBodySha256": "64e0552fa6837b71db32256c42bc6d60cc72ba46240cdb7001bc1dc67cc88d70",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "64e0552fa6837b71db32256c42bc6d60cc72ba46240cdb7001bc1dc67cc88d70"
+    },
+    {
+      "path": "snippets/melato-concierge-icon-delivery.liquid",
+      "liveMd5": "14f445198b7e4f3453da139108a192f1",
+      "liveBodySha256": "2403876d98f6f3f9db66b75db61ad90fab994d42760286954106bcfe16155b0c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2403876d98f6f3f9db66b75db61ad90fab994d42760286954106bcfe16155b0c"
+    },
+    {
+      "path": "snippets/melato-concierge-icon-fit.liquid",
+      "liveMd5": "ac1386fe896dce3788c4cc71543ffe0d",
+      "liveBodySha256": "57b0a6db9bccb91595de230e3be0be98f4e1f582a61b13461242aeb6867f0e4d",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "57b0a6db9bccb91595de230e3be0be98f4e1f582a61b13461242aeb6867f0e4d"
+    },
+    {
+      "path": "snippets/melato-contact-form-fields.liquid",
+      "liveMd5": "b8b04631a6ec9f98935ac2a6285d4785",
+      "liveBodySha256": "da4d5df218ac2bbb9866daaf507be608b70fb45104e6d31fb7dd1a58c09475ea",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "da4d5df218ac2bbb9866daaf507be608b70fb45104e6d31fb7dd1a58c09475ea"
+    },
+    {
+      "path": "snippets/melato-fit-card.liquid",
+      "liveMd5": "2f1d1fa83b2f178d04d7147dc8e4e376",
+      "liveBodySha256": "491908e1ce6beb71d0c7f379d7d052d78ca356cd4421d76c8c791af260cffabb",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "491908e1ce6beb71d0c7f379d7d052d78ca356cd4421d76c8c791af260cffabb"
+    },
+    {
+      "path": "snippets/melato-global-jsonld.liquid",
+      "liveMd5": "b46c421b7d46d5b19ca50157510e80cc",
+      "liveBodySha256": "47be5730eb66f2002017c91346eb46127738e2d24ef275ab4fbc3caa1aa3f424",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "47be5730eb66f2002017c91346eb46127738e2d24ef275ab4fbc3caa1aa3f424"
+    },
+    {
+      "path": "snippets/melato-global-polish.liquid",
+      "liveMd5": "b7ce51786a26aeee455e6a0354c5bd55",
+      "liveBodySha256": "24e72aa936e9bc5a9f283d67ea075af16d216169e2d68a6becada5e903e6c4a6",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "24e72aa936e9bc5a9f283d67ea075af16d216169e2d68a6becada5e903e6c4a6"
+    },
+    {
+      "path": "snippets/melato-icon-account.liquid",
+      "liveMd5": "923db3f98a42d6d81281ea27cdd7515e",
+      "liveBodySha256": "9b75a50f7c2eef2c1eb6bb2850bc452338eab5c7fcb25f35cfa30c977ba6843d",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "9b75a50f7c2eef2c1eb6bb2850bc452338eab5c7fcb25f35cfa30c977ba6843d"
+    },
+    {
+      "path": "snippets/melato-icon-cart.liquid",
+      "liveMd5": "9038f20478e8d2deb1471787aa288cc0",
+      "liveBodySha256": "294878a4e5629b85884a08d352489cc8b11fe31e5e47312945766381c125d7f0",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "294878a4e5629b85884a08d352489cc8b11fe31e5e47312945766381c125d7f0"
+    },
+    {
+      "path": "snippets/melato-icon-menu.liquid",
+      "liveMd5": "ad33c60f9bba2bdc9dc0c91ff2b091a4",
+      "liveBodySha256": "a92e9aa2d1614f45ad69bdebbed86e7b3bb3ec098ffd8210b05eacdd38b1af0e",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a92e9aa2d1614f45ad69bdebbed86e7b3bb3ec098ffd8210b05eacdd38b1af0e"
+    },
+    {
+      "path": "snippets/melato-icon-search.liquid",
+      "liveMd5": "a7d83867e85aae6aa72db4e344a89bf5",
+      "liveBodySha256": "d61cea5330cf20e0aecf7a10881a1aee5e72301981a6c8f3ccb07b522f623f03",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d61cea5330cf20e0aecf7a10881a1aee5e72301981a6c8f3ccb07b522f623f03"
+    },
+    {
+      "path": "snippets/melato-icon-style.liquid",
+      "liveMd5": "c94ecb6e82719312e1d9490cbed6dd22",
+      "liveBodySha256": "2c3271d870ab46f9e5a50db065537ee2f4107fb93844abc4a118bd1cc2de3c3c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2c3271d870ab46f9e5a50db065537ee2f4107fb93844abc4a118bd1cc2de3c3c"
+    },
+    {
+      "path": "snippets/melato-living-lookbook-evidence-case02-additions.liquid",
+      "liveMd5": "19aa44614abf33702def04e038cb1522",
+      "liveBodySha256": "e155fa22fdafab381a1436a61918cc988152dbd45947e492672637e1cac57308",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e155fa22fdafab381a1436a61918cc988152dbd45947e492672637e1cac57308"
+    },
+    {
+      "path": "snippets/melato-living-lookbook-evidence-case03-data.liquid",
+      "liveMd5": "bf11e5c9205696f8b0808b0b195939a8",
+      "liveBodySha256": "789717112cd3e87481c08ae1bdc6a472ce9491431d6522325acd7f6566c82967",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "789717112cd3e87481c08ae1bdc6a472ce9491431d6522325acd7f6566c82967"
+    },
+    {
+      "path": "snippets/melato-living-lookbook-evidence-data.liquid",
+      "liveMd5": "d1d9ffe56bbbc07183bcee2f9d313ef6",
+      "liveBodySha256": "94e7c323767e916d2b12af7baef5a6701cbd3a34e0a784355410129ad1694673",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "94e7c323767e916d2b12af7baef5a6701cbd3a34e0a784355410129ad1694673"
+    },
+    {
+      "path": "snippets/melato-living-lookbook-legacy-data.liquid",
+      "liveMd5": "b97f6aaeaf1d698abf60c3e9191943ed",
+      "liveBodySha256": "e9b9dbe523a5349a3a12dbb56952e1b91ba6310a4d9d1cca620be8aa40c4b880",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e9b9dbe523a5349a3a12dbb56952e1b91ba6310a4d9d1cca620be8aa40c4b880"
+    },
+    {
+      "path": "snippets/melato-living-lookbook-loader.liquid",
+      "liveMd5": "3de87007ba4e6d9ff2b2502da63cc5f3",
+      "liveBodySha256": "e0c3611a67e2bebb441394fc5f85e0896377c6811dc1f226ec70ccac6b2ceb1f",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e0c3611a67e2bebb441394fc5f85e0896377c6811dc1f226ec70ccac6b2ceb1f"
+    },
+    {
+      "path": "snippets/melato-money-with-currency.liquid",
+      "liveMd5": "6d16bb1e440da1a21ec177e060f248fc",
+      "liveBodySha256": "0003fc9d935d583cea11cb495b44c050a69979a8b15e38006c188b6719a042e3",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0003fc9d935d583cea11cb495b44c050a69979a8b15e38006c188b6719a042e3"
+    },
+    {
+      "path": "snippets/melato-product-card-audit.liquid",
+      "liveMd5": "aad10e1701e9ff582d6b942f9aa8f8b2",
+      "liveBodySha256": "101c034d1530f60e93cb7188bdacb423368c2b24ec0ea5938d32690152e1a0f8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "101c034d1530f60e93cb7188bdacb423368c2b24ec0ea5938d32690152e1a0f8"
+    },
+    {
+      "path": "snippets/melato-product-card.liquid",
+      "liveMd5": "f218ad862b6ca665e12a9e197e531b2d",
+      "liveBodySha256": "d1edb02576d7674c8b546ddab3f935e4a6b21e5e250901b1d76ba91d806a76b0",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d1edb02576d7674c8b546ddab3f935e4a6b21e5e250901b1d76ba91d806a76b0"
+    },
+    {
+      "path": "snippets/melato-product-color-engine.liquid",
+      "liveMd5": "53e9b4b4f5a197bfbf835c29be5b1980",
+      "liveBodySha256": "7a60f01f2160784adb4aa63821a8d0a3c3dab2fa506ab047f050122b1e4c97e6",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository closing-brace syntax repair and canonical engine; live snippet fails rendered JavaScript parsing.",
+      "candidateSha256": "feafe37e49b61d3482c4e10bff506c3e0b1a4094dd26e5a603f5eb863c53e9ca"
+    },
+    {
+      "path": "snippets/melato-product-jsonld.liquid",
+      "liveMd5": "a9a26056e6a0e4823bbac0cd5ef868e7",
+      "liveBodySha256": "05986a7077b8d4591bd25a67c665595e3ec6c6c830257ce584323af2b08f93aa",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "05986a7077b8d4591bd25a67c665595e3ec6c6c830257ce584323af2b08f93aa"
+    },
+    {
+      "path": "snippets/melato-rendered-output-filters-base.liquid",
+      "liveMd5": "48eed87f24d8094d0207027761eaaba1",
+      "liveBodySha256": "40643a244c2b4f2fb67125d78bf493fddc09560a1feb72d429bc3acb7aa34117",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository single-owner service/Fit copy; reject live duplicated assurances and truncated Fit preview.",
+      "candidateSha256": "adaa48a40c5377a6fce022cd47904a430d939bd22a9d9495e845fd703b9c9c27"
+    },
+    {
+      "path": "snippets/melato-rendered-output-filters.liquid",
+      "liveMd5": "a8e37c5e06a02dbf0c2f27106e907e3b",
+      "liveBodySha256": "ba1ee8b972bb28b25be6fc148657fa9081835586aa1da27c21accf6043de8bc7",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "ba1ee8b972bb28b25be6fc148657fa9081835586aa1da27c21accf6043de8bc7"
+    },
+    {
+      "path": "snippets/melato-responsive-image.liquid",
+      "liveMd5": "400ff9c974539c6edd4276c99c779100",
+      "liveBodySha256": "0f52ba9ef58630bfef70135478b1bf5da4d921732cf167aca3f07351a0b86780",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0f52ba9ef58630bfef70135478b1bf5da4d921732cf167aca3f07351a0b86780"
+    },
+    {
+      "path": "snippets/melato-service-card.liquid",
+      "liveMd5": "a4b0d5e2c39f27a5df88152819aa1cb7",
+      "liveBodySha256": "55cb73f5fe594175e83c31531005a4b0bc6c732e2827c34d68c5b9502761ae88",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "55cb73f5fe594175e83c31531005a4b0bc6c732e2827c34d68c5b9502761ae88"
+    },
+    {
+      "path": "snippets/melato-services-rail.liquid",
+      "liveMd5": "bf01e4ba8c5095170724fd7ba7e31178",
+      "liveBodySha256": "772c188790c9a15f5786ff7f2927ec97e8af2f33097d0354c300a81306f93e50",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "772c188790c9a15f5786ff7f2927ec97e8af2f33097d0354c300a81306f93e50"
+    },
+    {
+      "path": "snippets/melato-shipping-policy.liquid",
+      "liveMd5": "50eb7cc6a7d1503f3be165d75c502a4e",
+      "liveBodySha256": "1c3d2e3a03eb60159266fff4c080a689aeee0e3ee536dc066a2c5ab764bfe2b7",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "1c3d2e3a03eb60159266fff4c080a689aeee0e3ee536dc066a2c5ab764bfe2b7"
+    },
+    {
+      "path": "snippets/melato-smart-cta.liquid",
+      "liveMd5": "5f7910194f0c46706b52d79ec7388080",
+      "liveBodySha256": "2a144ebe5f7d80e152839fc485398a9cdef9a3b5369ef44751f0455bad157d4a",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2a144ebe5f7d80e152839fc485398a9cdef9a3b5369ef44751f0455bad157d4a"
+    },
+    {
+      "path": "snippets/melato-theme-audit-hotfix.liquid",
+      "liveMd5": "5c9b9ff366a5eb68b5bd68deed166c5b",
+      "liveBodySha256": "620ff21052d5df3472d2439f6fa40eb74faa4d1e3363475a1c01ae0c08eab691",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository guard against a second recommendation rail and heading replacement.",
+      "candidateSha256": "7490297aac9ffe52e7054204778a1c957d7eaea537c5204536ed115b4404a5d5"
+    },
+    {
+      "path": "snippets/melato-world-rail.liquid",
+      "liveMd5": "326f7f9668c336700c5ef556e7855985",
+      "liveBodySha256": "d2cf65e2b2a3631d52411416934377e9506e83e78bf3639d8e52d8e9c068a4c7",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d2cf65e2b2a3631d52411416934377e9506e83e78bf3639d8e52d8e9c068a4c7"
+    },
+    {
+      "path": "snippets/mobile-menu.liquid",
+      "liveMd5": "ebb003b99f2795b23f432944fa399a3e",
+      "liveBodySha256": "85eff11cf08fea87631111db7cf1321119c57bc5d23cb35046357b976fc6298e",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "85eff11cf08fea87631111db7cf1321119c57bc5d23cb35046357b976fc6298e"
+    },
+    {
+      "path": "snippets/product-badge.liquid",
+      "liveMd5": "c374040a2abe1addf85f70cee7c6d9b1",
+      "liveBodySha256": "75bcf6b8a0ad936d76b9eb7ef82b1041dc57d969bd0cc52f99599f2d45ef1c0c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "75bcf6b8a0ad936d76b9eb7ef82b1041dc57d969bd0cc52f99599f2d45ef1c0c"
+    },
+    {
+      "path": "snippets/product-card-images.liquid",
+      "liveMd5": "057b97bdbbfdad669d8b0e24c6dd2890",
+      "liveBodySha256": "33a7ec04f8988f2d2f1843df6f417584e24bfde0057c3ec3af859ef00cb004c8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "33a7ec04f8988f2d2f1843df6f417584e24bfde0057c3ec3af859ef00cb004c8"
+    },
+    {
+      "path": "snippets/product-card.liquid",
+      "liveMd5": "78f88aac10689a061c9337d11e9f7ef3",
+      "liveBodySha256": "3085f9ab4928d68c973534bb9eb1b27aec2b9759feec4f5b7fe3ab3c84a125de",
+      "decision": "retain-repository-fix",
+      "reason": "Keep repository removal of redundant category badges; product title and existing stock/new badges remain.",
+      "candidateSha256": "971dae79d3e9167c497deb977bd1ed9366a779db09923767b49b8851102c9156"
+    },
+    {
+      "path": "snippets/quick-view-modal.liquid",
+      "liveMd5": "9a38f9ebd1b60f0f8e95503ff4b5a6b8",
+      "liveBodySha256": "69a048fa3a284ec031321a54d9fee861160b45c63e2632d4adf0c2cc410b7129",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "69a048fa3a284ec031321a54d9fee861160b45c63e2632d4adf0c2cc410b7129"
+    },
+    {
+      "path": "snippets/search-drawer.liquid",
+      "liveMd5": "1d1d8ac00dd9649a2169c81187a684af",
+      "liveBodySha256": "e3e1bb3ca14fd285306bd9739d2c055b062d36496e869a92daf3393ab38012df",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e3e1bb3ca14fd285306bd9739d2c055b062d36496e869a92daf3393ab38012df"
+    },
+    {
+      "path": "snippets/size-guide-drawer.liquid",
+      "liveMd5": "0763b1156c005496a3eeb717881cc8a6",
+      "liveBodySha256": "c3098966fda1a01fa4872a7e1e0da1b57b3079d42a74b408c134bbd92f6e216c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c3098966fda1a01fa4872a7e1e0da1b57b3079d42a74b408c134bbd92f6e216c"
+    },
+    {
+      "path": "snippets/size-guide-modal.liquid",
+      "liveMd5": "7bdf8ffb1e8b6098fc31dace6a2e4860",
+      "liveBodySha256": "7f2f3af493c56fb6caf2338e658b50b8d7d2a0374238ff456f3a9b856a394dfe",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "7f2f3af493c56fb6caf2338e658b50b8d7d2a0374238ff456f3a9b856a394dfe"
+    },
+    {
+      "path": "templates/404.json",
+      "liveMd5": "da95c85b26afdfe5524ee8f64f88fb7a",
+      "liveBodySha256": "94f67fc386f0da49600c6eef72302ef73f89c2dcc4b9a235dd9298ee37bcc362",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "94f67fc386f0da49600c6eef72302ef73f89c2dcc4b9a235dd9298ee37bcc362"
+    },
+    {
+      "path": "templates/article.json",
+      "liveMd5": "2d1625651b96b6225eb3fdc672d75b94",
+      "liveBodySha256": "498c53cd59fcb80b80833c3ee6d2bce73d5ce563f174a054b43d8d88cde2757b",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "ef590d7f1c225174e93db6a31040c9f4e624d6092643dc81381272e4c617fd75"
+    },
+    {
+      "path": "templates/blog.json",
+      "liveMd5": "e96643bbe33d8183b32e866df7532c47",
+      "liveBodySha256": "6eadad984624655f4aef27915f4092170a605c126752119fd58ab5ffc4a59fda",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "5c6afb1787e527719d26ba29b98e9612583d81197082e827ec0adcfbfd95379e"
+    },
+    {
+      "path": "templates/cart.json",
+      "liveMd5": "1df70e66e4598bc653558ec6a5ac63c9",
+      "liveBodySha256": "aacd23fed7cfaad0d5dd2a10c7f5da2a1de54bbd6e7f9e178154b4f97e4f381d",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "8185bd73abb83420c8d2d0154f4e8390bbdaef611a7b6d41754128e0c1fda451"
+    },
+    {
+      "path": "templates/collection.json",
+      "liveMd5": "aae21cb98ce7865794880c7c3b45d7fc",
+      "liveBodySha256": "9f45fdb1890a161948ae2c248bc0c0fef321efd52fc2076b219fb669732361c9",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "9f45fdb1890a161948ae2c248bc0c0fef321efd52fc2076b219fb669732361c9"
+    },
+    {
+      "path": "templates/customers/account.json",
+      "liveMd5": "da3bbd98863524d9fcd58b5120176e72",
+      "liveBodySha256": "ba20e6f1575cc9f15b80b9f3e47cb6de5a16701560f0f2556e6120e48d59b197",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "184f343a7504cbdd3ee3990b083b92381aaa1538386da2ea786d6a0fd1af1666"
+    },
+    {
+      "path": "templates/customers/activate_account.liquid",
+      "liveMd5": "56ec82541f4e1235e800dc4662f73f3c",
+      "liveBodySha256": "ea23e19a2ab3f904292296d0fe4c6b5d03472df252ff4e3c9dd53729c6bd46b8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "ea23e19a2ab3f904292296d0fe4c6b5d03472df252ff4e3c9dd53729c6bd46b8"
+    },
+    {
+      "path": "templates/customers/addresses.json",
+      "liveMd5": "282680e2b0136849aeb9ae28819a8b5e",
+      "liveBodySha256": "f6d0af878ac3525459f1121654d70ee52792896dd9dd3b17a5ab6e32168e8330",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "55f78107bd94f89184ff12364932e4f8508ccf05c094019f6a1416107cf07605"
+    },
+    {
+      "path": "templates/customers/login.json",
+      "liveMd5": "b6cddf593fc146cdddd44fa1b413c72c",
+      "liveBodySha256": "f74d32c6bb586a9faed442ab94c93a51ce40ac0adab4d371bcdac4b202b3446e",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "8daf62f7a7791d32d0e5d289edc5b0d3496336385d30b02d11979cb3abb07dfd"
+    },
+    {
+      "path": "templates/customers/order.json",
+      "liveMd5": "4c6968ee34eb3459cba92a89668c5d28",
+      "liveBodySha256": "5231f5d29a343c3458ba6b64dc4b7902e9d47d453a718a4479390e088ea37b4c",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "1247bda45f361e45273f64c46f7c9181f96a79a2179550d1518c21fc7e42a8fa"
+    },
+    {
+      "path": "templates/customers/register.json",
+      "liveMd5": "2c222eb81ebad367d8df2ff1514deb59",
+      "liveBodySha256": "c984cf422daa2dbf764498a73936c9d71886c6890ad58ee37f8e3cde2b533e01",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "1f04253da3a549d2e54f85870a32e1f90aa56183c6b1ce892e4d03b20abe0db5"
+    },
+    {
+      "path": "templates/customers/reset_password.liquid",
+      "liveMd5": "cbbedc5af9bae36922594abd691855ec",
+      "liveBodySha256": "ab5ac6575339be414630bba9f16d804fc9909798d008d60f888f4134d5d695a4",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "ab5ac6575339be414630bba9f16d804fc9909798d008d60f888f4134d5d695a4"
+    },
+    {
+      "path": "templates/gift_card.liquid",
+      "liveMd5": "64e85cc9baf96ccf3c7d8293f7bac93a",
+      "liveBodySha256": "d11ca7142d67fe331649e64e1b6e96a63f18be40c8c0de87026116e72200ac18",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d11ca7142d67fe331649e64e1b6e96a63f18be40c8c0de87026116e72200ac18"
+    },
+    {
+      "path": "templates/index.json",
+      "liveMd5": "bfb773a383c6bb37968988fd0f035745",
+      "liveBodySha256": "ccc6c8c60e82a605194be5e749a2c24a1bd1826fa7c089ba28405f572c9d9ed6",
+      "decision": "merge",
+      "reason": "Preserve live poster, added/disabled sections, settings, blocks and ordering; retain existing repository shopping controls.",
+      "candidateSha256": "dcea29d7f9df03682bc74328681c9d83b4f5be42fb6540c7e18a0ed6b9155e48"
+    },
+    {
+      "path": "templates/index.melato-ovum-redesign.json",
+      "liveMd5": "04e40670e87ae49352853ed2078b6fb1",
+      "liveBodySha256": "7cef11f57fcf213519d68938fbadedb976432532a5a3b2115e82f0de8785af54",
+      "decision": "retain-repository-fix",
+      "reason": "Live differs semantically only by dropping four existing shopping CTA settings. Keep repository functional links; other data is equivalent.",
+      "candidateSha256": "f96a73bca9d68a222015f752620835f6d7fcf58479f93f6b57c73cd07f27bd48"
+    },
+    {
+      "path": "templates/metaobject/best_sellers.json",
+      "liveMd5": "f9af32ba23ee64fba85e9168d24117ea",
+      "liveBodySha256": "0b971db1ba1cee82216689f453e6697e182f58f26d2a12f8e365edadc9531a6f",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "3d1dfe9ec137c66e9f1557bcbe0f50b6ae56869b914e13a8b3458bbb728b285c"
+    },
+    {
+      "path": "templates/page.contact-upgrade.json",
+      "liveMd5": "ff319700de1cac9f268dba0b283fa500",
+      "liveBodySha256": "9773782a09821f4c6fd56e5b6b7c027b9c6928c9f2cba41f3fdc37a55ac92cb9",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "cf84203cfd14580a0cf76bb55f13c017f95813eaf7661c23164795af26a5bd91"
+    },
+    {
+      "path": "templates/page.faq-upgrade.json",
+      "liveMd5": "c061fa1671338bc25ff82d54343ce9f4",
+      "liveBodySha256": "9686a210b3bbb0410f625ca397a6a6f6bbdb9e32c6172fd7c87d6f0d9ca7d399",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "9686a210b3bbb0410f625ca397a6a6f6bbdb9e32c6172fd7c87d6f0d9ca7d399"
+    },
+    {
+      "path": "templates/page.json",
+      "liveMd5": "d8085538dc93d34f2457f8df79e37e50",
+      "liveBodySha256": "e0120354c1c87714bb146c1843b03873e5d2ca3245b387b29e015684fbfd6c0c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "e0120354c1c87714bb146c1843b03873e5d2ca3245b387b29e015684fbfd6c0c"
+    },
+    {
+      "path": "templates/page.living-lookbook.json",
+      "liveMd5": "9683a7ec2b84aee118a528965fb350a0",
+      "liveBodySha256": "c403f9de41ae3cf479215c7e81eeee8b2c109fe55ff613274af22b8d057900ed",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c403f9de41ae3cf479215c7e81eeee8b2c109fe55ff613274af22b8d057900ed"
+    },
+    {
+      "path": "templates/page.lookbook.json",
+      "liveMd5": "492496f61403a9bccb5547dc8aef2181",
+      "liveBodySha256": "c0626e8dd2769ed8690fa84293fbaa14dbbddf4016be2992d39ef5ea23718b30",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c0626e8dd2769ed8690fa84293fbaa14dbbddf4016be2992d39ef5ea23718b30"
+    },
+    {
+      "path": "templates/page.popup-calendar.json",
+      "liveMd5": "625139dcc008d320740827dd5e692ed3",
+      "liveBodySha256": "a99100574c34d388cad8e10b0ddb45ca373b821cedc93948c2f8998399fea5c8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "a99100574c34d388cad8e10b0ddb45ca373b821cedc93948c2f8998399fea5c8"
+    },
+    {
+      "path": "templates/page.preview.liquid",
+      "liveMd5": "520a04b0e930d2edaa9655b6222edb3f",
+      "liveBodySha256": "75483e5bb4c18c37cbc9d2ca407fed23bda96a9818d2635c80497d0423c84489",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "75483e5bb4c18c37cbc9d2ca407fed23bda96a9818d2635c80497d0423c84489"
+    },
+    {
+      "path": "templates/page.saved-products.liquid",
+      "liveMd5": "0ba70417446ccd0fc92650c284898fe2",
+      "liveBodySha256": "2c40ee5219f7e7fd62cc3249133fcc5e1c9f87075d130e6741b21d009947351c",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2c40ee5219f7e7fd62cc3249133fcc5e1c9f87075d130e6741b21d009947351c"
+    },
+    {
+      "path": "templates/page.shipping-returns.liquid",
+      "liveMd5": "3daacc97308d2717697789f8ffd999b5",
+      "liveBodySha256": "2af2aa6f7a01488c0055d4d78e276331c0726e541eb07117f511d2c159a4d3dd",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "2af2aa6f7a01488c0055d4d78e276331c0726e541eb07117f511d2c159a4d3dd"
+    },
+    {
+      "path": "templates/page.size-guide.liquid",
+      "liveMd5": "40e2caba9b4e323e16b767bad14a38a7",
+      "liveBodySha256": "76f32c29ad686f6b54633106ea75bb0418e456ab961283dbfe3723d9aed32abf",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "76f32c29ad686f6b54633106ea75bb0418e456ab961283dbfe3723d9aed32abf"
+    },
+    {
+      "path": "templates/page.thank-you.liquid",
+      "liveMd5": "feb88c701190781a40bb84ad9b715154",
+      "liveBodySha256": "08aa21bc66eb73993e9de8398a545431115953356479318669b57ca48d2c116e",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "08aa21bc66eb73993e9de8398a545431115953356479318669b57ca48d2c116e"
+    },
+    {
+      "path": "templates/page.world-orb.json",
+      "liveMd5": "3b1d228369d758957b18725925d84072",
+      "liveBodySha256": "ec2877370d80d976d9afe224c444729468f2369f836c0e2f269c4b0c17604fa6",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "efcb20b5a0b650f3071648b1aa57d6fb3a2fefb7c5d3e6f412d294bb6dc10865"
+    },
+    {
+      "path": "templates/page.world.json",
+      "liveMd5": "6e7d4cf963e3b54bca5329def5a77001",
+      "liveBodySha256": "0355fcbf343def60a0b4589f1461eac64751ae703070de7005603a2d31670c26",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "33bdba94f3a2725476b66d74bbd71eb12018255b3085bc1b194d27beb1d2a5f9"
+    },
+    {
+      "path": "templates/product.fragrance.json",
+      "liveMd5": "d3e62646b8e061fb421b775e7ba651a1",
+      "liveBodySha256": "d841389c90c8fd650cdb620bb4e336c43b8fb1d312a7939387ff5a5b2b9b3368",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "d841389c90c8fd650cdb620bb4e336c43b8fb1d312a7939387ff5a5b2b9b3368"
+    },
+    {
+      "path": "templates/product.jackets-2.json",
+      "liveMd5": "88846dafb1f77d1c7a5e1ee335c49d1b",
+      "liveBodySha256": "4c7a737347b9b58ed96790aa6563951e45d4ff36ce46370cd4bfe2e639a714b9",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "4c7a737347b9b58ed96790aa6563951e45d4ff36ce46370cd4bfe2e639a714b9"
+    },
+    {
+      "path": "templates/product.jackets.json",
+      "liveMd5": "88846dafb1f77d1c7a5e1ee335c49d1b",
+      "liveBodySha256": "4c7a737347b9b58ed96790aa6563951e45d4ff36ce46370cd4bfe2e639a714b9",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "4d78ce6077625dc2dcd010f74479752bb5efc55e6f41a4d84b6a33b29108ab7d"
+    },
+    {
+      "path": "templates/product.json",
+      "liveMd5": "dfcc9a8ba582f8917f606a451994c1b5",
+      "liveBodySha256": "cfd3131a538c02d1830c6367141363dd59a0eddd3bf80a65a9c70ec0b8ceac0b",
+      "decision": "retain-repository-fix",
+      "reason": "Keep canonical template order, explicit currency-enforcer helper and duplicate-module suppression from repository; reject older live removal of currency helper and contextual-module reactivation.",
+      "candidateSha256": "d05f08dac6c7659289b282e105fab134ec24be1daa5e17b79aa14f29614f70a6"
+    },
+    {
+      "path": "templates/product.melato-audit.json",
+      "liveMd5": "cb3a43cfcde6b258c15e1fd71f25f3d5",
+      "liveBodySha256": "0b6f878cf63cc893db210ddb58de741be29d35a2571d10b72ffe9abd64daaef2",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "0b6f878cf63cc893db210ddb58de741be29d35a2571d10b72ffe9abd64daaef2"
+    },
+    {
+      "path": "templates/product.melato-zara.json",
+      "liveMd5": "31359c43e1cdbf39a2c569d03b69fe2e",
+      "liveBodySha256": "1b191e85316616ce51ded533a2366dd5d2b51fe78bd4e4f0bdf2864d2b646ac4",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "dafe3e5578da1adfd48b561b341f8cd322ce083fa162e9abac5fb7bbfc797646"
+    },
+    {
+      "path": "templates/product.product-melato.json",
+      "liveMd5": "c53e95060a4061520dc5cd499eea04c5",
+      "liveBodySha256": "c542d465c4ac3967bb73ad953fb5d7da557a599b48cd0e49ba5f0a09326ce3b8",
+      "decision": "identical",
+      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
+      "candidateSha256": "c542d465c4ac3967bb73ad953fb5d7da557a599b48cd0e49ba5f0a09326ce3b8"
+    },
+    {
+      "path": "templates/search.json",
+      "liveMd5": "7d1aeec18e3dd9e08a86e7e21d1bdd5e",
+      "liveBodySha256": "e9f89b953c7a4f93a2996054ed514b097d2177ae04d5f01625fc74a4d62cde95",
+      "decision": "equivalent-json",
+      "reason": "Parsed JSON matches; ignore Shopify-generated header/formatting differences.",
+      "candidateSha256": "86abf156ce3100cc1eaaa7861da7ae4603fd1adeaa750dd0c596e11d69c1d5d5"
+    }
+  ]
+}

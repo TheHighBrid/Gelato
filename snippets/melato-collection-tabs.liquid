@@ -1,0 +1,29 @@
+{% comment %} MELATO: dynamic visual collection nav, sourced from Shopify menu and fallback collections {% endcomment %}
+{%- liquid
+  assign mx_nav = linklists['main-menu']
+  assign mx_has_links = false
+  if mx_nav != blank and mx_nav.links.size > 0
+    assign mx_has_links = true
+  endif
+-%}
+<nav class="mx-collection-tabs" aria-label="Shop by category">
+  <a href="{{ routes.all_products_collection_url }}" {% if collection.handle == 'all' %}aria-current="page"{% endif %}>View all</a>
+  {%- if mx_has_links -%}
+    {%- for item in mx_nav.links -%}
+      {%- if item.url contains '/collections/' and item.url != routes.all_products_collection_url -%}
+        <a href="{{ item.url }}" {% if collection.url == item.url %}aria-current="page"{% endif %}>{{ item.title | escape }}</a>
+      {%- endif -%}
+      {%- for subitem in item.links -%}
+        {%- if subitem.url contains '/collections/' and subitem.url != routes.all_products_collection_url -%}
+          <a href="{{ subitem.url }}" {% if collection.url == subitem.url %}aria-current="page"{% endif %}>{{ subitem.title | escape }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  {%- else -%}
+    {%- for fallback in collections -%}
+      {%- if fallback.products_count > 0 and fallback.handle != 'all' and forloop.index <= 12 -%}
+        <a href="{{ fallback.url }}" {% if collection.handle == fallback.handle %}aria-current="page"{% endif %}>{{ fallback.title | escape }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+</nav>
