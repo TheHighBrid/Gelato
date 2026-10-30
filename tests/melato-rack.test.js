@@ -33,3 +33,36 @@ const existing=r;vm.runInContext(source,dom.getInternalVMContext(),{filename:'me
 const second=await create(true);second.r.snapTo(5);assert.equal(second.r.active,5);assert.equal(second.r.raf,0);await second.r.open(0);await second.r.close();second.r.destroy();second.dom.window.close();passed.push('reduced motion uses immediate transitions');
 console.log(passed.map((x,i)=>`${i+1}. PASS ${x}`).join('\n'));console.log(`${passed.length} rack behavior checks passed`);
 });
+
+require('node:test')('rack honors partial angle overrides and a verified reverse view', async () => {
+  const {dom,r}=await create(true);
+  const front=r.data[0].front, back=r.data[0].back;
+  assert.ok(back,'first fixture must have a verified reverse view');
+  r.data[0].angles=[{degrees:0,url:front},{degrees:60,url:'/angle-60.webp'}];
+  await r.open(0);
+  assert.equal(r.turn.max,'180');
+  assert.equal(r.stage.querySelector('[data-rack-side="back"]').hidden,false);
+  r.setTurn(60);
+  assert.equal(r.imgFront.getAttribute('src'),'/angle-60.webp');
+  r.setTurn(180);
+  assert.equal(r.imgFront.getAttribute('src'),back);
+  assert.equal(r.stage.querySelector('[data-rack-side="back"]').getAttribute('aria-pressed'),'true');
+  await r.close();r.destroy();dom.window.close();
+  const snippet=fs.readFileSync('snippets/melato-rack-item.liquid','utf8');
+  assert.match(snippet,/if angle_block.settings.angle_30 or angle_block.settings.angle_60 or angle_block.settings.angle_90/);
+  assert.match(snippet,/elsif has_custom_angles and front_url/);
+  assert.doesNotMatch(snippet,/elsif angle_block and angle_block.settings.angle_30 and front_url/);
+});
+
+require('node:test')('empty rack does not register a half-initialized instance', () => {
+  const dom=new JSDOM('<section data-melato-rack></section>',{url:'https://melato.test/',runScripts:'outside-only'});
+  const w=dom.window;
+  w.matchMedia=()=>({matches:false,addEventListener(){}});
+  vm.runInContext(source,dom.getInternalVMContext(),{filename:'melato-rack.js'});
+  w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+  const root=w.document.querySelector('[data-melato-rack]');
+  assert.equal(root.__mrack,undefined);
+  w.document.dispatchEvent(new w.Event('shopify:section:unload'));
+  assert.equal(root.__mrack,undefined);
+  dom.window.close();
+});
