@@ -8,7 +8,7 @@
 {% endcomment %}
 
 {%- liquid
-  assign product_type_down = product.product_type | downcase
+  assign product_type_down = product.type | downcase
   assign is_fragrance = false
   if product_type_down contains 'fragrance' or product_type_down contains 'perfume' or product_type_down contains 'eau de parfum' or product_type_down contains 'eau de toilette'
     assign is_fragrance = true
