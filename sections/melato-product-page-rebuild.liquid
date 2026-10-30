@@ -10,7 +10,7 @@
   assign product_form_id = 'product-form-' | append: section.id
   assign featured_media = current_variant.featured_media | default: product.featured_media
   assign product_title_down = product.title | downcase
-  assign product_type_down = product.product_type | downcase
+  assign product_type_down = product.type | downcase
   assign tags_down = product.tags | join: '|' | downcase
 
   assign family = 'other'
@@ -340,7 +340,9 @@
   <script type="application/json" id="PDPVariants-{{ section.id }}">{{ product.variants | json }}</script>
 </section>
 
-{% render 'size-guide-drawer', product: product %}
+{%- unless family == 'fragrance' -%}
+  {% render 'size-guide-drawer', product: product %}
+{%- endunless -%}
 
 <script>
 (function(){
