@@ -18,7 +18,6 @@
 <style data-melato-pdp-unification>
   /* Suppress only the redundant trust/story surfaces. The canonical
      specification grid stays available for compact Material, Fit and Care. */
-  body.template-product .melato-pdp-rebuild .pdp-shipping-returns,
   body.template-product .melato-pdp-rebuild .pdp-story {
     display: none !important;
   }
@@ -332,7 +331,7 @@
     /* Keep the canonical specification grid. Remove only duplicate trust/story
        surfaces, then remove Construction from the grid because construction is
        already represented by the dedicated technical surface. */
-    root.querySelectorAll('.pdp-shipping-returns, .pdp-story').forEach(function (node) {
+    root.querySelectorAll('.pdp-story').forEach(function (node) {
       node.remove();
     });
 
