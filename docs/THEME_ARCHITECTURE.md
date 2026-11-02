@@ -54,3 +54,13 @@
 - [ ] Add missing alt text / ARIA where needed.
 - [ ] Clean unused product template variants.
 - [ ] Set up proper Shopify theme development workflow with CLI.
+
+## Consolidation Done (2026-11-01)
+
+Created:
+- `assets/melato-core.css` — concatenated always-loaded global CSS layers (luxury-tokens, collection-navigation, dynamic-announcement, enhancements, palette-logo-updated, header-logo-bigger, palette-v3, audit-upgrades, storefront-tail, apple-design)
+- `assets/melato-core.js` — concatenated always-loaded global JS (dynamic-announcement, optimization-2026, audit-nav-collections, cart-drawer, apple-design)
+
+Updated `layout/theme.liquid` to load the core files instead of the individual global layers. Conditional and feature-specific assets (PDP layout, info/legal pages, collection filters, premium-enhancements, Living Book, house, rack, etc.) remain separate.
+
+Source individual files are still present for reference/regeneration. Future changes to global styles/behavior should go into the core files (or regenerate them from updated sources).
