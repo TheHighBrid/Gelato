@@ -1,0 +1,22 @@
+# Large binaries and exports
+archive/
+*.zip
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.mht
+*.docx
+*.pdf
+
+# Node
+node_modules/
+.next/
+out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
