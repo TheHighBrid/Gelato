@@ -1,0 +1,92 @@
+/* Melato visibility fixes 2026-11-02
+   High-contrast overrides for sticky ATC and Complete the Set on dark surfaces.
+   Scoped to product templates. Additive only. */
+
+body.template-product .pdp-sticky-atc {
+  background: rgba(8, 8, 8, 0.94) !important;
+  color: #f2ebdf !important;
+  border-color: rgba(242, 235, 223, 0.18) !important;
+}
+
+body.template-product .pdp-sticky-atc .purchase-summary,
+body.template-product .pdp-sticky-atc .purchase-summary__title,
+body.template-product .pdp-sticky-atc .purchase-summary__price,
+body.template-product .pdp-sticky-atc strong,
+body.template-product .pdp-sticky-atc span {
+  color: #f2ebdf !important;
+}
+
+body.template-product .pdp-sticky-atc button,
+body.template-product .pdp-sticky-atc .pdp-atc {
+  background: #c9a86c !important;
+  color: #080808 !important;
+  border-color: #c9a86c !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-card,
+body.template-product .pdp-set-card {
+  background: #0d0d0d !important;
+  color: #f2ebdf !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-card .pdp-set-label,
+body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__title,
+body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__price,
+body.template-product .pdp-set-card .pdp-set-label,
+body.template-product .pdp-set-card .purchase-summary__title,
+body.template-product .pdp-set-card .purchase-summary__price,
+body.template-product .pdp-set-card strong,
+body.template-product .pdp-set-card h3,
+body.template-product .pdp-set-card p {
+  color: #f2ebdf !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-card .pdp-set-label,
+body.template-product .pdp-set-card .pdp-set-label {
+  color: rgba(242, 235, 223, 0.58) !important;
+}
+
+body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__price,
+body.template-product .pdp-set-card .purchase-summary__price {
+  color: rgba(242, 235, 223, 0.78) !important;
+}
+
+/* Consistent radii for premium rectangular house style (matches house-pdp) */
+body.template-product .melato-pdp-rebuild .pdp-choice,
+body.template-product .pdp-choice,
+body.template-product .melato-pdp-rebuild .pdp-qty,
+body.template-product .pdp-qty,
+body.template-product .melato-pdp-rebuild .pdp-atc,
+body.template-product .pdp-atc {
+  border-radius: 0 !important;
+}
+
+/* Slightly tighter main price if oversized */
+body.template-product .melato-pdp-rebuild .pdp-price,
+body.template-product .pdp-price {
+  font-size: clamp(15px, 1.4vw, 18px) !important;
+}
+
+/* Footer link spacing */
+.footer-link,
+.footer__link,
+[class*="footer"] a {
+  margin-inline: 0.35rem !important;
+  padding-inline: 0.25rem !important;
+}
+
+/* Ask Melato clearance */
+[class*="ask-melato"],
+.melato-concierge,
+#melato-chat-widget,
+[data-melato-chat] {
+  bottom: 88px !important;
+  z-index: 40 !important;
+}
+
+@media (max-width: 749px) {
+  body.template-product .pdp-sticky-atc {
+    background: rgba(8, 8, 8, 0.96) !important;
+    color: #f2ebdf !important;
+  }
+}
