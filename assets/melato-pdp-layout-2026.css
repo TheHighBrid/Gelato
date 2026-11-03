@@ -276,7 +276,8 @@ body.template-product .melato-pdp-rebuild {
 }
 
 .melato-footer .melato-footer__column a[href*="new-arrivals"] {
-  color: rgba(245, 241, 232, .78) !important;
+  /* footer is a light surface: cream text was ~1.1:1 (invisible). Use the footer's own muted colour (#595959, 7:1). */
+  color: var(--footer-muted, #595959) !important;
   font-size: 14px !important;
 }
 
