@@ -59,6 +59,7 @@
   {%- if template.name == 'page' or request.path contains '/policies/' -%}{{ 'melato-info-legal-pages.css' | asset_url | stylesheet_tag }}{%- endif -%}
   {{ 'premium-enhancements.css' | asset_url | stylesheet_tag }}
   {%- if template.name == 'product' -%}{{ 'melato-pdp-layout-2026.css' | asset_url | stylesheet_tag }}{%- endif -%}
+  {{ 'melato-visibility-fixes-202611.css' | asset_url | stylesheet_tag }}
   {%- if settings.custom_css != blank -%}<style>{{ settings.custom_css }}</style>{%- endif -%}
   {% render 'melato-global-jsonld' %}{% render 'melato-global-polish' %}
 </head>

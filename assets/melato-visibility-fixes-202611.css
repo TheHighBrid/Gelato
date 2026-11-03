@@ -1,92 +1,159 @@
-/* Melato visibility fixes 2026-11-02
-   High-contrast overrides for sticky ATC and Complete the Set on dark surfaces.
-   Scoped to product templates. Additive only. */
+/* ==========================================================================
+   MELATO VISIBILITY + UI FIXES — 2026-11-02 (last custom layer; loaded after
+   melato-pdp-layout-2026.css in layout/theme.liquid)
 
-body.template-product .pdp-sticky-atc {
-  background: rgba(8, 8, 8, 0.94) !important;
-  color: #f2ebdf !important;
-  border-color: rgba(242, 235, 223, 0.18) !important;
+   ROOT CAUSE (verified against live t/89 HTML, computed styles + CDP matched rules):
+   The PDP canvas is white and --pdp-text / --text-primary / body colour are
+   #111111, but several PDP modules keep DARK surfaces and never set a light
+   text colour:
+     - .pdp-sticky-atc            bg rgba(8,8,8,.92)  (section CSS)   text inherits #111
+     - .pdp-set-card              bg #0c0d0f !important (pdp-unification) text #111
+     - .melato-pdp-merchandising  bg #080808 (section CSS)             titles #3B2023, prices #111
+   The colour engine adds !important colour rules at specificity (0,3,2):
+     html.melato-product-palette-ready body.template-product [class*="price"]
+     html.melato-product-palette-ready body.template-product .melato-product-accent-title
+   so every selector below carries `html body.template-product …` (>= 0,4,x) to win
+   without relying on source order.
+
+   Palette on dark surfaces:  text #f5f1ea  |  muted #bdb6ab  (both >= 4.5:1 on #080808 / #0c0d0f)
+   Additive only. No existing rules removed.
+   ========================================================================== */
+
+/* ---------- 1. Sticky add-to-cart bar ---------- */
+html body.template-product .pdp-sticky-atc {
+  background: rgba(8, 8, 8, .96);
+  color: #f5f1ea;
+  border-color: rgba(245, 241, 234, .22);
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
 }
 
-body.template-product .pdp-sticky-atc .purchase-summary,
-body.template-product .pdp-sticky-atc .purchase-summary__title,
-body.template-product .pdp-sticky-atc .purchase-summary__price,
-body.template-product .pdp-sticky-atc strong,
-body.template-product .pdp-sticky-atc span {
-  color: #f2ebdf !important;
+html body.template-product .pdp-sticky-atc .purchase-summary {
+  min-width: 0;
+  flex: 1 1 auto;
+  color: #f5f1ea;
 }
 
-body.template-product .pdp-sticky-atc button,
-body.template-product .pdp-sticky-atc .pdp-atc {
-  background: #c9a86c !important;
-  color: #080808 !important;
-  border-color: #c9a86c !important;
+html body.template-product .pdp-sticky-atc .purchase-summary__title,
+html body.template-product .melato-pdp-rebuild .pdp-sticky-atc .purchase-summary__title {
+  display: block;
+  color: #f5f1ea !important;
+  font-size: 13px !important;
+  line-height: 1.3;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-body.template-product .melato-pdp-rebuild .pdp-set-card,
-body.template-product .pdp-set-card {
-  background: #0d0d0d !important;
-  color: #f2ebdf !important;
+html body.template-product .pdp-sticky-atc .purchase-summary__price,
+html body.template-product .melato-pdp-rebuild .pdp-sticky-atc .purchase-summary__price,
+html body.template-product .melato-pdp-rebuild .pdp-sticky-atc span {
+  color: #f5f1ea !important;
+  font-size: 13px !important;
+  font-weight: 500;
+  letter-spacing: .04em;
 }
 
-body.template-product .melato-pdp-rebuild .pdp-set-card .pdp-set-label,
-body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__title,
-body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__price,
-body.template-product .pdp-set-card .pdp-set-label,
-body.template-product .pdp-set-card .purchase-summary__title,
-body.template-product .pdp-set-card .purchase-summary__price,
-body.template-product .pdp-set-card strong,
-body.template-product .pdp-set-card h3,
-body.template-product .pdp-set-card p {
-  color: #f2ebdf !important;
+html body.template-product .pdp-sticky-atc button {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
-body.template-product .melato-pdp-rebuild .pdp-set-card .pdp-set-label,
-body.template-product .pdp-set-card .pdp-set-label {
-  color: rgba(242, 235, 223, 0.58) !important;
+/* ---------- 2. Complete the Set (dark cards) ---------- */
+html body.template-product .melato-pdp-rebuild .pdp-set-card {
+  color: #f5f1ea;
 }
 
-body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__price,
-body.template-product .pdp-set-card .purchase-summary__price {
-  color: rgba(242, 235, 223, 0.78) !important;
+html body.template-product .melato-pdp-rebuild .pdp-set-card .pdp-set-piece-label,
+html body.template-product .melato-pdp-rebuild .pdp-set-card .melato-full-set-status {
+  color: #bdb6ab !important;
 }
 
-/* Consistent radii for premium rectangular house style (matches house-pdp) */
-body.template-product .melato-pdp-rebuild .pdp-choice,
-body.template-product .pdp-choice,
-body.template-product .melato-pdp-rebuild .pdp-qty,
-body.template-product .pdp-qty,
-body.template-product .melato-pdp-rebuild .pdp-atc,
-body.template-product .pdp-atc {
+html body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__title,
+html body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__title a,
+html body.template-product .melato-pdp-rebuild .pdp-set-card h3 {
+  color: #f5f1ea !important;
+}
+
+html body.template-product .melato-pdp-rebuild .pdp-set-card .purchase-summary__price,
+html body.template-product .melato-pdp-rebuild .pdp-set-card .melato-full-set-price,
+html body.template-product .melato-pdp-rebuild .pdp-set-card .melato-full-set-price strong {
+  color: #f5f1ea !important;
+}
+
+html body.template-product .melato-pdp-rebuild .pdp-set-card .melato-full-set-price span,
+html body.template-product .melato-pdp-rebuild .pdp-set-card .melato-full-set-selector > span {
+  color: #bdb6ab;
+}
+
+html body.template-product .melato-pdp-rebuild .pdp-set-card .melato-full-set-selector select {
+  color: #f5f1ea;
+  color-scheme: dark;
+}
+
+html body.template-product .melato-pdp-rebuild .pdp-set-card .melato-full-set-selector select option {
+  background: #0c0d0f;
+  color: #f5f1ea;
+}
+
+/* ---------- 3. Consistent control radii (premium rectangular, matches ATC + qty) ---------- */
+html body.template-product .melato-pdp-rebuild .pdp-choice span,
+html body.template-product .melato-pdp-rebuild .pdp-qty,
+html body.template-product .melato-pdp-rebuild .pdp-atc,
+html body.template-product .melato-pdp-rebuild .pdp-sticky-atc button {
   border-radius: 0 !important;
 }
 
-/* Slightly tighter main price if oversized */
-body.template-product .melato-pdp-rebuild .pdp-price,
-body.template-product .pdp-price {
-  font-size: clamp(15px, 1.4vw, 18px) !important;
+/* ---------- 4. Main PDP price: refined, stays below the H1 ---------- */
+html body.template-product .melato-pdp-rebuild .pdp-price {
+  font-size: clamp(16px, 1.25vw, 18px) !important;
+  letter-spacing: .04em;
 }
 
-/* Footer link spacing */
-.footer-link,
-.footer__link,
-[class*="footer"] a {
-  margin-inline: 0.35rem !important;
-  padding-inline: 0.25rem !important;
+/* ---------- 5. Footer link rhythm (sitewide footer columns) ---------- */
+body .melato-footer .melato-footer__column ul {
+  gap: 22px;
 }
 
-/* Ask Melato clearance */
-[class*="ask-melato"],
-.melato-concierge,
-#melato-chat-widget,
-[data-melato-chat] {
-  bottom: 88px !important;
-  z-index: 40 !important;
+body .melato-footer .melato-footer__column a {
+  display: inline-block;
+  padding-block: 3px;
+  letter-spacing: .14em;
 }
 
+/* ---------- 6. Ask Melato clears the mobile sticky ATC bar ---------- */
 @media (max-width: 749px) {
-  body.template-product .pdp-sticky-atc {
-    background: rgba(8, 8, 8, 0.96) !important;
-    color: #f2ebdf !important;
+  /* sticky bar ≈ 12 + 46 + 12 + 2 (border) = 72px, bottom offset 12px => 84px; +12px gap */
+  body.template-product:has(.pdp-sticky-atc.is-visible) #melato-ai-concierge {
+    bottom: calc(96px + env(safe-area-inset-bottom, 0px));
   }
+
+  body.template-product:has(.pdp-sticky-atc.is-visible) #melato-ai-concierge .melato-ai-panel {
+    max-height: calc(100dvh - 190px);
+  }
+}
+
+@supports not selector(:has(*)) {
+  @media (max-width: 749px) {
+    body.template-product #melato-ai-concierge {
+      bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+    }
+  }
+}
+
+/* ---------- 7. New Arrivals (dark merchandising band on PDP) ----------
+   Extra `.melato-pdp-merchandising__inner` class lifts specificity to (0,4,2) so these
+   beat the colour engine's !important rules (0,3,2) regardless of source order. */
+html body.template-product .melato-pdp-merchandising .melato-pdp-merchandising__inner .melato-pdp-bible-section-title,
+html body.template-product .melato-pdp-merchandising .melato-pdp-merchandising__inner .melato-card__title,
+html body.template-product .melato-pdp-merchandising .melato-pdp-merchandising__inner .melato-card__title a,
+html body.template-product .melato-pdp-merchandising .melato-pdp-merchandising__inner .melato-card__price,
+html body.template-product .melato-pdp-merchandising .melato-pdp-merchandising__inner .melato-card__price span {
+  color: #f5f1ea !important;
+}
+
+html body.template-product .melato-pdp-merchandising .melato-pdp-merchandising__inner .melato-card__eyebrow,
+html body.template-product .melato-pdp-merchandising .melato-pdp-merchandising__inner .melato-pdp-merchandising__view-all {
+  color: #bdb6ab !important;
 }
