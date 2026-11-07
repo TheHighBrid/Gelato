@@ -10,7 +10,7 @@
   assign form_id = 'MelatoCleanProductForm-' | append: section.id
   assign featured_media = current_variant.featured_media | default: product.featured_media
   assign product_title_down = product.title | downcase
-  assign product_type_down = product.product_type | downcase
+  assign product_type_down = product.type | downcase
 
   assign is_fragrance = false
   if product_type_down contains 'fragrance' or product_type_down contains 'eau de' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum' or product_title_down contains 'perfume'

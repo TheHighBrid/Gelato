@@ -7,7 +7,7 @@
   assign current_variant = product.selected_or_first_available_variant
   assign featured_media = current_variant.featured_media | default: product.featured_media
   assign product_title_down = product.title | downcase
-  assign product_type_down = product.product_type | downcase
+  assign product_type_down = product.type | downcase
   assign pdp_hook = product.metafields.custom.pdp_hook.value
   assign pdp_context = product.metafields.custom.pdp_proof_context.value | default: product.metafields.custom.story.value | default: product.metafields.custom.product_story.value
   assign pdp_details = product.metafields.custom.pdp_technical_details.value | default: product.metafields.custom.design_features.value
@@ -202,9 +202,9 @@
   "name":"Melato Luxury Product",
   "settings":[
     {"type":"text","id":"eyebrow","label":"Eyebrow","default":"Product focus"},
-    {"type":"text","id":"subtitle","label":"Legacy fallback hook","default":""},
-    {"type":"text","id":"story_heading","label":"Legacy story heading","default":""},
-    {"type":"textarea","id":"default_materials","label":"Legacy materials fallback","default":""},
+    {"type":"text","id":"subtitle","label":"Legacy fallback hook"},
+    {"type":"text","id":"story_heading","label":"Legacy story heading"},
+    {"type":"textarea","id":"default_materials","label":"Legacy materials fallback"},
     {"type":"text","id":"extra_gallery_heading","label":"Extra gallery heading","default":"Editorial close-ups and extra angles"}
   ],
   "blocks":[{

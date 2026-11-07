@@ -11,7 +11,7 @@
   assign set_heading = section.settings.heading | default: 'Complete the Melato set'
   assign set_description = section.settings.description | default: 'Pair the matching pieces for the full look.'
 
-  if product.product_type == 'Jeans' or product.tags contains 'type_jeans' or product.tags contains 'category_denim'
+  if product.type == 'Jeans' or product.tags contains 'type_jeans' or product.tags contains 'category_denim'
     assign set_heading = 'Complete the denim look'
     assign set_description = 'Pair the referenced Melato piece without changing the denim story.'
   elsif product_title_down contains 'bamboo'

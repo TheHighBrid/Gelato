@@ -9,13 +9,13 @@
    ============================================================ */
 
 :root {
-  --melato-page-bg: #050505;
-  --melato-page-surface: #111111;
-  --melato-page-surface-2: #151515;
-  --melato-page-border: rgba(255,255,255,.11);
-  --melato-page-border-soft: rgba(255,255,255,.07);
-  --melato-page-text: #f2f2f2;
-  --melato-page-muted: #a3a3a3;
+  --melato-page-bg:var(--surface-page);
+  --melato-page-surface:var(--surface-media);
+  --melato-page-surface-2:var(--surface-subtle);
+  --melato-page-border: var(--border-subtle);
+  --melato-page-border-soft: var(--border-subtle);
+  --melato-page-text:var(--text-primary);
+  --melato-page-muted:var(--text-secondary);
   --melato-page-faint: #747474;
   --melato-page-accent: var(--m-orange, #c04a10);
   --melato-page-accent-soft: rgba(192,74,16,.16);

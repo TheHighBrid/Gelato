@@ -132,7 +132,7 @@
 
     if template.name == 'product' and product
       assign product_title_down = product.title | downcase
-      assign product_type_down = product.product_type | downcase
+      assign product_type_down = product.type | downcase
       assign size_guide_page = product.metafields.custom.size_guide.value
       assign size_guide_handle = size_guide_page.handle | default: '' | downcase
       assign has_specific_size_guide = false

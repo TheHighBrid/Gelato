@@ -39,7 +39,10 @@ try {
 }
 
 if (contract) {
-  if (contract.schemaVersion !== '1.0.0') fail('schemaVersion must be 1.0.0');
+  if (contract.schemaVersion !== '1.1.0') fail('schemaVersion must be 1.1.0');
+  if (contract.recommendations?.automaticSameTypeField !== 'product.type') fail('automatic recommendation type filter must use product.type');
+  if (contract.recommendations?.curatedCrossTypeOverride !== true) fail('curated recommendations must support deliberate cross-type relationships');
+  if (contract.recommendations?.fallbackWhenNoEligibleCandidates !== true) fail('empty recommendations must fall back');
   if (contract.status !== 'MANDATORY') fail('contract status must be MANDATORY');
   if (contract.vendor !== 'Melato') fail('vendor must be exactly Melato');
   if (contract.defaults?.inventoryPerSellableVariantWhenUnspecified !== 7) fail('unspecified inventory default must be 7');
@@ -163,7 +166,7 @@ for (const protectedPath of [
 
 const bible = read(biblePath);
 requireText(bible, '**Status:** MANDATORY', biblePath);
-requireText(bible, 'custom.pdp_bible_version = 1.0.0', biblePath);
+requireText(bible, 'custom.pdp_bible_version = 1.1.0', biblePath);
 forbidText(bible, 'FREE SHIPPING OVER $60', biblePath);
 forbidText(bible, '$60 away from free shipping', biblePath);
 

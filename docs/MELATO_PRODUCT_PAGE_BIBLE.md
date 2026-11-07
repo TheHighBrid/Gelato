@@ -1,7 +1,7 @@
 # MELATO PRODUCT PAGE BIBLE
 
 **Status:** MANDATORY  
-**Version:** 1.0.0  
+**Version:** 1.1.0  
 **Adopted:** 2026-09-08  
 **Applies to:** every new Melato product, every future PDP change, and every legacy-product migration  
 **Authority:** this file plus `config/melato-product-page-bible.json`
@@ -471,8 +471,11 @@ This section is mandatory.
 
 Priority:
 
-1. `custom.related_products` when populated
-2. Shopify product recommendations when not populated
+1. Valid, available `custom.related_products` references are authoritative, including intentionally curated cross-category products.
+2. Available, same-`product.type` Shopify recommendations when no eligible curated item remains.
+3. Available, same-`product.type` New Arrivals, then Best Sellers, only when no eligible Shopify recommendation remains.
+
+A populated but invalid or sold-out curated list must not suppress automatic fallbacks. Do not render an empty recommendation grid solely because Shopify returned cross-type products.
 
 Show up to 4 products.
 
@@ -642,7 +645,7 @@ Empty is better than fabricated.
 
 Every new product must set:
 
-`custom.pdp_bible_version = 1.0.0`
+`custom.pdp_bible_version = 1.1.0`
 
 This stamp means the product was created or migrated against this standard. It is not customer-facing.
 
@@ -817,7 +820,7 @@ A product may be ACTIVE only when all applicable checks pass.
 - [ ] Palette colors are valid and contrast-safe
 - [ ] SEO title and meta description completed
 - [ ] Product is added to every eligible publication/channel
-- [ ] `custom.pdp_bible_version` equals `1.0.0`
+- [ ] `custom.pdp_bible_version` equals `1.1.0`
 - [ ] No duplicate claims or duplicated section content
 - [ ] No unsupported superlatives or invented facts
 
