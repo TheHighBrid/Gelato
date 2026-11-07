@@ -887,7 +887,7 @@
       "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership.",
-      "candidateSha256": "832cb421d91804aa251dbdf45cf992c0ab748643d556167c3772985046a9c4a0"
+      "candidateSha256": "698f833760aaeb43a7a993110ba042a24351ac0a7cded735b38b25c5e8e430ae"
     },
     {
       "path": "locales/ar.json",
