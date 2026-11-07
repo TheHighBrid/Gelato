@@ -5,6 +5,7 @@
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)');
   function clamp(n, a, b) { return Math.min(b, Math.max(a, n)); }
   function lerp(a, b, t) { return a + (b - a) * t; }
+  function hermite(t) { return t * t * (3 - 2 * t); }
 
   function Rack(root) {
     this.root = root;
@@ -17,7 +18,8 @@
     });
     this.abort = new AbortController();
     this.pos = 0; this.target = 0; this.active = -1; this.selected = null;
-    this.raf = 0; this.stageRaf = 0; this.edge = 0; this.swing = 0; this.swingV = 0;
+    this.raf = 0; this.stageRaf = 0; this.turntableRaf = 0;
+    this.edge = 0; this.swing = 0; this.swingV = 0;
     this.lastVelocity = 0; this.clock = 0;
     this.visible = true; this.busy = false; this.destroyed = false;
     this.isOpenView = false; this.openStageIndex = 0;
@@ -30,11 +32,21 @@
         drapeV: 0,
         twist: 0,
         twistV: 0,
+        lift: 0,
+        liftV: 0,
         wave: 0,
-        phase: i * 0.55
+        phase: i * 0.62,
+        collisionRest: 0
       };
     });
-    this.stageCloth = { swing: 0, swingV: 0, drape: 0, drapeV: 0, twist: 0, wave: 0, phase: 0 };
+    this.stageCloth = {
+      swing: 0, swingV: 0,
+      drape: 0, drapeV: 0,
+      twist: 0, twistV: 0,
+      lift: 0, liftV: 0,
+      wave: 0, phase: 0,
+      flare: 0
+    };
     this.stage = root.querySelector('[data-rack-stage]');
     this.live = root.querySelector('[data-rack-live]');
     this.caption = root.querySelector('[data-rack-caption]');
@@ -128,7 +140,8 @@
     var span = Math.max(1, upper.degrees - lower.degrees);
     var t = clamp((deg - lower.degrees) / span, 0, 1);
     var secondary = nearest.url === lower.url ? upper : lower;
-    var blend = nearest.url === secondary.url ? 0 : (1 - Math.abs(t - 0.5) * 2) * 0.46;
+    var blendCurve = Math.sin(t * Math.PI);
+    var blend = nearest.url === secondary.url ? 0 : clamp(blendCurve * 0.52, 0, 0.52);
     return {
       nearest: nearest,
       secondary: secondary,
@@ -162,42 +175,52 @@
     var sh = primaryImg.naturalHeight;
     ctx.clearRect(0, 0, cw, ch);
 
-    var strips = 28;
+    var strips = 36;
     var swing = state ? state.swing : 0;
     var drape = state ? state.drape : 0;
     var twist = state ? state.twist : 0;
     var wave = state ? state.wave : 0;
     var phase = state ? state.phase : 0;
+    var flare = state && state.flare ? state.flare : 0;
+
+    var destCoords = new Array(strips + 1);
+    for (var i = 0; i <= strips; i++) {
+      var t = i / strips;
+      var u = t <= 0.15 ? 0 : hermite((t - 0.15) / 0.85);
+      var uPow = Math.pow(u, 1.42);
+      var uDrape = Math.pow(u, 2.12);
+      var ripple = Math.sin(u * Math.PI * 1.95 - phase) * wave * Math.pow(u, 1.3);
+      var xDisplace = (uPow * swing * 2.25 + uDrape * drape * 2.95 + ripple) * (cw / 560);
+      var yDisplace = -Math.pow(u, 1.8) * Math.min(8.5, Math.abs(swing) * 0.18 + Math.abs(drape) * 0.24) * (ch / 700);
+      var pleat = 1 - Math.min(0.06, Math.abs(twist) * 0.0012 * Math.pow(u, 1.1)) + Math.sin(u * Math.PI * 2.3 - phase) * (drape * 0.0024 * u) + flare * u;
+      destCoords[i] = { x: xDisplace, y: t * ch + yDisplace, pleat: pleat };
+    }
 
     for (var s = 0; s < strips; s++) {
       var t0 = s / strips;
       var t1 = (s + 1) / strips;
-      var tm = (t0 + t1) * 0.5;
-      var u = tm <= 0.13 ? 0 : (tm - 0.13) / 0.87;
-      var uPow = Math.pow(u, 1.38);
-      var uDrape = Math.pow(u, 2.08);
-      var ripple = Math.sin(u * Math.PI * 1.85 - phase) * wave * Math.pow(u, 1.35);
-      var dx = (uPow * swing * 2.15 + uDrape * drape * 2.85 + ripple) * (cw / 560);
-      var dy = -Math.pow(u, 1.75) * Math.min(7.5, Math.abs(swing) * 0.16 + Math.abs(drape) * 0.22) * (ch / 700);
-      var pleat = 1 - Math.min(0.055, Math.abs(twist) * 0.0011 * Math.pow(u, 1.1)) + Math.sin(u * Math.PI * 2.2 - phase) * (drape * 0.0022 * u);
-      var dw = cw * pleat;
+      var c0 = destCoords[s];
+      var c1 = destCoords[s + 1];
+
+      var dw = cw * ((c0.pleat + c1.pleat) * 0.5);
+      var dx = (c0.x + c1.x) * 0.5;
       var destX = (cw - dw) * 0.5 + dx;
-      var destY = t0 * ch + dy;
-      var destH = (t1 - t0) * ch + 0.9;
+      var destY = c0.y;
+      var destH = Math.max(1, c1.y - c0.y + 1.25);
 
       var sy = t0 * sh;
-      var sHeight = (t1 - t0) * sh + 0.8;
+      var sHeight = (t1 - t0) * sh + 0.95;
 
       ctx.globalAlpha = 1;
       ctx.drawImage(primaryImg, 0, sy, sw, sHeight, destX, destY, dw, destH);
       if (secondaryImg) {
-        ctx.globalAlpha = clamp(blendAlpha, 0, 0.55);
+        ctx.globalAlpha = clamp(blendAlpha, 0, 0.65);
         ctx.drawImage(
           secondaryImg,
           0,
           t0 * secondaryImg.naturalHeight,
           secondaryImg.naturalWidth,
-          (t1 - t0) * secondaryImg.naturalHeight + 0.8,
+          (t1 - t0) * secondaryImg.naturalHeight + 0.95,
           destX,
           destY,
           dw,
@@ -205,6 +228,22 @@
         );
       }
     }
+
+    // Dynamic velour sheen & fold shadow response to physical sway
+    var totalSway = swing * 0.65 + drape * 0.35;
+    if (Math.abs(totalSway) > 0.45) {
+      var sheenX = (cw * 0.5) + clamp(totalSway * 4.8, -cw * 0.36, cw * 0.36);
+      var grad = ctx.createLinearGradient(sheenX - 160, 0, sheenX + 160, 0);
+      var sheenAlpha = clamp(Math.abs(totalSway) * 0.011, 0.015, 0.055);
+      grad.addColorStop(0, 'rgba(0,0,0,0.035)');
+      grad.addColorStop(0.5, 'rgba(255,255,255,' + sheenAlpha.toFixed(3) + ')');
+      grad.addColorStop(1, 'rgba(0,0,0,0.045)');
+      ctx.globalCompositeOperation = 'soft-light';
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, cw, ch);
+      ctx.globalCompositeOperation = 'source-over';
+    }
+
     ctx.globalAlpha = 1;
     container.classList.add('has-cloth-mesh');
     return true;
@@ -237,7 +276,8 @@
       this.swingV = 0;
       this.lastVelocity = 0;
       this.clothStates.forEach(function (st) {
-        st.swing = 0; st.swingV = 0; st.drape = 0; st.drapeV = 0; st.twist = 0; st.twistV = 0; st.wave = 0;
+        st.swing = 0; st.swingV = 0; st.drape = 0; st.drapeV = 0;
+        st.twist = 0; st.twistV = 0; st.lift = 0; st.liftV = 0; st.wave = 0;
       });
       this.render();
     } else {
@@ -256,11 +296,12 @@
     for (var i = 0; i < this.clothStates.length; i++) {
       var st = this.clothStates[i];
       var dist = Math.abs(i - centerIndex);
-      var falloff = Math.max(0, 1 - dist * 0.24);
+      var falloff = Math.max(0, 1 - dist * 0.22);
       var dir = i === centerIndex ? 0.35 : (i < centerIndex ? -1 : 1);
       st.swingV += dir * strength * falloff;
-      st.drapeV += dir * strength * 1.35 * falloff;
-      st.twistV += dir * strength * 2.6 * falloff;
+      st.drapeV += dir * strength * 1.45 * falloff;
+      st.twistV += dir * strength * 2.8 * falloff;
+      st.liftV += Math.min(2.2, Math.abs(strength) * 0.25 * falloff);
     }
   };
 
@@ -280,9 +321,9 @@
       self.lastVelocity = velocity;
       self.pos += velocity;
 
-      self.swingV += (-velocity * 0.038 - accel * 0.09 - self.swing * 0.072) * dt;
+      self.swingV += (-velocity * 0.042 - accel * 0.1 - self.swing * 0.076) * dt;
       self.swingV *= Math.pow(0.83, dt);
-      self.swing = clamp(self.swing + self.swingV * dt, -8.5, 8.5);
+      self.swing = clamp(self.swing + self.swingV * dt, -9.5, 9.5);
 
       var totalEnergy = Math.abs(self.swing) + Math.abs(self.swingV);
       var n = self.clothStates.length;
@@ -290,28 +331,44 @@
         var st = self.clothStates[i];
         var leftSwing = i > 0 ? self.clothStates[i - 1].swing : st.swing;
         var rightSwing = i < n - 1 ? self.clothStates[i + 1].swing : st.swing;
-        var neighborForce = (leftSwing + rightSwing - 2 * st.swing) * 0.055;
+
+        // Wave propagation between adjacent hanging garments
+        var neighborForce = (leftSwing + rightSwing - 2 * st.swing) * 0.062;
+
+        // Hanger collision bumper: when hangers swing toward each other beyond limit
+        if (i > 0 && (st.swing - leftSwing) < -5.5) {
+          var collision = (-5.5 - (st.swing - leftSwing)) * 0.32;
+          st.swingV += collision;
+          self.clothStates[i - 1].swingV -= collision * 0.85;
+          st.liftV += collision * 0.25;
+        }
+
         var dCenter = (self.centers[i] + self.pos - self.vw / 2) / Math.min(self.vw, 850);
-        var centerWeight = Math.max(0.35, 1 - Math.min(Math.abs(dCenter), 1.2) * 0.45);
+        var centerWeight = Math.max(0.38, 1 - Math.min(Math.abs(dCenter), 1.25) * 0.42);
 
-        st.swingV += ((-velocity * 0.042 * centerWeight) - (accel * 0.11 * centerWeight) - st.swing * 0.078 + neighborForce) * dt;
+        st.swingV += ((-velocity * 0.046 * centerWeight) - (accel * 0.12 * centerWeight) - st.swing * 0.082 + neighborForce) * dt;
         st.swingV *= Math.pow(0.84, dt);
-        st.swing = clamp(st.swing + st.swingV * dt, -10, 10);
+        st.swing = clamp(st.swing + st.swingV * dt, -11, 11);
 
-        // Lower garment hem & sleeve follow-through lag (secondary pendulum)
-        st.drapeV += ((st.swing - st.drape) * 0.115 - velocity * 0.028 * centerWeight - st.drape * 0.045) * dt;
+        // Lower garment hem & sleeve follow-through lag (secondary compound pendulum)
+        st.drapeV += ((st.swing - st.drape) * 0.13 - velocity * 0.032 * centerWeight - st.drape * 0.048) * dt;
         st.drapeV *= Math.pow(0.81, dt);
-        st.drape = clamp(st.drape + st.drapeV * dt, -13, 13);
+        st.drape = clamp(st.drape + st.drapeV * dt, -14.5, 14.5);
 
-        // Torsional hanger twist from rail motion & aerodynamic drag
-        st.twistV += (-velocity * 0.34 * centerWeight - st.twist * 0.095) * dt;
+        // Torsional hanger twist from rail translation & aerodynamic resistance
+        st.twistV += (-velocity * 0.38 * centerWeight - st.twist * 0.1) * dt;
         st.twistV *= Math.pow(0.80, dt);
-        st.twist = clamp(st.twist + st.twistV * dt, -34, 34);
+        st.twist = clamp(st.twist + st.twistV * dt, -36, 36);
 
-        st.phase += (0.12 + Math.min(0.28, Math.abs(velocity) * 0.012 + Math.abs(st.drapeV) * 0.04)) * dt;
-        st.wave = clamp(Math.abs(st.drape) * 0.42 + Math.abs(velocity) * 0.16, 0, 5.5);
+        // Hook micro-lift & chatter along the chrome bar
+        st.liftV += (-st.lift * 0.28) * dt;
+        st.liftV *= Math.pow(0.78, dt);
+        st.lift = clamp(st.lift + st.liftV * dt, -4, 4);
 
-        totalEnergy += (Math.abs(st.swing) + Math.abs(st.swingV) + Math.abs(st.drape) + Math.abs(st.drapeV) + Math.abs(st.twist) * 0.15) * 0.25;
+        st.phase += (0.13 + Math.min(0.32, Math.abs(velocity) * 0.014 + Math.abs(st.drapeV) * 0.045)) * dt;
+        st.wave = clamp(Math.abs(st.drape) * 0.46 + Math.abs(velocity) * 0.18, 0, 6.2);
+
+        totalEnergy += (Math.abs(st.swing) + Math.abs(st.swingV) + Math.abs(st.drape) + Math.abs(st.drapeV) + Math.abs(st.twist) * 0.15 + Math.abs(st.lift)) * 0.25;
       }
 
       self.render();
@@ -320,7 +377,8 @@
       } else {
         self.pos = self.target; self.swing = 0; self.swingV = 0; self.lastVelocity = 0;
         self.clothStates.forEach(function (st) {
-          st.swing = 0; st.swingV = 0; st.drape = 0; st.drapeV = 0; st.twist = 0; st.twistV = 0; st.wave = 0;
+          st.swing = 0; st.swingV = 0; st.drape = 0; st.drapeV = 0;
+          st.twist = 0; st.twistV = 0; st.lift = 0; st.liftV = 0; st.wave = 0;
         });
         self.render(); self.raf = 0; self.announce();
       }
@@ -332,7 +390,7 @@
     this.track.style.transform = 'translate3d(' + this.pos.toFixed(2) + 'px,0,0)';
     for (var i = 0; i < this.items.length; i++) {
       var item = this.items[i];
-      var st = this.clothStates[i] || { swing: this.swing, drape: 0, twist: 0, wave: 0, phase: 0 };
+      var st = this.clothStates[i] || { swing: this.swing, drape: 0, twist: 0, lift: 0, wave: 0, phase: 0 };
       var d = (this.centers[i] + this.pos - this.vw / 2) / Math.min(this.vw, 850);
       var distance = Math.min(Math.abs(d), 1);
       var angle = motion.matches ? 0 : clamp(-d * 82 + st.twist * 0.45, -58, 58);
@@ -368,13 +426,13 @@
       }
 
       var sway = motion.matches ? 0 : (st.swing * 0.72 + this.swing * 0.28) * (1 - distance * 0.35);
-      var liftY = motion.matches ? 0 : -Math.min(4.5, Math.abs(sway) * 0.25 + Math.abs(st.drape) * 0.12);
+      var liftY = motion.matches ? 0 : (-Math.min(5.5, Math.abs(sway) * 0.28 + Math.abs(st.drape) * 0.14) + (st.lift || 0));
       item.style.transform = 'perspective(1150px) translate3d(0,' + liftY.toFixed(2) + 'px,0) rotateY(' + angle.toFixed(2) + 'deg) rotateZ(' + sway.toFixed(2) + 'deg) scale(' + (1 - distance * 0.12).toFixed(3) + ')';
       item.style.zIndex = String(100 - Math.round(distance * 80));
       item.style.setProperty('--mrack-depth', (1 - distance * 0.22).toFixed(3));
       item.style.setProperty('--mrack-drop-x', clamp(6 - sway * 1.3, -10, 16).toFixed(1) + 'px');
-      item.style.setProperty('--mrack-shadow-x', clamp(-sway * 2.4 - st.drape * 1.1, -22, 22).toFixed(1) + 'px');
-      item.style.setProperty('--mrack-shadow-scale', clamp(1 - Math.abs(angle) * 0.005 + Math.abs(st.drape) * 0.012, 0.72, 1.18).toFixed(3));
+      item.style.setProperty('--mrack-shadow-x', clamp(-sway * 2.6 - st.drape * 1.2, -24, 24).toFixed(1) + 'px');
+      item.style.setProperty('--mrack-shadow-scale', clamp(1 - Math.abs(angle) * 0.005 + Math.abs(st.drape) * 0.014, 0.72, 1.22).toFixed(3));
     }
     var active = this.nearest(this.pos);
     if (active !== this.active) {
@@ -421,7 +479,12 @@
       if (vp.hasPointerCapture(e.pointerId)) vp.releasePointerCapture(e.pointerId);
       vp.classList.remove('is-dragging'); self.suppressClick = drag.moved;
       var v = performance.now() - drag.time < 120 ? drag.velocity : 0;
-      if (drag.moved) self.snapTo(self.nearest(clamp(self.target + v * 155, self.minPos, self.maxPos)));
+      if (drag.moved) {
+        self.snapTo(self.nearest(clamp(self.target + v * 165, self.minPos, self.maxPos)));
+        if (!motion.matches && Math.abs(v) > 0.3) {
+          self.impulseNeighbors(self.active, -v * 4.2);
+        }
+      }
     }
     this.on(window, 'pointerup', release); this.on(window, 'pointercancel', release);
     this.on(vp, 'pointermove', function (e) {
@@ -499,28 +562,53 @@
     this.on(s.querySelector('[data-rack-zoom]'), 'click', function (e) {
       var zoom = self.art.classList.toggle('is-zoomed'); e.currentTarget.setAttribute('aria-pressed', String(zoom));
     });
+
+    // 360 Turntable rotation with inertial momentum coasting
     this.on(this.art, 'pointerdown', function (e) {
       if (e.button !== 0 || self.busy) return;
-      self.turnDrag = { id: e.pointerId, x: e.clientX, lastX: e.clientX, rotation: self.rotation };
+      self.stopTurntable();
+      var now = performance.now();
+      self.turnDrag = {
+        id: e.pointerId,
+        x: e.clientX,
+        lastX: e.clientX,
+        time: now,
+        lastTime: now,
+        velocity: 0,
+        rotation: self.rotation
+      };
       self.art.setPointerCapture(e.pointerId); self.art.classList.add('is-turning');
     });
     this.on(this.art, 'pointermove', function (e) {
       if (!self.turnDrag || self.turnDrag.id !== e.pointerId) return;
-      var deltaX = e.clientX - self.turnDrag.x;
+      var now = performance.now();
+      var dt = Math.max(1, now - self.turnDrag.lastTime);
       var stepDx = e.clientX - self.turnDrag.lastX;
+      self.turnDrag.velocity = (stepDx / dt) * 16.667;
       self.turnDrag.lastX = e.clientX;
+      self.turnDrag.lastTime = now;
+      var deltaX = e.clientX - self.turnDrag.x;
       var raw = self.turnDrag.rotation + deltaX * 0.68;
       var min = Number(self.turn.min), max = Number(self.turn.max);
       var views = self.current && self.current.angles;
       var nextDeg = (self.hasFullCircle(views) && max >= 360) ? (((raw % 360) + 360) % 360) : clamp(raw, min, max);
+      self.stageCloth.flare = clamp(Math.abs(self.turnDrag.velocity) * 0.0035, 0, 0.05);
       self.impulseStageCloth(stepDx * 0.22);
       self.setTurn(nextDeg);
     });
     function endTurn(e) {
       if (!self.turnDrag || self.turnDrag.id !== e.pointerId) return;
+      var drag = self.turnDrag;
       self.turnDrag = null;
       self.art.classList.remove('is-turning');
       if (self.art.hasPointerCapture(e.pointerId)) self.art.releasePointerCapture(e.pointerId);
+      var v = drag.velocity;
+      if (!motion.matches && Math.abs(v) > 0.45 && self.selected !== null) {
+        self.spinTurntable(v * 0.48);
+      } else {
+        self.stageCloth.flare = 0;
+        self.renderStageCloth();
+      }
     }
     this.on(this.art, 'pointerup', endTurn); this.on(this.art, 'pointercancel', endTurn);
     this.on(s.querySelector('[data-rack-avail]'), 'click', function () { self.openDrawer(); });
@@ -532,10 +620,41 @@
     });
   };
 
+  Rack.prototype.stopTurntable = function () {
+    cancelAnimationFrame(this.turntableRaf);
+    this.turntableRaf = 0;
+    this.stageCloth.flare = 0;
+  };
+
+  Rack.prototype.spinTurntable = function (velocity) {
+    var self = this;
+    this.stopTurntable();
+    var last = performance.now();
+    var v = velocity;
+    function spin(now) {
+      var dt = clamp((now - last) / 16.667, 0.25, 2); last = now;
+      v *= Math.pow(0.925, dt);
+      var views = self.current && self.current.angles;
+      var min = Number(self.turn.min), max = Number(self.turn.max);
+      var raw = self.rotation + v * dt;
+      var nextDeg = (self.hasFullCircle(views) && max >= 360) ? (((raw % 360) + 360) % 360) : clamp(raw, min, max);
+      self.stageCloth.flare = clamp(Math.abs(v) * 0.0035, 0, 0.045);
+      self.impulseStageCloth(v * 0.16);
+      self.setTurn(nextDeg);
+      if (Math.abs(v) > 0.06 && self.selected !== null) {
+        self.turntableRaf = requestAnimationFrame(spin);
+      } else {
+        self.stopTurntable();
+        self.renderStageCloth();
+      }
+    }
+    this.turntableRaf = requestAnimationFrame(spin);
+  };
+
   Rack.prototype.impulseStageCloth = function (impulse) {
     if (motion.matches) return;
-    this.stageCloth.swingV = clamp(this.stageCloth.swingV - impulse * 0.35, -8, 8);
-    this.stageCloth.drapeV = clamp(this.stageCloth.drapeV - impulse * 0.65, -12, 12);
+    this.stageCloth.swingV = clamp(this.stageCloth.swingV - impulse * 0.36, -8.5, 8.5);
+    this.stageCloth.drapeV = clamp(this.stageCloth.drapeV - impulse * 0.68, -12.5, 12.5);
     this.tickStageCloth();
   };
 
@@ -546,16 +665,16 @@
       if (self.destroyed || self.selected === null) { self.stageRaf = 0; return; }
       var dt = clamp((now - last) / 16.667, 0.25, 2); last = now;
       var st = self.stageCloth;
-      st.swingV += (-st.swing * 0.085) * dt;
+      st.swingV += (-st.swing * 0.088) * dt;
       st.swingV *= Math.pow(0.84, dt);
-      st.swing = clamp(st.swing + st.swingV * dt, -7, 7);
+      st.swing = clamp(st.swing + st.swingV * dt, -7.5, 7.5);
 
-      st.drapeV += ((st.swing - st.drape) * 0.12 - st.drape * 0.055) * dt;
+      st.drapeV += ((st.swing - st.drape) * 0.125 - st.drape * 0.058) * dt;
       st.drapeV *= Math.pow(0.82, dt);
-      st.drape = clamp(st.drape + st.drapeV * dt, -11, 11);
+      st.drape = clamp(st.drape + st.drapeV * dt, -11.5, 11.5);
 
-      st.phase += (0.14 + Math.abs(st.drapeV) * 0.04) * dt;
-      st.wave = clamp(Math.abs(st.drape) * 0.45, 0, 5);
+      st.phase += (0.14 + Math.abs(st.drapeV) * 0.045) * dt;
+      st.wave = clamp(Math.abs(st.drape) * 0.46, 0, 5.2);
 
       self.renderStageCloth();
       if (Math.abs(st.swing) + Math.abs(st.swingV) + Math.abs(st.drape) + Math.abs(st.drapeV) > 0.04) {
@@ -573,10 +692,10 @@
     if (!this.stage || !this.current) return;
     var st = this.stageCloth;
     if (this.flip) {
-      this.flip.style.setProperty('--mrack-stage-sway', (st.swing * 0.45).toFixed(2) + 'deg');
+      this.flip.style.setProperty('--mrack-stage-sway', (st.swing * 0.48).toFixed(2) + 'deg');
     }
     if (this.stageShadow) {
-      this.stageShadow.style.setProperty('--mrack-stage-shadow-x', (-st.swing * 2.2 - st.drape * 1.2).toFixed(1) + 'px');
+      this.stageShadow.style.setProperty('--mrack-stage-shadow-x', (-st.swing * 2.4 - st.drape * 1.25).toFixed(1) + 'px');
     }
     var primaryUrl = this.imgFront ? this.imgFront.getAttribute('src') : null;
     var secondaryUrl = (this.imgBlend && !this.imgBlend.hidden) ? this.imgBlend.getAttribute('src') : null;
@@ -588,6 +707,7 @@
     var openViews = this.current && this.current.openViews;
     if (!openViews || !openViews.length) return;
     clearTimeout(this.unzipTimer);
+    this.stopTurntable();
     if (!enable) {
       this.isOpenView = false;
       return;
@@ -606,19 +726,19 @@
     if (halfView && !motion.matches) {
       this.imgFront.src = halfView.url;
       this.imgFront.alt = this.current.title + ', unzipping';
-      this.impulseStageCloth(3.2);
+      this.impulseStageCloth(3.5);
       this.renderStageCloth();
       this.unzipTimer = setTimeout(function () {
         if (!self.isOpenView || self.destroyed || !self.current) return;
         self.imgFront.src = finalView.url;
         self.imgFront.alt = self.current.title + ', inside look';
-        self.impulseStageCloth(-2.4);
+        self.impulseStageCloth(-2.6);
         self.renderStageCloth();
       }, 210);
     } else {
       this.imgFront.src = finalView.url;
       this.imgFront.alt = this.current.title + ', inside look';
-      this.impulseStageCloth(2.6);
+      this.impulseStageCloth(2.8);
       this.renderStageCloth();
     }
 
@@ -688,10 +808,11 @@
     this.items.forEach(function (item, i) {
       item.style.translate = returning || i === index ? '0px' : (i < index ? -distance : distance) + 'px';
       if (!motion.matches && self.clothStates[i] && i !== index) {
-        var falloff = Math.max(0, 1 - Math.abs(i - index) * 0.28);
-        var dir = (i < index ? -1 : 1) * (returning ? -0.75 : 1);
-        self.clothStates[i].swingV += dir * 2.4 * falloff;
-        self.clothStates[i].drapeV += dir * 3.2 * falloff;
+        var falloff = Math.max(0, 1 - Math.abs(i - index) * 0.26);
+        var dir = (i < index ? -1 : 1) * (returning ? -0.85 : 1);
+        self.clothStates[i].swingV += dir * 2.8 * falloff;
+        self.clothStates[i].drapeV += dir * 3.8 * falloff;
+        self.clothStates[i].liftV += 1.8 * falloff;
       }
     });
     if (!motion.matches) await new Promise(function (resolve) { setTimeout(resolve, returning ? 380 : 240); });
@@ -704,21 +825,21 @@
     var frames = returning
       ? [
           { transform: 'none', offset: 0 },
-          { transform: 'translate(' + (dx * 0.32) + 'px,' + (dy * 0.24 - 22) + 'px) scale(' + lerp(1, scale, 0.38) + ') rotate(-1.6deg)', offset: 0.36 },
-          { transform: 'translate(' + dx + 'px,' + (dy - 32) + 'px) scale(' + scale + ') rotate(1.8deg)', offset: 0.76 },
-          { transform: 'translate(' + dx + 'px,' + (dy + 5) + 'px) scale(' + (scale * 0.992) + ') rotate(-0.8deg)', offset: 0.91 },
+          { transform: 'translate(' + (dx * 0.28) + 'px,' + (dy * 0.22 - 26) + 'px) scale(' + lerp(1, scale, 0.35) + ') rotate(-2deg)', offset: 0.32 },
+          { transform: 'translate(' + dx + 'px,' + (dy - 38) + 'px) scale(' + scale + ') rotate(2.2deg)', offset: 0.74 },
+          { transform: 'translate(' + dx + 'px,' + (dy + 6) + 'px) scale(' + (scale * 0.99) + ') rotate(-1deg)', offset: 0.89 },
           { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ') rotate(0deg)', offset: 1 }
         ]
       : [
           { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + scale + ') rotate(0deg)', offset: 0 },
-          { transform: 'translate(' + dx + 'px,' + (dy - 34) + 'px) scale(' + (scale * 1.02) + ') rotate(-2.4deg)', offset: 0.2 },
-          { transform: 'translate(' + (dx * 0.35) + 'px,' + (dy * 0.28 - 20) + 'px) scale(' + lerp(scale, 1, 0.68) + ') rotate(1.6deg)', offset: 0.64 },
-          { transform: 'translate(0px, 4px) scale(1.012) rotate(-0.5deg)', offset: 0.88 },
+          { transform: 'translate(' + dx + 'px,' + (dy - 38) + 'px) scale(' + (scale * 1.025) + ') rotate(-2.8deg)', offset: 0.18 },
+          { transform: 'translate(' + (dx * 0.32) + 'px,' + (dy * 0.26 - 24) + 'px) scale(' + lerp(scale, 1, 0.7) + ') rotate(1.8deg)', offset: 0.62 },
+          { transform: 'translate(0px, 6px) scale(1.015) rotate(-0.6deg)', offset: 0.86 },
           { transform: 'none', offset: 1 }
         ];
     this.stage.classList.add('is-travelling');
     this.animation = this.art.animate(frames, {
-      duration: returning ? 860 : 920,
+      duration: returning ? 880 : 940,
       easing: returning ? 'cubic-bezier(.24,.74,.22,1)' : 'cubic-bezier(.22,.78,.2,1)',
       fill: 'both'
     });
@@ -728,7 +849,7 @@
 
   Rack.prototype.open = async function (index, switching) {
     if (this.busy || this.selected !== null || !this.data[index] || !this.stage) return;
-    this.busy = true; this.stop(); this.drag = null;
+    this.busy = true; this.stop(); this.stopTurntable(); this.drag = null;
     var data = this.data[index], source = this.items[index];
     this.preloadProduct(data);
     this.lastFocus = switching ? source.querySelector('[data-rack-link]') : document.activeElement;
@@ -755,7 +876,7 @@
     var fullCircle = this.hasFullCircle(data.angles);
     this.turn.min = hasAngles ? data.angles[0].degrees : data.back ? 0 : -35;
     this.turn.max = hasAngles ? (fullCircle ? 360 : data.angles[data.angles.length - 1].degrees) : data.back ? 180 : 35;
-    this.stageCloth.swing = 0; this.stageCloth.swingV = 0; this.stageCloth.drape = 0; this.stageCloth.drapeV = 0;
+    this.stageCloth.swing = 0; this.stageCloth.swingV = 0; this.stageCloth.drape = 0; this.stageCloth.drapeV = 0; this.stageCloth.flare = 0;
     this.setTurn(0); this.art.classList.remove('is-zoomed');
     this.stage.querySelector('[data-rack-zoom]').setAttribute('aria-pressed', 'false');
     this.stage.querySelector('[data-rack-name]').textContent = data.title;
@@ -772,9 +893,9 @@
     try { await Promise.race([this.imgFront.decode().catch(function () {}), new Promise(function (resolve) { setTimeout(resolve, 500); })]); } catch (_) {}
     if (this.destroyed) return;
     this.art.style.visibility = '';
-    this.impulseStageCloth(3.8);
+    this.impulseStageCloth(4.2);
     await this.travel(from, this.art.getBoundingClientRect(), false);
-    this.impulseStageCloth(-2.1);
+    this.impulseStageCloth(-2.5);
     this.busy = false;
     this.stage.querySelector('[data-rack-close]').focus({ preventScroll: true });
   };
@@ -783,6 +904,7 @@
     if (this.selected === null || this.busy) return;
     this.busy = true;
     clearTimeout(this.unzipTimer);
+    this.stopTurntable();
     cancelAnimationFrame(this.stageRaf); this.stageRaf = 0;
     var index = this.selected, source = this.items[index];
     this.closeDrawer(true); this.setTurn(0); this.art.classList.remove('is-zoomed');
@@ -791,9 +913,10 @@
     source.classList.remove('is-picked'); this.selected = null;
     document.documentElement.style.overflow = this.previousOverflow;
     if (!motion.matches && this.clothStates[index]) {
-      this.clothStates[index].swingV += 2.8;
-      this.clothStates[index].drapeV -= 4.2;
-      this.impulseNeighbors(index, 1.8);
+      this.clothStates[index].swingV += 3.2;
+      this.clothStates[index].drapeV -= 4.6;
+      this.clothStates[index].liftV -= 2.2;
+      this.impulseNeighbors(index, 2.2);
     }
     await this.makeSpace(index, true);
     this.busy = false;
@@ -865,7 +988,8 @@
   };
 
   Rack.prototype.destroy = function () {
-    this.destroyed = true; this.stop(); cancelAnimationFrame(this.stageRaf); clearTimeout(this.unzipTimer);
+    this.destroyed = true; this.stop(); this.stopTurntable();
+    cancelAnimationFrame(this.stageRaf); clearTimeout(this.unzipTimer);
     this.abort.abort(); this.resize.disconnect(); this.observer.disconnect(); clearTimeout(this.wheelTimer);
     if (this.animation) this.animation.cancel();
     if (this.stage && this.stage.open) { this.stage.close(); document.documentElement.style.overflow = this.previousOverflow; }

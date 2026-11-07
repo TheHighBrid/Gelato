@@ -85,7 +85,8 @@
 .mrack__stage[open] { display: grid; place-items: center; }
 .mrack__close { position: fixed; top: max(16px, env(safe-area-inset-top)); right: max(20px, env(safe-area-inset-right)); z-index: 3; display: flex; gap: 12px; align-items: center; min-height: 44px; padding: 0 12px; border: 0; background: var(--mrack-bg); color: inherit; font: inherit; font-size: 11px; cursor: pointer; }
 .mrack__stage-body { width: min(1080px, 94vw); min-height: min(760px, 100dvh); display: grid; grid-template-columns: 1.25fr 1fr; align-items: center; gap: clamp(30px, 6vw, 100px); padding: 76px 28px 48px; }
-.mrack__art { width: 100%; max-width: min(520px, 60vh); aspect-ratio: 4 / 5; position: relative; transform-origin: 50% 14px; margin-inline: auto; touch-action: pan-y; cursor: ew-resize; will-change: transform; }
+.mrack__art { width: 100%; max-width: min(520px, 60vh); aspect-ratio: 4 / 5; position: relative; transform-origin: 50% 14px; margin-inline: auto; touch-action: pan-y; cursor: grab; will-change: transform; }
+.mrack__art.is-turning { cursor: grabbing; }
 .mrack__stage-shadow {
   position: absolute; left: 16%; right: 16%; bottom: -18px; height: 26px;
   border-radius: 50%;
@@ -161,7 +162,7 @@
 }
 
 /* Independent rail displacement preserves each garment's swing transform. */
-.mrack__item { transition: translate .55s cubic-bezier(.22,.75,.22,1); }
+.mrack__item { transition: translate .58s cubic-bezier(.22,.78,.2,1); }
 .mrack__stage .mrack__info, .mrack__stage .mrack__close { transition: opacity .35s ease, translate .45s ease; }
 .mrack__stage.is-travelling .mrack__info, .mrack__stage.is-travelling .mrack__close { opacity: 0; translate: 0 12px; pointer-events: none; }
 .mrack__stage.has-baked-hanger .mrack__hanger-wrap, .mrack__item.has-baked-hanger .mrack__hanger-wrap { display: none; }
