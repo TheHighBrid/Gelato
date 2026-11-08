@@ -1,19 +1,348 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "melato-living-book-vol01",
-      "settings": {
-        "hide_store_chrome": true
-      }
+      "type": "melato-lookbook-shop",
+      "settings": {},
+      "blocks": {
+        "frame_01": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_TAWAKAL26_TLB_OTTAWA_001.jpg",
+            "frame_title": "Reliance",
+            "caption": "One silhouette. Two accomplices.",
+            "place": "Ottawa",
+            "narrative": false,
+            "product_1": "reliance-bamboo-track-jacket",
+            "product_2": "reliance-bamboo-track-pant"
+          }
+        },
+        "frame_02": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_50.jpg",
+            "frame_title": "Black Cherry",
+            "caption": "The city has a dress code.",
+            "place": "City balcony",
+            "narrative": false,
+            "product_1": "black-cherry-velour-track-jacket",
+            "product_2": "black-cherry-track-pant"
+          }
+        },
+        "frame_03": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_60__AP.jpg",
+            "frame_title": "Whenever",
+            "caption": "Some things need no explanation.",
+            "place": "A closer look",
+            "narrative": true
+          }
+        },
+        "frame_04": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_TAWAKAL26_TLB_OTTAWA_003.png",
+            "frame_title": "In good company",
+            "caption": "Same uniform. Different alibis.",
+            "place": "Ottawa",
+            "narrative": false,
+            "product_1": "reliance-bamboo-track-jacket",
+            "product_2": "reliance-bamboo-track-pant"
+          }
+        },
+        "frame_05": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Editorial_Shots_Vol2_15.jpg",
+            "frame_title": "En route",
+            "caption": "The platform is a runway, briefly.",
+            "place": "Blair station \u00b7 Ottawa",
+            "narrative": true
+          }
+        },
+        "frame_06": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ENROUTE26_TLB_OTTAWA_001.png",
+            "frame_title": "Between stops",
+            "caption": "Nothing to declare. Somewhere to be.",
+            "place": "Blair station \u00b7 Ottawa",
+            "narrative": true
+          }
+        },
+        "frame_07": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Editorial_Shots_Vol2_20.jpg",
+            "frame_title": "The gallery",
+            "caption": "A study in taking up space.",
+            "place": "Gallery",
+            "narrative": false,
+            "product_1": "rex-x-fur-jacket-1",
+            "product_2": "sunset-deposition-corset-dress-copy"
+          }
+        },
+        "frame_08": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ORIGINS26__TLB_CASABLANCA_ROOFTOP_001.jpg",
+            "frame_title": "Above the city",
+            "caption": "A little distance changes everything.",
+            "place": "City balcony",
+            "narrative": false,
+            "product_1": "black-cherry-velour-track-jacket",
+            "product_2": "black-cherry-track-pant"
+          }
+        },
+        "frame_09": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ORIGINS26_DRESS_CODE_VIOLATION_RIB_KNIT_POLO_MINI_DRESS_TLB_MEKNES_SALON_001.jpg",
+            "frame_title": "Dress code violation",
+            "caption": "The room keeps its own counsel.",
+            "place": "Meknes",
+            "narrative": false,
+            "product_1": "dress-code-rib-knit-zip-mini-dress"
+          }
+        },
+        "frame_10": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ORIGINS26_TLB_RABAT_001.jpg",
+            "frame_title": "Origins",
+            "caption": "Home is a very particular light.",
+            "place": "Morocco",
+            "narrative": false,
+            "product_1": "black-cherry-velour-track-jacket",
+            "product_2": "black-cherry-track-pant"
+          }
+        },
+        "frame_11": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ORIGINS26_DETOUR-TEE_TLB_FOUR-SEASONS_001.jpg",
+            "frame_title": "The detour",
+            "caption": "The plan did not survive the evening.",
+            "place": "Four Seasons",
+            "narrative": false,
+            "product_1": "detour-tee"
+          }
+        },
+        "frame_12": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ORIGINS26_TLB_MEKNES_003.jpg",
+            "frame_title": "Salon, I",
+            "caption": "A familiar room. An unfamiliar silence.",
+            "place": "Meknes",
+            "narrative": false,
+            "product_1": "dress-code-rib-knit-zip-mini-dress"
+          }
+        },
+        "frame_13": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ORIGINS26_TLB_MEKNES_006.jpg",
+            "frame_title": "Salon, II",
+            "caption": "Stay a little longer.",
+            "place": "Meknes",
+            "narrative": false,
+            "product_1": "dress-code-rib-knit-zip-mini-dress"
+          }
+        },
+        "frame_14": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Editorial_Shots_Vol2_5.jpg",
+            "frame_title": "Red Handed",
+            "caption": "A case of personal effects.",
+            "place": "Objects of intent",
+            "narrative": false,
+            "product_1": "red-handed-top-handle-bag"
+          }
+        },
+        "frame_15": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Editorial_Shots_Vol2_26.jpg",
+            "frame_title": "Emerald Solstice",
+            "caption": "Evidence, left to soak.",
+            "place": "Objects of intent",
+            "narrative": false,
+            "product_1": "emerald-solstice-tile-geometric-tie"
+          }
+        },
+        "frame_16": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Melato_Editorial_Lookbook_ACT_3_SHOT_1_www.melato.ca.jpg",
+            "frame_title": "The correspondence",
+            "caption": "Some letters are better left unsent.",
+            "place": "After hours",
+            "narrative": false,
+            "product_1": "blush-ledger-satin-shirt"
+          }
+        },
+        "frame_17": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ARNIBAL26_TLL_OTTAWA_002.jpg",
+            "frame_title": "Press record",
+            "caption": "The camera remembers.",
+            "place": "Ottawa",
+            "narrative": true
+          }
+        },
+        "frame_18": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Melato_Editorial_Lookbook_ACT_3_SHOT_3_www.melato.ca.jpg",
+            "frame_title": "Unsent",
+            "caption": "What remains of what was said.",
+            "place": "The correspondence",
+            "narrative": true
+          }
+        },
+        "frame_19": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca_EL_TLL_FRAME_105.jpg",
+            "frame_title": "Dawn-to-Dusk",
+            "caption": "Private rituals. Public evidence.",
+            "place": "After hours",
+            "narrative": false,
+            "product_1": "dawn-to-dusk-three-piece-undergarment-set"
+          }
+        },
+        "frame_20": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO.CA_OBSIDIAN26_TLL_OTTAWA_001.png",
+            "frame_title": "Obsidian Coast",
+            "caption": "The part of you that stays behind.",
+            "place": "Objects of intent",
+            "narrative": false,
+            "product_1": "obsidian-coast-eau-de-parfum"
+          }
+        },
+        "frame_21": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca_EL_TLL_FRAME_106.png",
+            "frame_title": "Ivy Trellis",
+            "caption": "Held together with intent.",
+            "place": "Objects of intent",
+            "narrative": false,
+            "product_1": "ivy-trellis-harness-suspenders"
+          }
+        },
+        "frame_22": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_MANODIMANO26_TLB_OTTAWA_001.png",
+            "frame_title": "Soft power",
+            "caption": "A gesture is enough.",
+            "place": "The correspondence",
+            "narrative": true
+          }
+        },
+        "frame_23": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Melato_Editorial_Lookbook_ACT_3_SHOT_7_www.melato.ca.jpg",
+            "frame_title": "Pass it on",
+            "caption": "No return address.",
+            "place": "The correspondence",
+            "narrative": true
+          }
+        },
+        "frame_24": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook-Frame-0_1.jpg",
+            "frame_title": "Taqburni",
+            "caption": "A message worn close.",
+            "place": "Objects of intent",
+            "narrative": false,
+            "product_1": "taqburni-velour-polo-shirt"
+          }
+        },
+        "frame_25": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook-Frame-0_8.jpg",
+            "frame_title": "Personal effects",
+            "caption": "Two pieces. One open case.",
+            "place": "Objects of intent",
+            "narrative": false,
+            "product_1": "barolo-tweed-zip-overshirt",
+            "product_2": "red-handed-top-handle-bag"
+          }
+        },
+        "frame_26": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_84.jpg",
+            "frame_title": "Silk Bloom",
+            "caption": "Last light, bottled.",
+            "place": "At the water",
+            "narrative": false,
+            "product_1": "silk-bloom-eau-de-parfum"
+          }
+        },
+        "frame_27": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_34.jpg",
+            "frame_title": "Bordeaux Line",
+            "caption": "A line worth following.",
+            "place": "Rooftop",
+            "narrative": false,
+            "product_1": "bordeaux-line-knit-polo",
+            "product_2": "bordeaux-line-pleated-mini-skirt"
+          }
+        },
+        "frame_28": {
+          "type": "frame",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_85.jpg",
+            "frame_title": "Yours, Melato",
+            "caption": "The story continues with you.",
+            "place": "End of record",
+            "narrative": true
+          }
+        }
+      },
+      "block_order": [
+        "frame_01",
+        "frame_02",
+        "frame_03",
+        "frame_04",
+        "frame_05",
+        "frame_06",
+        "frame_07",
+        "frame_08",
+        "frame_09",
+        "frame_10",
+        "frame_11",
+        "frame_12",
+        "frame_13",
+        "frame_14",
+        "frame_15",
+        "frame_16",
+        "frame_17",
+        "frame_18",
+        "frame_19",
+        "frame_20",
+        "frame_21",
+        "frame_22",
+        "frame_23",
+        "frame_24",
+        "frame_25",
+        "frame_26",
+        "frame_27",
+        "frame_28"
+      ]
     }
   },
   "order": [

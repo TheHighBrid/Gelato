@@ -1,0 +1,27 @@
+{% doc %}
+  Renders a featured lookbook piece using current storefront product data.
+  @param {product} look_product - Published product featured in this exact frame.
+{% enddoc %}
+<article class="tll-product">
+  <a class="tll-product-image" href="{{ look_product.url }}" tabindex="-1" aria-hidden="true">
+    {% if look_product.featured_image %}{{ look_product.featured_image | image_url: width: 400 | image_tag: loading: 'lazy', widths: '200, 400', sizes: '120px', alt: look_product.title }}{% endif %}
+  </a>
+  <div class="tll-product-copy">
+    <h3><a href="{{ look_product.url }}">{{ look_product.title | escape }}</a></h3>
+    <p data-tll-price>{{ look_product.price | money_with_currency }}</p>
+    <form method="post" action="{{ routes.cart_add_url }}" data-tll-product-form>
+      <label><span class="tll-option-label">{{ look_product.options | join: ' / ' | escape }}</span>
+        <select name="id" required aria-label="{{ look_product.title | escape }}: {{ look_product.options | join: ' / ' | escape }}" {% unless look_product.available %}disabled{% endunless %}>
+          {% if look_product.variants.size > 1 %}<option value="" disabled selected>{{ 'living_lookbook.choose' | t }}</option>{% endif %}
+          {% for variant in look_product.variants %}
+            <option value="{{ variant.id }}" data-price="{{ variant.price | money_with_currency | escape }}" {% unless variant.available %}disabled{% endunless %}>{{ variant.title | escape }}{% unless variant.available %} · {{ 'living_lookbook.sold_out' | t }}{% endunless %}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <input type="hidden" name="quantity" value="1">
+      <button type="submit" {% unless look_product.available %}disabled{% endunless %}>{% if look_product.available %}{{ 'living_lookbook.add' | t }}{% else %}{{ 'living_lookbook.sold_out' | t }}{% endif %}</button>
+      <p class="tll-form-status" role="status" aria-live="polite" data-tll-status></p>
+    </form>
+    <a class="tll-product-details" href="{{ look_product.url }}">{{ 'living_lookbook.details' | t }} ↗</a>
+  </div>
+</article>
