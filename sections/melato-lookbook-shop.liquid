@@ -1,5 +1,5 @@
 {{ 'melato-lookbook-shop.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'melato-lookbook-shop.js' | asset_url }}" defer></script>
+<script type="module" src="{{ 'melato-lookbook-shop.js' | asset_url }}"></script>
 <section class="tll" data-tll data-cart-add="{{ routes.cart_add_url }}" aria-label="{{ 'living_lookbook.title' | t | escape }}">
   <a class="tll-skip" href="#tll-frames-{{ section.id }}">{{ 'living_lookbook.skip' | t }}</a>
   <header class="tll-header">

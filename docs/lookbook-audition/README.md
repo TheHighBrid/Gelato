@@ -21,7 +21,7 @@ Two source filenames contain an extra underscore. The working originals are `Mel
 
 ## Verification
 
-- `npm test`: 77 passed, 0 failed, including six new behavioral/sequence tests.
+- `npm test`: 79 passed, 0 failed, including eight behavioral/sequence tests.
 - `node scripts/validate-melato-product-page-bible.mjs`: passed.
 - Shopify theme validator: new section, product snippet, stylesheet, controller, JSON template and English locale passed. French has 84 pre-existing missing translation keys elsewhere in the theme. All 27 new lookbook keys are present in both languages. These unrelated locale gaps were preserved rather than expanding this audition's scope.
 - Browser rendering at 1440×1000 and 390×844: 28 frames, no JavaScript errors, no mobile horizontal overflow, correct two-product gallery panel. Browser add-to-cart was exercised against a mocked Shopify response, alongside the unit tests for variant selection, rejected carts and repeated clicks. No real customer cart, order or inventory was modified.
@@ -43,3 +43,5 @@ Screenshots below are from a local Liquid-rendered fixture with verified source 
 This branch replaces only `templates/page.living-lookbook.json` plus its new component assets and translations. It does not publish a theme or change Shopify products. Next, compare this audition with the other candidates in an unpublished Shopify theme preview, including the store's full global styling and live cart behavior. Merge and live publication remain owner decisions. Reverting the template restores the previous reader.
 
 Bebas Neue is bundled under the SIL Open Font License in `../BEBAS-NEUE-OFL.txt`.
+
+Codacy follow-up: [MDP-74 through MDP-88 remediation and verification](codacy-MDP-74-88.md).

@@ -1,12 +1,18 @@
-(() => {
-  'use strict';
+const initializedDocuments = new WeakSet();
+
+export function initializeLookbook(window) {
+  const { document } = window;
+  if (initializedDocuments.has(document)) return;
+  initializedDocuments.add(document);
   const mounted = new WeakMap();
   function mount(root) {
     if (mounted.has(root)) return;
-    const controller = new AbortController();
+    const controller = new window.AbortController();
     mounted.set(root, controller);
     const signal = controller.signal;
-    const on = (target, type, fn) => target.addEventListener(type, fn, { signal });
+    function on(target, type, fn) {
+      target.addEventListener(type, fn, { signal });
+    }
     const frames = [...root.querySelectorAll('[data-tll-frame]')];
     if (!frames.length) return;
     const strings = JSON.parse(root.querySelector('[data-tll-strings]').textContent);
@@ -20,7 +26,7 @@
     const route = window.Shopify?.routes?.root || '/';
     let current = 0;
     let opener = null;
-    const select = n => {
+    function select(n) {
       current = n;
       root.querySelector('[data-tll-current]').textContent = frames[n].dataset.tllFrame;
       root.querySelector('[data-tll-current-title]').textContent = frames[n].querySelector('h2').textContent;
@@ -32,13 +38,13 @@
         if (i === n) a.setAttribute('aria-current', 'true');
         else a.removeAttribute('aria-current');
       });
-    };
-    const jump = n => {
+    }
+    function jump(n) {
       if (n < 0 || n >= frames.length) return;
       select(n);
       frames[n].scrollIntoView({ behavior: reduced.matches ? 'instant' : 'smooth', block: 'start' });
-      history.replaceState(null, '', '#' + frames[n].id);
-    };
+      window.history.replaceState(null, '', '#' + frames[n].id);
+    }
     const canDialog = typeof shop.showModal === 'function';
     function show(dialog, button) {
       opener = button;
@@ -82,17 +88,17 @@
     on(prev, 'click', () => jump(current - 1));
     on(next, 'click', () => jump(current + 1));
     if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(entries => {
+      const observer = new window.IntersectionObserver(entries => {
         const visible = entries.filter(entry => entry.isIntersecting);
         if (visible.length) select(frames.indexOf(visible[visible.length - 1].target));
       }, { rootMargin: '-20% 0px -50% 0px', threshold: 0 });
-      frames.forEach(frame => observer.observe(frame));
+      frames.forEach(frame => { observer.observe(frame); });
       signal.addEventListener('abort', () => observer.disconnect());
     }
-    const fromHash = frames.findIndex(frame => '#' + frame.id === location.hash);
+    const fromHash = frames.findIndex(frame => '#' + frame.id === window.location.hash);
     select(Math.max(0, fromHash));
     on(window, 'hashchange', () => {
-      const n = frames.findIndex(frame => '#' + frame.id === location.hash);
+      const n = frames.findIndex(frame => '#' + frame.id === window.location.hash);
       if (n >= 0) select(n);
     });
     on(root, 'change', e => {
@@ -116,7 +122,7 @@
       button.textContent = strings.adding;
       status.textContent = '';
       try {
-        const response = await fetch(route + 'cart/add.js', {
+        const response = await window.fetch(route + 'cart/add.js', {
           method: 'POST', credentials: 'same-origin',
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({ items: [{ id: Number(option.value), quantity: 1 }] })
@@ -126,14 +132,14 @@
         status.textContent = strings.added;
         root.querySelector('[data-tll-live]').textContent = strings.added;
         try {
-          const result = await fetch(route + 'cart.js', { credentials: 'same-origin', headers: { Accept: 'application/json' } });
+          const result = await window.fetch(route + 'cart.js', { credentials: 'same-origin', headers: { Accept: 'application/json' } });
           if (result.ok) {
             const cart = await result.json();
-            window.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart } }));
+            window.dispatchEvent(new window.CustomEvent('cart:updated', { detail: { cart } }));
             root.querySelectorAll('[data-tll-bag-count]').forEach(el => { el.textContent = cart.item_count; });
           }
-        } catch (_) { /* Adding succeeded; a count refresh must never encourage a duplicate retry. */ }
-      } catch (_) {
+        } catch { /* Adding succeeded; a count refresh must never encourage a duplicate retry. */ }
+      } catch {
         status.textContent = strings.error;
       } finally {
         form.dataset.busy = 'false';
@@ -143,7 +149,7 @@
       }
     });
     root.querySelectorAll('.tll-image>img').forEach(img => {
-      const fail = () => {
+      function fail() {
         if (img.dataset.failed) return;
         img.dataset.failed = 'true';
         img.hidden = true;
@@ -151,14 +157,18 @@
         note.className = 'tll-image-error';
         note.textContent = strings.imageError;
         img.parentElement.append(note);
-      };
+      }
       on(img, 'error', fail);
       if (img.complete && img.naturalWidth === 0) fail();
     });
   }
-  const start = () => document.querySelectorAll('[data-tll]').forEach(mount);
+  function start() {
+    document.querySelectorAll('[data-tll]').forEach(mount);
+  }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
   else start();
   document.addEventListener('shopify:section:load', start);
   document.addEventListener('shopify:section:unload', e => e.target.querySelectorAll('[data-tll]').forEach(root => { mounted.get(root)?.abort(); mounted.delete(root); }));
-})();
+}
+
+if (typeof window !== 'undefined') initializeLookbook(window);
