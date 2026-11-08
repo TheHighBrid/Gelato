@@ -26,3 +26,13 @@ Never invent product specifications. Preserve verified facts. When sources confl
 Any product-system change must pass `scripts/validate-melato-product-page-bible.mjs` and the Product Page Bible GitHub Actions guard before merge.
 
 Changes to canonical field names, section order, category matrix, merchandising logic, naming rules, policy copy, color contract, or QA requirements require an owner-reviewed Pull Request and a Bible semantic-version bump.
+
+## Storefront Integrity & Reconciliation Invariant
+
+1. **Guarded Theme Loaders**: `layout/theme.liquid` must preserve explicit inclusions of `melato-luxury-tokens.css`, `melato-collection-navigation.css`, `melato-dynamic-announcement.js`, and `melato-audit-nav-collections.js`. Never omit or remove them during asset bundling or core refactoring.
+2. **Reconciliation Manifest (`docs/MELATO_THEME_RECONCILIATION.json`)**: When modifying any reconciled file tracked in `docs/MELATO_THEME_RECONCILIATION.json` (such as `layout/theme.liquid`), calculate the new SHA-256 (`shasum -a 256 <file>`) and update its `candidateSha256` entry.
+3. **Mandatory Test Suite Gate**: Before pushing to any branch or opening a PR, always execute:
+   - `npm test` (all 71+ unit/behavior tests must pass)
+   - `node scripts/validate-melato-product-page-bible.mjs`
+   - Storefront integrity script from `.github/workflows/melato-storefront-integrity-guard.yml`
+
