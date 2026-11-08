@@ -1,0 +1,104 @@
+{{ 'melato-lookbook-shop.css' | asset_url | stylesheet_tag }}
+<script type="module" src="{{ 'melato-lookbook-shop.js' | asset_url }}"></script>
+<section class="tll" data-tll data-cart-add="{{ routes.cart_add_url }}" aria-label="{{ 'living_lookbook.title' | t | escape }}">
+  <a class="tll-skip" href="#tll-frames-{{ section.id }}">{{ 'living_lookbook.skip' | t }}</a>
+  <header class="tll-header">
+    <a class="tll-wordmark" href="{{ routes.root_url }}" aria-label="{{ 'living_lookbook.store' | t | escape }}">MELATO<span>®</span></a>
+    <p>{{ 'living_lookbook.edition' | t }}</p>
+    <button type="button" data-tll-index hidden>{{ 'living_lookbook.index' | t }} <span aria-hidden="true">↗</span></button>
+    <a href="{{ routes.cart_url }}">{{ 'living_lookbook.bag' | t }} <span data-tll-bag-count>{{ cart.item_count }}</span></a>
+  </header>
+  <div class="tll-intro">
+    <p>{{ 'living_lookbook.edition' | t }}</p>
+    <h1>{{ 'living_lookbook.title' | t }}</h1>
+    <p>{{ 'living_lookbook.intro' | t }}</p>
+    <a href="#frame-01">{{ 'living_lookbook.scroll' | t }} <span aria-hidden="true">↓</span></a>
+  </div>
+  <div class="tll-frames" id="tll-frames-{{ section.id }}">
+    {% for block in section.blocks %}
+      {% liquid
+        assign frame_number = forloop.index | prepend: '0' | slice: -2, 2
+        assign image = block.settings.image
+      %}
+      <article id="frame-{{ frame_number }}" class="tll-frame" data-tll-frame="{{ frame_number }}" aria-labelledby="tll-title-{{ block.id }}" {{ block.shopify_attributes }}>
+        <div class="tll-image">
+          {% if image != blank %}
+            {% assign image_alt = block.settings.frame_title | append: ' / ' | append: block.settings.place %}
+            {% if forloop.first %}
+              {{ image | image_url: width: 1800 | image_tag: widths: '480, 750, 1100, 1500, 1800', sizes: '(min-width: 900px) 68vw, 100vw', loading: 'eager', fetchpriority: 'high', alt: image_alt }}
+            {% else %}
+              {{ image | image_url: width: 1800 | image_tag: widths: '480, 750, 1100, 1500, 1800', sizes: '(min-width: 900px) 68vw, 100vw', loading: 'lazy', alt: image_alt }}
+            {% endif %}
+          {% else %}
+            <p class="tll-image-error">{{ 'living_lookbook.image_unavailable' | t }}</p>
+          {% endif %}
+          <span class="tll-image-label">M / {{ frame_number }}</span>
+        </div>
+        <div class="tll-copy">
+          <p class="tll-eyebrow">{{ 'living_lookbook.frame' | t }} {{ frame_number }} / {{ section.blocks.size }} <span>{{ block.settings.place | escape }}</span></p>
+          <span class="tll-number" aria-hidden="true">{{ frame_number }}</span>
+          <h2 id="tll-title-{{ block.id }}">{{ block.settings.frame_title | escape }}</h2>
+          <p class="tll-caption">{{ block.settings.caption | escape }}</p>
+          {% if block.settings.narrative %}
+            <div class="tll-narrative"><span>{{ 'living_lookbook.narrative' | t }}</span><p>{{ 'living_lookbook.narrative_note' | t }}</p></div>
+          {% else %}
+            <details class="tll-shopping" data-tll-shopping>
+              <summary>{{ 'living_lookbook.shop' | t }} <span aria-hidden="true">↗</span></summary>
+              <div data-tll-products>
+                {% for slot in (1..2) %}
+                  {% assign product_key = 'product_' | append: slot %}
+                  {% assign look_product = block.settings[product_key] %}
+                  {% if look_product != blank %}
+                    {% render 'melato-lookbook-product', look_product: look_product %}
+                  {% endif %}
+                {% endfor %}
+                {% if block.settings.product_1 == blank and block.settings.product_2 == blank %}<p>{{ 'living_lookbook.unavailable' | t }}</p>{% endif %}
+              </div>
+            </details>
+          {% endif %}
+          {% if forloop.last %}<a class="tll-end-link" href="{{ routes.all_products_collection_url }}">{{ 'living_lookbook.catalogue' | t }} ↗</a>{% endif %}
+        </div>
+      </article>
+    {% endfor %}
+  </div>
+  <nav class="tll-nav" data-tll-nav hidden aria-label="{{ 'living_lookbook.title' | t | escape }}">
+    <div class="tll-progress" role="progressbar" aria-label="{{ 'living_lookbook.frame' | t | escape }}" aria-valuemin="1" aria-valuemax="{{ section.blocks.size }}" aria-valuenow="1" data-tll-progress><span></span></div>
+    <span><span data-tll-current>01</span> / {{ section.blocks.size }}</span>
+    <p data-tll-current-title>{{ section.blocks.first.settings.frame_title | escape }}</p>
+    <div><button type="button" data-tll-prev aria-label="{{ 'living_lookbook.previous' | t | escape }}">↑</button><button type="button" data-tll-next aria-label="{{ 'living_lookbook.next' | t | escape }}">↓</button></div>
+  </nav>
+  <dialog class="tll-dialog tll-shop-dialog" data-tll-dialog aria-labelledby="tll-dialog-title-{{ section.id }}">
+    <header><div><p data-tll-dialog-frame></p><h2 id="tll-dialog-title-{{ section.id }}">{{ 'living_lookbook.shop' | t }}</h2></div><button type="button" data-tll-close aria-label="{{ 'living_lookbook.close' | t | escape }}">×</button></header>
+    <div data-tll-dialog-content></div>
+    <a class="tll-bag-link" href="{{ routes.cart_url }}">{{ 'living_lookbook.bag' | t }} ↗</a>
+  </dialog>
+  <dialog class="tll-dialog tll-index-dialog" data-tll-index-dialog aria-labelledby="tll-index-title-{{ section.id }}">
+    <header><h2 id="tll-index-title-{{ section.id }}">{{ 'living_lookbook.index' | t }}</h2><button type="button" data-tll-close aria-label="{{ 'living_lookbook.close' | t | escape }}">×</button></header>
+    <ol>{% for block in section.blocks %}{% assign number = forloop.index | prepend: '0' | slice: -2, 2 %}<li><a href="#frame-{{ number }}"><span>{{ number }}</span>{{ block.settings.frame_title | escape }}<small>{% if block.settings.narrative %}{{ 'living_lookbook.narrative' | t }}{% else %}↗{% endif %}</small></a></li>{% endfor %}</ol>
+  </dialog>
+  <p class="tll-sr-only" role="status" aria-live="polite" data-tll-live></p>
+  <script type="application/json" data-tll-strings>{"adding": {{ 'living_lookbook.adding' | t | json }}, "added": {{ 'living_lookbook.added' | t | json }}, "error": {{ 'living_lookbook.error' | t | json }}, "imageError": {{ 'living_lookbook.image_unavailable' | t | json }}}</script>
+</section>
+{% schema %}
+{
+  "name": "Living Lookbook Shop",
+  "tag": "section",
+  "class": "section-tll-shop",
+  "max_blocks": 28,
+  "settings": [],
+  "blocks": [{
+    "type": "frame",
+    "name": "Editorial frame",
+    "settings": [
+      {"type": "image_picker", "id": "image", "label": "Original editorial image"},
+      {"type": "text", "id": "frame_title", "label": "Frame title"},
+      {"type": "text", "id": "place", "label": "Scene label"},
+      {"type": "textarea", "id": "caption", "label": "Editorial caption"},
+      {"type": "checkbox", "id": "narrative", "label": "Narrative only", "default": false},
+      {"type": "product", "id": "product_1", "label": "First featured piece"},
+      {"type": "product", "id": "product_2", "label": "Second featured piece"}
+    ]
+  }],
+  "presets": [{"name": "Living Lookbook Shop"}]
+}
+{% endschema %}

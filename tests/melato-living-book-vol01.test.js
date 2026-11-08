@@ -12,13 +12,13 @@ function parseJsonTemplate(file) {
   return JSON.parse(source);
 }
 
-test('Living Lookbook production template uses Living Book Vol. 01', () => {
+test('Living Lookbook production template uses the 28-frame shoppable edition', () => {
   const template = parseJsonTemplate('templates/page.living-lookbook.json');
   const sectionIds = new Set(Object.keys(template.sections));
   for (const sectionId of template.order) assert.ok(sectionIds.has(sectionId), `Missing ordered section: ${sectionId}`);
   assert.equal(template.order.length, 1);
-  assert.equal(template.sections.main?.type, 'melato-living-book-vol01');
-  assert.equal(template.sections.main?.settings?.hide_store_chrome, true);
+  assert.equal(template.sections.main?.type, 'melato-lookbook-shop');
+  assert.equal(template.sections.main?.block_order.length, 28);
 });
 
 test('Living Book Vol. 01 section, assets and engine are present', () => {
