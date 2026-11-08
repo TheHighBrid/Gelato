@@ -43,43 +43,29 @@
     "ticker": {
       "type": "ticker",
       "blocks": {
-        "item1": {
+        "item_jNdC3X": {
           "type": "item",
           "settings": {
-            "text": "THE CULTURE WEARS US"
-          }
-        },
-        "item2": {
-          "type": "item",
-          "settings": {
-            "text": "COMME NEVER CHANGE"
-          }
-        },
-        "item3": {
-          "type": "item",
-          "settings": {
-            "text": "COMPLIMENTARY STANDARD DELIVERY"
+            "text": "COMPLIMENTARY STANDARD DELIVERY ON ALL ORDERS"
           }
         },
         "item4": {
           "type": "item",
           "settings": {
-            "text": "FREE RETURNS ON ELIGIBLE ITEMS WITHIN 30 DAYS"
+            "text": "COMPLIMENTARY RETURNS ON ALL ORDERS*"
           }
         }
       },
       "block_order": [
-        "item1",
-        "item2",
-        "item3",
+        "item_jNdC3X",
         "item4"
       ],
       "settings": {
         "accessible_label": "Melato information",
-        "speed": 60,
-        "separator": "MELATO",
+        "speed": 45,
+        "separator": "",
         "direction": "left",
-        "padding": 8,
+        "padding": 6,
         "background_color": "#f5f1e8",
         "text_color": "#111111",
         "border_color": "#d8d3cb"
