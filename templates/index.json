@@ -15,28 +15,27 @@
       "settings": {
         "show_hero_actions": true,
         "hero_heading": "THE CULTURE WEARS US",
-        "primary_label": "Shop the drop",
+        "primary_label": "SHOP THE NEW COLLECTION",
         "primary_link": "/collections/new-arrivals",
-        "secondary_label": "Living Lookbook",
-        "secondary_link": "/pages/living-lookbook",
+        "secondary_label": "OUR STORY",
+        "secondary_link": "shopify://pages/our-story",
         "heading": "THUNDERSTORM AMBER ALERT",
         "center_heading": true,
-        "video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.HD-1080p-7.2Mbps-93650307.mp4",
+        "video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.SD-480p-1.5Mbps-9509603",
         "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.SD-480p-1.5Mbps-95096030.mp4",
         "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
         "autoplay": true,
         "full_width": true,
-        "aspect_ratio": "1/1"
+        "aspect_ratio": "4/3"
       }
     },
     "melato_conversion_2026": {
       "type": "melato-home-conversion",
-      "disabled": true,
       "settings": {
-        "eyebrow": "Melato",
-        "heading": "THE CULTURE WEARS US",
+        "eyebrow": "المحطة ديال",
+        "heading": "الحطة",
         "copy": "Tailored for movement, cut with intent.",
-        "hero_image": "shopify://shop_images/Melato.ca-_EL_TLB_-FRAME_261.jpg",
+        "hero_image": "shopify://shop_images/rn-image_picker_lib_temp_278645d5-0651-4038-9595-0605a21ab62a.png",
         "featured_collection": "new-arrivals"
       }
     },
@@ -71,6 +70,26 @@
         "border_color": "#d8d3cb"
       }
     },
+    "melato_rack_LzgiUD": {
+      "type": "melato-rack",
+      "name": "Melato Rack",
+      "settings": {
+        "collection": "rack",
+        "max_items": 14,
+        "heading": "",
+        "cta_label": "See availability",
+        "show_ticker": true,
+        "ticker_text": "The culture wears us | Numbered drops | Made in limited runs",
+        "ticker_speed": 70,
+        "bg_color": "#efeeeb",
+        "ink_color": "#22201e",
+        "accent_color": "#9c8765",
+        "rail_color": "#8d8f91",
+        "blend_photos": true,
+        "padding_top": 48,
+        "padding_bottom": 0
+      }
+    },
     "hero_video_K7WbW8": {
       "type": "hero-video",
       "name": "Melato - cinematic video hero",
@@ -93,26 +112,6 @@
         "secondary_label": "New Arrivals",
         "secondary_link": "shopify://collections/new-arrivals",
         "show_scroll_cue": true
-      }
-    },
-    "melato_rack_LzgiUD": {
-      "type": "melato-rack",
-      "name": "Melato Rack",
-      "settings": {
-        "collection": "rack",
-        "max_items": 14,
-        "heading": "",
-        "cta_label": "See availability",
-        "show_ticker": true,
-        "ticker_text": "The culture wears us | Numbered drops | Made in limited runs",
-        "ticker_speed": 70,
-        "bg_color": "#efeeeb",
-        "ink_color": "#22201e",
-        "accent_color": "#9c8765",
-        "rail_color": "#8d8f91",
-        "blend_photos": true,
-        "padding_top": 48,
-        "padding_bottom": 0
       }
     },
     "featured_collection": {
@@ -138,18 +137,18 @@
         "loop_video": true,
         "hero_height": "full",
         "custom_height": 1100,
-        "overlay_opacity": 65,
+        "overlay_opacity": 20,
         "enable_texture": true,
         "content_position": "left",
-        "content_width": 920,
+        "content_width": 420,
         "kicker": "THE MELATO STANDARD",
         "heading_line_1": "THE   Culture",
         "heading_line_2": "WEARS US",
-        "body": "<p>    -        comme never change</p>",
-        "primary_label": "SHOP THE DROP",
-        "primary_link": "shopify://collections/frontpage",
-        "secondary_label": "OUR STORY",
-        "secondary_link": "shopify://pages/our-story",
+        "body": "<p>&nbsp; &nbsp; - &nbsp; &nbsp; &nbsp; &nbsp;comme never change</p>",
+        "primary_label": "DENIM",
+        "primary_link": "shopify://collections/denim",
+        "secondary_label": "ACCESSORIES",
+        "secondary_link": "shopify://collections/accessories",
         "show_scroll_cue": true
       }
     },
@@ -167,10 +166,10 @@
         "heading": "HENDRIX BLUE MAGIC",
         "center_heading": true,
         "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
-        "mobile_video_url": "",
+        "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
         "cover_image": "shopify://shop_images/hendrix-flare-jean-view-07.png",
-        "autoplay": false,
-        "full_width": true,
+        "autoplay": true,
+        "full_width": false,
         "aspect_ratio": "4/3"
       }
     },
@@ -201,6 +200,7 @@
     },
     "drop_signup_FMehUL": {
       "type": "drop-signup",
+      "disabled": true,
       "settings": {
         "eyebrow": "Email",
         "heading": "MELATO NOTES",
@@ -215,6 +215,7 @@
     },
     "concierge_strip_74pEae": {
       "type": "concierge-strip",
+      "disabled": true,
       "name": "Client Services Nav",
       "settings": {
         "current_pillar": "order-support",
@@ -366,8 +367,8 @@
     "video_Hm6knQ",
     "melato_conversion_2026",
     "ticker",
-    "hero_video_K7WbW8",
     "melato_rack_LzgiUD",
+    "hero_video_K7WbW8",
     "featured_collection",
     "hero_video_wLntL4",
     "video_YBN7Uc",
