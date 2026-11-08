@@ -31,6 +31,7 @@
     },
     "melato_conversion_2026": {
       "type": "melato-home-conversion",
+      "disabled": true,
       "settings": {
         "eyebrow": "Melato",
         "heading": "THE CULTURE WEARS US",
@@ -84,6 +85,30 @@
         "border_color": "#d8d3cb"
       }
     },
+    "hero_video_K7WbW8": {
+      "type": "hero-video",
+      "name": "Melato - cinematic video hero",
+      "settings": {
+        "shopify_video": "shopify://files/videos/YouCut_20261015_140313517.mp4",
+        "video_url": "",
+        "loop_video": true,
+        "hero_height": "full",
+        "custom_height": 820,
+        "overlay_opacity": 20,
+        "enable_texture": true,
+        "content_position": "left",
+        "content_width": 620,
+        "kicker": "from the",
+        "heading_line_1": "culture",
+        "heading_line_2": "of the couture",
+        "body": "<p>&nbsp; &nbsp; &nbsp;S/o to everyone who chose us as the messenger for their self-expression! 🙏🏽🎙️</p>",
+        "primary_label": "Most wanted",
+        "primary_link": "shopify://collections/best-sellers",
+        "secondary_label": "New Arrivals",
+        "secondary_link": "shopify://collections/new-arrivals",
+        "show_scroll_cue": true
+      }
+    },
     "melato_rack_LzgiUD": {
       "type": "melato-rack",
       "name": "Melato Rack",
@@ -95,10 +120,10 @@
         "show_ticker": true,
         "ticker_text": "The culture wears us | Numbered drops | Made in limited runs",
         "ticker_speed": 70,
-        "bg_color": "#EFEEEB",
-        "ink_color": "#22201E",
-        "accent_color": "#9C8765",
-        "rail_color": "#8D8F91",
+        "bg_color": "#efeeeb",
+        "ink_color": "#22201e",
+        "accent_color": "#9c8765",
+        "rail_color": "#8d8f91",
         "blend_photos": true,
         "padding_top": 48,
         "padding_bottom": 0
@@ -355,6 +380,7 @@
     "video_Hm6knQ",
     "melato_conversion_2026",
     "ticker",
+    "hero_video_K7WbW8",
     "melato_rack_LzgiUD",
     "featured_collection",
     "hero_video_wLntL4",
