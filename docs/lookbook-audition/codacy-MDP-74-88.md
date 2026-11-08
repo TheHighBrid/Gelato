@@ -29,11 +29,13 @@ The module initializer is idempotent per document. Browser APIs and cart request
 - The original two files reproduce eleven Biome findings (nine errors and two warnings) with Biome 2.2.6.
 - The changed files pass the corresponding five rules with both Biome 2.2.6 and 2.6.6: `useQwikValidLexicalScope`, `useIterableCallbackReturn`, `noRedundantUseStrict`, `useArrowFunction`, and `noGlobalEval`.
 - Targeted ESLint: zero errors and zero warnings.
-- Full repository suite: 79 tests pass. New regressions cover repeated initialization, observer/listener cleanup and editor remount, plus successful adds when cart-count refresh fails.
+- Full repository suite: 79 tests pass, including in a checkout with no local dependencies and the CI-style external `NODE_PATH` dependency directory. New regressions cover repeated initialization, observer/listener cleanup and editor remount, plus successful adds when cart-count refresh fails.
 - Local Semgrep scan of both changed JavaScript files using upstream njsscan's semantic security rules: zero findings and zero scan errors. An additional upstream non-literal filesystem-path rule also reports zero findings.
 - Headless Chromium loads the actual `type="module"` script automatically, submits the selected variant exactly once against a mocked cart, navigates to frame 21, and reports no JavaScript errors or mobile overflow at 390×844.
 - Shopify's local Liquid/HTML parser accepts the changed section, and its schema JSON parses successfully. The validation wrapper was not used after automatic approval review rejected it over potential source transmission.
 - Product Page Bible validator and `git diff --check`: pass.
+
+The jsdom dependency is resolved through Node’s built-in `createRequire` resolver before normal module import, preserving the existing CI workflow’s external `NODE_PATH` dependency layout without changing the workflow or evaluating source strings.
 
 Node may emit `MODULE_TYPELESS_PACKAGE_JSON` while auto-detecting the two ES modules in this repository's otherwise CommonJS package. This is informational. The browser uses the explicit module script type, and Node 22 (the repository's CI runtime) supports module syntax detection and JSON import attributes. The package-wide module type was deliberately preserved to keep existing CommonJS tests and helpers compatible.
 

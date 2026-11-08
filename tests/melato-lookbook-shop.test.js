@@ -3,9 +3,11 @@ import assert from 'node:assert/strict';
 import { setImmediate as tick } from 'node:timers/promises';
 import template from '../templates/page.living-lookbook.json' with { type: 'json' };
 import manifest from '../docs/living-lookbook-frame-manifest.json' with { type: 'json' };
-import { JSDOM } from 'jsdom';
+import { createRequire } from 'node:module';
 import { renderLookbook } from './helpers/render-lookbook.cjs';
 import { initializeLookbook } from '../assets/melato-lookbook-shop.js';
+
+const { JSDOM } = await import(createRequire(import.meta.url).resolve('jsdom'));
 const product = { title: 'Reliance Track Jacket', url: '/products/reliance-bamboo-track-jacket', price: 9999, available: true, options: ['Size'], variants: [{ id: 123, title: 'S', price: 9999, available: false }, { id: 456, title: 'XL', price: 10999, available: true }] };
 const products = { 'reliance-bamboo-track-jacket': product };
 async function setup(fetch, configureWindow) {
