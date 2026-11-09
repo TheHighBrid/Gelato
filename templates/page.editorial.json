@@ -12,6 +12,46 @@
     "main": {
       "type": "melato-editorial",
       "blocks": {
+        "scene_BTqmHU": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017547.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": "shell-company-technical-track-jacket"
+          }
+        },
+        "scene_n4L6GB": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017581.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_HB9qRn": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000018700.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_EpmqYg": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000018482.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": "hot-pursuit-panel-track-jacket"
+          }
+        },
         "scene_fcJtTe": {
           "type": "scene",
           "settings": {
@@ -19,6 +59,16 @@
             "codename": "EXHIBIT-00",
             "alt": "",
             "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_idVTFz": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000018769.jpg",
+            "codename": "EXHIBIT-01",
+            "alt": "",
+            "act": "THE EVIDENCE",
             "product": ""
           }
         },
@@ -464,7 +514,12 @@
         }
       },
       "block_order": [
+        "scene_BTqmHU",
+        "scene_n4L6GB",
+        "scene_HB9qRn",
+        "scene_EpmqYg",
         "scene_fcJtTe",
+        "scene_idVTFz",
         "scene_ELCpJE",
         "scene_PihxmB",
         "scene_frPEPD",
@@ -513,9 +568,367 @@
       "settings": {
         "intro_enabled": true
       }
+    },
+    "melato_living_lookbook_20260901_H4YgXB": {
+      "type": "melato-living-lookbook-20260901",
+      "name": "Living Lookbook Sep 01",
+      "settings": {}
+    },
+    "melato_living_book_director_BE7DPm": {
+      "type": "melato-living-book-director",
+      "name": "Living Book Case Director",
+      "settings": {}
+    },
+    "melato_living_book_casefile_fzqJRa": {
+      "type": "melato-living-book-casefile",
+      "disabled": true,
+      "name": "Living Book v2",
+      "settings": {
+        "case_code": "LB-INFINITE",
+        "case_subtitle": "CASE FILE / UNRESOLVED",
+        "case_title": "THE LIVING BOOK",
+        "outline_title": "EVIDENCE",
+        "deck": "A forensic fashion archive built from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive.",
+        "filed_date": "18 AUG 2026",
+        "include_case03": true
+      }
+    },
+    "melato_editorial_Bq6dnr": {
+      "type": "melato-editorial",
+      "blocks": {
+        "scene_tp6Ahp": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000394881f594415fa3c79a2776.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_Fd3WUE": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000155881f5996cc1a4df606c50.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_rrkTbn": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/495471036_1792504120423097.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_LxzbCe": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/338416092_1792074536801642.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_b3bhmV": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000a0e481f7852286c225998e57.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_PFKeQ4": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/365219018_1792435314602461.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": "coat-of-silence-gloss-trench"
+          }
+        },
+        "scene_4a7yxa": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000b32c81f5b2414247447b1a18.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_QpHBkj": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/644513553_1792504130606817_2.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": "coat-of-silence-gloss-trench"
+          }
+        },
+        "scene_FacxaG": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/47373276_1792080552860320.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_TWteYY": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000fafc81f5869c86f44445d69c.png",
+            "codename": "EXHIBIT-02",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_tGrJpT": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000b0bc81f5a7299b504f2e0fe7.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_cdcWYf": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_000000007958720c8981597dfd26896a.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_LtmnCm": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/cobalt_editorial_reclining.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_bjWiLE": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/840881730_1792435451129159.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": "shell-company-technical-track-jacket"
+          }
+        },
+        "scene_7j7KJy": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/893573318_1792080381022191.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_UiYjVT": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/217719321_1792504183681997_1.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_a3NT9W": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1058352147_1792753406461918.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_XTNrnr": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/131647733_1792504141764646.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_cVmAzy": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/684070184_1792080332106457.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_KribXK": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/421367034_1792072396171770.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_dmbFNz": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017434.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_TrtWgf": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000003134.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_kTmKrK": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000014854.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_qhJQzh": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000376899.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_nUtwwq": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017556.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_TCXXQJ": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017680.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_4wB4Q3": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000005946.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_WBTMjC": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000001644.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_wgYNJH": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017633.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE DOSSIER",
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "scene_tp6Ahp",
+        "scene_Fd3WUE",
+        "scene_rrkTbn",
+        "scene_LxzbCe",
+        "scene_b3bhmV",
+        "scene_PFKeQ4",
+        "scene_4a7yxa",
+        "scene_QpHBkj",
+        "scene_FacxaG",
+        "scene_TWteYY",
+        "scene_tGrJpT",
+        "scene_cdcWYf",
+        "scene_LtmnCm",
+        "scene_bjWiLE",
+        "scene_7j7KJy",
+        "scene_UiYjVT",
+        "scene_a3NT9W",
+        "scene_XTNrnr",
+        "scene_cVmAzy",
+        "scene_KribXK",
+        "scene_dmbFNz",
+        "scene_TrtWgf",
+        "scene_kTmKrK",
+        "scene_qhJQzh",
+        "scene_nUtwwq",
+        "scene_TCXXQJ",
+        "scene_4wB4Q3",
+        "scene_WBTMjC",
+        "scene_wgYNJH"
+      ],
+      "name": "Melato Editorial",
+      "settings": {
+        "intro_enabled": true
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "melato_living_lookbook_20260901_H4YgXB",
+    "melato_living_book_director_BE7DPm",
+    "melato_living_book_casefile_fzqJRa",
+    "melato_editorial_Bq6dnr"
   ]
 }
