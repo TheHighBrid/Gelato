@@ -120,5 +120,31 @@
     "catalogue": "Explorer le catalogue",
     "skip": "Aller aux images",
     "image_unavailable": "Image éditoriale indisponible."
+  },
+  "melato_rack": {
+    "eyebrow": "Le vestiaire Melato",
+    "browse_hint": "Parcourez le portant ou faites glisser les pièces. Sélectionnez un article pour l’examiner.",
+    "empty": "Choisissez une collection avec des vues des vêtements.",
+    "previous": "Pièce précédente",
+    "next": "Pièce suivante",
+    "view_collection": "Explorer la collection",
+    "inspect": "Voir de plus près",
+    "return": "Remettre sur le portant",
+    "view": "Vue du vêtement",
+    "front": "Devant",
+    "angle": "Trois-quarts",
+    "back": "Dos",
+    "inside": "Vue intérieure",
+    "turn_hint": "Faites glisser le vêtement ou le curseur pour le tourner",
+    "zoom": "Examiner la texture",
+    "details": "Tous les détails",
+    "availability": "Disponibilité",
+    "close_availability": "Fermer les disponibilités",
+    "select_size": "Choisir une taille",
+    "add": "Ajouter au panier",
+    "adding": "Ajout…",
+    "added": "Ajouté à votre panier.",
+    "bag": "Voir le panier",
+    "cart_error": "Impossible d’ajouter cette taille. Veuillez réessayer."
   }
 }
