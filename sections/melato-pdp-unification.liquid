@@ -16,12 +16,6 @@
 -%}
 
 <style data-melato-pdp-unification>
-  /* Suppress only the redundant trust/story surfaces. The canonical
-     specification grid stays available for compact Material, Fit and Care. */
-  body.template-product .melato-pdp-rebuild .pdp-story {
-    display: none !important;
-  }
-
   body.template-product .melato-pdp-rebuild .pdp-content-stack {
     gap: 12px !important;
     margin-top: 28px !important;
@@ -328,22 +322,8 @@
     var root = document.querySelector('.melato-pdp-rebuild');
     if (!root || root.dataset.melatoUnified === 'true') return;
 
-    /* Keep the canonical specification grid. Remove only duplicate trust/story
-       surfaces, then remove Construction from the grid because construction is
-       already represented by the dedicated technical surface. */
-    root.querySelectorAll('.pdp-story').forEach(function (node) {
-      node.remove();
-    });
-
-    if (!isFragrance) {
-      root.querySelectorAll('.pdp-spec').forEach(function (details) {
-        var summary = details.querySelector(':scope > summary');
-        if (cleanText(summary) === 'construction') details.remove();
-      });
-    }
-
     var contentStack = root.querySelector('.pdp-content-stack');
-    if (contentStack && !contentStack.querySelector('.pdp-set, .pdp-spec-grid .pdp-spec')) {
+    if (contentStack && !contentStack.querySelector('.pdp-story, .pdp-set, .pdp-spec-grid .pdp-spec')) {
       contentStack.remove();
     }
 

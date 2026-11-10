@@ -6,7 +6,7 @@
 -%}
 <section class="mrack" data-melato-rack data-version="atelier-2" data-section-id="{{ section.id }}" style="--mrack-bg:{{ section.settings.bg_color }};--mrack-ink:{{ section.settings.ink_color }};--mrack-accent:{{ section.settings.accent_color }};--mrack-pad-top:{{ section.settings.padding_top }}px;--mrack-pad-bottom:{{ section.settings.padding_bottom }}px;--mrack-ticker-speed:{{ section.settings.ticker_speed }}s;">
   <p class="mrack__eyebrow">{{ 'melato_rack.eyebrow' | t }}</p>
-  <h2 class="mrack__heading">{{ section.settings.heading | default: 'Off the rail' | escape }}</h2>
+  <h2 class="mrack__heading">{% if section.settings.heading != blank %}{{ section.settings.heading | escape }}{% else %}{{ 'melato_rack.heading' | t }}{% endif %}</h2>
   <p class="mrack__hint">{{ 'melato_rack.browse_hint' | t }}</p>
   {%- if rack_collection == blank or rack_collection.products_count == 0 -%}
     <p class="mrack__empty">{{ 'melato_rack.empty' | t }}</p>

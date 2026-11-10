@@ -30,12 +30,12 @@ test('curated overrides are cross-category while automatic candidates use real S
   assert.doesNotMatch(source, /for fallback_product in new_arrivals\.products[\s\S]*?for fallback_product in new_arrivals\.products/);
 });
 
-test('Bible 1.1.0 records governed recommendation priority and fallbacks', () => {
-  assert.equal(contract.schemaVersion,'1.1.0');
-  assert.equal(contract.defaults.pdpBibleVersionMetafieldValue,'1.1.0');
+test('Bible 1.1.1 records governed recommendation priority and fallbacks', () => {
+  assert.equal(contract.schemaVersion,'1.1.1');
+  assert.equal(contract.defaults.pdpBibleVersionMetafieldValue,'1.1.1');
   assert.equal(contract.recommendations.automaticSameTypeField,'product.type');
   assert.equal(contract.recommendations.curatedCrossTypeOverride,true);
   assert.equal(contract.recommendations.fallbackWhenNoEligibleCandidates,true);
-  assert.match(bible,/\*\*Version:\*\* 1\.1\.0/);
-  assert.match(source,/MELATO PRODUCT PAGE BIBLE 1\.1\.0/);
+  assert.match(bible,/\*\*Version:\*\* 1\.1\.1/);
+  assert.match(source,/MELATO PRODUCT PAGE BIBLE 1\.1\.1/);
 });

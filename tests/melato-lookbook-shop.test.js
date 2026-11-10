@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { setImmediate as tick } from 'node:timers/promises';
-import template from '../templates/page.living-lookbook.json' with { type: 'json' };
+import fs from 'node:fs';
+const template = JSON.parse(fs.readFileSync(new URL('../templates/page.living-lookbook.json', import.meta.url), 'utf8').replace(/^\s*\/\*[\s\S]*?\*\//, ''));
 import manifest from '../docs/living-lookbook-frame-manifest.json' with { type: 'json' };
 import { createRequire } from 'node:module';
 import { renderLookbook } from './helpers/render-lookbook.cjs';

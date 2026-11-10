@@ -6,19 +6,10 @@ const unification = fs.readFileSync('sections/melato-pdp-unification.liquid', 'u
 const defaultTemplate = fs.readFileSync('templates/product.json', 'utf8');
 const auditTemplate = fs.readFileSync('templates/product.melato-audit.json', 'utf8');
 
-test('canonical shipping microcopy remains visible while duplicate story is suppressed', () => {
-  assert.match(unification, /\.pdp-story\s*\{\s*display:\s*none\s*!important/);
-  const hiddenRules = [...unification.matchAll(/([^{}]+)\{([^{}]*display:\s*none\s*!important[^{}]*)\}/g)];
-  assert.ok(hiddenRules.some(rule => rule[1].includes('.pdp-story')));
-  assert.ok(hiddenRules.every(rule => !rule[1].includes('.pdp-shipping-returns')));
-  assert.ok(hiddenRules.every(rule => !/(?:^|,)\s*[^,{}]*\.pdp-spec-grid\s*(?:,|$)/.test(rule[1])), 'No hiding rule may target the canonical specification grid');
-});
-
-test('canonical Material Fit and Care specification grid remains in the live DOM', () => {
-  assert.match(unification, /querySelectorAll\('\.pdp-story'\)/);
-  assert.doesNotMatch(unification, /querySelectorAll\('\.pdp-shipping-returns/);
-  assert.match(unification, /cleanText\(summary\) === 'construction'/);
-  assert.match(unification, /details\.remove\(\)/);
+test('canonical Story and specifications remain available without JavaScript cleanup', () => {
+  assert.doesNotMatch(unification, /\.pdp-story\s*\{\s*display:\s*none/);
+  assert.doesNotMatch(unification, /querySelectorAll\('\.pdp-story'\)/);
+  assert.doesNotMatch(unification, /cleanText\(summary\) === 'construction'\) details\.remove/);
 });
 
 test('Material Fit and Care disclosures use the minimized tab treatment', () => {
@@ -28,7 +19,7 @@ test('Material Fit and Care disclosures use the minimized tab treatment', () => 
 });
 
 test('cleanup keeps Complete the Set or the surviving specification grid', () => {
-  assert.match(unification, /!contentStack\.querySelector\('\.pdp-set, \.pdp-spec-grid \.pdp-spec'\)/);
+  assert.match(unification, /!contentStack\.querySelector\('\.pdp-story, \.pdp-set, \.pdp-spec-grid \.pdp-spec'\)/);
   assert.match(unification, /contentStack\.remove\(\)/);
 });
 

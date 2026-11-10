@@ -38,12 +38,12 @@
     </div>
 
     <div class="mxh__right" aria-label="Header tools">
-      <button class="mxh__text-btn mxh__search-btn" type="button" aria-label="Open search" aria-expanded="false" aria-controls="mxh-search-{{ section.id }}" data-mxh-search-open>Search</button>
+      <button class="mxh__text-btn mxh__search-btn" type="button" aria-label="Open search" aria-expanded="false" aria-controls="mxh-search-{{ section.id }}" data-mxh-search-open>{{ 'search.submit' | t }}</button>
       {% if shop.customer_accounts_enabled and section.settings.show_account %}
-        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">Account</a>
+        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">{{ 'melato_ui.account' | t }}</a>
       {% endif %}
       <a class="mxh__bag" href="{{ routes.cart_url }}" aria-label="Cart with {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}">
-        <span>Bag</span>
+        <span>{{ 'melato_ui.bag' | t }}</span>
         <span class="mxh__bag-count">{{ cart.item_count }}</span>
       </a>
     </div>
@@ -54,7 +54,7 @@
   <aside id="mxh-drawer-{{ section.id }}" class="mxh__drawer" role="dialog" aria-modal="true" aria-labelledby="mxh-drawer-title-{{ section.id }}" aria-hidden="true" hidden inert data-mxh-drawer>
     <div class="mxh__drawer-inner">
       <div class="mxh__drawer-top">
-        <h2 id="mxh-drawer-title-{{ section.id }}" class="mxh__drawer-kicker">Melato / Navigation</h2>
+        <h2 id="mxh-drawer-title-{{ section.id }}" class="mxh__drawer-kicker">{{ 'melato_ui.navigation' | t }}</h2>
         <button class="mxh__close" type="button" aria-label="Close navigation" data-mxh-close>
           <span></span><span></span>
         </button>
@@ -63,7 +63,7 @@
       <div class="mxh__drawer-grid">
         <div class="mxh__drawer-note">
           <p>{{ section.settings.drawer_note | default: 'Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.' }}</p>
-          <a href="{{ routes.all_products_collection_url }}">Collection</a>
+          <a href="{{ routes.all_products_collection_url }}">{{ 'melato_ui.collection' | t }}</a>
         </div>
 
         <nav class="mxh__nav" aria-label="Main navigation">
@@ -72,12 +72,12 @@
               <div class="mxh__nav-item">
                 <a class="mxh__nav-link{% if link.active %} is-active{% endif %}" href="{{ link.url }}">
                   <span>{{ forloop.index | prepend: '0' }}</span>
-                  {{ link.title }}
+                  {% render 'melato-navigation-label', title: link.title %}
                 </a>
                 {% if link.links.size > 0 %}
                   <div class="mxh__subnav">
                     {% for child_link in link.links %}
-                      <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                      <a href="{{ child_link.url }}">{% render 'melato-navigation-label', title: child_link.title %}</a>
                     {% endfor %}
                   </div>
                 {% endif %}
@@ -85,15 +85,15 @@
             {% endfor %}
           {% else %}
             <a class="mxh__nav-link" href="{{ routes.root_url }}"><span>01</span>Home</a>
-            <a class="mxh__nav-link" href="{{ routes.all_products_collection_url }}"><span>02</span>Collection</a>
-            <a class="mxh__nav-link" href="{{ routes.search_url }}"><span>03</span>Search</a>
+            <a class="mxh__nav-link" href="{{ routes.all_products_collection_url }}"><span>02</span>{{ 'melato_ui.collection' | t }}</a>
+            <a class="mxh__nav-link" href="{{ routes.search_url }}"><span>03</span>{{ 'search.submit' | t }}</a>
           {% endif %}
         </nav>
       </div>
 
       <div class="mxh__drawer-bottom">
-        <button class="mxh__drawer-search" type="button" data-mxh-search-open>Search the archive</button>
-        <a href="{{ routes.cart_url }}">Cart / {{ cart.item_count }}</a>
+        <button class="mxh__drawer-search" type="button" data-mxh-search-open>{{ 'melato_ui.search_archive' | t }}</button>
+        <a href="{{ routes.cart_url }}">{{ 'cart.title' | t }} / {{ cart.item_count }}</a>
       </div>
     </div>
   </aside>
@@ -101,13 +101,13 @@
   <section id="mxh-search-{{ section.id }}" class="mxh__search" role="dialog" aria-modal="true" aria-labelledby="mxh-search-title-{{ section.id }}" aria-hidden="true" hidden inert data-mxh-search>
     <div class="mxh__search-panel">
       <button class="mxh__close mxh__search-close" type="button" aria-label="Close search" data-mxh-search-close><span></span><span></span></button>
-      <h2 id="mxh-search-title-{{ section.id }}" class="mxh__search-kicker">Search Melato</h2>
+      <h2 id="mxh-search-title-{{ section.id }}" class="mxh__search-kicker">{{ 'melato_ui.search_melato' | t }}</h2>
       <form class="mxh__search-form" action="{{ routes.search_url }}" method="get" role="search">
-        <label class="mxh__sr" for="mxh-search-input-{{ section.id }}">Search products</label>
-        <input id="mxh-search-input-{{ section.id }}" type="search" name="q" placeholder="Type what you want" autocomplete="off" data-mxh-search-input>
+        <label class="mxh__sr" for="mxh-search-input-{{ section.id }}">{{ 'melato_ui.search_products' | t }}</label>
+        <input id="mxh-search-input-{{ section.id }}" type="search" name="q" placeholder="{{ 'melato_ui.type_search' | t }}" autocomplete="off" data-mxh-search-input>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="options[prefix]" value="last">
-        <button type="submit">Search</button>
+        <button type="submit">{{ 'search.submit' | t }}</button>
       </form>
     </div>
   </section>

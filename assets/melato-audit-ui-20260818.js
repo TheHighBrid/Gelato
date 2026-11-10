@@ -85,8 +85,8 @@
 
   function normalizeShippingLanguage(root = document) {
     const replacements = [
-      [/free shipping on orders over\s*\$?60(?:\.00)?/gi, 'complimentary delivery on all orders'],
-      [/free shipping over\s*\$?60(?:\.00)?/gi, 'complimentary delivery on all orders'],
+      [/free shipping on orders over\s*\$?60(?:\.00)?/gi, 'complimentary standard delivery on all orders'],
+      [/free shipping over\s*\$?60(?:\.00)?/gi, 'complimentary standard delivery on all orders'],
       [/\$?60(?:\.00)?\s*away from free shipping/gi, 'complimentary delivery included'],
       [/spend\s*\$?60(?:\.00)?\s*(?:more\s*)?(?:to|for)\s*(?:get\s*)?free shipping/gi, 'complimentary delivery included']
     ];

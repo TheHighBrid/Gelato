@@ -30,18 +30,18 @@
             <source media="(max-width: 749px)" src="{{ section.settings.mobile_video_url }}" type="video/mp4">
           {%- endif -%}
           <source src="{{ section.settings.video_url }}" type="video/mp4">
-          Your browser does not support the video tag.
+          {{ 'melato_ui.video_fallback' | t }}
         </video>
 
         {%- if section.settings.autoplay -%}
           <button
             class="melato-video-sound-toggle"
             type="button"
-            aria-label="Turn sound on"
+            aria-label="{{ 'melato_ui.sound_on' | t }}"
             aria-pressed="false"
             data-melato-sound-toggle
           >
-            <span class="visually-hidden" data-melato-sound-label>Turn sound on</span>
+            <span class="visually-hidden" data-melato-sound-label>{{ 'melato_ui.sound_on' | t }}</span>
 
             <svg class="melato-video-sound-toggle__icon" data-melato-icon-muted width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M11 5 6.8 8.5H3.5v7h3.3L11 19V5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
@@ -75,8 +75,8 @@
         <div class="melato-video-hero-content">
           <h1>{{ section.settings.hero_heading | escape }}</h1>
           <div class="melato-video-hero-actions">
-            <a class="melato-video-hero-link melato-video-hero-link--primary" href="{{ section.settings.primary_link }}">{{ section.settings.primary_label | escape }}</a>
-            <a class="melato-video-hero-link" href="{{ section.settings.secondary_link }}">{{ section.settings.secondary_label | escape }}</a>
+            <a class="melato-video-hero-link melato-video-hero-link--primary" href="{% render 'melato-localized-url', url: section.settings.primary_link %}">{{ section.settings.primary_label | escape }}</a>
+            <a class="melato-video-hero-link" href="{% render 'melato-localized-url', url: section.settings.secondary_link %}">{{ section.settings.secondary_label | escape }}</a>
           </div>
         </div>
       {%- endif -%}
@@ -162,7 +162,7 @@
 
       const syncSoundState = () => {
         const isMuted = video.muted || video.volume === 0;
-        const nextLabel = isMuted ? 'Turn sound on' : 'Mute video';
+        const nextLabel = isMuted ? {{ 'melato_ui.sound_on' | t | json }} : {{ 'melato_ui.sound_off' | t | json }};
 
         button.setAttribute('aria-label', nextLabel);
         button.setAttribute('aria-pressed', String(!isMuted));

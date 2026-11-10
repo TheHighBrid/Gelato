@@ -51,7 +51,7 @@
         "item4": {
           "type": "item",
           "settings": {
-            "text": "COMPLIMENTARY RETURNS ON ALL ORDERS*"
+            "text": "FREE RETURNS ON ELIGIBLE ITEMS WITHIN 30 DAYS"
           }
         }
       },
@@ -120,7 +120,7 @@
       "settings": {
         "eyebrow": "Collection",
         "title": "THE UNIFORM",
-        "collection": "frontpage",
+        "collection": "tracksuits",
         "products_to_show": 16,
         "columns_desktop": 4,
         "columns_mobile": 2,
@@ -178,7 +178,8 @@
       "type": "announcement-marquee",
       "name": "Announcement Marquee",
       "settings": {
-        "ticker_text": "SHOULD YOU WISH TO PREVIEW OUR SELECTION IN PERSON, PLEASE CONTACT US TO SCHEDULE AN APPOINTMENT AT 8555 CAMPEAU DRIVE, UNIT #370, TANGER OUTLETS OTTAWA.",
+        "ticker_text": "Private previews by appointment. Tanger Outlets Ottawa.",
+        "contact_url": "/pages/contact",
         "divider_char": "✦",
         "scroll_speed": 60,
         "bar_height": 38,
