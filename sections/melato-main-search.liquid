@@ -68,6 +68,18 @@
               </article>
             {%- endfor -%}
           </div>
+        {%- else -%}
+          <div class="melato-search-empty-recovery" data-search-recovery>
+            <h2 class="melato-search-empty-recovery__heading">Explore Melato</h2>
+            <p class="melato-search-empty-recovery__subheading">Discover our latest collections and signature silhouettes:</p>
+            <div class="melato-search-empty-recovery__links">
+              <a href="{{ routes.root_url }}collections/new-arrivals" class="melato-search-empty-recovery__link">New Arrivals</a>
+              <a href="{{ routes.root_url }}collections/tracksuits" class="melato-search-empty-recovery__link">Tracksuits</a>
+              <a href="{{ routes.root_url }}collections/accessories" class="melato-search-empty-recovery__link">Accessories</a>
+              <a href="{{ routes.root_url }}collections/fragrance" class="melato-search-empty-recovery__link">Fragrance</a>
+              <a href="{{ routes.all_products_collection_url }}" class="melato-search-empty-recovery__link">All Products</a>
+            </div>
+          </div>
         {%- endif -%}
 
         {%- if paginate.pages > 1 -%}
@@ -250,6 +262,56 @@
     color: #f5f1e8 !important;
     text-decoration: none;
     border-bottom: 1px solid rgba(245, 241, 232, 0.35);
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-empty-recovery {
+    margin-top: clamp(32px, 5vw, 64px);
+    padding: clamp(24px, 4vw, 40px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    text-align: center;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-empty-recovery__heading {
+    margin: 0 0 10px;
+    font-size: clamp(20px, 3vw, 28px);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #f5f1e8;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-empty-recovery__subheading {
+    margin: 0 0 24px;
+    font-size: 13px;
+    color: rgba(245, 241, 232, 0.6);
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-empty-recovery__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-empty-recovery__link {
+    display: inline-block;
+    padding: 12px 22px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
+    color: #f5f1e8;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+  }
+
+  #shopify-section-{{ section.id }} .melato-search-empty-recovery__link:hover {
+    border-color: #d3a74a;
+    color: #d3a74a;
+    background: rgba(211, 167, 74, 0.08);
   }
 
   @media screen and (max-width: 990px) {

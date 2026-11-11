@@ -886,8 +886,8 @@
       "liveMd5": "ece3feaea1dfb8b7615b8c1e9cbf6819",
       "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
       "decision": "remediate-live",
-      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership.",
-      "candidateSha256": "698f833760aaeb43a7a993110ba042a24351ac0a7cded735b38b25c5e8e430ae"
+      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline and enable rendered output filtering for policy routes; preserve the approved design and product evidence ownership.",
+      "candidateSha256": "8030de6eb1a0ee36b16eb8bd9ce98ba113b11313ffa18e52be672d36f0c874aa"
     },
     {
       "path": "locales/ar.json",
@@ -1423,7 +1423,7 @@
       "liveBodySha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership.",
-      "candidateSha256": "79cf8b5e4076440ab23a06d5ce9fc21b2628a9812ef5c30eb393b1ad49276272"
+      "candidateSha256": "b7b9c6162f4e4f0d94f6087e600cb9e7566841d99c14631f3ae52864394241b4"
     },
     {
       "path": "sections/melato-product-proof-bar.liquid",
@@ -1709,9 +1709,9 @@
       "path": "snippets/melato-global-jsonld.liquid",
       "liveMd5": "b46c421b7d46d5b19ca50157510e80cc",
       "liveBodySha256": "47be5730eb66f2002017c91346eb46127738e2d24ef275ab4fbc3caa1aa3f424",
-      "decision": "identical",
-      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
-      "candidateSha256": "47be5730eb66f2002017c91346eb46127738e2d24ef275ab4fbc3caa1aa3f424"
+      "decision": "remediate-live",
+      "reason": "Deduplicate BreadcrumbList schema on product templates against canonical melato-product-jsonld; preserve search action, organization, and webpage graph.",
+      "candidateSha256": "caa789c15e1ffbf7ab7fa70d8f666530b5074f6dbb8081f3f581b2613ef1db2b"
     },
     {
       "path": "snippets/melato-global-polish.liquid",

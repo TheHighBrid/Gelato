@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin language editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "accessibility": {
     "skip_to_content": "Passer au contenu",
@@ -33,8 +24,8 @@
     "total": "Total",
     "item": "article",
     "items": "articles",
-    "free_shipping_message": "Livraison standard offerte sur toutes les commandes",
-    "free_shipping_achieved": "Livraison standard offerte",
+    "free_shipping_message": "Livraison standard offerte sur toutes les commandes.",
+    "free_shipping_achieved": "Livraison standard offerte sur toutes les commandes.",
     "quantity": "Quantité"
   },
   "products": {
@@ -52,7 +43,20 @@
     "limited": "Limité",
     "notify_me": "M'alerter",
     "notify_submit": "M'alerter",
-    "notify_success": "Vous êtes sur la liste !"
+    "notify_success": "Vous êtes sur la liste !",
+    "materials": "Matières",
+    "fit": "Coupe",
+    "care": "Entretien",
+    "construction": "Confection",
+    "use": "Utilisation",
+    "warranty": "Garantie et entretien",
+    "complete_the_set": "Compléter l'ensemble",
+    "selected_piece": "Pièce sélectionnée",
+    "matching_piece": "Pièce assortie",
+    "view_matching_piece": "Voir la pièce assortie",
+    "quantity": "Quantité",
+    "fit_guide": "Guide des tailles",
+    "product_measurements": "Mesures du produit"
   },
   "collections": {
     "filter_by": "Filtrer",
@@ -145,6 +149,62 @@
     "adding": "Ajout…",
     "added": "Ajouté à votre panier.",
     "bag": "Voir le panier",
-    "cart_error": "Impossible d’ajouter cette taille. Veuillez réessayer."
+    "cart_error": "Impossible d’ajouter cette taille. Veuillez réessayer.",
+    "heading": "Sur le portant"
+  },
+  "melato_nav": {
+    "new_arrivals": "Nouveautés",
+    "tracksuits": "Survêtements",
+    "denim": "Denim",
+    "eve": "Le vestiaire d’Eve",
+    "accessories": "Accessoires",
+    "sunglasses": "Lunettes de soleil",
+    "fragrance": "Parfums",
+    "best_sellers": "Meilleures ventes",
+    "lookbook": "Lookbook interactif",
+    "newsletter": "Infolettre",
+    "editorial": "Éditorial",
+    "all_products": "Tous les articles",
+    "our_story": "Notre histoire",
+    "contact": "Contact",
+    "size_guide": "Guide des tailles",
+    "shipping_returns": "Livraison et retours",
+    "shop": "Boutique",
+    "house": "La maison",
+    "legal": "Informations légales",
+    "delivery": "Livraison",
+    "returns": "Retours et remboursements",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions de service",
+    "popup": "Événements éphémères",
+    "journal": "Journal Melato"
+  },
+  "melato_ui": {
+    "account": "Compte",
+    "bag": "Panier",
+    "navigation": "Melato / Navigation",
+    "collection": "Collection",
+    "search_archive": "Rechercher dans les archives",
+    "search_melato": "Rechercher chez Melato",
+    "search_products": "Rechercher des articles",
+    "type_search": "Que recherchez-vous ?",
+    "shop_drop": "Découvrir la collection",
+    "lookbook": "Lookbook interactif",
+    "sound_on": "Activer le son",
+    "sound_off": "Couper le son",
+    "video_fallback": "Votre navigateur ne prend pas en charge cette vidéo.",
+    "notes_heading": "Les nouvelles de la maison.",
+    "notes_body": "Nouveautés, réassorts, événements éphémères et actualités éditoriales.",
+    "email": "Adresse courriel",
+    "join": "S’inscrire",
+    "signup_success": "Votre inscription est confirmée.",
+    "footer_policy": "Livraison standard offerte · Retours offerts sous 30 jours sur les articles admissibles"
+  },
+  "melato_seo": {
+    "home_title": "Melato | Vêtements de créateur, accessoires et parfums",
+    "home_description": "Découvrez les vêtements, accessoires et parfums Melato. Des coupes soignées, des détails singuliers et des collections limitées. Livraison standard offerte.",
+    "all_title": "Tous les articles",
+    "cart_title": "Votre panier",
+    "cart_description": "Consultez votre panier Melato, modifiez les quantités et passez votre commande."
   }
 }

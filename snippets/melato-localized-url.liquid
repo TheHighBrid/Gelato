@@ -1,0 +1,32 @@
+{% doc %}
+Preserves the current locale on internal storefront links.
+@param {string} url - Destination URL
+{% enddoc %}
+{%- liquid
+  assign prefix = routes.root_url
+  if prefix == '/'
+    assign prefix = ''
+  endif
+  assign target_url = url
+  if target_url == '/collections/pant' or target_url == '/collections/pant/'
+    assign target_url = '/collections/pants'
+  elsif target_url contains '/collections/pant?'
+    assign target_url = target_url | replace: '/collections/pant?', '/collections/pants?'
+  elsif target_url contains '/collections/pant/'
+    assign target_url = target_url | replace: '/collections/pant/', '/collections/pants/'
+  endif
+  assign parts = target_url | split: '/'
+  assign first_character = target_url | slice: 0, 1
+  assign needs_prefix = false
+  if first_character == '/' and prefix != ''
+    case parts[1]
+      when 'collections', 'products', 'pages', 'policies', 'blogs', 'search', 'cart'
+        assign needs_prefix = true
+    endcase
+  endif
+  if needs_prefix
+    echo prefix | append: target_url | escape
+  else
+    echo target_url | escape
+  endif
+-%}

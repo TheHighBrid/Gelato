@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin language editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "accessibility": {
     "skip_to_content": "Skip to content",
@@ -39,8 +30,8 @@
     "total": "Total",
     "item": "item",
     "items": "items",
-    "free_shipping_message": "Complimentary delivery on all orders.",
-    "free_shipping_achieved": "Complimentary delivery on all orders.",
+    "free_shipping_message": "Complimentary standard delivery on all orders.",
+    "free_shipping_achieved": "Complimentary standard delivery on all orders.",
     "quantity": "Quantity",
     "upsell_heading": "You might also want"
   },
@@ -80,7 +71,20 @@
     "add_to_wishlist": "Add to wishlist",
     "remove_from_wishlist": "Remove from wishlist",
     "wishlisted": "Saved!",
-    "quick_view": "Quick View"
+    "quick_view": "Quick View",
+    "materials": "Materials",
+    "fit": "Fit",
+    "care": "Care",
+    "construction": "Construction",
+    "use": "Use",
+    "warranty": "Warranty & Maintenance",
+    "complete_the_set": "Complete the Set",
+    "selected_piece": "Selected piece",
+    "matching_piece": "Matching piece",
+    "view_matching_piece": "View matching piece",
+    "quantity": "Quantity",
+    "fit_guide": "Fit guide",
+    "product_measurements": "Product measurements"
   },
   "collections": {
     "filter_by": "Filter",
@@ -130,7 +134,7 @@
     "error": "Something went wrong. Please try again."
   },
   "general": {
-    "free_shipping": "Complimentary delivery",
+    "free_shipping": "Complimentary standard delivery",
     "on_orders_over": "on all orders",
     "easy_returns": "Easy returns",
     "return_days": "{{ days }}-day returns",
@@ -180,7 +184,8 @@
     "adding": "Adding…",
     "added": "Added to your bag.",
     "bag": "View bag",
-    "cart_error": "Could not add this size. Please try again."
+    "cart_error": "Could not add this size. Please try again.",
+    "heading": "Off the rail"
   },
   "living_lookbook": {
     "edition": "Shoppable edition / Vol. 01",
@@ -210,5 +215,60 @@
     "catalogue": "Explore the catalogue",
     "skip": "Skip to the frames",
     "image_unavailable": "Editorial image unavailable."
+  },
+  "melato_nav": {
+    "new_arrivals": "New Arrivals",
+    "tracksuits": "Tracksuits",
+    "denim": "Denim",
+    "eve": "Eve's Wardrobe",
+    "accessories": "Accessories",
+    "sunglasses": "Sunglasses",
+    "fragrance": "Fragrance",
+    "best_sellers": "Best Sellers",
+    "lookbook": "Living Lookbook",
+    "newsletter": "Newsletter",
+    "editorial": "Editorial",
+    "all_products": "All Products",
+    "our_story": "Our Story",
+    "contact": "Contact",
+    "size_guide": "Size Guide",
+    "shipping_returns": "Shipping & Returns",
+    "shop": "Shop",
+    "house": "House",
+    "legal": "Legal",
+    "delivery": "Delivery",
+    "returns": "Returns & Refunds",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "popup": "Popup Calendar",
+    "journal": "Melato Journal"
+  },
+  "melato_ui": {
+    "account": "Account",
+    "bag": "Bag",
+    "navigation": "Melato / Navigation",
+    "collection": "Collection",
+    "search_archive": "Search the archive",
+    "search_melato": "Search Melato",
+    "search_products": "Search products",
+    "type_search": "Type what you want",
+    "shop_drop": "Shop the drop",
+    "lookbook": "Living Lookbook",
+    "sound_on": "Turn sound on",
+    "sound_off": "Turn sound off",
+    "video_fallback": "Your browser does not support the video tag.",
+    "notes_heading": "Drop intelligence.",
+    "notes_body": "New releases, restocks, popup coordinates and editorial updates.",
+    "email": "Email address",
+    "join": "Join",
+    "signup_success": "You are on the list.",
+    "footer_policy": "Complimentary standard delivery · Free returns on eligible items within 30 days"
+  },
+  "melato_seo": {
+    "home_title": "Melato | Designer Apparel, Accessories & Fragrance",
+    "home_description": "Discover Melato clothing, accessories and fragrance. Explore considered silhouettes, distinctive details and limited collections. Complimentary standard delivery.",
+    "all_title": "All products",
+    "cart_title": "Your bag",
+    "cart_description": "Review your Melato bag, update quantities, and continue to checkout."
   }
 }
