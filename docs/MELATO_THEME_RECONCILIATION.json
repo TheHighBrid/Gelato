@@ -1197,9 +1197,9 @@
       "path": "sections/melato-footer.liquid",
       "liveMd5": "d02575db9391845edf308af795510075",
       "liveBodySha256": "c605189a651e73e81e6e2180462677ffd6216a1365708fdb09c8d6d8e271c039",
-      "decision": "identical",
-      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
-      "candidateSha256": "c605189a651e73e81e6e2180462677ffd6216a1365708fdb09c8d6d8e271c039"
+      "decision": "remediate-live",
+      "reason": "Preserve source-rendered delivery microcopy and enable localized navigation and UI strings across storefront locales.",
+      "candidateSha256": "3e56e1a410b6e2e1040a98d7d2a346d01e5947c1a78f752fff16f2ef9d162d2b"
     },
     {
       "path": "sections/melato-fragrance-product.liquid",
