@@ -169,6 +169,24 @@
       assign construction_details = blank
     endif
   endif
+
+  if material_copy contains 'final lens material not specified'
+    assign material_copy = material_copy | replace: ', final lens material not specified', '' | replace: 'final lens material not specified', ''
+  endif
+  if family == 'accessories' or family == 'bags'
+    assign size_guide_page = blank
+    assign size_guide_url = blank
+  endif
+  if construction_paragraph != blank
+    assign construction_check = construction_paragraph | strip_html | downcase
+    if construction_check contains 'material:' or construction_check contains 'fit:' or construction_check contains 'care:'
+      assign construction_paragraph = blank
+      assign construction_details = blank
+    endif
+    if material_copy != blank and construction_paragraph == material_copy
+      assign construction_paragraph = blank
+    endif
+  endif
 -%}
 
 <section

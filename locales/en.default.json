@@ -71,7 +71,20 @@
     "add_to_wishlist": "Add to wishlist",
     "remove_from_wishlist": "Remove from wishlist",
     "wishlisted": "Saved!",
-    "quick_view": "Quick View"
+    "quick_view": "Quick View",
+    "materials": "Materials",
+    "fit": "Fit",
+    "care": "Care",
+    "construction": "Construction",
+    "use": "Use",
+    "warranty": "Warranty & Maintenance",
+    "complete_the_set": "Complete the Set",
+    "selected_piece": "Selected piece",
+    "matching_piece": "Matching piece",
+    "view_matching_piece": "View matching piece",
+    "quantity": "Quantity",
+    "fit_guide": "Fit guide",
+    "product_measurements": "Product measurements"
   },
   "collections": {
     "filter_by": "Filter",

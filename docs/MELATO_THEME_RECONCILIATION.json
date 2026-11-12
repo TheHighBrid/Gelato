@@ -1197,9 +1197,9 @@
       "path": "sections/melato-footer.liquid",
       "liveMd5": "d02575db9391845edf308af795510075",
       "liveBodySha256": "c605189a651e73e81e6e2180462677ffd6216a1365708fdb09c8d6d8e271c039",
-      "decision": "identical",
-      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
-      "candidateSha256": "c605189a651e73e81e6e2180462677ffd6216a1365708fdb09c8d6d8e271c039"
+      "decision": "remediate-live",
+      "reason": "Preserve source-rendered delivery microcopy and enable localized navigation and UI strings across storefront locales.",
+      "candidateSha256": "3e56e1a410b6e2e1040a98d7d2a346d01e5947c1a78f752fff16f2ef9d162d2b"
     },
     {
       "path": "sections/melato-fragrance-product.liquid",
@@ -1709,9 +1709,9 @@
       "path": "snippets/melato-global-jsonld.liquid",
       "liveMd5": "b46c421b7d46d5b19ca50157510e80cc",
       "liveBodySha256": "47be5730eb66f2002017c91346eb46127738e2d24ef275ab4fbc3caa1aa3f424",
-      "decision": "identical",
-      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
-      "candidateSha256": "47be5730eb66f2002017c91346eb46127738e2d24ef275ab4fbc3caa1aa3f424"
+      "decision": "remediate-live",
+      "reason": "Deduplicate BreadcrumbList schema on product templates against canonical melato-product-jsonld; preserve search action, organization, and webpage graph.",
+      "candidateSha256": "caa789c15e1ffbf7ab7fa70d8f666530b5074f6dbb8081f3f581b2613ef1db2b"
     },
     {
       "path": "snippets/melato-global-polish.liquid",
