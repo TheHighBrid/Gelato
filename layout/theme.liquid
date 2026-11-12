@@ -9,14 +9,14 @@
     assign melato_meta_title = page_title
     assign melato_meta_description = page_description
     if template.name == 'index'
-      assign melato_meta_title = 'Melato | Premium Designer Apparel'
-      assign melato_meta_description = 'Limited-run Melato apparel, accessories and fragrance, tailored for movement and cut with deliberate intent.'
+      assign melato_meta_title = 'melato_seo.home_title' | t
+      assign melato_meta_description = 'melato_seo.home_description' | t
     elsif template.name == 'collection' and collection.handle == 'all'
-      assign melato_meta_title = 'All Products'
+      assign melato_meta_title = 'melato_seo.all_title' | t
       assign melato_meta_description = 'Shop Melato tracksuits, denim, dresses, tops, accessories and fragrance, designed in Ottawa with limited-run intent and refined construction'
     elsif template.name == 'cart'
-      assign melato_meta_title = 'Your bag'
-      assign melato_meta_description = 'Review your Melato bag, update quantities, and continue to checkout.'
+      assign melato_meta_title = 'melato_seo.cart_title' | t
+      assign melato_meta_description = 'melato_seo.cart_description' | t
     elsif template.name == 'page' and page.handle == 'contact'
       assign melato_meta_title = page.title | default: 'Contact'
       assign melato_meta_description = 'Contact Melato for order support, sizing, delivery, returns and general inquiries.'

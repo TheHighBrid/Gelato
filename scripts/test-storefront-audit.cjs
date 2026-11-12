@@ -4,7 +4,11 @@ const vm = require('node:vm');
 const { Liquid } = require('liquidjs');
 
 async function main() {
-  const engine = new Liquid({ root: 'snippets', extname: '.liquid' });
+  const engine = new Liquid({ root: 'snippets', extname: '.liquid', globals: { routes: { root_url: '/' } } });
+  engine.registerTag('doc', { parse(token,remain) { while(remain.length && remain.shift().name !== 'enddoc') {} }, render() { return ''; } });
+  const localeSource = fs.readFileSync('locales/en.default.json','utf8');
+  const locale = JSON.parse(localeSource.replace(/^\s*\/\*[\s\S]*?\*\//,''));
+  engine.registerFilter('t', key => String(key).split('.').reduce((value,part) => value?.[part],locale) || key);
   engine.registerFilter('json', value => JSON.stringify(value ?? null));
   engine.registerFilter('image_url', value => value);
   const read = file => fs.readFileSync(file, 'utf8');
@@ -17,14 +21,15 @@ async function main() {
   const index = JSON.parse(read('templates/index.json').replace(/^\/\*[\s\S]*?\*\//, ''));
   const first = index.sections[index.order.find(id => !index.sections[id].disabled)];
   assert.equal(first.type, 'video');
-  const video = await engine.parseAndRender(read('sections/video.liquid').split('{% schema %}')[0], {section: {id: 'test', settings: first.settings}});
-  assert.match(video, /href="\/collections\/new-arrivals"[^>]*>Shop the drop/);
-  assert.match(video, /href="\/pages\/living-lookbook"[^>]*>Living Lookbook/);
+  const heroSettings = {...first.settings, secondary_link: first.settings.secondary_link.replace('shopify://pages/','/pages/')};
+  const video = await engine.parseAndRender(read('sections/video.liquid').split('{% schema %}')[0], {section: {id: 'test', settings: heroSettings}});
+  assert.ok(video.includes(`href="${heroSettings.primary_link}">${heroSettings.primary_label}</a>`), 'Render the current primary campaign link and label');
+  assert.ok(video.includes(`href="${heroSettings.secondary_link}">${heroSettings.secondary_label}</a>`), 'Render the current secondary campaign link and label');
   assert.match(video, /<h1>THE CULTURE WEARS US<\/h1>/);
   assert.ok(!video.includes('<h2'), 'Campaign title must not precede the shopping hero');
   assert.ok(video.includes(`poster="${first.settings.cover_image}"`), 'Preserve the current editor-selected poster');
   assert.match(video, /<source media="\(max-width: 749px\)"[^>]*SD-480p/);
-  assert.match(video, /<source src="[^\"]*HD-1080p/);
+  assert.ok(video.includes(`src="${heroSettings.video_url}"`), 'Preserve current desktop campaign media');
   assert.ok(!read('sections/melato-home-conversion.liquid').includes('<h1'));
   assert.ok(!read('sections/hero-video.liquid').includes('<h1'));
   const current = '<section><h2 id="RelatedHeading-existing">You might also like</h2></section><section><h2>New Arrivals</h2></section>';

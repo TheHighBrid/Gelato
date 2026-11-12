@@ -36,8 +36,8 @@
       <h2>{{ section.settings.heading }}</h2>
       {%- if section.settings.copy != blank -%}<p class="melato-home-clean__copy">{{ section.settings.copy }}</p>{%- endif -%}
       <div class="melato-home-clean__actions">
-        <a class="melato-home-clean__cta melato-home-clean__cta--primary" href="{{ home_collection.url | default: '/collections/new-arrivals' }}">Shop the drop</a>
-        <a class="melato-home-clean__cta" href="/pages/living-lookbook">Living Lookbook</a>
+        <a class="melato-home-clean__cta melato-home-clean__cta--primary" href="{{ home_collection.url | default: '/collections/new-arrivals' }}">{{ 'melato_ui.shop_drop' | t }}</a>
+        <a class="melato-home-clean__cta" href="{% render 'melato-localized-url', url: "/pages/living-lookbook" %}">{{ 'melato_ui.lookbook' | t }}</a>
       </div>
     </header>
   </div>

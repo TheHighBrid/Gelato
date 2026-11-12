@@ -216,6 +216,34 @@
     "skip": "Skip to the frames",
     "image_unavailable": "Editorial image unavailable."
   },
+  "melato_seo": {
+    "home_title": "Melato | Designer Apparel, Accessories & Fragrance",
+    "home_description": "Discover Melato clothing, accessories and fragrance. Explore considered silhouettes, distinctive details and limited collections. Complimentary standard delivery.",
+    "all_title": "All products",
+    "cart_title": "Your bag",
+    "cart_description": "Review your Melato bag, update quantities, and continue to checkout."
+  },
+  "melato_ui": {
+    "account": "Account",
+    "bag": "Bag",
+    "navigation": "Melato / Navigation",
+    "collection": "Collection",
+    "search_archive": "Search the archive",
+    "search_melato": "Search Melato",
+    "search_products": "Search products",
+    "type_search": "Type what you want",
+    "shop_drop": "Shop the drop",
+    "lookbook": "Living Lookbook",
+    "sound_on": "Turn sound on",
+    "sound_off": "Turn sound off",
+    "video_fallback": "Your browser does not support the video tag.",
+    "notes_heading": "Drop intelligence.",
+    "notes_body": "New releases, restocks, popup coordinates and editorial updates.",
+    "email": "Email address",
+    "join": "Join",
+    "signup_success": "You are on the list.",
+    "footer_policy": "Complimentary standard delivery · Free returns on eligible items within 30 days"
+  },
   "melato_nav": {
     "new_arrivals": "New Arrivals",
     "tracksuits": "Tracksuits",
@@ -242,33 +270,5 @@
     "terms": "Terms of Service",
     "popup": "Popup Calendar",
     "journal": "Melato Journal"
-  },
-  "melato_ui": {
-    "account": "Account",
-    "bag": "Bag",
-    "navigation": "Melato / Navigation",
-    "collection": "Collection",
-    "search_archive": "Search the archive",
-    "search_melato": "Search Melato",
-    "search_products": "Search products",
-    "type_search": "Type what you want",
-    "shop_drop": "Shop the drop",
-    "lookbook": "Living Lookbook",
-    "sound_on": "Turn sound on",
-    "sound_off": "Turn sound off",
-    "video_fallback": "Your browser does not support the video tag.",
-    "notes_heading": "Drop intelligence.",
-    "notes_body": "New releases, restocks, popup coordinates and editorial updates.",
-    "email": "Email address",
-    "join": "Join",
-    "signup_success": "You are on the list.",
-    "footer_policy": "Complimentary standard delivery · Free returns on eligible items within 30 days"
-  },
-  "melato_seo": {
-    "home_title": "Melato | Designer Apparel, Accessories & Fragrance",
-    "home_description": "Discover Melato clothing, accessories and fragrance. Explore considered silhouettes, distinctive details and limited collections. Complimentary standard delivery.",
-    "all_title": "All products",
-    "cart_title": "Your bag",
-    "cart_description": "Review your Melato bag, update quantities, and continue to checkout."
   }
 }

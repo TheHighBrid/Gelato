@@ -28,7 +28,7 @@ test('reconciled homepage keeps current editor artwork, disabled slots and exist
   const video = home.sections.video_Hm6knQ.settings;
   assert.equal(video.cover_image, 'shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png');
   assert.equal(video.primary_link, '/collections/new-arrivals');
-  assert.equal(video.secondary_link, '/pages/living-lookbook');
+  assert.equal(video.secondary_link, 'shopify://pages/our-story');
   assert.equal(home.sections.melato_service_hero_CdQdE4.disabled, true);
   assert.equal(home.sections.video_LXiWPt.disabled, true);
   assert.equal(home.sections.melato_world_orb_kPPgtR.block_order.length, 7);

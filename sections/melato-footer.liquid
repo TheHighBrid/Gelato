@@ -86,7 +86,7 @@
     <div class="melato-footer__bottom">
       <div>
         <p class="melato-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name | default: 'Melato' }}.</p>
-        <p class="melato-footer__microcopy">{% if request.locale.iso_code == 'fr' %}{{ 'melato_ui.footer_policy' | t }}{% else %}Complimentary standard delivery · Free returns within 30 days{% endif %}</p>
+        <p class="melato-footer__microcopy">{{ 'melato_ui.footer_policy' | t }}</p>
       </div>
       {% if shop.enabled_payment_types.size > 0 %}
         <ul class="melato-footer__payments" aria-label="Accepted payment methods">

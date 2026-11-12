@@ -145,14 +145,16 @@
     if matching_product != blank
       assign current_variant = product.selected_or_first_available_variant
       assign matching_variant = matching_product.selected_or_first_available_variant
-      assign current_label = 'Jacket size'
-      assign matching_label = 'Pant size'
-      if product_title_down contains 'pant'
-        assign current_label = 'Pant size'
-        assign matching_label = 'Jacket size'
-      endif
+      unless current_variant.available
+        assign current_variant = product.variants | where: 'available', true | first
+      endunless
+      unless matching_variant.available
+        assign matching_variant = matching_product.variants | where: 'available', true | first
+      endunless
+      assign current_label = product.title | append: ' size'
+      assign matching_label = matching_product.title | append: ' size'
       assign can_add_full_set = true
-      if current_variant == blank or matching_variant == blank
+      if current_variant == blank or matching_variant == blank or current_variant.available == false or matching_variant.available == false
         assign can_add_full_set = false
       endif
 
@@ -169,9 +171,9 @@
         echo '<span data-melato-full-set hidden aria-hidden="true"></span>'
         echo '<div class="melato-full-set-selectors">'
         echo '<label class="melato-full-set-selector"><span>'
-        echo current_label
+        echo current_label | escape
         echo '</span><select data-melato-set-current aria-label="'
-        echo current_label
+        echo current_label | escape
         echo '">'
         for variant in product.variants
           if variant.available
@@ -190,9 +192,9 @@
         endfor
         echo '</select></label>'
         echo '<label class="melato-full-set-selector"><span>'
-        echo matching_label
+        echo matching_label | escape
         echo '</span><select data-melato-set-matching aria-label="'
-        echo matching_label
+        echo matching_label | escape
         echo '">'
         for variant in matching_product.variants
           if variant.available

@@ -7,16 +7,8 @@ Preserves the current locale on internal storefront links.
   if prefix == '/'
     assign prefix = ''
   endif
-  assign target_url = url
-  if target_url == '/collections/pant' or target_url == '/collections/pant/'
-    assign target_url = '/collections/pants'
-  elsif target_url contains '/collections/pant?'
-    assign target_url = target_url | replace: '/collections/pant?', '/collections/pants?'
-  elsif target_url contains '/collections/pant/'
-    assign target_url = target_url | replace: '/collections/pant/', '/collections/pants/'
-  endif
-  assign parts = target_url | split: '/'
-  assign first_character = target_url | slice: 0, 1
+  assign parts = url | split: '/'
+  assign first_character = url | slice: 0, 1
   assign needs_prefix = false
   if first_character == '/' and prefix != ''
     case parts[1]
@@ -25,8 +17,8 @@ Preserves the current locale on internal storefront links.
     endcase
   endif
   if needs_prefix
-    echo prefix | append: target_url | escape
+    echo prefix | append: url | escape
   else
-    echo target_url | escape
+    echo url | escape
   endif
 -%}

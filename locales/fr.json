@@ -11,7 +11,12 @@
     "open_cart": "Ouvrir le panier",
     "close_cart": "Fermer le panier",
     "open_search": "Ouvrir la recherche",
-    "close_search": "Fermer la recherche"
+    "close_search": "Fermer la recherche",
+    "play": "Lire",
+    "pause": "Pause",
+    "zoom_in": "Agrandir",
+    "zoom_out": "Réduire",
+    "change_image": "Afficher l’image {{ position }}"
   },
   "cart": {
     "title": "Panier",
@@ -24,9 +29,11 @@
     "total": "Total",
     "item": "article",
     "items": "articles",
-    "free_shipping_message": "Livraison standard offerte sur toutes les commandes.",
-    "free_shipping_achieved": "Livraison standard offerte sur toutes les commandes.",
-    "quantity": "Quantité"
+    "free_shipping_message": "Livraison standard offerte sur toutes les commandes",
+    "free_shipping_achieved": "Livraison standard offerte",
+    "quantity": "Quantité",
+    "update": "Mettre à jour",
+    "upsell_heading": "À découvrir aussi"
   },
   "products": {
     "add_to_cart": "Ajouter au panier",
@@ -44,19 +51,27 @@
     "notify_me": "M'alerter",
     "notify_submit": "M'alerter",
     "notify_success": "Vous êtes sur la liste !",
-    "materials": "Matières",
-    "fit": "Coupe",
-    "care": "Entretien",
-    "construction": "Confection",
-    "use": "Utilisation",
-    "warranty": "Garantie et entretien",
-    "complete_the_set": "Compléter l'ensemble",
-    "selected_piece": "Pièce sélectionnée",
-    "matching_piece": "Pièce assortie",
-    "view_matching_piece": "Voir la pièce assortie",
-    "quantity": "Quantité",
-    "fit_guide": "Guide des tailles",
-    "product_measurements": "Mesures du produit"
+    "vendor": "par {{ vendor }}",
+    "drop_live": "La collection est disponible",
+    "drop_soon": "Lancement dans",
+    "drop_ended": "Lancement terminé",
+    "notify_email": "Votre adresse courriel",
+    "viewers_singular": "{{ count }} personne consulte cet article",
+    "viewers_plural": "{{ count }} personnes consultent cet article",
+    "share": "Partager",
+    "copy_link": "Copier le lien",
+    "link_copied": "Lien copié",
+    "description": "Description",
+    "details": "Détails",
+    "shipping": "Livraison et retours",
+    "related": "Vous aimerez aussi",
+    "recently_viewed": "Vus récemment",
+    "reviews_count": "{{ count }} avis",
+    "write_review": "Rédiger un avis",
+    "add_to_wishlist": "Ajouter aux favoris",
+    "remove_from_wishlist": "Retirer des favoris",
+    "wishlisted": "Enregistré",
+    "quick_view": "Aperçu rapide"
   },
   "collections": {
     "filter_by": "Filtrer",
@@ -72,29 +87,48 @@
       "price_desc": "Prix décroissant",
       "newest": "Plus récent",
       "title_asc": "A–Z",
-      "title_desc": "Z–A"
-    }
+      "title_desc": "Z–A",
+      "oldest": "Plus ancien"
+    },
+    "products_count": "{{ count }} articles",
+    "showing_count": "{{ count }} articles sur {{ total }}",
+    "load_more": "Voir plus",
+    "no_results_cta": "Effacer les filtres"
   },
   "search": {
     "placeholder": "Rechercher des produits...",
     "submit": "Rechercher",
-    "no_results": "Aucun résultat pour « {{ query }} »"
+    "no_results": "Aucun résultat pour « {{ query }} »",
+    "results_count": "{{ count }} résultats pour « {{ query }} »",
+    "popular_searches": "Recherches populaires",
+    "recent_searches": "Recherches récentes",
+    "clear": "Effacer"
   },
   "newsletter": {
     "placeholder": "Votre adresse email",
     "submit": "S'abonner",
-    "success": "Merci pour votre inscription !"
+    "success": "Merci pour votre inscription !",
+    "error": "Une erreur est survenue. Veuillez réessayer."
   },
   "general": {
     "free_shipping": "Livraison standard offerte",
-    "secure_checkout": "Paiement"
+    "secure_checkout": "Paiement",
+    "on_orders_over": "sur toutes les commandes",
+    "easy_returns": "Retours simplifiés",
+    "return_days": "Retours sous {{ days }} jours",
+    "currency": "Devise",
+    "country": "Pays ou région",
+    "language": "Langue",
+    "powered_by": "Propulsé par Shopify"
   },
   "drop": {
     "countdown_title": "Le drop commence dans",
     "waitlist_heading": "Accès anticipé",
     "waitlist_success": "Vous êtes sur la liste !",
     "locked": "Drop pas encore disponible",
-    "coming_soon": "Bientôt disponible"
+    "coming_soon": "Bientôt disponible",
+    "waitlist_subheading": "Soyez parmi les premiers informés du lancement",
+    "drop_calendar": "Prochaines collections"
   },
   "living_lookbook": {
     "edition": "Édition à magasiner / Vol. 01",
@@ -152,6 +186,51 @@
     "cart_error": "Impossible d’ajouter cette taille. Veuillez réessayer.",
     "heading": "Sur le portant"
   },
+  "account": {
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "register": "Créer un compte",
+    "forgot_password": "Mot de passe oublié ?",
+    "my_account": "Mon compte",
+    "orders": "Commandes",
+    "addresses": "Adresses",
+    "wishlist": "Favoris"
+  },
+  "errors": {
+    "sold_out": "Cet article est épuisé",
+    "unavailable": "Cette variante est indisponible",
+    "invalid_email": "Veuillez saisir une adresse courriel valide",
+    "required": "Ce champ est obligatoire",
+    "add_to_cart_error": "Impossible d’ajouter cet article au panier"
+  },
+  "melato_seo": {
+    "home_title": "Melato | Vêtements de créateur, accessoires et parfums",
+    "home_description": "Découvrez les vêtements, accessoires et parfums Melato. Des coupes soignées, des détails singuliers et des collections limitées. Livraison standard offerte.",
+    "all_title": "Tous les articles",
+    "cart_title": "Votre panier",
+    "cart_description": "Consultez votre panier Melato, modifiez les quantités et passez votre commande."
+  },
+  "melato_ui": {
+    "account": "Compte",
+    "bag": "Panier",
+    "navigation": "Melato / Navigation",
+    "collection": "Collection",
+    "search_archive": "Rechercher dans les archives",
+    "search_melato": "Rechercher chez Melato",
+    "search_products": "Rechercher des articles",
+    "type_search": "Que recherchez-vous ?",
+    "shop_drop": "Découvrir la collection",
+    "lookbook": "Lookbook interactif",
+    "sound_on": "Activer le son",
+    "sound_off": "Couper le son",
+    "video_fallback": "Votre navigateur ne prend pas en charge cette vidéo.",
+    "notes_heading": "Les nouvelles de la maison.",
+    "notes_body": "Nouveautés, réassorts, événements éphémères et actualités éditoriales.",
+    "email": "Adresse courriel",
+    "join": "S’inscrire",
+    "signup_success": "Votre inscription est confirmée.",
+    "footer_policy": "Livraison standard offerte · Retours offerts sous 30 jours sur les articles admissibles"
+  },
   "melato_nav": {
     "new_arrivals": "Nouveautés",
     "tracksuits": "Survêtements",
@@ -178,33 +257,5 @@
     "terms": "Conditions de service",
     "popup": "Événements éphémères",
     "journal": "Journal Melato"
-  },
-  "melato_ui": {
-    "account": "Compte",
-    "bag": "Panier",
-    "navigation": "Melato / Navigation",
-    "collection": "Collection",
-    "search_archive": "Rechercher dans les archives",
-    "search_melato": "Rechercher chez Melato",
-    "search_products": "Rechercher des articles",
-    "type_search": "Que recherchez-vous ?",
-    "shop_drop": "Découvrir la collection",
-    "lookbook": "Lookbook interactif",
-    "sound_on": "Activer le son",
-    "sound_off": "Couper le son",
-    "video_fallback": "Votre navigateur ne prend pas en charge cette vidéo.",
-    "notes_heading": "Les nouvelles de la maison.",
-    "notes_body": "Nouveautés, réassorts, événements éphémères et actualités éditoriales.",
-    "email": "Adresse courriel",
-    "join": "S’inscrire",
-    "signup_success": "Votre inscription est confirmée.",
-    "footer_policy": "Livraison standard offerte · Retours offerts sous 30 jours sur les articles admissibles"
-  },
-  "melato_seo": {
-    "home_title": "Melato | Vêtements de créateur, accessoires et parfums",
-    "home_description": "Découvrez les vêtements, accessoires et parfums Melato. Des coupes soignées, des détails singuliers et des collections limitées. Livraison standard offerte.",
-    "all_title": "Tous les articles",
-    "cart_title": "Votre panier",
-    "cart_description": "Consultez votre panier Melato, modifiez les quantités et passez votre commande."
   }
 }
