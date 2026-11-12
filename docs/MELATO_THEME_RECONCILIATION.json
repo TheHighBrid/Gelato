@@ -886,8 +886,8 @@
       "liveMd5": "ece3feaea1dfb8b7615b8c1e9cbf6819",
       "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
       "decision": "remediate-live",
-      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership.",
-      "candidateSha256": "698f833760aaeb43a7a993110ba042a24351ac0a7cded735b38b25c5e8e430ae"
+      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
+      "candidateSha256": "560ec9445bb3296567f814c1e561e0271ddcfc71306b1eb3d098e124579842ee"
     },
     {
       "path": "locales/ar.json",
@@ -1390,8 +1390,8 @@
       "liveMd5": "a02b162a2751d09e4fd431bd4c586cb7",
       "liveBodySha256": "b094e0f5ea84a38013016f79a9e6c36a2702fa98ebcdfd98d6b2fdee34dfb1cc",
       "decision": "remediate-live",
-      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership.",
-      "candidateSha256": "cd905b0690b11bf174c890994f6cd37d5e9401a32d46aa2c61adbcbf17715ed8"
+      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
+      "candidateSha256": "77bdf342ec7eeb2c73488a70705912f1735f2e6a5b37133279b475300400679f"
     },
     {
       "path": "sections/melato-popup-calendar.liquid",
@@ -1422,8 +1422,8 @@
       "liveMd5": "7db420d6bae690a3f04b96bced65566c",
       "liveBodySha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b",
       "decision": "remediate-live",
-      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership.",
-      "candidateSha256": "79cf8b5e4076440ab23a06d5ce9fc21b2628a9812ef5c30eb393b1ad49276272"
+      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
+      "candidateSha256": "a94d5dd43f71d854f26089966515bf64aa3d36e52725b02e1002e7ab356fcc94"
     },
     {
       "path": "sections/melato-product-proof-bar.liquid",
@@ -1454,8 +1454,8 @@
       "liveMd5": "b22060c594a92c09bbebdcb3863b5be9",
       "liveBodySha256": "48fe373176b0b028928b6d3f28eb90d6fb76522b99b46c8ae6fb8db14d7cd8bf",
       "decision": "remediate-live",
-      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership.",
-      "candidateSha256": "33e69ea9bd65066ba42db1eff4881e7bf256dada5868db177a093bc84dfc978a"
+      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
+      "candidateSha256": "4711a34b949efd90ffb34ea0c136457d491d9eac61d571e7809d72dcb87490fc"
     },
     {
       "path": "sections/melato-related-products.liquid",

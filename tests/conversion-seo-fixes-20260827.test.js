@@ -61,6 +61,6 @@ test('All Products and cart metadata are purpose-built', () => {
   assert.equal(allProductsMeta.length, 140);
   assert.ok(layout.includes(allProductsMeta));
   assert.match(layout, /elsif template\.name == 'cart'/);
-  assert.match(layout, /assign melato_meta_title = 'Your bag'/);
-  assert.match(layout, /Review your Melato bag, update quantities, and continue to checkout\./);
+  assert.match(layout, /assign melato_meta_title = 'melato_seo.cart_title' \| t/);
+  assert.match(layout, /assign melato_meta_description = 'melato_seo.cart_description' \| t/);
 });

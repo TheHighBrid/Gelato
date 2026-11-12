@@ -34,6 +34,12 @@
     assign story_copy = product.metafields.melato.product_story.value | default: product.metafields.custom.story.value | default: product.metafields.custom.product_story.value | default: product.metafields.custom.pdp_story.value | default: product.metafields.custom.pdp_story_content.value
   endif
 
+  assign story_plain = story_copy | strip_html | strip | downcase
+  assign subtitle_plain = subtitle | strip_html | strip | downcase
+  if subtitle_plain != blank and story_plain contains subtitle_plain
+    assign subtitle = blank
+  endif
+
   assign fit_copy = product.metafields.custom.fit_notes.value
   if fit_copy == blank
     assign fit_copy = product.metafields.melato.fit.value | default: product.metafields.custom.fit_summary.value | default: product.metafields.custom.fit.value
@@ -60,6 +66,56 @@
 
   assign ingredients_copy = product.metafields.fragrance.inci_ingredients.value | default: product.metafields.custom.ingredients.value
   assign use_copy = product.metafields.custom.use.value | default: product.metafields.custom.application.value
+  assign use_copy = use_copy | default: product.metafields.fragrance.how_to_wear.value
+  assign safety_copy = product.metafields.fragrance.safety_warning.value
+  assign legacy_details = ''
+  assign normalized_description = story_copy | replace: '<H', '<h' | replace: '</H', '</h' | replace: '<h2', '<h3' | replace: '</h2>', '</h3>' | replace: '<h4', '<h3' | replace: '</h4>', '</h3>'
+  assign legacy_blocks = normalized_description | split: '<h3'
+  assign story_copy = legacy_blocks.first | strip_html | strip
+  for legacy_block in legacy_blocks offset: 1
+    assign legacy_heading = legacy_block | split: '</h3>' | first | split: '>' | last | strip_html | strip
+    assign legacy_heading_down = legacy_heading | downcase
+    assign legacy_body = legacy_block | split: '</h3>' | last | strip
+    case legacy_heading_down
+      when 'story', 'product story', 'description'
+        assign narrative = legacy_body | strip_html | strip
+        assign story_copy = story_copy | append: ' ' | append: narrative | strip
+      when 'material', 'materials', 'composition', 'materials & composition', 'materials &amp; composition'
+        if material_copy == blank and material_details == blank
+          assign material_copy = legacy_body
+        endif
+      when 'care', 'care instructions', 'care and storage'
+        if care_copy == blank and care_details == blank
+          assign care_copy = legacy_body
+        endif
+      when 'fit', 'fit notes', 'fit and use'
+        if fit_copy == blank and fit_details == blank
+          assign fit_copy = legacy_body
+        endif
+      when 'construction'
+        if construction_details == blank and construction_paragraph == blank
+          assign construction_paragraph = legacy_body | strip_html | strip
+        endif
+      when 'ingredients', 'ingredients and disclosure'
+        if ingredients_copy == blank
+          assign ingredients_copy = legacy_body
+        endif
+      when 'use', 'application', 'how to wear'
+        if use_copy == blank
+          assign use_copy = legacy_body
+        endif
+      else
+        capture legacy_detail
+          echo '<details class="pdp-spec"><summary>'
+          echo legacy_heading | escape
+          echo '</summary><div class="pdp-rte">'
+          echo legacy_body
+          echo '</div></details>'
+        endcapture
+        assign legacy_details = legacy_details | append: legacy_detail
+    endcase
+  endfor
+
   assign made_in = product.metafields.custom.made_in.value
   assign material_profile = product.metafields.custom.material_profile.value
   assign product_specification = product.metafields.custom.product_specification.value
@@ -217,9 +273,9 @@
         {% render 'back-in-stock-form', product: product %}
 
         {%- if family == 'fragrance' -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
         {%- else -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
         {%- endif -%}
 
         {%- comment -%}
@@ -289,11 +345,15 @@
       {%- if story_copy != blank -%}
         <section class="pdp-panel pdp-story" aria-labelledby="PDPStory-{{ section.id }}">
           <header class="pdp-section-head"><h2 id="PDPStory-{{ section.id }}" class="melato-pdp-bible-section-title">Story</h2></header>
-          <div class="pdp-rte rte">{{ story_copy }}</div>
+          <div class="pdp-rte rte"><p>{{ story_copy | escape }}</p></div>
         </section>
       {%- endif -%}
 
       <section class="pdp-spec-grid" aria-label="Product specifications">
+        {{ legacy_details }}
+        {%- if safety_copy != blank -%}
+          <details class="pdp-spec"><summary>Safety</summary><div class="pdp-rte">{{ safety_copy | escape | newline_to_br }}</div></details>
+        {%- endif -%}
         {%- if family == 'fragrance' -%}
           {%- comment -%}Fragrance purchase-decision specs are surfaced in the buybox above.{%- endcomment -%}
         {%- else -%}

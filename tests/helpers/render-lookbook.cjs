@@ -3,7 +3,7 @@ const path = require('node:path');
 const { Liquid } = require('liquidjs');
 const repo = path.resolve(__dirname, '../..');
 async function renderLookbook({ products = {}, missingImage = false, language = 'en.default' } = {}) {
-  const template = JSON.parse(fs.readFileSync(path.join(repo, 'templates/page.living-lookbook.json'), 'utf8'));
+  const template = JSON.parse(fs.readFileSync(path.join(repo, 'templates/page.living-lookbook.json'), 'utf8').replace(/^\s*\/\*[\s\S]*?\*\//, ''));
   const section = structuredClone(template.sections.main);
   section.id = 'audition';
   section.blocks = section.block_order.map(id => ({ ...section.blocks[id], id }));

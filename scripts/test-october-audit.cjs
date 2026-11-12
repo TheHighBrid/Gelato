@@ -29,7 +29,7 @@ async function main() {
     assert.ok(!archived.includes('NEXT OPERATION'));
   }
   const fit = 'Wide-leg track pant with elasticated waist and drawcord.';
-  const shipping = 'Ships in 1 to 3 business days. Complimentary delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.';
+  const shipping = 'Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.';
   const source = fs.readFileSync('snippets/melato-rendered-output-filters-base.liquid', 'utf8');
   const html = await engine.parseAndRender(source, {
     html: `<form data-bis-root></form><p class="pdp-shipping-returns">${shipping}</p><details><summary>Fit</summary>${fit}</details>`,
@@ -39,7 +39,7 @@ async function main() {
   });
   assert.equal(html.split(fit).length - 1, 1, 'Fit must render once');
   assert.equal(html.split('Ships in 1 to 3 business days.').length - 1, 1, 'Dispatch must render once');
-  assert.equal(html.split('Complimentary delivery on all orders.').length - 1, 1, 'Delivery must render once');
+  assert.equal(html.split('Complimentary standard delivery on all orders.').length - 1, 1, 'Delivery must render once');
   assert.ok(!html.includes('<strong>Returns</strong>'), 'No duplicate return fact');
   assert.ok(!html.includes('<ul class="pdp-conversion-assurances__trust"'), 'No duplicate trust list');
   console.log('October audit regression checks passed: 8 date boundaries and single-owner PDP copy.');

@@ -25,36 +25,36 @@
       </div>
 
       <nav class="melato-footer__column" aria-label="Shop links">
-        <h2>Shop</h2>
+        <h2>{% render 'melato-navigation-label', title: "Shop" %}</h2>
         <ul>
-          <li><a href="{{ routes.all_products_collection_url }}">All Products</a></li>
-          <li><a href="/collections/new-arrivals">New Arrivals</a></li>
-          <li><a href="/collections/tracksuits">Tracksuits</a></li>
-          <li><a href="/collections/denim">Denim</a></li>
-          <li><a href="/collections/accessories">Accessories</a></li>
+          <li><a href="{{ routes.all_products_collection_url }}">{% render 'melato-navigation-label', title: "All Products" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/collections/new-arrivals" %}">{% render 'melato-navigation-label', title: "New Arrivals" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/collections/tracksuits" %}">{% render 'melato-navigation-label', title: "Tracksuits" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/collections/denim" %}">{% render 'melato-navigation-label', title: "Denim" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/collections/accessories" %}">{% render 'melato-navigation-label', title: "Accessories" %}</a></li>
         </ul>
       </nav>
 
       <nav class="melato-footer__column" aria-label="Editorial and information links">
-        <h2>House</h2>
+        <h2>{% render 'melato-navigation-label', title: "House" %}</h2>
         <ul>
-          <li><a href="/pages/our-story">Our Story</a></li>
-          <li><a href="/pages/living-lookbook">Living Lookbook</a></li>
-          <li><a href="/pages/editorial">Editorial</a></li>
-          <li><a href="/pages/popup-calendar">Popup Calendar</a></li>
-          <li><a href="/blogs/news">Melato Journal</a></li>
-          <li><a href="/pages/faq">FAQ</a></li>
-          <li><a href="/pages/contact">Contact</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/pages/our-story" %}">{% render 'melato-navigation-label', title: "Our Story" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/pages/living-lookbook" %}">{% render 'melato-navigation-label', title: "Living Lookbook" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/pages/editorial" %}">{% render 'melato-navigation-label', title: "Editorial" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/pages/popup-calendar" %}">{% render 'melato-navigation-label', title: "Popup Calendar" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/blogs/news" %}">{% render 'melato-navigation-label', title: "Melato Journal" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/pages/faq" %}">FAQ</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/pages/contact" %}">{% render 'melato-navigation-label', title: "Contact" %}</a></li>
         </ul>
       </nav>
 
       <nav class="melato-footer__column" aria-label="Legal links">
-        <h2>Legal</h2>
+        <h2>{% render 'melato-navigation-label', title: "Legal" %}</h2>
         <ul>
-          <li><a href="/policies/shipping-policy">Delivery</a></li>
-          <li><a href="/policies/refund-policy">Returns & Refunds</a></li>
-          <li><a href="/policies/privacy-policy">Privacy Policy</a></li>
-          <li><a href="/policies/terms-of-service">Terms of Service</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/policies/shipping-policy" %}">{% render 'melato-navigation-label', title: "Delivery" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/policies/refund-policy" %}">{% render 'melato-navigation-label', title: "Returns & Refunds" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/policies/privacy-policy" %}">{% render 'melato-navigation-label', title: "Privacy Policy" %}</a></li>
+          <li><a href="{% render 'melato-localized-url', url: "/policies/terms-of-service" %}">{% render 'melato-navigation-label', title: "Terms of Service" %}</a></li>
         </ul>
       </nav>
     </div>
@@ -62,20 +62,20 @@
     <div class="melato-footer__notes">
       <div>
         <p class="melato-footer__eyebrow">MELATO NOTES</p>
-        <h2>DROP INTELLIGENCE.</h2>
-        <p>New releases, restocks, popup coordinates and editorial updates.</p>
+        <h2>{{ 'melato_ui.notes_heading' | t }}</h2>
+        <p>{{ 'melato_ui.notes_body' | t }}</p>
       </div>
       <div>
         {%- assign footer_form_id = 'melato-footer-form-' | append: section.id -%}
         {%- form 'customer', id: footer_form_id, class: 'melato-footer__form' -%}
           <input type="hidden" name="contact[tags]" value="newsletter">
           {% if form.posted_successfully? %}
-            <p class="melato-footer__success" role="status">You are on the list.</p>
+            <p class="melato-footer__success" role="status">{{ 'melato_ui.signup_success' | t }}</p>
           {% else %}
-            <label class="visually-hidden" for="melato-footer-email-{{ section.id }}">Email address</label>
+            <label class="visually-hidden" for="melato-footer-email-{{ section.id }}">{{ 'melato_ui.email' | t }}</label>
             <div class="melato-footer__field">
-              <input id="melato-footer-email-{{ section.id }}" type="email" name="contact[email]" placeholder="Email address" autocomplete="email" required>
-              <button type="submit">Join</button>
+              <input id="melato-footer-email-{{ section.id }}" type="email" name="contact[email]" placeholder="{{ 'melato_ui.email' | t }}" autocomplete="email" required>
+              <button type="submit">{{ 'melato_ui.join' | t }}</button>
             </div>
             {% if form.errors %}<div class="melato-footer__error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}
           {% endif %}
@@ -86,7 +86,7 @@
     <div class="melato-footer__bottom">
       <div>
         <p class="melato-footer__copyright">© {{ 'now' | date: '%Y' }} {{ shop.name | default: 'Melato' }}.</p>
-        <p class="melato-footer__microcopy">Complimentary standard delivery · Free returns within 30 days</p>
+        <p class="melato-footer__microcopy">{{ 'melato_ui.footer_policy' | t }}</p>
       </div>
       {% if shop.enabled_payment_types.size > 0 %}
         <ul class="melato-footer__payments" aria-label="Accepted payment methods">

@@ -1,0 +1,67 @@
+{% doc %}
+Renders a localized standard navigation label while preserving custom names.
+@param {string} title - Menu label
+{% enddoc %}
+{%- liquid
+  assign label_key = ''
+  case title
+    when 'New Arrivals'
+      assign label_key = 'melato_nav.new_arrivals'
+    when 'Tracksuits'
+      assign label_key = 'melato_nav.tracksuits'
+    when 'Denim'
+      assign label_key = 'melato_nav.denim'
+    when 'Eve’s Wardrobe'
+      assign label_key = 'melato_nav.eve'
+    when "Eve's Wardrobe"
+      assign label_key = 'melato_nav.eve'
+    when 'Accessories'
+      assign label_key = 'melato_nav.accessories'
+    when 'Sunglasses'
+      assign label_key = 'melato_nav.sunglasses'
+    when 'Fragrance'
+      assign label_key = 'melato_nav.fragrance'
+    when 'Best Sellers'
+      assign label_key = 'melato_nav.best_sellers'
+    when 'Living Lookbook'
+      assign label_key = 'melato_nav.lookbook'
+    when 'Newsletter'
+      assign label_key = 'melato_nav.newsletter'
+    when 'Editorial'
+      assign label_key = 'melato_nav.editorial'
+    when 'All Products'
+      assign label_key = 'melato_nav.all_products'
+    when 'Our Story'
+      assign label_key = 'melato_nav.our_story'
+    when 'Contact'
+      assign label_key = 'melato_nav.contact'
+    when 'Size Guide'
+      assign label_key = 'melato_nav.size_guide'
+    when 'Shipping & Returns'
+      assign label_key = 'melato_nav.shipping_returns'
+    when 'Shop'
+      assign label_key = 'melato_nav.shop'
+    when 'House'
+      assign label_key = 'melato_nav.house'
+    when 'Legal'
+      assign label_key = 'melato_nav.legal'
+    when 'Delivery'
+      assign label_key = 'melato_nav.delivery'
+    when 'Returns & Refunds'
+      assign label_key = 'melato_nav.returns'
+    when 'Privacy Policy'
+      assign label_key = 'melato_nav.privacy'
+    when 'Terms of Service'
+      assign label_key = 'melato_nav.terms'
+    when 'Popup Calendar'
+      assign label_key = 'melato_nav.popup'
+    when 'Melato Journal'
+      assign label_key = 'melato_nav.journal'
+  endcase
+  if label_key != ''
+    echo label_key | t
+  else
+    echo title | escape
+  endif
+-%}
+
