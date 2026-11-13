@@ -53,6 +53,39 @@
       assign output = output | replace: '>Product measurements</button>', '>Fit guide</button>'
     endunless
 
+    assign output = output | replace: ', final lens material not specified', '' | replace: 'final lens material not specified', ''
+
+    assign product_type_down = product.type | downcase
+    if product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_type_down contains 'accessor' or product_type_down contains 'bag' or product_title_down contains 'sunglass'
+      assign output = output | replace: '<a class="size-guide-trigger" href="/pages/size-guide">Fit guide</a>', ''
+      assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Fit guide</button>', ''
+      assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>', ''
+    endif
+
+    assign matching_product = product.metafields.custom.companion_product.value | default: product.metafields.custom.companion_product
+    if product.featured_image != blank
+      capture empty_current_set_alt
+        echo 'class="pdp-set-image" loading="lazy" widths="300, 500, 800" alt=""'
+      endcapture
+      capture proper_current_set_alt
+        echo 'class="pdp-set-image" loading="lazy" widths="300, 500, 800" alt="'
+        echo product.title | escape
+        echo ' - Front view"'
+      endcapture
+      assign output = output | replace_first: empty_current_set_alt, proper_current_set_alt
+    endif
+    if matching_product != blank and matching_product.featured_image != blank
+      capture empty_match_set_alt
+        echo 'class="pdp-set-image" loading="lazy" widths="300, 500, 800" alt=""'
+      endcapture
+      capture proper_match_set_alt
+        echo 'class="pdp-set-image" loading="lazy" widths="300, 500, 800" alt="'
+        echo matching_product.title | escape
+        echo ' - Front view"'
+      endcapture
+      assign output = output | replace_first: empty_match_set_alt, proper_match_set_alt
+    endif
+
     assign origin_copy = product.metafields.custom.made_in.value | default: product.metafields.custom.country_of_origin.value
     if origin_copy != blank and origin_copy contains 'Designed in'
       capture malformed_origin_row
@@ -107,6 +140,12 @@
         echo '<a class="pdp-set-cta" href="'
         echo matching_product.url
         echo '">View matching piece</a>'
+      endcapture
+
+      capture legacy_set_link_fr
+        echo '<a class="pdp-set-cta" href="'
+        echo matching_product.url
+        echo '">Voir la pièce assortie</a>'
       endcapture
 
       capture full_set_markup
@@ -179,7 +218,31 @@
 
       if output contains legacy_set_link
         assign output = output | replace_first: legacy_set_link, full_set_markup
+      elsif output contains legacy_set_link_fr
+        assign output = output | replace_first: legacy_set_link_fr, full_set_markup
       endif
+    endif
+
+    if request.locale.iso_code == 'fr'
+      assign output = output | replace: '>Add to cart<', '>Ajouter au panier<'
+      assign output = output | replace: '>Out of stock<', '>Rupture de stock<'
+      assign output = output | replace: '<span>Materials</span>', '<span>Matières</span>'
+      assign output = output | replace: '<span>Fit</span>', '<span>Coupe</span>'
+      assign output = output | replace: '<span>Care</span>', '<span>Entretien</span>'
+      assign output = output | replace: '<summary>Construction</summary>', '<summary>Confection</summary>'
+      assign output = output | replace: '<summary>Use</summary>', '<summary>Utilisation</summary>'
+      assign output = output | replace: '<legend>Size</legend>', '<legend>Taille</legend>'
+      assign output = output | replace: '<legend>Color</legend>', '<legend>Couleur</legend>'
+      assign output = output | replace: '<span>One Size</span>', '<span>Taille unique</span>'
+      assign output = output | replace: '>Quantity<', '>Quantité<'
+      assign output = output | replace: '>Fit guide<', '>Guide des tailles<'
+      assign output = output | replace: '>Product measurements<', '>Mesures du produit<'
+      assign output = output | replace: '>Complete the Set<', '>Compléter l\'ensemble<'
+      assign output = output | replace: '>Selected piece<', '>Pièce sélectionnée<'
+      assign output = output | replace: '>Matching piece<', '>Pièce assortie<'
+      assign output = output | replace: '>View matching piece<', '>Voir la pièce assortie<'
+      assign output = output | replace: 'ADD FULL SET', 'AJOUTER L\'ENSEMBLE'
+      assign output = output | replace: '<span>Full set</span>', '<span>Ensemble complet</span>'
     endif
   endif
 -%}

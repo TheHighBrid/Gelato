@@ -3,8 +3,18 @@ Renders a localized standard navigation label while preserving custom names.
 @param {string} title - Menu label
 {% enddoc %}
 {%- liquid
+  assign raw_title = title | strip
+  assign num_prefix = ''
+  assign lookup_title = raw_title
+  assign title_parts = raw_title | split: ' '
+  assign first_token = title_parts[0]
+  if first_token == '01' or first_token == '02' or first_token == '03' or first_token == '04' or first_token == '05' or first_token == '06' or first_token == '07' or first_token == '08' or first_token == '09' or first_token == '10'
+    assign num_prefix = first_token | append: ' '
+    assign lookup_title = raw_title | remove_first: num_prefix | strip
+  endif
+
   assign label_key = ''
-  case title
+  case lookup_title
     when 'New Arrivals'
       assign label_key = 'melato_nav.new_arrivals'
     when 'Tracksuits'
@@ -58,10 +68,11 @@ Renders a localized standard navigation label while preserving custom names.
     when 'Melato Journal'
       assign label_key = 'melato_nav.journal'
   endcase
+
   if label_key != ''
-    echo label_key | t
+    assign translated = label_key | t
+    echo num_prefix | append: translated | escape
   else
-    echo title | escape
+    echo raw_title | escape
   endif
 -%}
-

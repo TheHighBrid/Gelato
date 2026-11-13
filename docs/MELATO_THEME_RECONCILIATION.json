@@ -887,7 +887,7 @@
       "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
-      "candidateSha256": "560ec9445bb3296567f814c1e561e0271ddcfc71306b1eb3d098e124579842ee"
+      "candidateSha256": "c04d22f55ec3a0224e761360427ba0499221f3eddebbd0c28ca2852b6b18afb1"
     },
     {
       "path": "locales/ar.json",
@@ -1199,7 +1199,7 @@
       "liveBodySha256": "c605189a651e73e81e6e2180462677ffd6216a1365708fdb09c8d6d8e271c039",
       "decision": "remediate-live",
       "reason": "Preserve source-rendered delivery microcopy and enable localized navigation and UI strings across storefront locales.",
-      "candidateSha256": "3e56e1a410b6e2e1040a98d7d2a346d01e5947c1a78f752fff16f2ef9d162d2b"
+      "candidateSha256": "633aa05a49fddde06684672d1f169d1a7b91de95575a5a8ed586619560d4badc"
     },
     {
       "path": "sections/melato-fragrance-product.liquid",
@@ -1423,7 +1423,7 @@
       "liveBodySha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
-      "candidateSha256": "a94d5dd43f71d854f26089966515bf64aa3d36e52725b02e1002e7ab356fcc94"
+      "candidateSha256": "3759d6225a4e490387fa111aa63c172584931adfb76147104487c6e2ab8d1ad2"
     },
     {
       "path": "sections/melato-product-proof-bar.liquid",
