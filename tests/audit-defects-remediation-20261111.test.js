@@ -158,14 +158,54 @@ test('F-P02-FR-UNTRANSLATED: French locale translates buybox CTA and specificati
   assert.match(filtered, /Compléter l'ensemble/);
 });
 
-test('F-P02-FR-UNTRANSLATED: navigation labels translate accurately for French storefront', async () => {
+test('F-P02-FR-UNTRANSLATED: French locale preserves Complete the Set controls and translates bundle labels and CTA', async () => {
+  const engine = createEngine({ request: { locale: { iso_code: 'fr' } }, shop: { currency: 'CAD' } });
+  const rawSetLink = '<a class="pdp-set-cta" href="/products/shell-company-technical-track-pant">View matching piece</a>';
+  const v1 = { id: 101, available: true, title: 'M', price: 13999 };
+  const v2 = { id: 202, available: true, title: 'M', price: 11999 };
+  const productA = {
+    title: 'Shell Company Technical Track Jacket',
+    type: 'Track Jacket',
+    url: '/products/shell-company-technical-track-jacket',
+    variants: [v1],
+    selected_or_first_available_variant: v1,
+    metafields: { custom: {} }
+  };
+  const productB = {
+    title: 'Shell Company Technical Track Pant',
+    type: 'Track Pant',
+    url: '/products/shell-company-technical-track-pant',
+    variants: [v2],
+    selected_or_first_available_variant: v2,
+    metafields: { custom: {} }
+  };
+  productA.metafields.custom.companion_product = { value: productB };
+
+  const filtered = await engine.parseAndRender(read('snippets/melato-rendered-output-filters.liquid'), {
+    html: rawSetLink,
+    context: 'main',
+    template: { name: 'product' },
+    product: productA,
+    shop: { currency: 'CAD' }
+  });
+
+  const { JSDOM } = require('jsdom');
+  const doc = new JSDOM(filtered).window.document;
+  assert.ok(doc.querySelector('[data-melato-set-current]'), 'Current product size selector must be present');
+  assert.ok(doc.querySelector('[data-melato-set-matching]'), 'Matching product size selector must be present');
+  assert.equal(doc.querySelector('.melato-full-set-button')?.textContent, "AJOUTER L'ENSEMBLE");
+  assert.equal(doc.querySelector('.pdp-set-cta')?.textContent, 'Voir la pièce assortie');
+  assert.equal(doc.querySelector('.melato-full-set-price span')?.textContent, 'Ensemble complet');
+});
+
+test('F-P02-FR-UNTRANSLATED: navigation labels translate accurately for French storefront including numbered prefixes', async () => {
   const engine = createEngine();
   const fr = parseJson('locales/fr.json');
   engine.registerFilter('t', key => key.split('.').reduce((obj, part) => obj?.[part], fr) || key);
 
-  const testNav = '{% render "melato-navigation-label", title: "New Arrivals" %}|{% render "melato-navigation-label", title: "Tracksuits" %}|{% render "melato-navigation-label", title: "Accessories" %}|{% render "melato-navigation-label", title: "Fragrance" %}';
+  const testNav = '{% render "melato-navigation-label", title: "New Arrivals" %}|{% render "melato-navigation-label", title: "01 New Arrivals" %}|{% render "melato-navigation-label", title: "02 Tracksuits" %}|{% render "melato-navigation-label", title: "05 Accessories" %}|{% render "melato-navigation-label", title: "Fragrance" %}|{% render "melato-navigation-label", title: "Pocket Change" %}';
   const rendered = await engine.parseAndRender(testNav);
-  assert.equal(rendered.trim(), 'Nouveautés|Survêtements|Accessoires|Parfums');
+  assert.equal(rendered.trim(), 'Nouveautés|01 Nouveautés|02 Survêtements|05 Accessoires|Parfums|Pocket Change');
 });
 
 test('F-P09-SUPPORT-EMAIL-VARIANCE: policy pages route through filters and contact email is unified', () => {
