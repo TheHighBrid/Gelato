@@ -23,6 +23,7 @@
 (function () {
   'use strict';
   var family = {{ pdp_family | json }};
+  var isFr = {{ request.locale.iso_code | json }} === 'fr';
 
   function cleanText(node) {
     return node ? String(node.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase() : '';
@@ -34,11 +35,23 @@
 
     root.querySelectorAll('.pdp-buybox-spec').forEach(function (details) {
       var summary = details.querySelector(':scope > summary');
-      if (!summary || cleanText(summary).indexOf('fit') !== 0) return;
+      var summaryText = cleanText(summary);
+      var isFitDisclosure = summary && (
+        summaryText.indexOf('fit') === 0 ||
+        summaryText.indexOf('coupe') === 0 ||
+        summaryText.indexOf('dimensions') === 0 ||
+        summaryText.indexOf('mesures') === 0 ||
+        details.querySelector('.pdp-inline-link') !== null
+      );
+      if (!isFitDisclosure) return;
 
       var label = summary.querySelector('span:first-child');
       if (label) {
-        label.textContent = family === 'bags' ? 'Dimensions & Capacity' : 'Frame & Lens Measurements';
+        if (isFr) {
+          label.textContent = family === 'bags' ? 'Dimensions et capacité' : 'Mesures monture et verres';
+        } else {
+          label.textContent = family === 'bags' ? 'Dimensions & Capacity' : 'Frame & Lens Measurements';
+        }
       }
 
       details.querySelectorAll('.pdp-inline-link').forEach(function (link) {

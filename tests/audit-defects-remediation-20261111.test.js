@@ -150,7 +150,7 @@ test('F-P02-FR-UNTRANSLATED: French locale translates buybox CTA and specificati
     template: { name: 'product' },
     product: { title: 'Test Product', type: 'Apparel', metafields: { custom: {} } }
   });
-  assert.match(filtered, />Ajouter au panier</);
+  assert.match(filtered, />\s*Ajouter au panier\s*</);
   assert.match(filtered, /<span>Matières<\/span>/);
   assert.match(filtered, /<span>Coupe<\/span>/);
   assert.match(filtered, /<span>Entretien<\/span>/);
@@ -228,3 +228,54 @@ test('F-P06 & F-P11: localized URL maps singular pant collection to plural and p
   });
   assert.equal(renderedTracksuits.trim(), '/fr/collections/tracksuits');
 });
+
+test('F-P02-FR-UNTRANSLATED: buybox purchase button with whitespace and rebuild template renders in French', async () => {
+  const engine = createEngine({ request: { locale: { iso_code: 'fr' } }, shop: { currency: 'CAD' } });
+  const rawPdpButton = `
+    <button class="pdp-atc" type="submit" name="add" data-pdp-atc>
+      Add to cart
+    </button>
+  `;
+  const filtered = await engine.parseAndRender(read('snippets/melato-rendered-output-filters.liquid'), {
+    html: rawPdpButton,
+    context: 'main',
+    template: { name: 'product' },
+    product: { title: 'Test Garment', type: 'Apparel', metafields: { custom: {} } }
+  });
+  assert.match(filtered, />\s*Ajouter au panier\s*</);
+
+  const rebuildSource = read('sections/melato-product-page-rebuild.liquid');
+  assert.match(rebuildSource, /request\.locale\.iso_code == 'fr'/);
+  assert.match(rebuildSource, /Ajouter au panier/);
+  assert.match(rebuildSource, /Rupture de stock/);
+});
+
+test('F-P02 / Codex P2: category adapter in melato-pdp-product-type-semantics processes French disclosures and strips fit guide link', () => {
+  const semantics = read('sections/melato-pdp-product-type-semantics.liquid');
+  assert.match(semantics, /isFitDisclosure/);
+  assert.match(semantics, /summaryText\.indexOf\('coupe'\)/);
+  assert.match(semantics, /Mesures monture et verres/);
+  assert.match(semantics, /Dimensions et capacité/);
+});
+
+test('F-P01-SLUG-DIRTY: cloned product handles are sanitized in melato-rendered-output-filters', async () => {
+  const engine = createEngine();
+  const rawHtml = `
+    <a href="/products/sunset-deposition-corset-dress-copy">Sunset Deposition</a>
+    <a href="/products/rex-x-fur-jacket-1">Rex X Fur</a>
+    <a href="/products/blacklist-sunglasses-1">Blacklist</a>
+  `;
+  const filtered = await engine.parseAndRender(read('snippets/melato-rendered-output-filters.liquid'), {
+    html: rawHtml,
+    context: 'main',
+    template: { name: 'product' },
+    product: { title: 'Test', type: 'Apparel', metafields: { custom: {} } }
+  });
+  assert.doesNotMatch(filtered, /sunset-deposition-corset-dress-copy/);
+  assert.doesNotMatch(filtered, /rex-x-fur-jacket-1/);
+  assert.doesNotMatch(filtered, /blacklist-sunglasses-1/);
+  assert.match(filtered, /\/products\/sunset-deposition-corset-dress"/);
+  assert.match(filtered, /\/products\/rex-x-fur-jacket"/);
+  assert.match(filtered, /\/products\/blacklist-sunglasses"/);
+});
+

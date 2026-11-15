@@ -60,7 +60,15 @@
       assign output = output | replace: '<a class="size-guide-trigger" href="/pages/size-guide">Fit guide</a>', ''
       assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Fit guide</button>', ''
       assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="">Melato Fit Guide</a></p>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="">Guide des tailles Melato</a></p>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="/pages/size-guide">Melato Fit Guide</a></p>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="/pages/size-guide">Guide des tailles Melato</a></p>', ''
     endif
+
+    assign output = output | replace: '/products/sunset-deposition-corset-dress-copy', '/products/sunset-deposition-corset-dress'
+    assign output = output | replace: '/products/rex-x-fur-jacket-1', '/products/rex-x-fur-jacket'
+    assign output = output | replace: '/products/blacklist-sunglasses-1', '/products/blacklist-sunglasses'
 
     assign matching_product = product.metafields.custom.companion_product.value | default: product.metafields.custom.companion_product
     if product.featured_image != blank
@@ -224,10 +232,17 @@
     endif
 
     if request.locale.iso_code == 'fr'
-      assign output = output | replace: '>Add to cart<', '>Ajouter au panier<'
-      assign output = output | replace: '>Out of stock<', '>Rupture de stock<'
+      assign output = output | replace: 'Add to cart', 'Ajouter au panier'
+      assign output = output | replace: 'Out of stock', 'Rupture de stock'
+      assign output = output | replace: 'Sold out', 'Épuisé'
       assign output = output | replace: '<span>Materials</span>', '<span>Matières</span>'
-      assign output = output | replace: '<span>Fit</span>', '<span>Coupe</span>'
+      if product_type_down contains 'bag' or product_type_down contains 'duffle' or product_type_down contains 'tote' or product_type_down contains 'messenger'
+        assign output = output | replace: '<span>Fit</span>', '<span>Dimensions et capacité</span>'
+      elsif product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_title_down contains 'sunglass'
+        assign output = output | replace: '<span>Fit</span>', '<span>Mesures monture et verres</span>'
+      else
+        assign output = output | replace: '<span>Fit</span>', '<span>Coupe</span>'
+      endif
       assign output = output | replace: '<span>Care</span>', '<span>Entretien</span>'
       assign output = output | replace: '<summary>Construction</summary>', '<summary>Confection</summary>'
       assign output = output | replace: '<summary>Use</summary>', '<summary>Utilisation</summary>'
