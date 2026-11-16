@@ -376,7 +376,7 @@
           {%- comment -%}Fragrance purchase-decision specs are surfaced in the buybox above.{%- endcomment -%}
         {%- else -%}
           {%- if construction_details != blank or construction_paragraph != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail }}</li>{%- endfor -%}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph }}</p>{%- endif -%}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail | escape }}</li>{%- endfor -%}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph }}</p>{%- endif -%}</div></details>
           {%- endif -%}
 
           {%- if use_copy != blank and family == 'bags' or use_copy != blank and family == 'accessories' -%}
