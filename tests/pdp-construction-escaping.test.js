@@ -7,5 +7,7 @@ test('canonical construction details render as escaped text, not executable mark
   assert.match(source, /assign construction_details = product\.metafields\.custom\.construction\.value/);
   assert.match(source, /<li>\{\{ detail \| escape \}\}<\/li>/);
   assert.doesNotMatch(source, /<li>\{\{ detail \}\}<\/li>/);
+  assert.match(source, /<p>\{\{ construction_paragraph \| escape \}\}<\/p>/);
+  assert.doesNotMatch(source, /<p>\{\{ construction_paragraph \}\}<\/p>/);
   assert.match(source, /assign construction_details = product\.metafields\.custom\.design_features\.value/);
 });
