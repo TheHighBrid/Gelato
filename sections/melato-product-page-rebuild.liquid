@@ -197,11 +197,11 @@
   data-pdp-label-chips="{% if label_background != blank %}true{% else %}false{% endif %}"
   data-pdp-family="{{ family }}"
   data-pdp-bible-version="{{ pdp_bible_version | default: 'legacy-unmigrated' | escape }}"
-  data-palette-1="{{ palette_1 }}"
-  data-palette-2="{{ palette_2 }}"
-  data-palette-3="{{ palette_3 }}"
-  data-foreground="{{ fg_seed }}"
-  data-surface="{{ section.settings.surface }}"
+  data-palette-1="{{ palette_1 | escape }}"
+  data-palette-2="{{ palette_2 | escape }}"
+  data-palette-3="{{ palette_3 | escape }}"
+  data-foreground="{{ fg_seed | escape }}"
+  data-surface="{{ section.settings.surface | escape }}"
 >
   <div class="pdp-shell">
     <div class="pdp-hero">
