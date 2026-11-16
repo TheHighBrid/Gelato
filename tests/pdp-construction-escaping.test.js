@@ -11,3 +11,17 @@ test('canonical construction details render as escaped text, not executable mark
   assert.doesNotMatch(source, /<p>\{\{ construction_paragraph \}\}<\/p>/);
   assert.match(source, /assign construction_details = product\.metafields\.custom\.design_features\.value/);
 });
+
+test('product-supplied palette and surface values cannot break HTML data attributes', () => {
+  const source = fs.readFileSync('sections/melato-product-page-rebuild.liquid', 'utf8');
+  for (const [attribute, expression] of [
+    ['data-palette-1', 'palette_1'],
+    ['data-palette-2', 'palette_2'],
+    ['data-palette-3', 'palette_3'],
+    ['data-foreground', 'fg_seed'],
+    ['data-surface', 'section.settings.surface'],
+  ]) {
+    assert.ok(source.includes(attribute + '="{{ ' + expression + ' | escape }}"'), attribute + ' must HTML-escape its value');
+    assert.ok(!source.includes(attribute + '="{{ ' + expression + ' }}"'), attribute + ' must not interpolate unescaped values');
+  }
+});
