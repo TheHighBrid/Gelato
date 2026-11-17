@@ -35,3 +35,11 @@ test('dynamic product navigation URLs are escaped inside href attributes', () =>
     assert.ok(!source.includes('href="{{ ' + expression + ' }}"'), expression + ' must not be unescaped');
   }
 });
+
+test('fit and matching-product labels are escaped as plain text', () => {
+  const source = fs.readFileSync('sections/melato-product-page-rebuild.liquid', 'utf8');
+  assert.match(source, /for item in fit_details -%}<li>\{\{ item \| escape \}\}<\/li>/);
+  assert.match(source, /\{\{ fit_copy \| escape \}\}/);
+  assert.match(source, /\{\{ matching_product\.title \| escape \}\}<\/a>/);
+  assert.doesNotMatch(source, /\{\{ matching_product\.title \}\}<\/a>/);
+});
