@@ -43,3 +43,14 @@ test('fit and matching-product labels are escaped as plain text', () => {
   assert.match(source, /\{\{ matching_product\.title \| escape \}\}<\/a>/);
   assert.doesNotMatch(source, /\{\{ matching_product\.title \}\}<\/a>/);
 });
+
+
+test('product titles and subtitle are HTML-escaped across all PDP text surfaces', () => {
+  const source = fs.readFileSync('sections/melato-product-page-rebuild.liquid', 'utf8');
+  for (const tag of ['h1', 'h3', 'strong']) {
+    assert.match(source, new RegExp('<' + tag + '[^>]*>\\{\\{ product\\.title \\| escape \\}\\}<\\/' + tag + '>'));
+  }
+  assert.match(source, /<p class="pdp-thesis">\{\{ subtitle \| escape \}\}<\/p>/);
+  assert.doesNotMatch(source, /\{\{ product\.title \}\}/);
+  assert.doesNotMatch(source, /\{\{ subtitle \}\}/);
+});
