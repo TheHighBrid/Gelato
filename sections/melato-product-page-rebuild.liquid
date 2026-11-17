@@ -195,7 +195,7 @@
   style="--pdp-bg:var(--surface-page);--pdp-surface:var(--surface-studio);--pdp-text:var(--text-primary);--pdp-muted:var(--text-secondary);--pdp-accent:{{ product_button_accent }};--pdp-accent-text:{{ label_text }};--pdp-title-accent:var(--text-primary);--melato-pdp-section-title:var(--text-primary);--pdp-label-bg:{{ label_background | default: 'transparent' }};--pdp-label-text:{{ label_text }}"
   data-product-section
   data-pdp-label-chips="{% if label_background != blank %}true{% else %}false{% endif %}"
-  data-pdp-family="{{ family }}"
+  data-pdp-family="{{ family | escape }}"
   data-pdp-bible-version="{{ pdp_bible_version | default: 'legacy-unmigrated' | escape }}"
   data-palette-1="{{ palette_1 | escape }}"
   data-palette-2="{{ palette_2 | escape }}"
