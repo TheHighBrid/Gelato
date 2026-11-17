@@ -1423,7 +1423,7 @@
       "liveBodySha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
-      "candidateSha256": "cedc93912b2c735a35fdb594d11358e6b46714ca3393ef40ca1dea7309c6ce56"
+      "candidateSha256": "3759d6225a4e490387fa111aa63c172584931adfb76147104487c6e2ab8d1ad2"
     },
     {
       "path": "sections/melato-product-proof-bar.liquid",
