@@ -195,13 +195,13 @@
   style="--pdp-bg:var(--surface-page);--pdp-surface:var(--surface-studio);--pdp-text:var(--text-primary);--pdp-muted:var(--text-secondary);--pdp-accent:{{ product_button_accent }};--pdp-accent-text:{{ label_text }};--pdp-title-accent:var(--text-primary);--melato-pdp-section-title:var(--text-primary);--pdp-label-bg:{{ label_background | default: 'transparent' }};--pdp-label-text:{{ label_text }}"
   data-product-section
   data-pdp-label-chips="{% if label_background != blank %}true{% else %}false{% endif %}"
-  data-pdp-family="{{ family | escape }}"
+  data-pdp-family="{{ family }}"
   data-pdp-bible-version="{{ pdp_bible_version | default: 'legacy-unmigrated' | escape }}"
-  data-palette-1="{{ palette_1 | escape }}"
-  data-palette-2="{{ palette_2 | escape }}"
-  data-palette-3="{{ palette_3 | escape }}"
-  data-foreground="{{ fg_seed | escape }}"
-  data-surface="{{ section.settings.surface | escape }}"
+  data-palette-1="{{ palette_1 }}"
+  data-palette-2="{{ palette_2 }}"
+  data-palette-3="{{ palette_3 }}"
+  data-foreground="{{ fg_seed }}"
+  data-surface="{{ section.settings.surface }}"
 >
   <div class="pdp-shell">
     <div class="pdp-hero">
@@ -230,7 +230,7 @@
       <div class="pdp-buybox">
         {%- if section.settings.eyebrow != blank -%}<p class="pdp-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
         <h1 class="pdp-title">{{ product.title | escape }}</h1>
-        {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle | escape }}</p>{%- endif -%}
+        {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle }}</p>{%- endif -%}
 
         <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="Price">
           <span class="pdp-price">{{ current_variant.price | money_with_currency }}</span>
@@ -250,7 +250,7 @@
                     {%- if size_guide_page != blank -%}
                       <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>
                     {%- else -%}
-                      <a class="size-guide-trigger" href="{{ size_guide_url | escape }}">Fit guide</a>
+                      <a class="size-guide-trigger" href="{{ size_guide_url }}">Fit guide</a>
                     {%- endif -%}
                   {%- endif -%}
                 </div>
@@ -283,7 +283,11 @@
             <label class="visually-hidden" for="PDPQty-{{ section.id }}">Quantity</label>
             <input id="PDPQty-{{ section.id }}" class="pdp-qty" type="number" name="quantity" min="1" value="1">
             <button class="pdp-atc{% unless current_variant.available %} pdp-atc--oos{% endunless %}" type="submit" name="add" data-pdp-atc {% unless current_variant.available %}disabled{% endunless %}>
-              {% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}
+              {%- if request.locale.iso_code == 'fr' -%}
+                {%- if current_variant.available -%}Ajouter au panier{%- else -%}Rupture de stock{%- endif -%}
+              {%- else -%}
+                {%- if current_variant.available -%}Add to cart{%- else -%}Out of stock{%- endif -%}
+              {%- endif -%}
             </button>
           </div>
         {% endform %}
@@ -338,7 +342,7 @@
               {%- if fit_details != blank or fit_copy != blank -%}
                 <details class="pdp-buybox-spec">
                   <summary><span>Fit</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item | escape }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy | escape }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url | escape }}">Melato Fit Guide</a></p></div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}{%- if size_guide_url != blank -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">{%- if request.locale.iso_code == 'fr' -%}Guide des tailles Melato{%- else -%}Melato Fit Guide{%- endif -%}</a></p>{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if care_details != blank or care_copy != blank -%}
@@ -412,7 +416,7 @@
 
   <div class="pdp-sticky-atc" data-pdp-sticky aria-hidden="true">
     <div class="purchase-summary"><strong class="purchase-summary__title">{{ product.title | escape }}</strong><span class="purchase-summary__price" id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money_with_currency }}</span></div>
-    <button type="button" data-pdp-sticky-button class="{% unless current_variant.available %}pdp-atc--oos{% endunless %}" {% unless current_variant.available %}disabled{% endunless %}>{% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}</button>
+    <button type="button" data-pdp-sticky-button class="{% unless current_variant.available %}pdp-atc--oos{% endunless %}" {% unless current_variant.available %}disabled{% endunless %}>{% if request.locale.iso_code == 'fr' %}{% if current_variant.available %}Ajouter au panier{% else %}Rupture de stock{% endif %}{% else %}{% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}{% endif %}</button>
   </div>
 
   <script type="application/json" id="PDPVariants-{{ section.id }}">{{ product.variants | json }}</script>
@@ -447,7 +451,9 @@
     var idInput=form.querySelector('[data-variant-id]');if(idInput)idInput.value=variant.id;
     var price=section.querySelector('#PDPPrice-{{ section.id }}');if(price)price.innerHTML='<span class="pdp-price">'+formatMoney(variant.price)+'</span>'+(variant.compare_at_price&&variant.compare_at_price>variant.price?'<s class="pdp-compare">'+formatMoney(variant.compare_at_price)+'</s>':'');
     var stickyPrice=section.querySelector('#PDPStickyPrice-{{ section.id }}');if(stickyPrice)stickyPrice.textContent=formatMoney(variant.price);
-    [section.querySelector('[data-pdp-atc]'),section.querySelector('[data-pdp-sticky-button]')].forEach(function(button){if(!button)return;button.disabled=!variant.available;button.textContent=variant.available?'Add to cart':'Out of stock';button.classList.toggle('pdp-atc--oos',!variant.available)});
+    var isFr = {{ request.locale.iso_code | json }} === 'fr';
+    var atcText = variant.available ? (isFr ? 'Ajouter au panier' : 'Add to cart') : (isFr ? 'Rupture de stock' : 'Out of stock');
+    [section.querySelector('[data-pdp-atc]'),section.querySelector('[data-pdp-sticky-button]')].forEach(function(button){if(!button)return;button.disabled=!variant.available;button.textContent=atcText;button.classList.toggle('pdp-atc--oos',!variant.available)});
     if(variant.featured_image&&mainImage){mainImage.src=variant.featured_image.src;mainImage.removeAttribute('srcset')}
     var url=new URL(window.location.href);url.searchParams.set('variant',variant.id);window.history.replaceState({},'',url.toString());
     document.dispatchEvent(new CustomEvent('variant:change',{detail:{variant:variant}}));
