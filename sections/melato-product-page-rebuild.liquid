@@ -195,13 +195,13 @@
   style="--pdp-bg:var(--surface-page);--pdp-surface:var(--surface-studio);--pdp-text:var(--text-primary);--pdp-muted:var(--text-secondary);--pdp-accent:{{ product_button_accent }};--pdp-accent-text:{{ label_text }};--pdp-title-accent:var(--text-primary);--melato-pdp-section-title:var(--text-primary);--pdp-label-bg:{{ label_background | default: 'transparent' }};--pdp-label-text:{{ label_text }}"
   data-product-section
   data-pdp-label-chips="{% if label_background != blank %}true{% else %}false{% endif %}"
-  data-pdp-family="{{ family }}"
+  data-pdp-family="{{ family | escape }}"
   data-pdp-bible-version="{{ pdp_bible_version | default: 'legacy-unmigrated' | escape }}"
-  data-palette-1="{{ palette_1 }}"
-  data-palette-2="{{ palette_2 }}"
-  data-palette-3="{{ palette_3 }}"
-  data-foreground="{{ fg_seed }}"
-  data-surface="{{ section.settings.surface }}"
+  data-palette-1="{{ palette_1 | escape }}"
+  data-palette-2="{{ palette_2 | escape }}"
+  data-palette-3="{{ palette_3 | escape }}"
+  data-foreground="{{ fg_seed | escape }}"
+  data-surface="{{ section.settings.surface | escape }}"
 >
   <div class="pdp-shell">
     <div class="pdp-hero">
@@ -230,7 +230,7 @@
       <div class="pdp-buybox">
         {%- if section.settings.eyebrow != blank -%}<p class="pdp-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
         <h1 class="pdp-title">{{ product.title | escape }}</h1>
-        {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle }}</p>{%- endif -%}
+        {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle | escape }}</p>{%- endif -%}
 
         <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="Price">
           <span class="pdp-price">{{ current_variant.price | money_with_currency }}</span>
@@ -250,7 +250,7 @@
                     {%- if size_guide_page != blank -%}
                       <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>
                     {%- else -%}
-                      <a class="size-guide-trigger" href="{{ size_guide_url }}">Fit guide</a>
+                      <a class="size-guide-trigger" href="{{ size_guide_url | escape }}">Fit guide</a>
                     {%- endif -%}
                   {%- endif -%}
                 </div>
@@ -324,7 +324,7 @@
               {%- if care_details != blank or care_copy != blank -%}
                 <details class="pdp-buybox-spec">
                   <summary><span>Care</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item | escape }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
                 </details>
               {%- endif -%}
             </div>
@@ -336,19 +336,19 @@
               {%- if material_details != blank or material_copy != blank -%}
                 <details class="pdp-buybox-spec">
                   <summary><span>Materials</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item | escape }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if fit_details != blank or fit_copy != blank -%}
                 <details class="pdp-buybox-spec">
                   <summary><span>Fit</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}{%- if size_guide_url != blank -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">{%- if request.locale.iso_code == 'fr' -%}Guide des tailles Melato{%- else -%}Melato Fit Guide{%- endif -%}</a></p>{%- endif -%}</div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item | escape }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy | escape }}{%- endif -%}{%- if size_guide_url != blank -%}<p class="pdp-inline-link"><a href="{{ size_guide_url | escape }}">{%- if request.locale.iso_code == 'fr' -%}Guide des tailles Melato{%- else -%}Melato Fit Guide{%- endif -%}</a></p>{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if care_details != blank or care_copy != blank -%}
                 <details class="pdp-buybox-spec">
                   <summary><span>Care</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item | escape }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if warranty_copy != blank and family == 'accessories' -%}
