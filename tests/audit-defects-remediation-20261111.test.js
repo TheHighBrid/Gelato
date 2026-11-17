@@ -279,3 +279,35 @@ test('F-P01-SLUG-DIRTY: cloned product handles are sanitized in melato-rendered-
   assert.match(filtered, /\/products\/blacklist-sunglasses"/);
 });
 
+
+
+test('F-P01/P02: legacy companion URL normalization retains Complete the Set selectors', async () => {
+  const engine = createEngine({ shop: { currency: 'CAD' } });
+  const variant = { id: 501, available: true, title: 'One Size', price: 19500 };
+  const companion = {
+    title: 'Blacklist Sunglasses',
+    url: '/products/blacklist-sunglasses-1',
+    variants: [variant],
+    selected_or_first_available_variant: variant,
+    metafields: { custom: {} }
+  };
+  const product = {
+    title: 'Test Accessory',
+    type: 'Accessories',
+    variants: [variant],
+    selected_or_first_available_variant: variant,
+    metafields: { custom: { companion_product: { value: companion } } }
+  };
+  const rendered = await engine.parseAndRender(read('snippets/melato-rendered-output-filters.liquid'), {
+    html: '<a class="pdp-set-cta" href="/products/blacklist-sunglasses-1">View matching piece</a>',
+    context: 'main',
+    template: { name: 'product' },
+    product,
+    shop: { currency: 'CAD' }
+  });
+  assert.match(rendered, /data-melato-set-current/);
+  assert.match(rendered, /data-melato-set-matching/);
+  assert.match(rendered, /data-melato-set-add/);
+  assert.match(rendered, /href="\/products\/blacklist-sunglasses"/);
+  assert.doesNotMatch(rendered, /blacklist-sunglasses-1/);
+});
