@@ -195,13 +195,13 @@
   style="--pdp-bg:var(--surface-page);--pdp-surface:var(--surface-studio);--pdp-text:var(--text-primary);--pdp-muted:var(--text-secondary);--pdp-accent:{{ product_button_accent }};--pdp-accent-text:{{ label_text }};--pdp-title-accent:var(--text-primary);--melato-pdp-section-title:var(--text-primary);--pdp-label-bg:{{ label_background | default: 'transparent' }};--pdp-label-text:{{ label_text }}"
   data-product-section
   data-pdp-label-chips="{% if label_background != blank %}true{% else %}false{% endif %}"
-  data-pdp-family="{{ family }}"
+  data-pdp-family="{{ family | escape }}"
   data-pdp-bible-version="{{ pdp_bible_version | default: 'legacy-unmigrated' | escape }}"
-  data-palette-1="{{ palette_1 }}"
-  data-palette-2="{{ palette_2 }}"
-  data-palette-3="{{ palette_3 }}"
-  data-foreground="{{ fg_seed }}"
-  data-surface="{{ section.settings.surface }}"
+  data-palette-1="{{ palette_1 | escape }}"
+  data-palette-2="{{ palette_2 | escape }}"
+  data-palette-3="{{ palette_3 | escape }}"
+  data-foreground="{{ fg_seed | escape }}"
+  data-surface="{{ section.settings.surface | escape }}"
 >
   <div class="pdp-shell">
     <div class="pdp-hero">
@@ -229,8 +229,8 @@
 
       <div class="pdp-buybox">
         {%- if section.settings.eyebrow != blank -%}<p class="pdp-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
-        <h1 class="pdp-title">{{ product.title }}</h1>
-        {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle }}</p>{%- endif -%}
+        <h1 class="pdp-title">{{ product.title | escape }}</h1>
+        {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle | escape }}</p>{%- endif -%}
 
         <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="Price">
           <span class="pdp-price">{{ current_variant.price | money_with_currency }}</span>
@@ -250,7 +250,7 @@
                     {%- if size_guide_page != blank -%}
                       <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>
                     {%- else -%}
-                      <a class="size-guide-trigger" href="{{ size_guide_url }}">Fit guide</a>
+                      <a class="size-guide-trigger" href="{{ size_guide_url | escape }}">Fit guide</a>
                     {%- endif -%}
                   {%- endif -%}
                 </div>
@@ -338,7 +338,7 @@
               {%- if fit_details != blank or fit_copy != blank -%}
                 <details class="pdp-buybox-spec">
                   <summary><span>Fit</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">Melato Fit Guide</a></p></div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item | escape }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy | escape }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url | escape }}">Melato Fit Guide</a></p></div>
                 </details>
               {%- endif -%}
               {%- if care_details != blank or care_copy != blank -%}
@@ -376,7 +376,7 @@
           {%- comment -%}Fragrance purchase-decision specs are surfaced in the buybox above.{%- endcomment -%}
         {%- else -%}
           {%- if construction_details != blank or construction_paragraph != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail }}</li>{%- endfor -%}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph }}</p>{%- endif -%}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail | escape }}</li>{%- endfor -%}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph | escape }}</p>{%- endif -%}</div></details>
           {%- endif -%}
 
           {%- if use_copy != blank and family == 'bags' or use_copy != blank and family == 'accessories' -%}
@@ -392,17 +392,17 @@
             <article class="pdp-set-card" role="listitem">
               {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               <p class="pdp-set-piece-label">Selected piece</p>
-              <h3 class="purchase-summary__title">{{ product.title }}</h3>
+              <h3 class="purchase-summary__title">{{ product.title | escape }}</h3>
               <p class="purchase-summary__price">{{ product.price | money_with_currency }}</p>
             </article>
             <article class="pdp-set-card" role="listitem">
-              <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
+              <a class="pdp-set-media-link" href="{{ matching_product.url | escape }}" aria-label="View {{ matching_product.title | escape }}">
                 {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               </a>
               <p class="pdp-set-piece-label">Matching piece</p>
-              <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
+              <h3 class="purchase-summary__title"><a href="{{ matching_product.url | escape }}">{{ matching_product.title | escape }}</a></h3>
               <p class="purchase-summary__price">{{ matching_product.price | money_with_currency }}</p>
-              <a class="pdp-set-cta" href="{{ matching_product.url }}">View matching piece</a>
+              <a class="pdp-set-cta" href="{{ matching_product.url | escape }}">View matching piece</a>
             </article>
           </div>
         </section>
@@ -411,7 +411,7 @@
   </div>
 
   <div class="pdp-sticky-atc" data-pdp-sticky aria-hidden="true">
-    <div class="purchase-summary"><strong class="purchase-summary__title">{{ product.title }}</strong><span class="purchase-summary__price" id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money_with_currency }}</span></div>
+    <div class="purchase-summary"><strong class="purchase-summary__title">{{ product.title | escape }}</strong><span class="purchase-summary__price" id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money_with_currency }}</span></div>
     <button type="button" data-pdp-sticky-button class="{% unless current_variant.available %}pdp-atc--oos{% endunless %}" {% unless current_variant.available %}disabled{% endunless %}>{% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}</button>
   </div>
 
