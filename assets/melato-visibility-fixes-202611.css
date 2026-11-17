@@ -97,10 +97,20 @@ html body.template-product .melato-pdp-rebuild .pdp-set-card .melato-full-set-se
   color: #f5f1ea;
 }
 
-/* ---------- 3. Consistent control radii (premium rectangular, matches ATC + qty) ---------- */
+/* ---------- 3. Main purchase controls: restrained rounded geometry ---------- */
 html body.template-product .melato-pdp-rebuild .pdp-choice span,
 html body.template-product .melato-pdp-rebuild .pdp-qty,
-html body.template-product .melato-pdp-rebuild .pdp-atc,
+html body.template-product .melato-pdp-rebuild .pdp-atc {
+  border-radius: 12px !important;
+}
+
+html body.template-product .melato-pdp-rebuild .pdp-choice span {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 html body.template-product .melato-pdp-rebuild .pdp-sticky-atc button {
   border-radius: 0 !important;
 }

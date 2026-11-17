@@ -233,7 +233,6 @@
     endcomment
     assign output = output | replace: '/products/sunset-deposition-corset-dress-copy', '/products/sunset-deposition-corset-dress'
     assign output = output | replace: '/products/rex-x-fur-jacket-1', '/products/rex-x-fur-jacket'
-    assign output = output | replace: '/products/blacklist-sunglasses-1', '/products/blacklist-sunglasses'
 
     if request.locale.iso_code == 'fr'
       assign output = output | replace: 'Add to cart', 'Ajouter au panier'

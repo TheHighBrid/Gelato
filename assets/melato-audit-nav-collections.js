@@ -24,7 +24,6 @@
     path = path.replace(/\/collections\/pant(?=\/|$)/i, '/collections/pants');
     path = path.replace(/\/products\/sunset-deposition-corset-dress-copy(?=\/|$)/i, '/products/sunset-deposition-corset-dress');
     path = path.replace(/\/products\/rex-x-fur-jacket-1(?=\/|$)/i, '/products/rex-x-fur-jacket');
-    path = path.replace(/\/products\/blacklist-sunglasses-1(?=\/|$)/i, '/products/blacklist-sunglasses');
     if (path.length > 1) path = path.replace(/\/+$/g, '');
     return path || '/';
   }

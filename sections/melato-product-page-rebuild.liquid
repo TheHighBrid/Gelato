@@ -88,7 +88,7 @@
         if care_copy == blank and care_details == blank
           assign care_copy = legacy_body
         endif
-      when 'fit', 'fit notes', 'fit and use'
+      when 'fit', 'fit notes', 'fit and use', 'fit & construction', 'fit &amp; construction'
         if fit_copy == blank and fit_details == blank
           assign fit_copy = legacy_body
         endif
@@ -107,7 +107,7 @@
       else
         capture legacy_detail
           echo '<details class="pdp-spec"><summary>'
-          echo legacy_heading | escape
+          echo legacy_heading | escape_once
           echo '</summary><div class="pdp-rte">'
           echo legacy_body
           echo '</div></details>'
@@ -176,6 +176,20 @@
   if family == 'accessories' or family == 'bags'
     assign size_guide_page = blank
     assign size_guide_url = blank
+  endif
+  if construction_details != blank
+    assign construction_only = ''
+    for detail in construction_details
+      assign detail_prefix = detail | strip | downcase | split: ':' | first | strip
+      unless detail_prefix == 'material' or detail_prefix == 'materials' or detail_prefix == 'fit' or detail_prefix == 'care' or detail_prefix == 'composition'
+        capture construction_only
+          echo construction_only
+          echo '<li>'
+          echo detail | escape_once
+          echo '</li>'
+        endcapture
+      endunless
+    endfor
   endif
   if construction_paragraph != blank
     assign construction_check = construction_paragraph | strip_html | downcase
@@ -367,7 +381,7 @@
       {%- if story_copy != blank -%}
         <section class="pdp-panel pdp-story" aria-labelledby="PDPStory-{{ section.id }}">
           <header class="pdp-section-head"><h2 id="PDPStory-{{ section.id }}" class="melato-pdp-bible-section-title">Story</h2></header>
-          <div class="pdp-rte rte"><p>{{ story_copy | escape }}</p></div>
+          <div class="pdp-rte rte"><p>{{ story_copy | escape_once }}</p></div>
         </section>
       {%- endif -%}
 
@@ -379,8 +393,8 @@
         {%- if family == 'fragrance' -%}
           {%- comment -%}Fragrance purchase-decision specs are surfaced in the buybox above.{%- endcomment -%}
         {%- else -%}
-          {%- if construction_details != blank or construction_paragraph != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_details != blank -%}<ul>{%- for detail in construction_details -%}<li>{{ detail }}</li>{%- endfor -%}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph }}</p>{%- endif -%}</div></details>
+          {%- if construction_only != blank or construction_paragraph != blank -%}
+            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_only != blank -%}<ul>{{ construction_only }}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph | escape_once }}</p>{%- endif -%}</div></details>
           {%- endif -%}
 
           {%- if use_copy != blank and family == 'bags' or use_copy != blank and family == 'accessories' -%}
