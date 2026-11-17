@@ -26,3 +26,12 @@ test('product-supplied palette and surface values cannot break HTML data attribu
     assert.ok(!source.includes(attribute + '="{{ ' + expression + ' }}"'), attribute + ' must not interpolate unescaped values');
   }
 });
+
+
+test('dynamic product navigation URLs are escaped inside href attributes', () => {
+  const source = fs.readFileSync('sections/melato-product-page-rebuild.liquid', 'utf8');
+  for (const expression of ['size_guide_url', 'matching_product.url']) {
+    assert.ok(source.includes('href="{{ ' + expression + ' | escape }}"'), expression + ' link must be escaped');
+    assert.ok(!source.includes('href="{{ ' + expression + ' }}"'), expression + ' must not be unescaped');
+  }
+});
