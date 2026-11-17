@@ -250,7 +250,7 @@
                     {%- if size_guide_page != blank -%}
                       <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>
                     {%- else -%}
-                      <a class="size-guide-trigger" href="{{ size_guide_url }}">Fit guide</a>
+                      <a class="size-guide-trigger" href="{{ size_guide_url | escape }}">Fit guide</a>
                     {%- endif -%}
                   {%- endif -%}
                 </div>
@@ -338,7 +338,7 @@
               {%- if fit_details != blank or fit_copy != blank -%}
                 <details class="pdp-buybox-spec">
                   <summary><span>Fit</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">Melato Fit Guide</a></p></div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}<p class="pdp-inline-link"><a href="{{ size_guide_url | escape }}">Melato Fit Guide</a></p></div>
                 </details>
               {%- endif -%}
               {%- if care_details != blank or care_copy != blank -%}
@@ -396,13 +396,13 @@
               <p class="purchase-summary__price">{{ product.price | money_with_currency }}</p>
             </article>
             <article class="pdp-set-card" role="listitem">
-              <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
+              <a class="pdp-set-media-link" href="{{ matching_product.url | escape }}" aria-label="View {{ matching_product.title | escape }}">
                 {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               </a>
               <p class="pdp-set-piece-label">Matching piece</p>
-              <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
+              <h3 class="purchase-summary__title"><a href="{{ matching_product.url | escape }}">{{ matching_product.title }}</a></h3>
               <p class="purchase-summary__price">{{ matching_product.price | money_with_currency }}</p>
-              <a class="pdp-set-cta" href="{{ matching_product.url }}">View matching piece</a>
+              <a class="pdp-set-cta" href="{{ matching_product.url | escape }}">View matching piece</a>
             </article>
           </div>
         </section>
