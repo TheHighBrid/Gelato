@@ -447,7 +447,19 @@
   function selections(){return Array.prototype.map.call(section.querySelectorAll('.pdp-option'),function(fieldset){var selected=fieldset.querySelector('input:checked');return selected?selected.value:null})}
   function selectedVariant(){var values=selections();return variants.find(function(variant){return variant.options.every(function(value,index){return values[index]===value})})}
   function updateVariant(variant){
-    if(!variant||!form)return;
+    if(!form)return;
+    if(!variant){
+      var missingId=form.querySelector('[data-variant-id]');
+      if(missingId)missingId.value='';
+      var unavailableText={{ request.locale.iso_code | json }} === 'fr' ? 'Combinaison indisponible' : 'Combination unavailable';
+      [section.querySelector('[data-pdp-atc]'),section.querySelector('[data-pdp-sticky-button]')].forEach(function(button){
+        if(!button)return;
+        button.disabled=true;
+        button.textContent=unavailableText;
+        button.classList.add('pdp-atc--oos');
+      });
+      return;
+    }
     var idInput=form.querySelector('[data-variant-id]');if(idInput)idInput.value=variant.id;
     var price=section.querySelector('#PDPPrice-{{ section.id }}');if(price)price.innerHTML='<span class="pdp-price">'+formatMoney(variant.price)+'</span>'+(variant.compare_at_price&&variant.compare_at_price>variant.price?'<s class="pdp-compare">'+formatMoney(variant.compare_at_price)+'</s>':'');
     var stickyPrice=section.querySelector('#PDPStickyPrice-{{ section.id }}');if(stickyPrice)stickyPrice.textContent=formatMoney(variant.price);
@@ -459,6 +471,13 @@
     document.dispatchEvent(new CustomEvent('variant:change',{detail:{variant:variant}}));
   }
   section.querySelectorAll('.pdp-choice input').forEach(function(input){input.addEventListener('change',function(){var grid=input.closest('.pdp-option-grid');if(grid)grid.querySelectorAll('.pdp-choice').forEach(function(label){label.classList.remove('is-selected')});input.closest('.pdp-choice').classList.add('is-selected');updateVariant(selectedVariant())})});
+  if(form)form.addEventListener('submit',function(event){
+    var variant=selectedVariant();
+    if(!variant||!variant.available){
+      event.preventDefault();
+      updateVariant(variant);
+    }
+  });
   var stickyButton=section.querySelector('[data-pdp-sticky-button]');if(stickyButton&&form)stickyButton.addEventListener('click',function(){var submit=form.querySelector('[data-pdp-atc]');if(submit)submit.click()});
   var sticky=section.querySelector('[data-pdp-sticky]');var atc=section.querySelector('[data-pdp-atc]');if(sticky&&atc&&'IntersectionObserver'in window){new IntersectionObserver(function(entries){entries.forEach(function(entry){if(window.innerWidth>749)return;sticky.classList.toggle('is-visible',!entry.isIntersecting);sticky.setAttribute('aria-hidden',entry.isIntersecting?'true':'false')})},{threshold:0}).observe(atc)}
 
