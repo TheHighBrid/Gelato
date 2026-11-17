@@ -111,6 +111,19 @@ html body.template-product .melato-pdp-rebuild .pdp-choice span {
   justify-content: center;
 }
 
+html body.template-product .melato-pdp-rebuild .pdp-buybox .pdp-choice.is-selected input:checked + span {
+  background: #252525 !important;
+  border-color: #252525 !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+}
+
+html body.template-product .melato-pdp-rebuild .pdp-buybox .pdp-atc-row .pdp-atc:not(:disabled) {
+  background: #0a0a0a !important;
+  border-color: #0a0a0a !important;
+  color: #ffffff !important;
+}
+
 html body.template-product .melato-pdp-rebuild .pdp-sticky-atc button {
   border-radius: 0 !important;
 }

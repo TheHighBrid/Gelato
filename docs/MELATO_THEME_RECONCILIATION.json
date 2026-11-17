@@ -1831,7 +1831,7 @@
       "liveBodySha256": "7a60f01f2160784adb4aa63821a8d0a3c3dab2fa506ab047f050122b1e4c97e6",
       "decision": "retain-repository-fix",
       "reason": "Keep repository closing-brace syntax repair and canonical engine; live snippet fails rendered JavaScript parsing.",
-      "candidateSha256": "34cbd207eead7bdfcff1978f33e72264a2e90d8d75417bf81cb744711f7a69e1"
+      "candidateSha256": "feafe37e49b61d3482c4e10bff506c3e0b1a4094dd26e5a603f5eb863c53e9ca"
     },
     {
       "path": "snippets/melato-product-jsonld.liquid",
