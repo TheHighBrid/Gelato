@@ -445,7 +445,7 @@
 
   function formatMoney(cents){if(window.Shopify&&Shopify.formatMoney)return Shopify.formatMoney(cents,{{ shop.money_format | json }});return '$'+(cents/100).toFixed(2)}
   function selections(){return Array.prototype.map.call(section.querySelectorAll('.pdp-option'),function(fieldset){var selected=fieldset.querySelector('input:checked');return selected?selected.value:null})}
-  function selectedVariant(){var values=selections();return variants.find(function(variant){return variant.options.every(function(value,index){return values[index]===value})})}
+  function selectedVariant(){var values=selections();if(!section.querySelector('.pdp-option'))return variants[0];return variants.find(function(variant){return variant.options.every(function(value,index){return values[index]===value})})}
   function updateVariant(variant){
     if(!form)return;
     if(!variant){
