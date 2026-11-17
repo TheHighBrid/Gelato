@@ -20,6 +20,7 @@ test('product-supplied palette and surface values cannot break HTML data attribu
     ['data-palette-3', 'palette_3'],
     ['data-foreground', 'fg_seed'],
     ['data-surface', 'section.settings.surface'],
+    ['data-pdp-family', 'family'],
   ]) {
     assert.ok(source.includes(attribute + '="{{ ' + expression + ' | escape }}"'), attribute + ' must HTML-escape its value');
     assert.ok(!source.includes(attribute + '="{{ ' + expression + ' }}"'), attribute + ' must not interpolate unescaped values');
