@@ -27,6 +27,14 @@
   const pendingLines = new Set();
   const queuedLineQuantities = new Map();
   let lastFocused = null;
+  // Whole-cart responses must be applied in mutation order across all lines.
+  let cartMutationTail = Promise.resolve();
+  function serializeCartMutation(operation) {
+    const task = cartMutationTail.then(operation);
+    cartMutationTail = task.catch(() => {});
+    return task;
+  }
+
 
   const locale = () => document.documentElement.lang || navigator.language || 'en-CA';
   const rootPath = () => {
@@ -173,13 +181,16 @@
     let nextQuantity = requested;
     try {
       while (true) {
-        const response = await fetch(route('cart/change.js'), {
-          method:'POST', credentials:'same-origin',
-          headers:{'Content-Type':'application/json',Accept:'application/json','X-Requested-With':'XMLHttpRequest'},
-          body:JSON.stringify({id:key,quantity:nextQuantity})
+        const payload = await serializeCartMutation(async () => {
+          const response = await fetch(route('cart/change.js'), {
+            method:'POST', credentials:'same-origin',
+            headers:{'Content-Type':'application/json',Accept:'application/json','X-Requested-With':'XMLHttpRequest'},
+            body:JSON.stringify({id:key,quantity:nextQuantity})
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(result.description || result.message || 'Cart could not be updated.');
+          return result;
         });
-        const payload = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
         // Do not replace the input while another click for this line is queued.
         if (!queuedLineQuantities.has(key)) renderCart(payload);
         if (!queuedLineQuantities.has(key)) break;
