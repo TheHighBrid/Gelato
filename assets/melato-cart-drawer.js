@@ -300,8 +300,13 @@
     const opener = event.target.closest('[data-cart-open],[data-cart-toggle],.mxh__bag');
     if (opener && !opener.closest('.cart-drawer')) {
       event.preventDefault();
-      fetchCart().then(cart => {
+      // Serialize the open-cart snapshot with add/change mutations.
+      // A delayed GET must never repaint an older cart after a successful POST.
+      serializeCartMutation(async () => {
+        const cart = await fetchCart();
         renderCart(cart);
+        return cart;
+      }).then(() => {
         openCart();
       }).catch(error => {
         // Never paint a large failure toast over editorial content. If the AJAX
