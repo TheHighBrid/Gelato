@@ -1,0 +1,20 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+
+const source = fs.readFileSync(path.join(__dirname, '../snippets/cart-drawer.liquid'), 'utf8');
+
+test('cart drawer renders a visible placeholder for missing product media', () => {
+  assert.match(source, /if item\.image != blank[\s\S]*?else[\s\S]*?placeholder_svg_tag: 'cart-item__img cart-item__img--placeholder'/);
+  assert.match(source, /if item\.image != blank[\s\S]*?image_url: width: 120/);
+  assert.match(source, /if item\.image != blank[\s\S]*?divided_by: item\.image\.aspect_ratio/);
+});
+
+test('cart drawer escapes dynamic cart content before HTML interpolation', () => {
+  for (const expression of ['item.key', 'item.url', 'item.product.title', 'item.variant.title', 'cart.note']) {
+    const raw = new RegExp('\\{\\{\\s*' + expression.replace(/\\./g, '\\\\.') + '\\s*\\}\\}');
+    assert.doesNotMatch(source, raw, expression + ' must not be rendered without escaping');
+    assert.ok(source.includes('{{ ' + expression + ' | escape }}'), expression + ' must be escaped');
+  }
+});
