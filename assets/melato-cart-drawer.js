@@ -131,7 +131,7 @@
       const title = escapeHtml(item.product_title || item.title || 'Product');
       const url = escapeHtml(item.url || '#');
       const imageUrl = escapeHtml(item.image || item.featured_image?.url || '');
-      const image = imageUrl ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">` : '';
+      const image = imageUrl ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">` : '<span class="cart-item__img cart-item__img--placeholder" aria-hidden="true"></span>';
       const variant = item.variant_title && item.variant_title !== 'Default Title' ? `<span class="cart-item__variant">${escapeHtml(item.variant_title)}</span>` : '';
       const key = escapeHtml(item.key || '');
       const quantity = Math.max(0, Number(item.quantity || 0));
