@@ -23,7 +23,7 @@ test('cart item title, variant and product links escape dynamic values', () => {
 
 test('cart quantity controls retain line keys and translated checkout action', () => {
   assert.match(cart, /name="updates\[\]"/);
-  assert.match(cart, /data-line="{{ item\.key }}"/);
+  assert.equal((cart.match(/data-line="{{ item\.key \| escape }}"/g) || []).length, 3);
   assert.match(cart, /name="checkout"/);
   assert.match(cart, /'cart\.checkout' \| t/);
 });
