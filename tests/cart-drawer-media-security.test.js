@@ -72,3 +72,14 @@ test('opening cart serializes GET and rendering with cart mutations', () => {
   assert.match(openHandler, /serializeCartMutation\(async \(\) => \{\s*const cart = await fetchCart\(\);\s*renderCart\(cart\);\s*return cart;\s*\}\)/);
   assert.doesNotMatch(openHandler, /fetchCart\(\)\.then\(cart =>/);
 });
+
+test('quantity updates and recovery refresh render inside the shared mutation queue', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  const start = js.indexOf('async function updateLine(');
+  const end = js.indexOf('function isProductAddForm(', start);
+  assert.ok(start >= 0 && end > start);
+  const update = js.slice(start, end);
+  assert.match(update, /if \(!queuedLineQuantities\.has\(key\)\) renderCart\(result\);\s*return result;\s*\}\);/);
+  assert.doesNotMatch(update, /\}\);\s*\/\/ Do not replace the input/);
+  assert.match(update, /serializeCartMutation\(async \(\) => \{\s*const cart = await fetchCart\(\);\s*renderCart\(cart\);\s*\}\)\.catch/);
+});
