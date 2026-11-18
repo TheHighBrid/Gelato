@@ -86,7 +86,7 @@
       throw new Error(`Cart request failed (${response.status}).`);
     }
     const payload = await response.json().catch(() => null);
-    if (!payload || !Array.isArray(payload.items)) {
+    if (!payload || !Array.isArray(payload.items) || !Number.isSafeInteger(payload.item_count) || payload.item_count < 0 || !Number.isSafeInteger(payload.total_price) || payload.total_price < 0) {
       if (attempt < 1) return fetchCart(attempt + 1);
       throw new Error('Cart response was invalid.');
     }
