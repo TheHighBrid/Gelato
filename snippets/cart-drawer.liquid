@@ -19,25 +19,25 @@
     {%- else -%}
       {%- for item in cart.items -%}
         {%- capture melato_line_price -%}{%- render 'melato-money-with-currency', amount: item.final_line_price -%}{%- endcapture -%}
-        <div class="cart-item" role="listitem" data-line-key="{{ item.key }}" data-line-index="{{ forloop.index }}">
-          <a href="{{ item.url }}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">
+        <div class="cart-item" role="listitem" data-line-key="{{ item.key | escape }}" data-line-index="{{ forloop.index }}">
+          <a href="{{ item.url | escape }}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">
             {%- if item.image != blank -%}
               <img class="cart-item__img" src="{{ item.image | image_url: width: 120 }}" srcset="{{ item.image | image_url: width: 120 }} 1x, {{ item.image | image_url: width: 240 }} 2x" alt="{{ item.title | escape }}" width="80" height="{{ 80 | divided_by: item.image.aspect_ratio | ceil }}" loading="lazy">
             {%- endif -%}
           </a>
           <div class="cart-item__info">
             <div class="cart-item__top">
-              <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
-              <button class="cart-item__remove" type="button" aria-label="Remove {{ item.product.title | escape }}" data-remove-line="{{ item.key }}">×</button>
+              <a href="{{ item.url | escape }}" class="cart-item__title">{{ item.product.title | escape }}</a>
+              <button class="cart-item__remove" type="button" aria-label="Remove {{ item.product.title | escape }}" data-remove-line="{{ item.key | escape }}">×</button>
             </div>
-            {%- if item.variant.title != 'Default Title' -%}<span class="cart-item__variant">{{ item.variant.title }}</span>{%- endif -%}
+            {%- if item.variant.title != 'Default Title' -%}<span class="cart-item__variant">{{ item.variant.title | escape }}</span>{%- endif -%}
             <div class="cart-item__footer">
               <div class="qty-stepper" aria-label="Quantity for {{ item.product.title | escape }}">
-                <button class="qty-stepper__btn" type="button" aria-label="Decrease quantity" data-qty-change="-1" data-line-key="{{ item.key }}">−</button>
-                <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" aria-label="Quantity" data-line-key="{{ item.key }}">
-                <button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1" data-line-key="{{ item.key }}">+</button>
+                <button class="qty-stepper__btn" type="button" aria-label="Decrease quantity" data-qty-change="-1" data-line-key="{{ item.key | escape }}">−</button>
+                <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" aria-label="Quantity" data-line-key="{{ item.key | escape }}">
+                <button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1" data-line-key="{{ item.key | escape }}">+</button>
               </div>
-              <span class="price" data-line-price="{{ item.key }}" aria-label="{{ melato_line_price | strip_html | escape }}">{{ melato_line_price }}</span>
+              <span class="price" data-line-price="{{ item.key | escape }}" aria-label="{{ melato_line_price | strip_html | escape }}">{{ melato_line_price }}</span>
             </div>
           </div>
         </div>
@@ -50,7 +50,7 @@
     <div class="cart-extras">
       <button class="cart-note-toggle" type="button" aria-expanded="false" aria-controls="cart-note-field">Add order note <span aria-hidden="true">⌄</span></button>
       <div id="cart-note-field" class="cart-note" aria-hidden="true" hidden>
-        <textarea class="cart-note__input" name="note" form="cart-form" placeholder="Order note" aria-label="Order note" rows="3" data-note-input>{{ cart.note }}</textarea>
+        <textarea class="cart-note__input" name="note" form="cart-form" placeholder="Order note" aria-label="Order note" rows="3" data-note-input>{{ cart.note | escape }}</textarea>
       </div>
     </div>
   {%- endif -%}
