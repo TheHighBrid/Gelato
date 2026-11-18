@@ -196,10 +196,11 @@
           });
           const result = await response.json().catch(() => ({}));
           if (!response.ok) throw new Error(result.description || result.message || 'Cart could not be updated.');
+          // Apply this full-cart snapshot before any later mutation begins.
+          // Preserve optimistic quantity intent for lines still awaiting updates.
+          if (!queuedLineQuantities.has(key)) renderCart(result);
           return result;
         });
-        // Do not replace the input while another click for this line is queued.
-        if (!queuedLineQuantities.has(key)) renderCart(payload);
         if (!queuedLineQuantities.has(key)) break;
         nextQuantity = queuedLineQuantities.get(key);
         queuedLineQuantities.delete(key);
@@ -211,7 +212,11 @@
     } catch (error) {
       console.error('Melato cart update:', error);
       toast(error.message || 'Cart could not be updated.');
-      fetchCart().then(renderCart).catch(() => {});
+      // A recovery GET must not repaint a newer cart mutation's result.
+      serializeCartMutation(async () => {
+        const cart = await fetchCart();
+        renderCart(cart);
+      }).catch(() => {});
     } finally {
       queuedLineQuantities.delete(key);
       pendingLines.delete(key);
