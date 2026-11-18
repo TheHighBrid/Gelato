@@ -177,7 +177,12 @@
 
   async function updateLine(key, quantity) {
     if (!key) return;
-    const requested = Math.max(0, Math.floor(Number(quantity) || 0));
+    const numericQuantity = Number(quantity);
+    if (!Number.isFinite(numericQuantity) || numericQuantity < 0 || !Number.isInteger(numericQuantity)) {
+      toast('Enter a valid whole-number quantity.');
+      return;
+    }
+    const requested = numericQuantity;
     // Preserve the last shopper intent instead of dropping rapid clicks.
     if (pendingLines.has(key)) {
       queuedLineQuantities.set(key, requested);
@@ -354,7 +359,17 @@
 
   drawer.addEventListener('change', event => {
     const quantityInput = event.target.closest('.qty-stepper__value[data-line-key]');
-    if (quantityInput) { updateLine(quantityInput.dataset.lineKey, Number(quantityInput.value || 0)); return; }
+    if (quantityInput) {
+      const rawQuantity = quantityInput.value.trim();
+      const quantity = Number(rawQuantity);
+      if (!rawQuantity || !Number.isSafeInteger(quantity) || quantity < 0) {
+        quantityInput.value = quantityInput.defaultValue;
+        toast('Enter a valid whole-number quantity.');
+        return;
+      }
+      updateLine(quantityInput.dataset.lineKey, quantity);
+      return;
+    }
     const note = event.target.closest('[data-note-input]');
     if (note) {
       const hidden = drawer.querySelector('[data-note-hidden]');
