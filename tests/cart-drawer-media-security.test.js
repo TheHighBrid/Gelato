@@ -91,3 +91,15 @@ test('invalid or blank manual quantity never becomes a remove-line request', () 
   assert.doesNotMatch(js, /updateLine\(quantityInput\.dataset\.lineKey, Number\(quantityInput\.value \|\| 0\)\)/);
   assert.match(js, /if \(!Number\.isFinite\(numericQuantity\) \|\| numericQuantity < 0 \|\| !Number\.isInteger\(numericQuantity\)\)/);
 });
+
+
+test('quantity mutation rejects malformed Shopify cart snapshots before rendering', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  const start = js.indexOf('async function updateLine(');
+  const end = js.indexOf('function isProductAddForm(', start);
+  const update = js.slice(start, end);
+  assert.match(update, /!Array\\.isArray\\(result\\.items\\)/);
+  assert.match(update, /!Number\\.isSafeInteger\\(result\\.item_count\\)/);
+  assert.match(update, /!Number\\.isFinite\\(result\\.total_price\\)/);
+  assert.ok(update.indexOf('Cart update returned an invalid response.') < update.indexOf('renderCart(result)'));
+});
