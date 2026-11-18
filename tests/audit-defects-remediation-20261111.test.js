@@ -216,6 +216,15 @@ test('F-P09-SUPPORT-EMAIL-VARIANCE: policy pages route through filters and conta
   assert.doesNotMatch(contact, /"email":\s*"orders@melato\.ca"/);
 });
 
+test('Owner annotation: encoded labels render once, including localized menu labels', async () => {
+  const engine = createEngine();
+  const en = parseJson('locales/en.default.json');
+  engine.registerFilter('t', key => key.split('.').reduce((obj, part) => obj?.[part], en) || key);
+  const rendered = await engine.parseAndRender('{% render "melato-navigation-label", title: "Eve&#39;s Wardrobe" %}|{% render "melato-navigation-label", title: "Returns &amp; Refunds" %}', {});
+  const { JSDOM } = require('jsdom');
+  assert.equal(new JSDOM(rendered).window.document.body.textContent.trim(), "Eve's Wardrobe|Returns & Refunds");
+});
+
 test('F-P06 & F-P11: localized URL maps singular pant collection to plural and preserves locale', async () => {
   const engine = createEngine({ routes: { root_url: '/fr' } });
   const renderedPant = await engine.parseAndRender('{% render "melato-localized-url", url: "/collections/pant" %}', {
@@ -273,10 +282,10 @@ test('F-P01-SLUG-DIRTY: cloned product handles are sanitized in melato-rendered-
   });
   assert.doesNotMatch(filtered, /sunset-deposition-corset-dress-copy/);
   assert.doesNotMatch(filtered, /rex-x-fur-jacket-1/);
-  assert.doesNotMatch(filtered, /blacklist-sunglasses-1/);
+  assert.doesNotMatch(filtered, /\/products\/blacklist-sunglasses"/);
   assert.match(filtered, /\/products\/sunset-deposition-corset-dress"/);
   assert.match(filtered, /\/products\/rex-x-fur-jacket"/);
-  assert.match(filtered, /\/products\/blacklist-sunglasses"/);
+  assert.match(filtered, /\/products\/blacklist-sunglasses-1"/);
 });
 
 
@@ -308,6 +317,6 @@ test('F-P01/P02: legacy companion URL normalization retains Complete the Set sel
   assert.match(rendered, /data-melato-set-current/);
   assert.match(rendered, /data-melato-set-matching/);
   assert.match(rendered, /data-melato-set-add/);
-  assert.match(rendered, /href="\/products\/blacklist-sunglasses"/);
-  assert.doesNotMatch(rendered, /blacklist-sunglasses-1/);
+  assert.match(rendered, /href="\/products\/blacklist-sunglasses-1"/);
+  assert.doesNotMatch(rendered, /href="\/products\/blacklist-sunglasses"/);
 });

@@ -17,7 +17,6 @@ Preserves the current locale on internal storefront links.
   endif
   assign target_url = target_url | replace: '/products/sunset-deposition-corset-dress-copy', '/products/sunset-deposition-corset-dress'
   assign target_url = target_url | replace: '/products/rex-x-fur-jacket-1', '/products/rex-x-fur-jacket'
-  assign target_url = target_url | replace: '/products/blacklist-sunglasses-1', '/products/blacklist-sunglasses'
   assign parts = target_url | split: '/'
   assign first_character = target_url | slice: 0, 1
   assign needs_prefix = false

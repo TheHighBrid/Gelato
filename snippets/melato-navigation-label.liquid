@@ -4,6 +4,7 @@ Renders a localized standard navigation label while preserving custom names.
 {% enddoc %}
 {%- liquid
   assign raw_title = title | strip
+  assign raw_title = raw_title | replace: '&amp;', '&' | replace: '&#39;', "'" | replace: '&#039;', "'" | replace: '&apos;', "'"
   assign num_prefix = ''
   assign lookup_title = raw_title
   assign title_parts = raw_title | split: ' '
@@ -71,8 +72,8 @@ Renders a localized standard navigation label while preserving custom names.
 
   if label_key != ''
     assign translated = label_key | t
-    echo num_prefix | append: translated | escape
+    echo num_prefix | append: translated | escape_once
   else
-    echo raw_title | escape
+    echo raw_title | escape_once
   endif
 -%}
