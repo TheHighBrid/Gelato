@@ -36,9 +36,9 @@
                   {%- endif -%}
                   <div class="cart-item__footer">
                     <div class="qty-stepper">
-                      <button type="button" class="qty-stepper__btn" data-qty-change="-1" data-line="{{ item.key }}" aria-label="Decrease {{ item.product.title | escape }} quantity">−</button>
-                      <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" data-line="{{ item.key }}" name="updates[]" aria-label="{{ item.product.title | escape }} quantity">
-                      <button type="button" class="qty-stepper__btn" data-qty-change="+1" data-line="{{ item.key }}" aria-label="Increase {{ item.product.title | escape }} quantity">+</button>
+                      <button type="button" class="qty-stepper__btn" data-qty-change="-1" data-line="{{ item.key | escape }}" aria-label="Decrease {{ item.product.title | escape }} quantity">−</button>
+                      <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" data-line="{{ item.key | escape }}" name="updates[]" aria-label="{{ item.product.title | escape }} quantity">
+                      <button type="button" class="qty-stepper__btn" data-qty-change="+1" data-line="{{ item.key | escape }}" aria-label="Increase {{ item.product.title | escape }} quantity">+</button>
                     </div>
                     <span class="price">{{ item.final_line_price | money }}</span>
                   </div>
