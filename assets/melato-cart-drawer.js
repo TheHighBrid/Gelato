@@ -201,7 +201,7 @@
           });
           const result = await response.json().catch(() => ({}));
           if (!response.ok) throw new Error(result.description || result.message || 'Cart could not be updated.');
-          if (!result || !Array.isArray(result.items) || !Number.isSafeInteger(result.item_count) || !Number.isFinite(result.total_price)) {
+          if (!result || !Array.isArray(result.items) || !Number.isSafeInteger(result.item_count) || result.item_count < 0 || !Number.isSafeInteger(result.total_price) || result.total_price < 0) {
             throw new Error('Cart update returned an invalid response.');
           }
           // Apply this full-cart snapshot before any later mutation begins.
