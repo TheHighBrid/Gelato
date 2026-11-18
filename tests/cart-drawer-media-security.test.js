@@ -18,3 +18,10 @@ test('cart drawer escapes dynamic cart content before HTML interpolation', () =>
     assert.ok(source.includes('{{ ' + expression + ' | escape }}'), expression + ' must be escaped');
   }
 });
+
+
+test('AJAX cart redraw retains a visible missing-media fallback', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  assert.match(js, /const image = imageUrl \?[^\n]+: '<span class="cart-item__img cart-item__img--placeholder" aria-hidden="true"><\/span>';/);
+  assert.match(js, /\$\{image\}<\/a>/);
+});
