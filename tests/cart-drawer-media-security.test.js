@@ -44,3 +44,11 @@ test('quantity clicks retain optimistic input changes during in-flight requests'
   assert.match(js, /if \(input\) input\.value = String\(nextQuantity\)/);
   assert.match(js, /updateLine\(key, nextQuantity\)/);
 });
+
+
+test('cart redraw restores queued shopper quantities after another line completes', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  assert.match(js, /function renderCart\(cart\) \{[\s\S]*?renderItems\(cart\);[\s\S]*?queuedLineQuantities\.forEach\(\(quantity, key\) =>/);
+  assert.match(js, /\.find\(node => node\.dataset\.lineKey === key\)/);
+  assert.match(js, /if \(input\) input\.value = String\(quantity\)/);
+});
