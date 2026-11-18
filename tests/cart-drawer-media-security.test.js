@@ -117,3 +117,17 @@ test('cart GET rejects missing or invalid totals before any drawer repaint', () 
   assert.match(fetchCart, /payload\.total_price < 0/);
   assert.match(fetchCart, /if \(attempt < 1\) return fetchCart\(attempt \+ 1\)/);
 });
+
+test('stepper buttons reject blank or malformed quantities before changing cart lines', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  const start = js.indexOf("const quantityButton = event.target.closest('[data-qty-change]')");
+  const end = js.indexOf("const removeButton = event.target.closest('[data-remove-line]')", start);
+  assert.ok(start >= 0 && end > start);
+  const handler = js.slice(start, end);
+  assert.match(handler, /const rawQuantity = input\?\.value\.trim\(\) \?\? ''/);
+  assert.match(handler, /!rawQuantity \|\| !Number\.isSafeInteger\(currentQuantity\)/);
+  assert.match(handler, /!Number\.isSafeInteger\(currentQuantity \+ delta\)/);
+  assert.match(handler, /if \(input\) input\.value = input\.defaultValue/);
+  assert.ok(handler.indexOf("return;") < handler.indexOf('updateLine(key, nextQuantity)'));
+  assert.doesNotMatch(handler, /Number\(input\?\.value \|\| 0\)/);
+});
