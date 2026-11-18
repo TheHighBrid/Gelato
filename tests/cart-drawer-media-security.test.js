@@ -89,7 +89,7 @@ test('invalid or blank manual quantity never becomes a remove-line request', () 
   assert.match(js, /if \(!rawQuantity \|\| !Number\.isSafeInteger\(quantity\) \|\| quantity < 0\)/);
   assert.match(js, /quantityInput\.value = quantityInput\.defaultValue;/);
   assert.doesNotMatch(js, /updateLine\(quantityInput\.dataset\.lineKey, Number\(quantityInput\.value \|\| 0\)\)/);
-  assert.match(js, /if \(!Number\.isFinite\(numericQuantity\) \|\| numericQuantity < 0 \|\| !Number\.isInteger\(numericQuantity\)\)/);
+  assert.match(js, /if \(!Number\.isFinite\(numericQuantity\) \|\| numericQuantity < 0 \|\| !Number\.isSafeInteger\(numericQuantity\)\)/);
 });
 
 
@@ -98,8 +98,8 @@ test('quantity mutation rejects malformed Shopify cart snapshots before renderin
   const start = js.indexOf('async function updateLine(');
   const end = js.indexOf('function isProductAddForm(', start);
   const update = js.slice(start, end);
-  assert.match(update, /!Array\\.isArray\\(result\\.items\\)/);
-  assert.match(update, /!Number\\.isSafeInteger\\(result\\.item_count\\)/);
-  assert.match(update, /!Number\\.isFinite\\(result\\.total_price\\)/);
+  assert.match(update, /!Array\.isArray\(result\.items\)/);
+  assert.match(update, /!Number\.isSafeInteger\(result\.item_count\)/);
+  assert.match(update, /!Number\.isFinite\(result\.total_price\)/);
   assert.ok(update.indexOf('Cart update returned an invalid response.') < update.indexOf('renderCart(result)'));
 });
