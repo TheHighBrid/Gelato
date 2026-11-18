@@ -52,3 +52,13 @@ test('cart redraw restores queued shopper quantities after another line complete
   assert.match(js, /\.find\(node => node\.dataset\.lineKey === key\)/);
   assert.match(js, /if \(input\) input\.value = String\(quantity\)/);
 });
+
+test('add-to-cart renders its snapshot inside the serialized mutation', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  const start = js.indexOf('async function addForm(');
+  const end = js.indexOf('function trapTab(', start);
+  assert.ok(start >= 0 && end > start);
+  const addForm = js.slice(start, end);
+  assert.match(addForm, /const cart = await serializeCartMutation\(async \(\) => \{[\s\S]*?const latestCart = await fetchCart\(\);[\s\S]*?renderCart\(latestCart\);[\s\S]*?return latestCart;\s*\}\);/);
+  assert.doesNotMatch(addForm, /\}\);\s*renderCart\(cart\);/);
+});
