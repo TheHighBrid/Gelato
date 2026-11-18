@@ -178,7 +178,7 @@
   async function updateLine(key, quantity) {
     if (!key) return;
     const numericQuantity = Number(quantity);
-    if (!Number.isFinite(numericQuantity) || numericQuantity < 0 || !Number.isInteger(numericQuantity)) {
+    if (!Number.isFinite(numericQuantity) || numericQuantity < 0 || !Number.isSafeInteger(numericQuantity)) {
       toast('Enter a valid whole-number quantity.');
       return;
     }
@@ -201,6 +201,9 @@
           });
           const result = await response.json().catch(() => ({}));
           if (!response.ok) throw new Error(result.description || result.message || 'Cart could not be updated.');
+          if (!result || !Array.isArray(result.items) || !Number.isSafeInteger(result.item_count) || !Number.isFinite(result.total_price)) {
+            throw new Error('Cart update returned an invalid response.');
+          }
           // Apply this full-cart snapshot before any later mutation begins.
           // Preserve optimistic quantity intent for lines still awaiting updates.
           if (!queuedLineQuantities.has(key)) renderCart(result);
