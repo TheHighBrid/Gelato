@@ -166,6 +166,13 @@
   function renderCart(cart) {
     renderItems(cart);
     updateChrome(cart);
+    // Another line's completed response must not erase a shopper's pending
+    // quantity intent while its serialized cart mutation is still waiting.
+    queuedLineQuantities.forEach((quantity, key) => {
+      const input = Array.from(drawer.querySelectorAll('.qty-stepper__value[data-line-key]'))
+        .find(node => node.dataset.lineKey === key);
+      if (input) input.value = String(quantity);
+    });
   }
 
   async function updateLine(key, quantity) {
