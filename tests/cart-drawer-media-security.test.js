@@ -25,3 +25,12 @@ test('AJAX cart redraw retains a visible missing-media fallback', () => {
   assert.match(js, /const image = imageUrl \?[^\n]+: '<span class="cart-item__img cart-item__img--placeholder" aria-hidden="true"><\/span>';/);
   assert.match(js, /\$\{image\}<\/a>/);
 });
+
+test('cart line updates suppress duplicate in-flight requests and release locks', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  assert.match(js, /const pendingLines = new Set\(\)/);
+  assert.match(js, /if \(!key \|\| pendingLines\.has\(key\)\) return;/);
+  assert.match(js, /pendingLines\.add\(key\);/);
+  assert.match(js, /finally \{\s*pendingLines\.delete\(key\);/);
+  assert.match(js, /if \(pendingLines\.size === 0\) drawer\.classList\.remove\('is-updating'\)/);
+});
