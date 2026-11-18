@@ -255,12 +255,15 @@
     try {
       const data = new FormData(form);
       if (!data.get('quantity')) data.set('quantity','1');
-      const response = await fetch(route('cart/add.js'), {
-        method:'POST', credentials:'same-origin', headers:{Accept:'application/json','X-Requested-With':'XMLHttpRequest'}, body:data
+      // Serialize add-to-cart with quantity changes to avoid stale cart snapshots.
+      const cart = await serializeCartMutation(async () => {
+        const response = await fetch(route('cart/add.js'), {
+          method:'POST', credentials:'same-origin', headers:{Accept:'application/json','X-Requested-With':'XMLHttpRequest'}, body:data
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
+        return fetchCart();
       });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
-      const cart = await fetchCart();
       renderCart(cart);
       openCart();
       toast('Added to cart');
