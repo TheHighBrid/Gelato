@@ -24,6 +24,7 @@
 
   const overlay = document.getElementById('drip-overlay') || document.querySelector('[data-overlay]');
   const pendingForms = new WeakSet();
+  const pendingLines = new Set();
   let lastFocused = null;
 
   const locale = () => document.documentElement.lang || navigator.language || 'en-CA';
@@ -159,7 +160,8 @@
   }
 
   async function updateLine(key, quantity) {
-    if (!key) return;
+    if (!key || pendingLines.has(key)) return;
+    pendingLines.add(key);
     drawer.classList.add('is-updating');
     try {
       const response = await fetch(route('cart/change.js'), {
@@ -175,7 +177,8 @@
       toast(error.message || 'Cart could not be updated.');
       fetchCart().then(renderCart).catch(() => {});
     } finally {
-      drawer.classList.remove('is-updating');
+      pendingLines.delete(key);
+      if (pendingLines.size === 0) drawer.classList.remove('is-updating');
     }
   }
 
