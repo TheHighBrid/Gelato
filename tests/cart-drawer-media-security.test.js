@@ -100,7 +100,9 @@ test('quantity mutation rejects malformed Shopify cart snapshots before renderin
   const update = js.slice(start, end);
   assert.match(update, /!Array\.isArray\(result\.items\)/);
   assert.match(update, /!Number\.isSafeInteger\(result\.item_count\)/);
-  assert.match(update, /!Number\.isFinite\(result\.total_price\)/);
+  assert.match(update, /result\.item_count < 0/);
+  assert.match(update, /!Number\.isSafeInteger\(result\.total_price\)/);
+  assert.match(update, /result\.total_price < 0/);
   assert.ok(update.indexOf('Cart update returned an invalid response.') < update.indexOf('renderCart(result)'));
 });
 
