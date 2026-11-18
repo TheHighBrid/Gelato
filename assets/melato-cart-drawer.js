@@ -262,9 +262,11 @@
         });
         const payload = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
-        return fetchCart();
+        const latestCart = await fetchCart();
+        // Apply this snapshot before the next queued mutation can run.
+        renderCart(latestCart);
+        return latestCart;
       });
-      renderCart(cart);
       openCart();
       toast('Added to cart');
       window.dispatchEvent(new CustomEvent('cart:updated',{detail:{cart}}));
