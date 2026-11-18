@@ -25,6 +25,7 @@
   const overlay = document.getElementById('drip-overlay') || document.querySelector('[data-overlay]');
   const pendingForms = new WeakSet();
   const pendingLines = new Set();
+  const queuedLineQuantities = new Map();
   let lastFocused = null;
 
   const locale = () => document.documentElement.lang || navigator.language || 'en-CA';
@@ -160,23 +161,41 @@
   }
 
   async function updateLine(key, quantity) {
-    if (!key || pendingLines.has(key)) return;
+    if (!key) return;
+    const requested = Math.max(0, Math.floor(Number(quantity) || 0));
+    // Preserve the last shopper intent instead of dropping rapid clicks.
+    if (pendingLines.has(key)) {
+      queuedLineQuantities.set(key, requested);
+      return;
+    }
     pendingLines.add(key);
     drawer.classList.add('is-updating');
+    let nextQuantity = requested;
     try {
-      const response = await fetch(route('cart/change.js'), {
-        method:'POST', credentials:'same-origin',
-        headers:{'Content-Type':'application/json',Accept:'application/json','X-Requested-With':'XMLHttpRequest'},
-        body:JSON.stringify({id:key,quantity:Math.max(0,Number(quantity || 0))})
-      });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
-      renderCart(payload);
+      while (true) {
+        const response = await fetch(route('cart/change.js'), {
+          method:'POST', credentials:'same-origin',
+          headers:{'Content-Type':'application/json',Accept:'application/json','X-Requested-With':'XMLHttpRequest'},
+          body:JSON.stringify({id:key,quantity:nextQuantity})
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
+        // Do not replace the input while another click for this line is queued.
+        if (!queuedLineQuantities.has(key)) renderCart(payload);
+        if (!queuedLineQuantities.has(key)) break;
+        nextQuantity = queuedLineQuantities.get(key);
+        queuedLineQuantities.delete(key);
+        if (nextQuantity === Number(payload.items?.find(item => item.key === key)?.quantity ?? 0)) {
+          renderCart(payload);
+          break;
+        }
+      }
     } catch (error) {
       console.error('Melato cart update:', error);
       toast(error.message || 'Cart could not be updated.');
       fetchCart().then(renderCart).catch(() => {});
     } finally {
+      queuedLineQuantities.delete(key);
       pendingLines.delete(key);
       if (pendingLines.size === 0) drawer.classList.remove('is-updating');
     }
@@ -278,7 +297,9 @@
       const row = quantityButton.closest('.cart-item');
       const key = quantityButton.dataset.lineKey || row?.dataset.lineKey;
       const input = row?.querySelector('.qty-stepper__value');
-      updateLine(key, Math.max(0, Number(input?.value || 0) + Number(quantityButton.dataset.qtyChange || 0)));
+      const nextQuantity = Math.max(0, Number(input?.value || 0) + Number(quantityButton.dataset.qtyChange || 0));
+      if (input) input.value = String(nextQuantity);
+      updateLine(key, nextQuantity);
       return;
     }
 
