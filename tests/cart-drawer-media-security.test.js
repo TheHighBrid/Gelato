@@ -103,3 +103,17 @@ test('quantity mutation rejects malformed Shopify cart snapshots before renderin
   assert.match(update, /!Number\.isFinite\(result\.total_price\)/);
   assert.ok(update.indexOf('Cart update returned an invalid response.') < update.indexOf('renderCart(result)'));
 });
+
+test('cart GET rejects missing or invalid totals before any drawer repaint', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  const start = js.indexOf('async function fetchCart(');
+  const end = js.indexOf('function openCart(', start);
+  assert.ok(start >= 0 && end > start);
+  const fetchCart = js.slice(start, end);
+  assert.match(fetchCart, /!Array\.isArray\(payload\.items\)/);
+  assert.match(fetchCart, /!Number\.isSafeInteger\(payload\.item_count\)/);
+  assert.match(fetchCart, /payload\.item_count < 0/);
+  assert.match(fetchCart, /!Number\.isSafeInteger\(payload\.total_price\)/);
+  assert.match(fetchCart, /payload\.total_price < 0/);
+  assert.match(fetchCart, /if \(attempt < 1\) return fetchCart\(attempt \+ 1\)/);
+});
