@@ -338,7 +338,18 @@
       const row = quantityButton.closest('.cart-item');
       const key = quantityButton.dataset.lineKey || row?.dataset.lineKey;
       const input = row?.querySelector('.qty-stepper__value');
-      const nextQuantity = Math.max(0, Number(input?.value || 0) + Number(quantityButton.dataset.qtyChange || 0));
+      // A blank or invalid manual entry must not become an accidental removal.
+      const rawQuantity = input?.value.trim() ?? '';
+      const currentQuantity = Number(rawQuantity);
+      const delta = Number(quantityButton.dataset.qtyChange);
+      if (!rawQuantity || !Number.isSafeInteger(currentQuantity) || currentQuantity < 0 ||
+          !Number.isSafeInteger(delta) || (delta !== 1 && delta !== -1) ||
+          !Number.isSafeInteger(currentQuantity + delta)) {
+        if (input) input.value = input.defaultValue;
+        toast('Enter a valid whole-number quantity.');
+        return;
+      }
+      const nextQuantity = Math.max(0, currentQuantity + delta);
       if (input) input.value = String(nextQuantity);
       updateLine(key, nextQuantity);
       return;
