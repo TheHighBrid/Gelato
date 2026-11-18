@@ -62,3 +62,13 @@ test('add-to-cart renders its snapshot inside the serialized mutation', () => {
   assert.match(addForm, /const cart = await serializeCartMutation\(async \(\) => \{[\s\S]*?const latestCart = await fetchCart\(\);[\s\S]*?renderCart\(latestCart\);[\s\S]*?return latestCart;\s*\}\);/);
   assert.doesNotMatch(addForm, /\}\);\s*renderCart\(cart\);/);
 });
+
+test('opening cart serializes GET and rendering with cart mutations', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  const start = js.indexOf("const opener = event.target.closest(");
+  const end = js.indexOf("if (event.target.closest('[data-cart-close]'))", start);
+  assert.ok(start >= 0 && end > start);
+  const openHandler = js.slice(start, end);
+  assert.match(openHandler, /serializeCartMutation\(async \(\) => \{\s*const cart = await fetchCart\(\);\s*renderCart\(cart\);\s*return cart;\s*\}\)/);
+  assert.doesNotMatch(openHandler, /fetchCart\(\)\.then\(cart =>/);
+});
