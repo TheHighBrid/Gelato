@@ -83,3 +83,11 @@ test('quantity updates and recovery refresh render inside the shared mutation qu
   assert.doesNotMatch(update, /\}\);\s*\/\/ Do not replace the input/);
   assert.match(update, /serializeCartMutation\(async \(\) => \{\s*const cart = await fetchCart\(\);\s*renderCart\(cart\);\s*\}\)\.catch/);
 });
+
+test('invalid or blank manual quantity never becomes a remove-line request', () => {
+  const js = fs.readFileSync(path.join(__dirname, '../assets/melato-cart-drawer.js'), 'utf8');
+  assert.match(js, /if \(!rawQuantity \|\| !Number\.isSafeInteger\(quantity\) \|\| quantity < 0\)/);
+  assert.match(js, /quantityInput\.value = quantityInput\.defaultValue;/);
+  assert.doesNotMatch(js, /updateLine\(quantityInput\.dataset\.lineKey, Number\(quantityInput\.value \|\| 0\)\)/);
+  assert.match(js, /if \(!Number\.isFinite\(numericQuantity\) \|\| numericQuantity < 0 \|\| !Number\.isInteger\(numericQuantity\)\)/);
+});
