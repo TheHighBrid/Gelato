@@ -23,6 +23,8 @@
           <a href="{{ item.url | escape }}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">
             {%- if item.image != blank -%}
               <img class="cart-item__img" src="{{ item.image | image_url: width: 120 }}" srcset="{{ item.image | image_url: width: 120 }} 1x, {{ item.image | image_url: width: 240 }} 2x" alt="{{ item.title | escape }}" width="80" height="{{ 80 | divided_by: item.image.aspect_ratio | ceil }}" loading="lazy">
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'cart-item__img cart-item__img--placeholder' }}
             {%- endif -%}
           </a>
           <div class="cart-item__info">
