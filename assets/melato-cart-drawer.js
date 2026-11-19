@@ -280,6 +280,7 @@
     pendingForms.add(form);
     const button = submitter?.matches?.('button,input[type="submit"]') ? submitter : form.querySelector('[name="add"],[data-pdp-atc],[data-atc-btn]');
     setButtonLoading(button, true);
+    let addSucceeded = false;
     try {
       const data = new FormData(form);
       if (!data.get('quantity')) data.set('quantity','1');
@@ -290,6 +291,8 @@
         });
         const payload = await response.json().catch(() => ({}));
         if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
+        // The add committed. A failed refresh must not prompt a duplicate add.
+        addSucceeded = true;
         const latestCart = await fetchCart();
         // Apply this snapshot before the next queued mutation can run.
         renderCart(latestCart);
@@ -300,7 +303,11 @@
       window.dispatchEvent(new CustomEvent('cart:updated',{detail:{cart}}));
     } catch (error) {
       console.error('Melato add to cart:', error);
-      toast(error.message || 'Unable to add to cart.');
+      if (addSucceeded) {
+        window.location.assign(route('cart'));
+      } else {
+        toast(error.message || 'Unable to add to cart.');
+      }
     } finally {
       pendingForms.delete(form);
       setButtonLoading(button, false);
