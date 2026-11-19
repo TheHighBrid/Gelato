@@ -27,3 +27,12 @@ test('cart quantity controls retain line keys and translated checkout action', (
   assert.match(cart, /name="checkout"/);
   assert.match(cart, /'cart\.checkout' \| t/);
 });
+
+test('cart image height falls back safely for zero or missing aspect ratios', () => {
+  assert.match(cart, /item\.image\.aspect_ratio != blank and item\.image\.aspect_ratio > 0/);
+  assert.match(cart, /100 \| divided_by: item\.image\.aspect_ratio \| ceil/);
+  assert.match(cart, /else %}100{% endif %}/);
+  const guard = cart.indexOf('item.image.aspect_ratio != blank and item.image.aspect_ratio > 0');
+  const division = cart.indexOf('100 | divided_by: item.image.aspect_ratio | ceil');
+  assert.ok(guard >= 0 && division > guard, 'division must follow positive-ratio guard');
+});
