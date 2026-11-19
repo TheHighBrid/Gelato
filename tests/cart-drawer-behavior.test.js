@@ -8,6 +8,7 @@ const vm = require('node:vm');
 // Execute the real cart script rather than asserting that particular strings exist.
 function bootCart(responses) {
   const listeners = {};
+  const drawerListeners = {};
   const requests = [];
   const nodes = new Map();
   const node = () => ({
@@ -17,6 +18,7 @@ function bootCart(responses) {
     querySelector() { return null; }, querySelectorAll() { return []; }
   });
   const drawer = node();
+  drawer.addEventListener = (type, fn) => { drawerListeners[type] = fn; };
   const items = node();
   drawer.querySelector = selector => selector.includes('cart-items') ? items : null;
   const document = {
@@ -51,7 +53,15 @@ function bootCart(responses) {
     target: { closest(selector) { return selector.includes('data-cart-open') ? { closest() { return null; } } : null; } },
     preventDefault() {}
   });
-  return { open, requests, items, location };
+  const changeQuantity = (key, value) => drawerListeners.change({
+    target: {
+      value,
+      defaultValue: '1',
+      dataset: { lineKey: key },
+      closest(selector) { return selector.includes('qty-stepper__value') ? this : null; }
+    }
+  });
+  return { open, changeQuantity, requests, items, location };
 }
 const flush = () => new Promise(resolve => setImmediate(resolve));
 
@@ -123,4 +133,18 @@ test('cart drawer rejects executable and protocol-relative catalog URLs', async 
   await flush();
   assert.match(app.items.innerHTML, /href="#"/);
   assert.doesNotMatch(app.items.innerHTML, /javascript:|data:image|<img /);
+});
+
+test('failed cart mutation and failed recovery redirect to authoritative native cart', async () => {
+  const app = bootCart([
+    { ok: false, status: 422, body: { description: 'Cannot update cart' } },
+    { body: { items: null, item_count: 0, total_price: 0 } },
+    { body: { items: [], item_count: -1, total_price: 0 } }
+  ]);
+  app.changeQuantity('line-1', '2');
+  for (let i = 0; i < 8; i++) await flush();
+  assert.equal(app.requests.length, 3);
+  assert.match(app.requests[0].url, /cart\/change\.js$/);
+  assert.match(app.requests[1].url, /cart\.js$/);
+  assert.equal(app.location.assigned, '/cart');
 });
