@@ -136,3 +136,19 @@ test('committed add with failed refresh preserves localized Shopify root', async
   assert.equal(app.requests.filter(request => request.url.includes('/cart/add.js')).length, 1);
   assert.equal(app.location.assigned, '/fr-ca/cart');
 });
+
+
+test('rapid repeated submits while an add is pending send only one Shopify add request', async () => {
+  const app = boot([
+    { body: { id: 12345 } },
+    { body: { items: [{ key: 'line-1', quantity: 1, product_title: 'Test' }], item_count: 1, total_price: 1200, currency: 'CAD' } }
+  ]);
+  assert.equal(app.submit(), true);
+  assert.equal(app.submit(), true);
+  assert.equal(app.submit(), true);
+  await flush(); await flush(); await flush();
+  assert.equal(app.requests.filter(request => request.url === '/cart/add.js').length, 1);
+  assert.equal(app.requests.filter(request => request.url === '/cart.js').length, 1);
+  assert.equal(app.location.assigned, null);
+  assert.equal(app.button.disabled, false);
+});
