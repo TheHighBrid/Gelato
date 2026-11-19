@@ -41,6 +41,7 @@ function bootCart(responses) {
       requests.push({ url, options });
       const next = responses.shift();
       if (!next) throw new Error('Unexpected cart request');
+      if (next.wait) await next.wait;
       return {
         ok: next.ok !== false, status: next.status || 200,
         json: async () => next.body
@@ -147,4 +148,29 @@ test('failed cart mutation and failed recovery redirect to authoritative native 
   assert.match(app.requests[0].url, /cart\/change\.js$/);
   assert.match(app.requests[1].url, /cart\.js$/);
   assert.equal(app.location.assigned, '/cart');
+});
+
+
+test('rapid same-line quantity edits preserve latest intent and serialize writes', async () => {
+  let releaseFirst;
+  const firstWait = new Promise(resolve => { releaseFirst = resolve; });
+  const snapshot = quantity => ({
+    items: [{ key: 'line-1', product_title: 'Test', quantity, final_line_price: quantity * 1000 }],
+    item_count: quantity, total_price: quantity * 1000, currency: 'CAD'
+  });
+  const app = bootCart([
+    { wait: firstWait, body: snapshot(2) },
+    { body: snapshot(4) }
+  ]);
+  app.changeQuantity('line-1', '2');
+  await flush();
+  app.changeQuantity('line-1', '3');
+  app.changeQuantity('line-1', '4');
+  assert.equal(app.requests.length, 1, 'second mutation must wait for first response');
+  releaseFirst();
+  for (let i = 0; i < 8; i++) await flush();
+  assert.equal(app.requests.length, 2);
+  assert.deepEqual(app.requests.map(request => JSON.parse(request.options.body).quantity), [2, 4]);
+  assert.match(app.items.innerHTML, /value="4"/);
+  assert.equal(app.location.assigned, null);
 });
