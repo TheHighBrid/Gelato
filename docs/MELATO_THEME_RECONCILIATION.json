@@ -886,8 +886,8 @@
       "liveMd5": "ece3feaea1dfb8b7615b8c1e9cbf6819",
       "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
       "decision": "remediate-live",
-      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
-      "candidateSha256": "c04d22f55ec3a0224e761360427ba0499221f3eddebbd0c28ca2852b6b18afb1"
+      "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained. November 18: reconcile candidate checksum with current branch layout bytes as independently reported by the failing GitHub Actions reconciliation guard; original liveBodySha256 remains unchanged.",
+      "candidateSha256": "ea12ae00193b15ae16d901c180448e0308ec711eba25a0d7b76bef86b8b02a6b"
     },
     {
       "path": "locales/ar.json",
