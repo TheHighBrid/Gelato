@@ -198,7 +198,7 @@ test('different cart lines serialize full-cart writes without stale snapshot ove
   assert.equal(app.requests.length, 2);
   assert.deepEqual(app.requests.map(request => JSON.parse(request.options.body).id), ['line-a', 'line-b']);
   assert.deepEqual(app.requests.map(request => JSON.parse(request.options.body).quantity), [2, 3]);
-  assert.match(app.items.innerHTML, /data-line-key="line-a"[\\s\\S]*?value="2"/);
-  assert.match(app.items.innerHTML, /data-line-key="line-b"[\\s\\S]*?value="3"/);
+  assert.match(app.items.innerHTML, /data-line-key="line-a"[\s\S]*?value="2"/);
+  assert.match(app.items.innerHTML, /data-line-key="line-b"[\s\S]*?value="3"/);
   assert.equal(app.location.assigned, null);
 });
