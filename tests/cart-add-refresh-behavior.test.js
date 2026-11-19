@@ -152,3 +152,34 @@ test('rapid repeated submits while an add is pending send only one Shopify add r
   assert.equal(app.location.assigned, null);
   assert.equal(app.button.disabled, false);
 });
+
+
+test('committed add with malformed cart snapshots falls back without duplicate POST', async () => {
+  const app = boot([
+    { body: { id: 12345 } },
+    { body: { items: [], item_count: '1', total_price: 1200 } },
+    { body: { items: [], item_count: 1, total_price: -1 } }
+  ]);
+  assert.equal(app.submit(), true);
+  await flush(); await flush(); await flush();
+  assert.equal(app.requests.length, 3);
+  assert.equal(app.requests.filter(request => request.url === '/cart/add.js').length, 1);
+  assert.equal(app.requests[1].url, '/cart.js');
+  assert.match(app.requests[2].url, /^\/cart\.js\?melato_refresh=\d+$/);
+  assert.equal(app.location.assigned, '/cart');
+  assert.equal(app.button.disabled, false);
+});
+
+test('committed add recovers after an invalid cart snapshot without duplicate POST', async () => {
+  const app = boot([
+    { body: { id: 12345 } },
+    { body: { items: null, item_count: 1, total_price: 1200 } },
+    { body: { items: [{ key: 'line-1', quantity: 1, product_title: 'Test' }], item_count: 1, total_price: 1200, currency: 'CAD' } }
+  ]);
+  assert.equal(app.submit(), true);
+  await flush(); await flush(); await flush();
+  assert.equal(app.requests.length, 3);
+  assert.equal(app.requests.filter(request => request.url === '/cart/add.js').length, 1);
+  assert.equal(app.location.assigned, null);
+  assert.equal(app.button.disabled, false);
+});
