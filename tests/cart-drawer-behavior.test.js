@@ -108,3 +108,19 @@ test('cart drawer renders untrusted catalog fields as escaped text and attribute
   assert.match(markup, /src="https:\/\/example\.com\/a&quot; onerror=&quot;alert\(1\)"/);
   assert.doesNotMatch(markup, /<script|<img src=x|onmouseover="alert\(1\)"/);
 });
+
+test('cart drawer rejects executable and protocol-relative catalog URLs', async () => {
+  const app = bootCart([{ body: {
+    items: [{
+      key: 'unsafe', product_title: 'Safe product',
+      url: 'javascript:alert(1)', image: 'data:image/svg+xml,<svg onload=alert(1)>',
+      quantity: 1, final_line_price: 2500
+    }],
+    item_count: 1, total_price: 2500, currency: 'CAD'
+  } }]);
+  app.open();
+  await flush();
+  await flush();
+  assert.match(app.items.innerHTML, /href="#"/);
+  assert.doesNotMatch(app.items.innerHTML, /javascript:|data:image|<img /);
+});
