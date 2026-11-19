@@ -174,3 +174,31 @@ test('rapid same-line quantity edits preserve latest intent and serialize writes
   assert.match(app.items.innerHTML, /value="4"/);
   assert.equal(app.location.assigned, null);
 });
+
+test('different cart lines serialize full-cart writes without stale snapshot overwrite', async () => {
+  let releaseFirst;
+  const firstWait = new Promise(resolve => { releaseFirst = resolve; });
+  const snapshot = (first, second) => ({
+    items: [
+      { key: 'line-a', product_title: 'First', quantity: first, final_line_price: first * 1000 },
+      { key: 'line-b', product_title: 'Second', quantity: second, final_line_price: second * 1000 }
+    ],
+    item_count: first + second, total_price: (first + second) * 1000, currency: 'CAD'
+  });
+  const app = bootCart([
+    { wait: firstWait, body: snapshot(2, 1) },
+    { body: snapshot(2, 3) }
+  ]);
+  app.changeQuantity('line-a', '2');
+  await flush();
+  app.changeQuantity('line-b', '3');
+  assert.equal(app.requests.length, 1, 'second line must wait for the first mutation');
+  releaseFirst();
+  for (let i = 0; i < 8; i++) await flush();
+  assert.equal(app.requests.length, 2);
+  assert.deepEqual(app.requests.map(request => JSON.parse(request.options.body).id), ['line-a', 'line-b']);
+  assert.deepEqual(app.requests.map(request => JSON.parse(request.options.body).quantity), [2, 3]);
+  assert.match(app.items.innerHTML, /data-line-key="line-a"[\\s\\S]*?value="2"/);
+  assert.match(app.items.innerHTML, /data-line-key="line-b"[\\s\\S]*?value="3"/);
+  assert.equal(app.location.assigned, null);
+});
