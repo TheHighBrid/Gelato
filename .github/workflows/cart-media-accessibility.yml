@@ -1,0 +1,21 @@
+name: Melato main cart accessibility regression
+on:
+  pull_request:
+    paths:
+      - 'sections/main-cart.liquid'
+      - 'tests/cart-media-accessibility.test.js'
+      - '.github/workflows/cart-media-accessibility.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  cart-media-accessibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate missing-media fallback and cart markup
+        run: node --test tests/cart-media-accessibility.test.js
