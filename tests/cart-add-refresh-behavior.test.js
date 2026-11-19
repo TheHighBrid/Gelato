@@ -7,7 +7,7 @@ const vm = require('node:vm');
 
 // Exercise the actual submit handler. A successful add must never be retried
 // just because the subsequent cart refresh fails.
-function boot(responses) {
+function boot(responses, shopRoot = '/') {
   const listeners = {};
   const requests = [];
   const drawer = {
@@ -36,7 +36,7 @@ function boot(responses) {
     matches() { return false; }
   };
   const window = {
-    Shopify: { routes: { root: '/' } }, location,
+    Shopify: { routes: { root: shopRoot } }, location,
     setTimeout() {}, dispatchEvent() {}
   };
   const context = {
@@ -120,4 +120,19 @@ test('successful add with transient refresh failure recovers without another add
   assert.match(app.requests[2].url, /^\/cart\.js\?melato_refresh=\d+$/);
   assert.equal(app.location.assigned, null);
   assert.equal(app.button.disabled, false);
+});
+
+test('committed add with failed refresh preserves localized Shopify root', async () => {
+  const app = boot([
+    { body: { id: 12345 } },
+    { ok: false, status: 503, body: {} },
+    { ok: false, status: 503, body: {} }
+  ], '/fr-ca/');
+  assert.equal(app.submit(), true);
+  await flush(); await flush(); await flush();
+  assert.equal(app.requests[0].url, '/fr-ca/cart/add.js');
+  assert.equal(app.requests[1].url, '/fr-ca/cart.js');
+  assert.match(app.requests[2].url, /^\/fr-ca\/cart\.js\?melato_refresh=\d+$/);
+  assert.equal(app.requests.filter(request => request.url.includes('/cart/add.js')).length, 1);
+  assert.equal(app.location.assigned, '/fr-ca/cart');
 });
