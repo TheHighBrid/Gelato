@@ -93,3 +93,31 @@ test('failed add does not navigate to cart or perform refresh', async () => {
   assert.equal(app.location.assigned, null);
   assert.equal(app.button.disabled, false);
 });
+
+test('successful add with valid first refresh opens drawer without navigation or duplicate POST', async () => {
+  const app = boot([
+    { body: { id: 12345 } },
+    { body: { items: [{ key: 'line-1', quantity: 1, product_title: 'Test' }], item_count: 1, total_price: 1200, currency: 'CAD' } }
+  ]);
+  assert.equal(app.submit(), true);
+  await flush(); await flush(); await flush();
+  assert.deepEqual(app.requests.map(request => request.url), ['/cart/add.js', '/cart.js']);
+  assert.equal(app.location.assigned, null);
+  assert.equal(app.button.disabled, false);
+});
+
+test('successful add with transient refresh failure recovers without another add', async () => {
+  const app = boot([
+    { body: { id: 12345 } },
+    { ok: false, status: 503, body: {} },
+    { body: { items: [{ key: 'line-1', quantity: 1, product_title: 'Test' }], item_count: 1, total_price: 1200, currency: 'CAD' } }
+  ]);
+  assert.equal(app.submit(), true);
+  await flush(); await flush(); await flush();
+  assert.equal(app.requests.length, 3);
+  assert.equal(app.requests.filter(request => request.url === '/cart/add.js').length, 1);
+  assert.equal(app.requests[1].url, '/cart.js');
+  assert.match(app.requests[2].url, /^\/cart\.js\?melato_refresh=\d+$/);
+  assert.equal(app.location.assigned, null);
+  assert.equal(app.button.disabled, false);
+});
