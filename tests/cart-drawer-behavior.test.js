@@ -83,3 +83,28 @@ test('cart open fails closed to native cart after two invalid snapshots', async 
   assert.equal(app.location.assigned, '/cart');
   assert.equal(app.items.innerHTML, '');
 });
+
+test('cart drawer renders untrusted catalog fields as escaped text and attributes', async () => {
+  const app = bootCart([{ body: {
+    items: [{
+      key: 'line" onmouseover="alert(1)',
+      product_title: '<img src=x onerror=alert(1)>',
+      variant_title: '<script>alert(1)</script>',
+      url: '/products/test?x=" onclick="alert(1)',
+      image: 'https://example.com/a" onerror="alert(1)',
+      quantity: 1,
+      final_line_price: 2500
+    }],
+    item_count: 1, total_price: 2500, currency: 'CAD'
+  } }]);
+  app.open();
+  await flush();
+  await flush();
+  const markup = app.items.innerHTML;
+  assert.match(markup, /&lt;img src=x onerror=alert\(1\)&gt;/);
+  assert.match(markup, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+  assert.match(markup, /data-line-key="line&quot; onmouseover=&quot;alert\(1\)"/);
+  assert.match(markup, /href="\/products\/test\?x=&quot; onclick=&quot;alert\(1\)"/);
+  assert.match(markup, /src="https:\/\/example\.com\/a&quot; onerror=&quot;alert\(1\)"/);
+  assert.doesNotMatch(markup, /<script|<img src=x|onmouseover="alert\(1\)"/);
+});
