@@ -13,7 +13,7 @@ function bootCart(responses) {
   const node = () => ({
     hidden: true, innerHTML: '', textContent: '', style: {}, dataset: {},
     classList: { add() {}, remove() {} },
-    setAttribute() {}, removeAttribute() {}, focus() {},
+    setAttribute() {}, removeAttribute() {}, addEventListener() {}, focus() {},
     querySelector() { return null; }, querySelectorAll() { return []; }
   });
   const drawer = node();
@@ -34,7 +34,7 @@ function bootCart(responses) {
   const context = {
     document, window, navigator: { language: 'en-CA' },
     console: { error() {}, warn() {} }, Intl, Number, String,
-    Date, Promise, Set, Map, WeakSet, FormData, CustomEvent: class {},
+    Date, Promise, Set, Map, WeakSet, FormData, clearTimeout() {}, CustomEvent: class {},
     fetch: async (url, options) => {
       requests.push({ url, options });
       const next = responses.shift();
