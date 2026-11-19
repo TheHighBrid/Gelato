@@ -47,6 +47,16 @@
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
   }[char]));
 
+  // Catalog URLs are untrusted input. Escaping quotes alone does not block
+  // javascript: links or non-image schemes in cart media attributes.
+  function safeCartUrl(value, image = false) {
+    const raw = String(value || '').trim();
+    if (!raw) return image ? '' : '#';
+    if (/^(?:\\/\\/(?!\\/)|\\\\)/.test(raw)) return image ? '' : '#';
+    if (/^\\/(?!\\/)/.test(raw) || /^https?:\\/\\//i.test(raw)) return escapeHtml(raw);
+    return image ? '' : '#';
+  }
+
   function formatMoney(cents, code) {
     const amount = Number(cents || 0) / 100;
     const currencyCode = String(code || window.DRIP?.shop?.currency || 'CAD').trim().toUpperCase();
@@ -139,8 +149,8 @@
     const code = currency(cart);
     host.innerHTML = cart.items.map(item => {
       const title = escapeHtml(item.product_title || item.title || 'Product');
-      const url = escapeHtml(item.url || '#');
-      const imageUrl = escapeHtml(item.image || item.featured_image?.url || '');
+      const url = safeCartUrl(item.url);
+      const imageUrl = safeCartUrl(item.image || item.featured_image?.url || '', true);
       const image = imageUrl ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">` : '<span class="cart-item__img cart-item__img--placeholder" aria-hidden="true"></span>';
       const variant = item.variant_title && item.variant_title !== 'Default Title' ? `<span class="cart-item__variant">${escapeHtml(item.variant_title)}</span>` : '';
       const key = escapeHtml(item.key || '');
