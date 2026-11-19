@@ -52,8 +52,9 @@
   function safeCartUrl(value, image = false) {
     const raw = String(value || '').trim();
     if (!raw) return image ? '' : '#';
-    if (/^(?:\\/\\/(?!\\/)|\\\\)/.test(raw)) return image ? '' : '#';
-    if (/^\\/(?!\\/)/.test(raw) || /^https?:\\/\\//i.test(raw)) return escapeHtml(raw);
+    // Reject protocol-relative URLs and backslashes, including browser-normalized variants.
+    if (raw.startsWith('//') || raw.includes('\\')) return image ? '' : '#';
+    if (raw.startsWith('/') || /^https?:\/\//i.test(raw)) return escapeHtml(raw);
     return image ? '' : '#';
   }
 
