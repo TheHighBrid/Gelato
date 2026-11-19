@@ -235,7 +235,11 @@
       serializeCartMutation(async () => {
         const cart = await fetchCart();
         renderCart(cart);
-      }).catch(() => {});
+      }).catch(recoveryError => {
+        // A failed recovery must not leave shoppers trusting a stale drawer.
+        console.error('Melato cart recovery:', recoveryError);
+        window.location.assign(route('cart'));
+      });
     } finally {
       queuedLineQuantities.delete(key);
       pendingLines.delete(key);
