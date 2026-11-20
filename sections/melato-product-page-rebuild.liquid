@@ -233,7 +233,7 @@
             {%- for media in product.media limit: 10 -%}
               {%- assign media_alt = media.alt | strip -%}
               {%- if media_alt == blank -%}{%- assign media_alt = product.title | append: ' - Product view ' | append: forloop.index -%}{%- endif -%}
-              <button class="pdp-thumb{% if media.id == featured_media.id %} is-active{% endif %}" type="button" data-pdp-thumb data-media-src="{{ media | image_url: width: 1800 }}" data-media-alt="{{ media_alt | escape }}" aria-label="Show {{ media_alt | escape }}" role="listitem">
+              <button class="pdp-thumb{% if media.id == featured_media.id %} is-active{% endif %}" type="button" data-pdp-thumb data-media-src="{{ media | image_url: width: 1800 | escape }}" data-media-alt="{{ media_alt | escape }}" aria-label="Show {{ media_alt | escape }}" role="listitem">
                 {{ media | image_url: width: 220 | image_tag: class: 'pdp-thumb-image', loading: 'lazy', widths: '110, 160, 220', sizes: '110px', alt: media_alt }}
               </button>
             {%- endfor -%}
@@ -243,7 +243,7 @@
 
       <div class="pdp-buybox">
         {%- if section.settings.eyebrow != blank -%}<p class="pdp-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
-        <h1 class="pdp-title">{{ product.title }}</h1>
+        <h1 class="pdp-title">{{ product.title | escape }}</h1>
         {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle }}</p>{%- endif -%}
 
         <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="Price">
@@ -258,7 +258,7 @@
             {%- for option in product.options_with_values -%}
               <fieldset class="pdp-option">
                 <div class="pdp-option__header">
-                  <legend>{{ option.name }}</legend>
+                  <legend>{{ option.name | escape }}</legend>
                   {%- assign option_name_down = option.name | downcase -%}
                   {%- if option_name_down == 'size' and family == 'apparel' or option_name_down == 'size' and family == 'denim' or option_name_down == 'size' and family == 'footwear' -%}
                     {%- if size_guide_page != blank -%}
@@ -284,7 +284,7 @@
                     -%}
                     <label class="pdp-choice{% if option.selected_value == value %} is-selected{% endif %}{% unless value_available %} is-sold-out{% endunless %}">
                       <input type="radio" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-position="{{ option.position }}" {% unless value_available %}disabled{% endunless %}>
-                      <span>{{ value }}</span>
+                      <span>{{ value | escape }}</span>
                     </label>
                   {%- endfor -%}
                 </div>
