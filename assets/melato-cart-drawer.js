@@ -24,7 +24,17 @@
 
   const overlay = document.getElementById('drip-overlay') || document.querySelector('[data-overlay]');
   const pendingForms = new WeakSet();
+  const pendingLines = new Set();
+  const queuedLineQuantities = new Map();
   let lastFocused = null;
+  // Whole-cart responses must be applied in mutation order across all lines.
+  let cartMutationTail = Promise.resolve();
+  function serializeCartMutation(operation) {
+    const task = cartMutationTail.then(operation);
+    cartMutationTail = task.catch(() => {});
+    return task;
+  }
+
 
   const locale = () => document.documentElement.lang || navigator.language || 'en-CA';
   const rootPath = () => {
@@ -36,6 +46,17 @@
   const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, char => ({
     '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
   }[char]));
+
+  // Catalog URLs are untrusted input. Escaping quotes alone does not block
+  // javascript: links or non-image schemes in cart media attributes.
+  function safeCartUrl(value, image = false) {
+    const raw = String(value || '').trim();
+    if (!raw) return image ? '' : '#';
+    // Reject protocol-relative URLs and backslashes, including browser-normalized variants.
+    if (raw.startsWith('//') || raw.includes('\\')) return image ? '' : '#';
+    if (raw.startsWith('/') || /^https?:\/\//i.test(raw)) return escapeHtml(raw);
+    return image ? '' : '#';
+  }
 
   function formatMoney(cents, code) {
     const amount = Number(cents || 0) / 100;
@@ -76,7 +97,7 @@
       throw new Error(`Cart request failed (${response.status}).`);
     }
     const payload = await response.json().catch(() => null);
-    if (!payload || !Array.isArray(payload.items)) {
+    if (!payload || !Array.isArray(payload.items) || !Number.isSafeInteger(payload.item_count) || payload.item_count < 0 || !Number.isSafeInteger(payload.total_price) || payload.total_price < 0) {
       if (attempt < 1) return fetchCart(attempt + 1);
       throw new Error('Cart response was invalid.');
     }
@@ -129,9 +150,9 @@
     const code = currency(cart);
     host.innerHTML = cart.items.map(item => {
       const title = escapeHtml(item.product_title || item.title || 'Product');
-      const url = escapeHtml(item.url || '#');
-      const imageUrl = escapeHtml(item.image || item.featured_image?.url || '');
-      const image = imageUrl ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">` : '';
+      const url = safeCartUrl(item.url);
+      const imageUrl = safeCartUrl(item.image || item.featured_image?.url || '', true);
+      const image = imageUrl ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">` : '<span class="cart-item__img cart-item__img--placeholder" aria-hidden="true"></span>';
       const variant = item.variant_title && item.variant_title !== 'Default Title' ? `<span class="cart-item__variant">${escapeHtml(item.variant_title)}</span>` : '';
       const key = escapeHtml(item.key || '');
       const quantity = Math.max(0, Number(item.quantity || 0));
@@ -156,26 +177,73 @@
   function renderCart(cart) {
     renderItems(cart);
     updateChrome(cart);
+    // Another line's completed response must not erase a shopper's pending
+    // quantity intent while its serialized cart mutation is still waiting.
+    queuedLineQuantities.forEach((quantity, key) => {
+      const input = Array.from(drawer.querySelectorAll('.qty-stepper__value[data-line-key]'))
+        .find(node => node.dataset.lineKey === key);
+      if (input) input.value = String(quantity);
+    });
   }
 
   async function updateLine(key, quantity) {
     if (!key) return;
+    const numericQuantity = Number(quantity);
+    if (!Number.isFinite(numericQuantity) || numericQuantity < 0 || !Number.isSafeInteger(numericQuantity)) {
+      toast('Enter a valid whole-number quantity.');
+      return;
+    }
+    const requested = numericQuantity;
+    // Preserve the last shopper intent instead of dropping rapid clicks.
+    if (pendingLines.has(key)) {
+      queuedLineQuantities.set(key, requested);
+      return;
+    }
+    pendingLines.add(key);
     drawer.classList.add('is-updating');
+    let nextQuantity = requested;
     try {
-      const response = await fetch(route('cart/change.js'), {
-        method:'POST', credentials:'same-origin',
-        headers:{'Content-Type':'application/json',Accept:'application/json','X-Requested-With':'XMLHttpRequest'},
-        body:JSON.stringify({id:key,quantity:Math.max(0,Number(quantity || 0))})
-      });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
-      renderCart(payload);
+      while (true) {
+        const payload = await serializeCartMutation(async () => {
+          const response = await fetch(route('cart/change.js'), {
+            method:'POST', credentials:'same-origin',
+            headers:{'Content-Type':'application/json',Accept:'application/json','X-Requested-With':'XMLHttpRequest'},
+            body:JSON.stringify({id:key,quantity:nextQuantity})
+          });
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) throw new Error(result.description || result.message || 'Cart could not be updated.');
+          if (!result || !Array.isArray(result.items) || !Number.isSafeInteger(result.item_count) || result.item_count < 0 || !Number.isSafeInteger(result.total_price) || result.total_price < 0) {
+            throw new Error('Cart update returned an invalid response.');
+          }
+          // Apply this full-cart snapshot before any later mutation begins.
+          // Preserve optimistic quantity intent for lines still awaiting updates.
+          if (!queuedLineQuantities.has(key)) renderCart(result);
+          return result;
+        });
+        if (!queuedLineQuantities.has(key)) break;
+        nextQuantity = queuedLineQuantities.get(key);
+        queuedLineQuantities.delete(key);
+        if (nextQuantity === Number(payload.items?.find(item => item.key === key)?.quantity ?? 0)) {
+          renderCart(payload);
+          break;
+        }
+      }
     } catch (error) {
       console.error('Melato cart update:', error);
       toast(error.message || 'Cart could not be updated.');
-      fetchCart().then(renderCart).catch(() => {});
+      // A recovery GET must not repaint a newer cart mutation's result.
+      serializeCartMutation(async () => {
+        const cart = await fetchCart();
+        renderCart(cart);
+      }).catch(recoveryError => {
+        // A failed recovery must not leave shoppers trusting a stale drawer.
+        console.error('Melato cart recovery:', recoveryError);
+        window.location.assign(route('cart'));
+      });
     } finally {
-      drawer.classList.remove('is-updating');
+      queuedLineQuantities.delete(key);
+      pendingLines.delete(key);
+      if (pendingLines.size === 0) drawer.classList.remove('is-updating');
     }
   }
 
@@ -212,22 +280,34 @@
     pendingForms.add(form);
     const button = submitter?.matches?.('button,input[type="submit"]') ? submitter : form.querySelector('[name="add"],[data-pdp-atc],[data-atc-btn]');
     setButtonLoading(button, true);
+    let addSucceeded = false;
     try {
       const data = new FormData(form);
       if (!data.get('quantity')) data.set('quantity','1');
-      const response = await fetch(route('cart/add.js'), {
-        method:'POST', credentials:'same-origin', headers:{Accept:'application/json','X-Requested-With':'XMLHttpRequest'}, body:data
+      // Serialize add-to-cart with quantity changes to avoid stale cart snapshots.
+      const cart = await serializeCartMutation(async () => {
+        const response = await fetch(route('cart/add.js'), {
+          method:'POST', credentials:'same-origin', headers:{Accept:'application/json','X-Requested-With':'XMLHttpRequest'}, body:data
+        });
+        const payload = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
+        // The add committed. A failed refresh must not prompt a duplicate add.
+        addSucceeded = true;
+        const latestCart = await fetchCart();
+        // Apply this snapshot before the next queued mutation can run.
+        renderCart(latestCart);
+        return latestCart;
       });
-      const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
-      const cart = await fetchCart();
-      renderCart(cart);
       openCart();
       toast('Added to cart');
       window.dispatchEvent(new CustomEvent('cart:updated',{detail:{cart}}));
     } catch (error) {
       console.error('Melato add to cart:', error);
-      toast(error.message || 'Unable to add to cart.');
+      if (addSucceeded) {
+        window.location.assign(route('cart'));
+      } else {
+        toast(error.message || 'Unable to add to cart.');
+      }
     } finally {
       pendingForms.delete(form);
       setButtonLoading(button, false);
@@ -255,8 +335,13 @@
     const opener = event.target.closest('[data-cart-open],[data-cart-toggle],.mxh__bag');
     if (opener && !opener.closest('.cart-drawer')) {
       event.preventDefault();
-      fetchCart().then(cart => {
+      // Serialize the open-cart snapshot with add/change mutations.
+      // A delayed GET must never repaint an older cart after a successful POST.
+      serializeCartMutation(async () => {
+        const cart = await fetchCart();
         renderCart(cart);
+        return cart;
+      }).then(() => {
         openCart();
       }).catch(error => {
         // Never paint a large failure toast over editorial content. If the AJAX
@@ -275,7 +360,20 @@
       const row = quantityButton.closest('.cart-item');
       const key = quantityButton.dataset.lineKey || row?.dataset.lineKey;
       const input = row?.querySelector('.qty-stepper__value');
-      updateLine(key, Math.max(0, Number(input?.value || 0) + Number(quantityButton.dataset.qtyChange || 0)));
+      // A blank or invalid manual entry must not become an accidental removal.
+      const rawQuantity = input?.value.trim() ?? '';
+      const currentQuantity = Number(rawQuantity);
+      const delta = Number(quantityButton.dataset.qtyChange);
+      if (!rawQuantity || !Number.isSafeInteger(currentQuantity) || currentQuantity < 0 ||
+          !Number.isSafeInteger(delta) || (delta !== 1 && delta !== -1) ||
+          !Number.isSafeInteger(currentQuantity + delta)) {
+        if (input) input.value = input.defaultValue;
+        toast('Enter a valid whole-number quantity.');
+        return;
+      }
+      const nextQuantity = Math.max(0, currentQuantity + delta);
+      if (input) input.value = String(nextQuantity);
+      updateLine(key, nextQuantity);
       return;
     }
 
@@ -297,7 +395,17 @@
 
   drawer.addEventListener('change', event => {
     const quantityInput = event.target.closest('.qty-stepper__value[data-line-key]');
-    if (quantityInput) { updateLine(quantityInput.dataset.lineKey, Number(quantityInput.value || 0)); return; }
+    if (quantityInput) {
+      const rawQuantity = quantityInput.value.trim();
+      const quantity = Number(rawQuantity);
+      if (!rawQuantity || !Number.isSafeInteger(quantity) || quantity < 0) {
+        quantityInput.value = quantityInput.defaultValue;
+        toast('Enter a valid whole-number quantity.');
+        return;
+      }
+      updateLine(quantityInput.dataset.lineKey, quantity);
+      return;
+    }
     const note = event.target.closest('[data-note-input]');
     if (note) {
       const hidden = drawer.querySelector('[data-note-hidden]');
