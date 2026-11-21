@@ -1,23 +1,21 @@
 'use strict';
-const fs = require('node:fs');
-const path = require('node:path');
 
-function validateThemeTarget({ manifestThemeId, intendedThemeId, verifiedLiveThemeId }) {
+// The October 2026 reconciliation manifest is historical evidence, not a release target.
+// A release must supply an intended theme ID and a freshly confirmed Shopify MAIN ID.
+function validateThemeTarget({ intendedThemeId, verifiedLiveThemeId }) {
   const valid = value => typeof value === 'string' && /^[1-9][0-9]*$/.test(value);
-  if (![manifestThemeId, intendedThemeId, verifiedLiveThemeId].every(valid)) {
-    throw new Error('BLOCKED: all three Shopify theme IDs must be explicitly supplied as positive decimal strings');
+  if (!valid(intendedThemeId) || !valid(verifiedLiveThemeId)) {
+    throw new Error('BLOCKED: intended and freshly verified live Shopify theme IDs must be positive decimal strings');
   }
-  if (manifestThemeId !== intendedThemeId || intendedThemeId !== verifiedLiveThemeId) {
-    throw new Error('BLOCKED: repository manifest, intended target and freshly verified live theme IDs differ');
+  if (intendedThemeId !== verifiedLiveThemeId) {
+    throw new Error('BLOCKED: intended target and freshly verified Shopify MAIN theme IDs differ');
   }
   return true;
 }
 
 if (require.main === module) {
   try {
-    const manifest = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'docs', 'MELATO_THEME_RECONCILIATION.json'), 'utf8'));
     validateThemeTarget({
-      manifestThemeId: String(manifest.themeId || ''),
       intendedThemeId: process.env.MELATO_TARGET_THEME_ID,
       verifiedLiveThemeId: process.env.MELATO_VERIFIED_LIVE_THEME_ID
     });
