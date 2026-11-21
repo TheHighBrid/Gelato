@@ -202,3 +202,14 @@ test('different cart lines serialize full-cart writes without stale snapshot ove
   assert.match(app.items.innerHTML, /data-line-key="line-b"[\s\S]*?value="3"/);
   assert.equal(app.location.assigned, null);
 });
+
+
+test('invalid quantity input never reaches Shopify cart mutation endpoint', async () => {
+  const app = bootCart([]);
+  for (const invalid of ['-1', '1.5', 'NaN', 'Infinity', '9007199254740992']) {
+    app.changeQuantity('line-1', invalid);
+  }
+  for (let i = 0; i < 3; i++) await flush();
+  assert.equal(app.requests.length, 0, 'invalid quantities must not generate cart writes');
+  assert.equal(app.location.assigned, null, 'invalid input should not force checkout or redirect');
+});
