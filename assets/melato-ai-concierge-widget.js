@@ -271,8 +271,33 @@
     return true;
   }
 
+  function hasExternalChatWidget() {
+    return Boolean(document.getElementById('bv-chat-frame') || document.querySelector('[id^="bv-chat"]'));
+  }
+
+  function syncConciergeVisibility() {
+    const root = document.getElementById('melato-ai-concierge');
+    const externalPresent = hasExternalChatWidget();
+    const drawerOpen = Boolean(document.querySelector('.cart-drawer.is-open, .search-drawer.is-open, .mobile-menu.is-open, .mxh__drawer.is-open, .melato-filter-drawer[aria-hidden="false"]'));
+    const stickyAtc = document.querySelector('.pdp-sticky-atc.is-visible');
+    const mobileStickyVisible = Boolean(stickyAtc && window.innerWidth <= 749);
+
+    document.body.classList.toggle('melato-drawer-open', drawerOpen);
+    document.body.classList.toggle('melato-sticky-atc-visible', mobileStickyVisible);
+
+    if (root) {
+      const suppress = externalPresent || drawerOpen || mobileStickyVisible;
+      root.hidden = suppress;
+      root.style.display = suppress ? 'none' : '';
+    }
+  }
+
   function createWidget() {
     if (document.getElementById('melato-ai-concierge')) return;
+    if (hasExternalChatWidget()) {
+      syncConciergeVisibility();
+      return;
+    }
 
     const style = document.createElement('style');
     style.textContent = `
@@ -375,12 +400,28 @@
     add(CONFIG.greeting, 'bot');
   }
 
-  window.MelatoAI = { config: CONFIG, ask: answer, draftEmail, createServicePlan, buildFitProfile, createOrderLookupRequest, speak, createWidget };
+  window.MelatoAI = { config: CONFIG, ask: answer, draftEmail, createServicePlan, buildFitProfile, createOrderLookupRequest, speak, createWidget, syncConciergeVisibility };
+
+  function startVisibilitySync() {
+    syncConciergeVisibility();
+    window.addEventListener('resize', syncConciergeVisibility, { passive: true });
+    if (typeof MutationObserver !== 'undefined' && document.body) {
+      let timer;
+      new MutationObserver(() => {
+        clearTimeout(timer);
+        timer = setTimeout(syncConciergeVisibility, 50);
+      }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'aria-hidden', 'id'] });
+    }
+  }
 
   const current = document.currentScript;
   const auto = !current || current.dataset.auto !== 'false';
   if (auto) {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', createWidget);
-    else createWidget();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => { createWidget(); startVisibilitySync(); });
+    } else {
+      createWidget();
+      startVisibilitySync();
+    }
   }
 })();

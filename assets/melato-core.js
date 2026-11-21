@@ -152,11 +152,32 @@
     return next;
   }
 
+  function getRowRawLabel(input, row) {
+    if (!row) return input ? input.value : '';
+    if (!row.dataset.melatoRawFilterLabel) {
+      const span = row.querySelector('span');
+      row.dataset.melatoRawFilterLabel = ((span ? span.textContent : row.textContent) || '').trim();
+    }
+    return row.dataset.melatoRawFilterLabel;
+  }
+
+  function inputMatchesGroup(input, row, group) {
+    const valKey = normalizeFilterKey(input.value);
+    const labelKey = normalizeFilterKey(getRowRawLabel(input, row));
+    const groupKey = normalizeFilterKey(group.label);
+    if (valKey === groupKey || labelKey === groupKey) return true;
+    return group.raw.some((raw) => {
+      const rawKey = normalizeFilterKey(raw);
+      return rawKey === valKey || rawKey === labelKey;
+    });
+  }
+
   function urlWithoutFilterGroup(group, drawer) {
     let params = new URLSearchParams(window.location.search);
     if (!drawer || !group) return window.location.pathname + (params.toString() ? '?' + params.toString() : '');
     drawer.querySelectorAll('[data-filter-input], input[type="checkbox"]').forEach((input) => {
-      if (group.raw.some((raw) => normalizeFilterKey(raw) === normalizeFilterKey(input.value))) {
+      const row = input.closest('label') || input.closest('.melato-filter-option') || input.parentElement;
+      if (inputMatchesGroup(input, row, group)) {
         params = removeParamValue(params, input.name, input.value);
       }
     });
@@ -168,11 +189,16 @@
     const drawer = document.getElementById('melato-filter-drawer');
     if (!drawer) return;
 
+    const allInputs = Array.from(drawer.querySelectorAll('[data-filter-input], input[type="checkbox"]'));
+    allInputs.forEach((input) => {
+      const row = input.closest('label') || input.closest('.melato-filter-option') || input.parentElement;
+      if (row) getRowRawLabel(input, row);
+    });
+
     PUBLIC_FILTER_GROUPS.forEach((group) => {
-      const members = Array.from(drawer.querySelectorAll('[data-filter-input], input[type="checkbox"]'))
-        .filter((input) => group.raw.some((raw) => normalizeFilterKey(raw) === normalizeFilterKey(input.value)))
+      const members = allInputs
         .map((input) => ({ input, row: input.closest('label') || input.closest('.melato-filter-option') || input.parentElement }))
-        .filter((item) => item.row);
+        .filter((item) => item.row && inputMatchesGroup(item.input, item.row, group));
 
       if (!members.length) return;
 
@@ -180,9 +206,15 @@
       anchor.input.checked = members.some((item) => item.input.checked);
       anchor.input.dataset.melatoPublicFilterGroup = group.label;
       anchor.row.dataset.melatoPublicFilterLabel = group.label;
+      anchor.row.hidden = false;
+      anchor.row.style.display = '';
+      anchor.row.removeAttribute('aria-hidden');
 
       members.slice(1).forEach((item) => {
+        item.input.dataset.melatoPublicFilterGroup = group.label;
+        item.row.dataset.melatoPublicFilterLabel = group.label;
         item.row.hidden = true;
+        item.row.style.display = 'none';
         item.row.setAttribute('aria-hidden', 'true');
         item.row.dataset.melatoGroupedFilterHidden = group.label;
         item.input.tabIndex = -1;
@@ -192,12 +224,35 @@
         anchor.input.dataset.melatoGroupBound = 'true';
         anchor.input.addEventListener('change', () => {
           const checked = anchor.input.checked;
-          members.forEach((item) => { item.input.checked = checked; });
+          drawer.querySelectorAll('[data-filter-input], input[type="checkbox"]').forEach((candidate) => {
+            if (candidate.dataset.melatoPublicFilterGroup === group.label) {
+              candidate.checked = checked;
+            }
+          });
         });
       }
     });
 
     polishTextNodes(drawer);
+
+    drawer.querySelectorAll('.melato-filter-group').forEach((groupEl) => {
+      const seenLabels = new Set();
+      groupEl.querySelectorAll('.melato-filter-option').forEach((row) => {
+        if (row.hidden) return;
+        const span = row.querySelector('span');
+        const key = normalizeFilterKey(span ? span.textContent : row.textContent);
+        if (!key) return;
+        if (seenLabels.has(key)) {
+          row.hidden = true;
+          row.style.display = 'none';
+          row.setAttribute('aria-hidden', 'true');
+          const input = row.querySelector('input[type="checkbox"]');
+          if (input) input.tabIndex = -1;
+        } else {
+          seenLabels.add(key);
+        }
+      });
+    });
   }
 
   function normalizeActiveFilterPills() {

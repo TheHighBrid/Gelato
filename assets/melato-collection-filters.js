@@ -157,7 +157,7 @@
     isFetching = true;
     button.setAttribute('aria-busy', 'true');
     var originalText = button.textContent;
-    button.textContent = 'Loading';
+    button.textContent = (document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0 ? 'Chargement' : 'Loading';
 
     fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
       .then(function (r) {

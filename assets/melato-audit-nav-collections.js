@@ -115,6 +115,101 @@
     });
   }
 
+  function parseColorRgb(value) {
+    if (!value) return null;
+    var raw = String(value).trim();
+    var hex = raw.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (hex) {
+      var h = hex[1];
+      if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+      return {
+        r: parseInt(h.slice(0, 2), 16),
+        g: parseInt(h.slice(2, 4), 16),
+        b: parseInt(h.slice(4, 6), 16)
+      };
+    }
+    var rgb = raw.match(/^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
+    if (rgb) {
+      return { r: Number(rgb[1]), g: Number(rgb[2]), b: Number(rgb[3]) };
+    }
+    return null;
+  }
+
+  function relativeLuminance(rgb) {
+    var channels = [rgb.r, rgb.g, rgb.b].map(function (c) {
+      var v = c / 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+  }
+
+  function wcagContrast(a, b) {
+    var l1 = relativeLuminance(a);
+    var l2 = relativeLuminance(b);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  }
+
+  function pickAccessibleTextHex(bgRgb) {
+    var dark = { r: 17, g: 17, b: 17 };
+    var light = { r: 255, g: 247, b: 234 };
+    return wcagContrast(dark, bgRgb) >= wcagContrast(light, bgRgb) ? '#111111' : '#fff7ea';
+  }
+
+  function rgbToHex(rgb) {
+    return '#' + [rgb.r, rgb.g, rgb.b].map(function (v) {
+      return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  var guardingContrast = false;
+
+  function ensureAnnouncementContrast(bar) {
+    if (!bar || guardingContrast) return;
+    guardingContrast = true;
+    try {
+      var cs = window.getComputedStyle ? window.getComputedStyle(bar) : null;
+      var item = bar.querySelector('.melato-ann__item');
+      var itemCs = item && window.getComputedStyle ? window.getComputedStyle(item) : null;
+      var bgRgb =
+        parseColorRgb(bar.style.getPropertyValue('--melato-bar-current')) ||
+        parseColorRgb(bar.style.getPropertyValue('--ab-bg')) ||
+        (cs ? parseColorRgb(cs.getPropertyValue('--ab-bg')) || parseColorRgb(cs.backgroundColor) : null);
+      var fgRgb =
+        parseColorRgb(bar.style.getPropertyValue('--ab-fg')) ||
+        (itemCs ? parseColorRgb(itemCs.color) : null) ||
+        (cs ? parseColorRgb(cs.getPropertyValue('--ab-fg')) || parseColorRgb(cs.color) : null);
+      if (!bgRgb || !fgRgb) return;
+
+      if (wcagContrast(fgRgb, bgRgb) < 4.5) {
+        var safeFg = pickAccessibleTextHex(bgRgb);
+        var bgHex = rgbToHex(bgRgb);
+        bar.style.setProperty('--ab-fg', safeFg);
+        bar.style.setProperty('--ab-muted', 'color-mix(in srgb,' + safeFg + ' 72%,transparent)');
+        bar.style.setProperty('--ab-border', 'color-mix(in srgb,' + safeFg + ' 20%,transparent)');
+        bar.style.setProperty('--ab-btn-bg', safeFg);
+        bar.style.setProperty('--ab-btn-fg', bgHex);
+        if (bar.style.getPropertyValue('--melato-bar-text-current')) {
+          bar.style.setProperty('--melato-bar-text-current', safeFg);
+        }
+        var rootStyle = document.documentElement.style;
+        if (rootStyle.getPropertyValue('--melato-bar-text-current')) {
+          rootStyle.setProperty('--melato-bar-text-current', safeFg);
+        }
+      }
+    } finally {
+      guardingContrast = false;
+    }
+  }
+
+  function observeAnnouncementContrast(bar) {
+    if (!bar || bar.dataset.melatoContrastObserved === 'true' || typeof MutationObserver === 'undefined') return;
+    bar.dataset.melatoContrastObserved = 'true';
+    var observer = new MutationObserver(function () {
+      ensureAnnouncementContrast(bar);
+    });
+    observer.observe(bar, { attributes: true, attributeFilter: ['style', 'class'] });
+  }
+
   function stabilizeAnnouncement(root) {
     var scope = root && root.querySelector ? root : document;
     var bar = scope.querySelector('#melato-announcement-bar') || document.querySelector('#melato-announcement-bar');
@@ -131,9 +226,12 @@
         group.setAttribute('inert', '');
       }
     });
+    ensureAnnouncementContrast(bar);
+    observeAnnouncementContrast(bar);
   }
 
   function run(root) {
+    stabilizeAnnouncement(root || document);
     window.requestAnimationFrame(function () {
       normalizeLinks(root || document);
       ensureDesktopNav(root || document);
