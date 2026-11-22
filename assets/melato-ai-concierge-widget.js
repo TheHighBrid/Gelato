@@ -271,8 +271,83 @@
     return true;
   }
 
+  const isFrLocale = () => (document.documentElement.lang || '').toLowerCase().startsWith('fr');
+
+  function hasExternalChatWidget() {
+    return Boolean(
+      document.getElementById('bv-chat-frame') ||
+      document.querySelector('[id^="bv-chat"], inbox-online-store-chat, #ShopifyChat, [id^="shopify-chat"], iframe[src*="bubblav.com"]')
+    );
+  }
+
+  function rectsIntersect(a, b) {
+    return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+  }
+
+  function syncConciergeVisibility() {
+    const root = document.getElementById('melato-ai-concierge');
+    const externalPresent = hasExternalChatWidget();
+    const drawerOpen = Boolean(document.querySelector('.cart-drawer.is-open, .search-drawer.is-open, .mobile-menu.is-open, .mxh__drawer.is-open, .mxh__search.is-open, .melato-filter-drawer[aria-hidden="false"], .melato-size-drawer.is-open, [data-size-drawer][aria-hidden="false"]'));
+    const stickyAtc = document.querySelector('.pdp-sticky-atc.is-visible');
+    const mobileStickyVisible = Boolean(stickyAtc && window.innerWidth <= 749);
+
+    document.body.classList.toggle('melato-drawer-open', drawerOpen);
+    document.body.classList.toggle('melato-sticky-atc-visible', mobileStickyVisible);
+
+    let shiftLeftOnDesktop = false;
+    if (!drawerOpen && window.innerWidth >= 750 && document.body.classList.contains('template-product')) {
+      const chatHost = document.querySelector('#bv-chat-frame, [id^="bv-chat"], inbox-online-store-chat, #ShopifyChat, [id^="shopify-chat"]') || root;
+      if (chatHost && typeof chatHost.getBoundingClientRect === 'function') {
+        const chatRect = chatHost.getBoundingClientRect();
+        if (chatRect.width > 0 && chatRect.height > 0) {
+          const targets = document.querySelectorAll('.pdp-shipping-returns, .pdp-buybox-specs, .pdp-atc');
+          for (const el of targets) {
+            if (rectsIntersect(chatRect, el.getBoundingClientRect())) {
+              shiftLeftOnDesktop = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+    document.body.classList.toggle('melato-chat-clear-left', shiftLeftOnDesktop);
+
+    if (root) {
+      const suppress = externalPresent || drawerOpen || mobileStickyVisible;
+      root.hidden = suppress;
+      root.style.display = suppress ? 'none' : '';
+    }
+  }
+
   function createWidget() {
     if (document.getElementById('melato-ai-concierge')) return;
+    if (hasExternalChatWidget()) {
+      syncConciergeVisibility();
+      return;
+    }
+
+    const fr = isFrLocale();
+    const ui = fr ? {
+      dialogLabel: 'Conciergerie IA Melato',
+      heading: 'Conciergerie Melato',
+      subtitle: 'Coupes, livraison, retours, articles et service client.',
+      close: 'Fermer',
+      placeholder: 'Demander à Melato...',
+      inputLabel: 'Question pour la conciergerie Melato',
+      voiceLabel: 'Saisie vocale',
+      submit: 'Envoyer',
+      toggle: 'Demander à Melato'
+    } : {
+      dialogLabel: 'Melato AI Concierge',
+      heading: 'Melato Concierge',
+      subtitle: 'Fit, delivery, returns, products, and client care.',
+      close: 'Close',
+      placeholder: 'Ask Melato...',
+      inputLabel: 'Question for the Melato concierge',
+      voiceLabel: 'Voice input',
+      submit: 'Ask',
+      toggle: 'Ask Melato'
+    };
 
     const style = document.createElement('style');
     style.textContent = `
@@ -285,13 +360,13 @@
     const root = document.createElement('div');
     root.id = 'melato-ai-concierge';
     root.innerHTML = `
-      <section id="melato-ai-dialog" class="melato-ai-panel" role="dialog" aria-label="Melato AI Concierge" aria-modal="true" aria-hidden="true">
-        <div class="melato-ai-head"><div><strong>Melato Concierge</strong><span>Fit, delivery, returns, products, and client care.</span></div><button class="melato-ai-close" aria-label="Close">×</button></div>
+      <section id="melato-ai-dialog" class="melato-ai-panel" role="dialog" aria-label="${ui.dialogLabel}" aria-modal="true" aria-hidden="true">
+        <div class="melato-ai-head"><div><strong>${ui.heading}</strong><span>${ui.subtitle}</span></div><button class="melato-ai-close" aria-label="${ui.close}">×</button></div>
         <div class="melato-ai-log" aria-live="polite"></div>
         <div class="melato-ai-quick"></div>
-        <form class="melato-ai-form"><input aria-label="Question for the Melato concierge" placeholder="Ask Melato..." autocomplete="off" maxlength="2000" /><button type="button" class="melato-ai-voice" aria-label="Voice input">🎙</button><button type="submit">Ask</button></form>
+        <form class="melato-ai-form"><input aria-label="${ui.inputLabel}" placeholder="${ui.placeholder}" autocomplete="off" maxlength="2000" /><button type="button" class="melato-ai-voice" aria-label="${ui.voiceLabel}">🎙</button><button type="submit">${ui.submit}</button></form>
       </section>
-      <button class="melato-ai-toggle" aria-controls="melato-ai-dialog" aria-expanded="false">Ask Melato</button>`;
+      <button class="melato-ai-toggle" aria-controls="melato-ai-dialog" aria-expanded="false">${ui.toggle}</button>`;
     document.body.appendChild(root);
 
     const panel = root.querySelector('.melato-ai-panel');
@@ -375,12 +450,29 @@
     add(CONFIG.greeting, 'bot');
   }
 
-  window.MelatoAI = { config: CONFIG, ask: answer, draftEmail, createServicePlan, buildFitProfile, createOrderLookupRequest, speak, createWidget };
+  window.MelatoAI = { config: CONFIG, ask: answer, draftEmail, createServicePlan, buildFitProfile, createOrderLookupRequest, speak, createWidget, syncConciergeVisibility };
+
+  function startVisibilitySync() {
+    syncConciergeVisibility();
+    window.addEventListener('resize', syncConciergeVisibility, { passive: true });
+    window.addEventListener('scroll', syncConciergeVisibility, { passive: true });
+    if (typeof MutationObserver !== 'undefined' && document.body) {
+      let timer;
+      new MutationObserver(() => {
+        clearTimeout(timer);
+        timer = setTimeout(syncConciergeVisibility, 50);
+      }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['class', 'aria-hidden', 'id'] });
+    }
+  }
 
   const current = document.currentScript;
   const auto = !current || current.dataset.auto !== 'false';
   if (auto) {
-    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', createWidget);
-    else createWidget();
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => { createWidget(); startVisibilitySync(); });
+    } else {
+      createWidget();
+      startVisibilitySync();
+    }
   }
 })();

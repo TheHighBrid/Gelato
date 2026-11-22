@@ -10,12 +10,30 @@
     assign atelier_menu = linklists['main-menu']
   endif
   assign logo_alt = section.settings.logo.alt | default: shop.name | escape
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
+  assign search_btn_label = 'search.submit' | t
+  assign account_btn_label = 'melato_ui.account' | t
+  assign bag_btn_label = 'melato_ui.bag' | t
+  if is_fr
+    if search_btn_label == 'Search' or search_btn_label == blank
+      assign search_btn_label = 'Rechercher'
+    endif
+    if account_btn_label == 'Account' or account_btn_label == blank
+      assign account_btn_label = 'Compte'
+    endif
+    if bag_btn_label == 'Bag' or bag_btn_label == blank
+      assign bag_btn_label = 'Panier'
+    endif
+  endif
 %}
 
 <header id="mxh-{{ section.id }}" class="mxh" role="banner" data-mxh>
   <div class="mxh__bar">
     <div class="mxh__left">
-      <button class="mxh__menu" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mxh-drawer-{{ section.id }}" data-mxh-menu>
+      <button class="mxh__menu" type="button" aria-label="{% if is_fr %}Ouvrir la navigation{% else %}Open navigation{% endif %}" aria-expanded="false" aria-controls="mxh-drawer-{{ section.id }}" data-mxh-menu>
         <span class="mxh__menu-mark" aria-hidden="true">
           <svg viewBox="0 0 40 40" focusable="false">
             <path d="M7 20h26" />
@@ -28,7 +46,7 @@
     </div>
 
     <div class="mxh__center">
-      <a class="mxh__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+      <a class="mxh__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}{% if is_fr %} accueil{% else %} home{% endif %}">
         {% if section.settings.logo != blank %}
           {{ section.settings.logo | image_url: width: 900 | image_tag: class: 'mxh__logo-img', alt: logo_alt, loading: 'eager', widths: '140, 180, 220, 280, 360, 480, 640, 900', sizes: '(max-width: 749px) 138px, 210px' }}
         {% else %}
@@ -37,13 +55,13 @@
       </a>
     </div>
 
-    <div class="mxh__right" aria-label="Header tools">
-      <button class="mxh__text-btn mxh__search-btn" type="button" aria-label="Open search" aria-expanded="false" aria-controls="mxh-search-{{ section.id }}" data-mxh-search-open>{{ 'search.submit' | t }}</button>
+    <div class="mxh__right" aria-label="{% if is_fr %}Outils d’en-tête{% else %}Header tools{% endif %}">
+      <button class="mxh__text-btn mxh__search-btn" type="button" aria-label="{% if is_fr %}Ouvrir la recherche{% else %}Open search{% endif %}" aria-expanded="false" aria-controls="mxh-search-{{ section.id }}" data-mxh-search-open>{{ search_btn_label }}</button>
       {% if shop.customer_accounts_enabled and section.settings.show_account %}
-        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">{{ 'melato_ui.account' | t }}</a>
+        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">{{ account_btn_label }}</a>
       {% endif %}
-      <a class="mxh__bag" href="{{ routes.cart_url }}" aria-label="Cart with {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}">
-        <span>{{ 'melato_ui.bag' | t }}</span>
+      <a class="mxh__bag" href="{{ routes.cart_url }}" aria-label="{% if is_fr %}Panier avec {{ cart.item_count }} {% if cart.item_count == 1 %}article{% else %}articles{% endif %}{% else %}Cart with {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}{% endif %}">
+        <span>{{ bag_btn_label }}</span>
         <span class="mxh__bag-count">{{ cart.item_count }}</span>
       </a>
     </div>

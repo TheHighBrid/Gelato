@@ -4,7 +4,14 @@
   Policy sync refresh, 2026-08-29.
 {% endcomment %}
 
-<section class="section-spacing">
+{%- liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
+-%}
+
+<section class="section-spacing" data-main-cart-section data-section-id="{{ section.id }}">
   <div class="container--narrow">
     <h1 class="heading-md drip-reveal" style="margin-bottom:48px;">{{ 'cart.title' | t }}</h1>
 
@@ -26,15 +33,23 @@
                   >
                 </a>
                 <div class="cart-item__info">
-                  <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+                  <div class="cart-item__top">
+                    <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+                    <button
+                      type="button"
+                      class="cart-item__remove"
+                      data-remove-line="{{ item.key }}"
+                      aria-label="{% if is_fr %}Retirer {{ item.product.title | escape }}{% else %}Remove {{ item.product.title | escape }}{% endif %}"
+                    >×</button>
+                  </div>
                   {%- if item.variant.title != 'Default Title' -%}
                     <span class="cart-item__variant">{{ item.variant.title }}</span>
                   {%- endif -%}
                   <div class="cart-item__footer">
                     <div class="qty-stepper">
-                      <button type="button" class="qty-stepper__btn" data-qty-change="-1" data-line="{{ item.key }}" aria-label="Decrease {{ item.product.title | escape }} quantity">−</button>
-                      <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" data-line="{{ item.key }}" name="updates[]" aria-label="{{ item.product.title | escape }} quantity">
-                      <button type="button" class="qty-stepper__btn" data-qty-change="+1" data-line="{{ item.key }}" aria-label="Increase {{ item.product.title | escape }} quantity">+</button>
+                      <button type="button" class="qty-stepper__btn" data-qty-change="-1" data-line="{{ item.key }}" aria-label="{% if is_fr %}Diminuer la quantité de {{ item.product.title | escape }}{% else %}Decrease {{ item.product.title | escape }} quantity{% endif %}">−</button>
+                      <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" data-line="{{ item.key }}" name="updates[]" aria-label="{% if is_fr %}Quantité pour {{ item.product.title | escape }}{% else %}{{ item.product.title | escape }} quantity{% endif %}">
+                      <button type="button" class="qty-stepper__btn" data-qty-change="+1" data-line="{{ item.key }}" aria-label="{% if is_fr %}Augmenter la quantité de {{ item.product.title | escape }}{% else %}Increase {{ item.product.title | escape }} quantity{% endif %}">+</button>
                     </div>
                     <span class="price">{{ item.final_line_price | money }}</span>
                   </div>
@@ -44,12 +59,12 @@
           </div>
 
           <div style="background:var(--color-surface);padding:32px;position:sticky;top:80px;" class="drip-reveal drip-reveal--delay-2">
-            <h2 class="heading-xs" style="margin-bottom:24px;">ORDER SUMMARY</h2>
+            <h2 class="heading-xs" style="margin-bottom:24px;">{% if is_fr %}RÉCAPITULATIF{% else %}ORDER SUMMARY{% endif %}</h2>
             <div class="cart-subtotal" style="margin-bottom:12px;">
               <span class="text-label">{{ 'cart.subtotal' | t }}</span>
               <span class="price">{{ cart.total_price | money }}</span>
             </div>
-            <p class="text-label" style="color:var(--color-muted);text-align:center;margin-bottom:20px;">Complimentary standard delivery · prepared in 1–3 business days · returns on eligible items within 30 days</p>
+            <p class="text-label" style="color:var(--color-muted);text-align:center;margin-bottom:20px;">{% if is_fr %}Livraison standard offerte · préparation en 1 à 3 jours ouvrables · retours sur les articles admissibles sous 30 jours{% else %}Complimentary standard delivery · prepared in 1–3 business days · returns on eligible items within 30 days{% endif %}</p>
             <button type="submit" name="checkout" class="btn btn--primary btn--full btn--lg">{{ 'cart.checkout' | t }}</button>
             {%- if additional_checkout_buttons -%}
               <div class="additional-checkout-buttons" style="margin-top:12px;">{{ content_for_additional_checkout_buttons }}</div>
@@ -66,22 +81,27 @@
       -%}
       <div class="melato-empty-cart">
         <div class="melato-empty-cart__intro">
-          <p class="text-label">Your cart</p>
+          <p class="text-label">{% if is_fr %}Votre panier{% else %}Your cart{% endif %}</p>
           <h2 class="heading-sm">{{ 'cart.empty' | t }}</h2>
-          <p>Your cart is empty. Start with New Arrivals or revisit the Living Lookbook.</p>
+          <p>{% if is_fr %}Votre panier est vide. Commencez par les nouveautés ou explorez le Lookbook interactif.{% else %}Your cart is empty. Start with New Arrivals or revisit the Living Lookbook.{% endif %}</p>
           <div class="melato-empty-cart__actions">
-            <a href="/collections/new-arrivals" class="btn btn--primary">SHOP NEW ARRIVALS</a>
-            <a href="/pages/living-lookbook" class="btn btn--secondary">LIVING LOOKBOOK</a>
+            <a href="{% render 'melato-localized-url', url: '/collections/new-arrivals' %}" class="btn btn--primary">{% if is_fr %}DÉCOUVRIR LES NOUVEAUTÉS{% else %}SHOP NEW ARRIVALS{% endif %}</a>
+            <a href="{% render 'melato-localized-url', url: '/pages/living-lookbook' %}" class="btn btn--secondary">{% if is_fr %}LOOKBOOK INTERACTIF{% else %}LIVING LOOKBOOK{% endif %}</a>
           </div>
         </div>
 
-        <ul class="melato-empty-cart__trust" aria-label="Shopping assurances">
-          <li><strong>Complimentary standard delivery</strong><span>Standard delivery is included on all orders. Orders usually prepare within 1 to 3 business days.</span></li>
-          <li><strong>Free returns</strong><span>Approved eligible returns within 30 days include free standard return shipping through the Melato return method.</span></li>
+        <ul class="melato-empty-cart__trust" aria-label="{% if is_fr %}Garanties d’achat{% else %}Shopping assurances{% endif %}">
+          {%- if is_fr -%}
+            <li><strong>Livraison standard offerte</strong><span>La livraison standard est offerte sur toutes les commandes. Préparation habituelle sous 1 à 3 jours ouvrables.</span></li>
+            <li><strong>Retours offerts</strong><span>Les retours admissibles approuvés sous 30 jours incluent l’expédition de retour standard gratuite via la méthode Melato.</span></li>
+          {%- else -%}
+            <li><strong>Complimentary standard delivery</strong><span>Standard delivery is included on all orders. Orders usually prepare within 1 to 3 business days.</span></li>
+            <li><strong>Free returns</strong><span>Approved eligible returns within 30 days include free standard return shipping through the Melato return method.</span></li>
+          {%- endif -%}
         </ul>
 
         {%- if shop.enabled_payment_types.size > 0 -%}
-          <div class="melato-empty-cart__payments" aria-label="Accepted payment methods">
+          <div class="melato-empty-cart__payments" aria-label="{% if is_fr %}Modes de paiement acceptés{% else %}Accepted payment methods{% endif %}">
             {%- for type in shop.enabled_payment_types -%}
               {{ type | payment_type_svg_tag }}
             {%- endfor -%}
@@ -90,8 +110,8 @@
 
         {%- if recovery_collection != blank and recovery_collection.products_count > 0 -%}
           <section class="melato-empty-cart__recovery" aria-labelledby="EmptyCartRecoveryTitle">
-            <p class="text-label">Most Wanted</p>
-            <h3 id="EmptyCartRecoveryTitle" class="heading-xs">Continue the rotation</h3>
+            <p class="text-label">{% if is_fr %}Les plus demandés{% else %}Most Wanted{% endif %}</p>
+            <h3 id="EmptyCartRecoveryTitle" class="heading-xs">{% if is_fr %}Continuer la sélection{% else %}Continue the rotation{% endif %}</h3>
             <div class="melato-empty-cart__grid">
               {%- for product in recovery_collection.products limit: 4 -%}
                 <div class="melato-empty-cart__product">{%- render 'product-card', product: product -%}</div>
@@ -105,7 +125,7 @@
 </section>
 
 <style>
-  .melato-empty-cart{padding:36px 0 12px}.melato-empty-cart__intro{text-align:center;max-width:680px;margin:0 auto}.melato-empty-cart__intro .heading-sm{margin:12px 0 16px}.melato-empty-cart__intro>p:not(.text-label){max-width:560px;margin:0 auto;color:var(--color-muted);line-height:1.65}.melato-empty-cart__actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:26px}.melato-empty-cart__trust{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:44px 0 20px;background:var(--color-border);border:1px solid var(--color-border)}.melato-empty-cart__trust li{background:var(--color-bg);padding:20px}.melato-empty-cart__trust strong,.melato-empty-cart__trust span{display:block}.melato-empty-cart__trust strong{font-family:var(--font-mono-family);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}.melato-empty-cart__trust span{margin-top:6px;color:var(--color-muted);font-size:.82rem;line-height:1.45}.melato-empty-cart__payments{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin:0 auto 44px}.melato-empty-cart__payments svg{width:auto;height:24px;max-width:42px}.melato-empty-cart__recovery{margin-top:52px}.melato-empty-cart__recovery>.text-label{margin-bottom:8px;color:var(--color-accent)}.melato-empty-cart__recovery>.heading-xs{margin-bottom:22px}.melato-empty-cart__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.melato-empty-cart__grid .product-card__title{font-size:.95rem}.melato-empty-cart__grid .product-card__media{aspect-ratio:3/4}
+  .melato-empty-cart{padding:36px 0 12px}.melato-empty-cart__intro{text-align:center;max-width:680px;margin:0 auto}.melato-empty-cart__intro .heading-sm{margin:12px 0 16px}.melato-empty-cart__intro>p:not(.text-label){max-width:560px;margin:0 auto;color:var(--color-muted);line-height:1.65}.melato-empty-cart__actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:26px}.melato-empty-cart__trust{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin:44px 0 20px;background:var(--color-border);border:1px solid var(--color-border)}.melato-empty-cart__trust li{background:var(--color-bg);padding:20px}.melato-empty-cart__trust strong,.melato-empty-cart__trust span{display:block}.melato-empty-cart__trust strong{font-family:var(--font-mono-family);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase}.melato-empty-cart__trust span{margin-top:6px;color:var(--color-muted);font-size:.82rem;line-height:1.45}.melato-empty-cart__payments{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:8px;margin:0 auto 44px}.melato-empty-cart__payments svg{width:auto;height:24px;max-width:42px}.melato-empty-cart__recovery{margin-top:52px}.melato-empty-cart__recovery>.text-label{margin-bottom:8px;color:var(--color-accent)}.melato-empty-cart__recovery>.heading-xs{margin-bottom:22px}.melato-empty-cart__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.melato-empty-cart__grid .product-card__title{font-size:.95rem}.melato-empty-cart__grid .product-card__media{aspect-ratio:3/4}
   @media (max-width: 900px){.melato-empty-cart__grid{grid-template-columns:repeat(2,minmax(0,1fr))}.melato-empty-cart__trust{grid-template-columns:1fr}}
   @media (max-width: 768px){.cart-page-grid{grid-template-columns:1fr !important}.melato-empty-cart{padding-top:12px}.melato-empty-cart__actions{display:grid}.melato-empty-cart__actions .btn{width:100%}}
 </style>

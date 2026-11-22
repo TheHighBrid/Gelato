@@ -95,13 +95,14 @@
 
       var links = Array.from(header.querySelectorAll('.mxh__drawer .mxh__nav-item > .mxh__nav-link, .mxh__drawer .mxh__nav > .mxh__nav-link'))
         .filter(function (link) { return link.getAttribute('href'); })
-        .filter(function (link) { return normalizeHref(link.getAttribute('href')) !== '/collections/sunglasses'; })
+        .filter(function (link) { return !/\/collections\/sunglasses(?:$|\?|#)/i.test(normalizeHref(link.getAttribute('href'))); })
         .slice(0, 6);
       if (!links.length) return;
 
+      var isFr = (document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0;
       var nav = document.createElement('nav');
       nav.className = 'mxh__desktop-nav';
-      nav.setAttribute('aria-label', 'Primary navigation');
+      nav.setAttribute('aria-label', isFr ? 'Navigation principale' : 'Primary navigation');
 
       links.forEach(function (source) {
         var link = document.createElement('a');
@@ -113,6 +114,73 @@
 
       header.querySelector('.mxh__bar').insertAdjacentElement('afterend', nav);
     });
+  }
+
+  function parseColorRgb(value) {
+    if (!value) return null;
+    var raw = String(value).trim();
+    var hex = raw.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if (hex) {
+      var h = hex[1];
+      if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+      return {
+        r: parseInt(h.slice(0, 2), 16),
+        g: parseInt(h.slice(2, 4), 16),
+        b: parseInt(h.slice(4, 6), 16)
+      };
+    }
+    var rgb = raw.match(/^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
+    if (rgb) {
+      return { r: Number(rgb[1]), g: Number(rgb[2]), b: Number(rgb[3]) };
+    }
+    return null;
+  }
+
+  function relativeLuminance(rgb) {
+    var channels = [rgb.r, rgb.g, rgb.b].map(function (c) {
+      var v = c / 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+  }
+
+  function wcagContrast(a, b) {
+    var l1 = relativeLuminance(a);
+    var l2 = relativeLuminance(b);
+    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
+  }
+
+  function pickAccessibleTextHex(bgRgb) {
+    var dark = { r: 17, g: 17, b: 17 };
+    var light = { r: 255, g: 247, b: 234 };
+    return wcagContrast(dark, bgRgb) >= wcagContrast(light, bgRgb) ? '#111111' : '#fff7ea';
+  }
+
+  function rgbToHex(rgb) {
+    return '#' + [rgb.r, rgb.g, rgb.b].map(function (v) {
+      return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0');
+    }).join('');
+  }
+
+  function ensureAnnouncementContrast(bar) {
+    if (!bar || typeof window.getComputedStyle !== 'function') return;
+    var computed = window.getComputedStyle(bar);
+    var bgRgb = parseColorRgb(bar.style.getPropertyValue('--melato-ann-bg') || computed.backgroundColor);
+    var fgRgb = parseColorRgb(bar.style.getPropertyValue('--melato-ann-fg') || computed.color);
+    if (!bgRgb) return;
+    if (!fgRgb || wcagContrast(fgRgb, bgRgb) < 4.5) {
+      var safeFg = pickAccessibleTextHex(bgRgb);
+      bar.style.setProperty('--melato-ann-fg', safeFg, 'important');
+      bar.style.setProperty('color', safeFg, 'important');
+      bar.querySelectorAll('.melato-ann__item, .melato-ann__link, .mx-ann-close').forEach(function (el) {
+        el.style.setProperty('color', safeFg, 'important');
+      });
+    } else {
+      var hexFg = rgbToHex(fgRgb);
+      bar.querySelectorAll('.melato-ann__item, .melato-ann__link, .mx-ann-close').forEach(function (el) {
+        el.style.setProperty('color', hexFg, 'important');
+      });
+    }
   }
 
   function stabilizeAnnouncement(root) {
@@ -131,6 +199,13 @@
         group.setAttribute('inert', '');
       }
     });
+    ensureAnnouncementContrast(bar);
+    if (bar.dataset.melatoContrastObserved !== 'true' && typeof MutationObserver !== 'undefined') {
+      bar.dataset.melatoContrastObserved = 'true';
+      new MutationObserver(function () {
+        ensureAnnouncementContrast(bar);
+      }).observe(bar, { attributes: true, attributeFilter: ['style', 'class'] });
+    }
   }
 
   function run(root) {

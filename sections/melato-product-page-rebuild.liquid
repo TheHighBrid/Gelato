@@ -80,7 +80,7 @@
       when 'story', 'product story', 'description'
         assign narrative = legacy_body | strip_html | strip
         assign story_copy = story_copy | append: ' ' | append: narrative | strip
-      when 'material', 'materials', 'composition', 'materials & composition', 'materials &amp; composition'
+      when 'material', 'materials', 'composition', 'materials & composition', 'materials &amp; composition', 'verified materials', 'verified material information', 'material details'
         if material_copy == blank and material_details == blank
           assign material_copy = legacy_body
         endif
@@ -91,6 +91,17 @@
       when 'fit', 'fit notes', 'fit and use', 'fit & construction', 'fit &amp; construction'
         if fit_copy == blank and fit_details == blank
           assign fit_copy = legacy_body
+        endif
+      when 'origin'
+        if product.metafields.custom.made_in.value == blank and product.metafields.custom.country_of_origin.value == blank and product.metafields.custom.made_in_canada.value != true
+          capture legacy_detail
+            echo '<details class="pdp-spec"><summary>'
+            echo legacy_heading | escape_once
+            echo '</summary><div class="pdp-rte">'
+            echo legacy_body
+            echo '</div></details>'
+          endcapture
+          assign legacy_details = legacy_details | append: legacy_detail
         endif
       when 'construction'
         if construction_details == blank and construction_paragraph == blank
@@ -177,11 +188,24 @@
     assign size_guide_page = blank
     assign size_guide_url = blank
   endif
+  assign material_copy_down = material_copy | strip_html | downcase
+  assign has_origin_fact = false
+  if made_in != blank or product.metafields.custom.country_of_origin.value != blank or product.metafields.custom.made_in_canada.value == true
+    assign has_origin_fact = true
+  endif
   if construction_details != blank
     assign construction_only = ''
     for detail in construction_details
       assign detail_prefix = detail | strip | downcase | split: ':' | first | strip
-      unless detail_prefix == 'material' or detail_prefix == 'materials' or detail_prefix == 'fit' or detail_prefix == 'care' or detail_prefix == 'composition'
+      assign skip_construction_detail = false
+      if detail_prefix == 'material' or detail_prefix == 'materials' or detail_prefix == 'fit' or detail_prefix == 'care' or detail_prefix == 'composition' or detail_prefix == 'origin'
+        assign skip_construction_detail = true
+      elsif material_copy_down != blank and material_copy_down contains detail_prefix
+        if detail_prefix == 'exterior' or detail_prefix == 'lining' or detail_prefix == 'hardware'
+          assign skip_construction_detail = true
+        endif
+      endif
+      unless skip_construction_detail
         capture construction_only
           echo construction_only
           echo '<li>'
@@ -199,6 +223,35 @@
     endif
     if material_copy != blank and construction_paragraph == material_copy
       assign construction_paragraph = blank
+    endif
+    if construction_paragraph != blank
+      assign filtered_sentences = ''
+      assign raw_sentences = construction_paragraph | strip_html | split: '. '
+      for sentence in raw_sentences
+        assign sentence_clean = sentence | strip
+        assign sentence_down = sentence_clean | downcase
+        assign skip_sentence = false
+        if sentence_clean == blank
+          assign skip_sentence = true
+        elsif material_copy_down != blank and material_copy_down contains sentence_down
+          assign skip_sentence = true
+        elsif material_copy_down != blank and sentence_down contains 'exterior:' and material_copy_down contains 'exterior:'
+          assign skip_sentence = true
+        elsif material_copy_down != blank and sentence_down contains 'lining:' and material_copy_down contains 'lining:'
+          assign skip_sentence = true
+        elsif material_copy_down != blank and sentence_down contains 'hardware:' and material_copy_down contains 'hardware:'
+          assign skip_sentence = true
+        elsif has_origin_fact and sentence_down contains 'made in '
+          assign skip_sentence = true
+        endif
+        unless skip_sentence
+          if filtered_sentences != blank
+            assign filtered_sentences = filtered_sentences | append: '. '
+          endif
+          assign filtered_sentences = filtered_sentences | append: sentence_clean
+        endunless
+      endfor
+      assign construction_paragraph = filtered_sentences | strip
     endif
   endif
 -%}
@@ -242,11 +295,11 @@
       </div>
 
       <div class="pdp-buybox">
-        {%- if section.settings.eyebrow != blank -%}<p class="pdp-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.eyebrow != blank -%}<p class="pdp-eyebrow">{%- if request.locale.iso_code == 'fr' and section.settings.eyebrow == 'Product focus' -%}Focus produit{%- else -%}{{ section.settings.eyebrow }}{%- endif -%}</p>{%- endif -%}
         <h1 class="pdp-title">{{ product.title }}</h1>
         {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle }}</p>{%- endif -%}
 
-        <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="Price">
+        <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="{% if request.locale.iso_code == 'fr' %}Prix{% else %}Price{% endif %}">
           <span class="pdp-price">{{ current_variant.price | money_with_currency }}</span>
           {%- if current_variant.compare_at_price > current_variant.price -%}<s class="pdp-compare">{{ current_variant.compare_at_price | money_with_currency }}</s>{%- endif -%}
         </div>
@@ -262,9 +315,9 @@
                   {%- assign option_name_down = option.name | downcase -%}
                   {%- if option_name_down == 'size' and family == 'apparel' or option_name_down == 'size' and family == 'denim' or option_name_down == 'size' and family == 'footwear' -%}
                     {%- if size_guide_page != blank -%}
-                      <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>
+                      <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">{% if request.locale.iso_code == 'fr' %}Mesures du produit{% else %}Product measurements{% endif %}</button>
                     {%- else -%}
-                      <a class="size-guide-trigger" href="{{ size_guide_url }}">Fit guide</a>
+                      <a class="size-guide-trigger" href="{% render 'melato-localized-url', url: size_guide_url %}">{% if request.locale.iso_code == 'fr' %}Guide des tailles{% else %}Fit guide{% endif %}</a>
                     {%- endif -%}
                   {%- endif -%}
                 </div>
@@ -309,9 +362,17 @@
         {% render 'back-in-stock-form', product: product %}
 
         {%- if family == 'fragrance' -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          {%- if request.locale.iso_code == 'fr' -%}
+            <p class="pdp-shipping-returns">Expédition sous 1 à 3 jours ouvrables. Livraison standard offerte sur toutes les commandes. Les parfums non ouverts admissibles peuvent être retournés sous 30 jours ; les parfums ouverts ou vaporisés sont généralement exclus. <a href="{% render 'melato-localized-url', url: '/pages/shipping-returns' %}">Politique complète de livraison et de retours</a>.</p>
+          {%- else -%}
+            <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          {%- endif -%}
         {%- else -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          {%- if request.locale.iso_code == 'fr' -%}
+            <p class="pdp-shipping-returns">Expédition sous 1 à 3 jours ouvrables. Livraison standard offerte sur toutes les commandes. Retours acceptés sur les articles admissibles non portés selon la politique de retour en vigueur. <a href="{% render 'melato-localized-url', url: '/pages/shipping-returns' %}">Politique complète de livraison et de retours</a>.</p>
+          {%- else -%}
+            <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          {%- endif -%}
         {%- endif -%}
 
         {%- comment -%}

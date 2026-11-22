@@ -15,10 +15,12 @@
       const url = this.dataset.url;
       if (!url || this.dataset.loaded === 'true') return;
 
-      const existingCards = this.querySelector('.melato-grid--cards .melato-card, .melato-related-grid .melato-card');
-      if (existingCards) {
+      const section = this.closest('section.melato-related');
+      const existingCards = this.querySelectorAll('.melato-grid--cards .melato-card, .melato-related-grid .melato-card');
+      if (existingCards.length > 0) {
         this.dataset.loaded = 'true';
         this.dataset.recommendationSource = 'server-fallback';
+        if (section) section.hidden = false;
         return;
       }
 
@@ -29,17 +31,21 @@
           return response.text();
         })
         .then((text) => {
-          if (window.scrollY > 150) return;
           const html = document.createElement('div');
           html.innerHTML = text;
           const incoming = html.querySelector('product-recommendations');
-          if (incoming && incoming.innerHTML.trim().length > 0) {
+          const cards = incoming ? incoming.querySelectorAll('.melato-card') : [];
+          if (incoming && cards.length > 0) {
             this.innerHTML = incoming.innerHTML;
             this.removeAttribute('data-recommendations-error');
+            if (section) section.hidden = false;
+          } else if (section) {
+            section.hidden = true;
           }
         })
         .catch(() => {
           this.setAttribute('data-recommendations-error', 'true');
+          if (section) section.hidden = true;
         });
     }
   }

@@ -145,11 +145,56 @@ body .melato-footer .melato-footer__column a {
   letter-spacing: .14em;
 }
 
-/* ---------- 6. Ask Melato clears the mobile sticky ATC bar ---------- */
+/* ---------- 6. Chat launchers clear drawers, mobile sticky ATC & desktop PDP copy ---------- */
+body.melato-drawer-open #bv-chat-frame,
+body.melato-drawer-open [id^="bv-chat"],
+body.melato-drawer-open inbox-online-store-chat,
+body.melato-drawer-open #ShopifyChat,
+body.melato-drawer-open [id^="shopify-chat"],
+body.melato-drawer-open #melato-ai-concierge,
+body:has(.cart-drawer.is-open, .search-drawer.is-open, .mobile-menu.is-open, .mxh__drawer.is-open, .mxh__search.is-open, .melato-filter-drawer[aria-hidden="false"]) #bv-chat-frame,
+body:has(.cart-drawer.is-open, .search-drawer.is-open, .mobile-menu.is-open, .mxh__drawer.is-open, .mxh__search.is-open, .melato-filter-drawer[aria-hidden="false"]) [id^="bv-chat"],
+body:has(.cart-drawer.is-open, .search-drawer.is-open, .mobile-menu.is-open, .mxh__drawer.is-open, .mxh__search.is-open, .melato-filter-drawer[aria-hidden="false"]) inbox-online-store-chat,
+body:has(.cart-drawer.is-open, .search-drawer.is-open, .mobile-menu.is-open, .mxh__drawer.is-open, .mxh__search.is-open, .melato-filter-drawer[aria-hidden="false"]) #ShopifyChat,
+body:has(.cart-drawer.is-open, .search-drawer.is-open, .mobile-menu.is-open, .mxh__drawer.is-open, .mxh__search.is-open, .melato-filter-drawer[aria-hidden="false"]) [id^="shopify-chat"],
+body:has(.cart-drawer.is-open, .search-drawer.is-open, .mobile-menu.is-open, .mxh__drawer.is-open, .mxh__search.is-open, .melato-filter-drawer[aria-hidden="false"]) #melato-ai-concierge {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+@media (min-width: 750px) {
+  body.template-product.melato-chat-clear-left #bv-chat-frame,
+  body.template-product.melato-chat-clear-left [id^="bv-chat"],
+  body.template-product.melato-chat-clear-left inbox-online-store-chat,
+  body.template-product.melato-chat-clear-left #ShopifyChat,
+  body.template-product.melato-chat-clear-left [id^="shopify-chat"],
+  body.template-product.melato-chat-clear-left #melato-ai-concierge {
+    left: 18px !important;
+    right: auto !important;
+  }
+}
+
 @media (max-width: 749px) {
   /* sticky bar ≈ 12 + 46 + 12 + 2 (border) = 72px, bottom offset 12px => 84px; +12px gap */
-  body.template-product:has(.pdp-sticky-atc.is-visible) #melato-ai-concierge {
-    bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  body.template-product:has(.pdp-sticky-atc.is-visible) #melato-ai-concierge,
+  body.template-product.melato-sticky-atc-visible #melato-ai-concierge,
+  body.template-product:has(.pdp-sticky-atc.is-visible) #bv-chat-frame,
+  body.template-product.melato-sticky-atc-visible #bv-chat-frame,
+  body.template-product:has(.pdp-sticky-atc.is-visible) [id^="bv-chat"],
+  body.template-product.melato-sticky-atc-visible [id^="bv-chat"],
+  body.template-product:has(.pdp-sticky-atc.is-visible) inbox-online-store-chat,
+  body.template-product.melato-sticky-atc-visible inbox-online-store-chat,
+  body.template-product:has(.pdp-sticky-atc.is-visible) #ShopifyChat,
+  body.template-product.melato-sticky-atc-visible #ShopifyChat,
+  body.template-product:has(.pdp-sticky-atc.is-visible) [id^="shopify-chat"],
+  body.template-product.melato-sticky-atc-visible [id^="shopify-chat"] {
+    bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
   }
 
   body.template-product:has(.pdp-sticky-atc.is-visible) #melato-ai-concierge .melato-ai-panel {
@@ -159,10 +204,61 @@ body .melato-footer .melato-footer__column a {
 
 @supports not selector(:has(*)) {
   @media (max-width: 749px) {
-    body.template-product #melato-ai-concierge {
-      bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+    body.template-product #melato-ai-concierge,
+    body.template-product #bv-chat-frame,
+    body.template-product [id^="bv-chat"],
+    body.template-product inbox-online-store-chat,
+    body.template-product #ShopifyChat,
+    body.template-product [id^="shopify-chat"] {
+      bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
     }
   }
+}
+
+/* ---------- 6b. Header BAG pill & Cart Drawer View Cart sizing ---------- */
+html body .mxh .mxh__bag {
+  width: auto !important;
+  min-width: 42px !important;
+  padding: 0 14px !important;
+  white-space: nowrap !important;
+}
+
+html body .cart-drawer .cart-drawer__footer .cart-drawer__view-cart {
+  width: 100% !important;
+  min-height: 42px !important;
+  height: auto !important;
+  padding: 0 16px !important;
+  white-space: nowrap !important;
+}
+
+/* ---------- 6c. Mobile announcement bar unclipping (overrides fixed 44px) ---------- */
+@media (max-width: 989px) {
+  html body #melato-announcement-bar.melato-ann {
+    height: auto !important;
+    min-height: 44px !important;
+    padding: 8px 36px !important;
+  }
+
+  html body #melato-announcement-bar.melato-ann .melato-ann__viewport {
+    overflow: visible !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+  }
+
+  html body #melato-announcement-bar.melato-ann .melato-ann__track {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  html body #melato-announcement-bar.melato-ann .melato-ann__item {
+    white-space: normal !important;
+    line-height: 1.45 !important;
+  }
+}
+
+/* ---------- 6d. Hidden collection filter options stay hidden ---------- */
+.melato-filter-option[hidden] {
+  display: none !important;
 }
 
 /* ---------- 7. New Arrivals (dark merchandising band on PDP) ----------

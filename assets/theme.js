@@ -390,29 +390,60 @@ const Cart = {
         setTimeout(() => el.classList.remove('cart-count--bump'), 300);
       }
     });
+    $$('.mxh__bag-count, [data-cart-item-count]').forEach(el => {
+      el.textContent = String(count);
+    });
+  },
+
+  async syncCartPage(cart) {
+    const host = document.querySelector('[data-main-cart-section]');
+    if (!host) return;
+    try {
+      const res = await fetch(window.location.href, {
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      });
+      if (!res.ok) throw new Error('Cart page fetch failed');
+      const html = await res.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const nextHost = doc.querySelector('[data-main-cart-section]');
+      if (nextHost) {
+        host.innerHTML = nextHost.innerHTML;
+        return;
+      }
+    } catch (err) {
+      console.error('Cart page sync error:', err);
+    }
+    if (Number(cart?.item_count || 0) === 0) {
+      window.location.reload();
+    }
   },
 
   bindCartEvents() {
-    // Qty steppers
+    // Qty steppers (main cart page; drawer events are owned by melato-cart-drawer.js)
     document.addEventListener('click', async e => {
+      if (e.target.closest('.cart-drawer')) return;
       const btn = e.target.closest('[data-qty-change]');
       if (!btn) return;
-      const line  = btn.dataset.line;
-      const input = $(`[data-line="${line}"].qty-stepper__value`) ||
+      const line  = btn.dataset.line || btn.dataset.lineKey;
+      const input = (line && $(`[data-line="${line}"].qty-stepper__value`)) ||
                     btn.closest('.qty-stepper')?.querySelector('.qty-stepper__value');
-      if (!input) return;
-      const currentQty = parseInt(input.value);
-      const delta = parseInt(btn.dataset.qtyChange);
+      if (!input || !line) return;
+      const currentQty = parseInt(input.value, 10) || 0;
+      const delta = parseInt(btn.dataset.qtyChange, 10) || 0;
       const newQty = Math.max(0, currentQty + delta);
       await this.updateItem(line, newQty);
     });
 
     // Qty input direct edit
     document.addEventListener('change', async e => {
+      if (e.target.closest('.cart-drawer')) return;
       const input = e.target.closest('.qty-stepper__value');
       if (!input) return;
-      const line = input.dataset.line;
-      await this.updateItem(line, parseInt(input.value) || 0);
+      const line = input.dataset.line || input.dataset.lineKey;
+      if (!line) return;
+      await this.updateItem(line, Math.max(0, parseInt(input.value, 10) || 0));
     });
   },
 
@@ -441,12 +472,14 @@ const Cart = {
 
   async updateItem(line, quantity) {
     try {
-      await fetch(window.DRIP.shop.routes.cartChange, {
+      const res = await fetch(window.DRIP.shop.routes.cartChange, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify({ id: line, quantity })
       });
+      const cart = await res.json().catch(() => null);
       await this.fetchAndRender();
+      await this.syncCartPage(cart || this.data);
     } catch (err) {
       console.error('Cart update error:', err);
     }
@@ -1019,7 +1052,9 @@ const Filters = {
   drawer: null,
 
   init() {
+    if (document.getElementById('melato-filter-drawer') || document.getElementById('melato-product-grid')) return;
     this.drawer = $('.filter-drawer');
+    if (!this.drawer) return;
 
     $('[data-filter-open]')?.addEventListener('click',  () => this.open());
     $('[data-filter-close]')?.addEventListener('click', () => this.close());
@@ -1053,6 +1088,7 @@ const Filters = {
   },
 
   applyFilters() {
+    if (document.getElementById('melato-filter-drawer') || document.getElementById('melato-product-grid')) return;
     const params = new URLSearchParams(window.location.search);
     // Reset existing filter params
     [...params.keys()].filter(k => k.startsWith('filter.')).forEach(k => params.delete(k));
