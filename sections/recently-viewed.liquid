@@ -21,8 +21,8 @@
 <section class="melato-related melato-recently-viewed section-{{ section.id }}" data-melato-recently-viewed aria-labelledby="RecentlyViewedHeading-{{ section.id }}" hidden>
   <div class="melato-section-wrap">
     <div class="melato-section-head">
-      <p class="melato-eyebrow">Your trail</p>
-      <h2 id="RecentlyViewedHeading-{{ section.id }}">{{ section.settings.heading | default: 'Recently viewed' }}</h2>
+      <p class="melato-eyebrow">{% if request.locale.iso_code == 'fr' %}Votre parcours{% else %}Your trail{% endif %}</p>
+      <h2 id="RecentlyViewedHeading-{{ section.id }}">{% if request.locale.iso_code == 'fr' %}Consultés récemment{% else %}{{ section.settings.heading | default: 'Recently viewed' }}{% endif %}</h2>
     </div>
     <div class="melato-grid melato-grid--cards" data-melato-recently-viewed-grid></div>
   </div>

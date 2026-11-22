@@ -2,11 +2,11 @@
   Melato cart drawer / semantic QA 2026-08-20.
   Quantity and removal remain AJAX-driven by melato-cart-drawer.js.
 {% endcomment %}
-<div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping cart" aria-hidden="true" inert data-cart-drawer>
+<div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="{% if request.locale.iso_code == 'fr' %}Panier{% else %}Shopping cart{% endif %}" aria-hidden="true" inert data-cart-drawer>
   <div class="cart-drawer__header">
     <div class="cart-drawer__header-left">
-      <h2 class="cart-drawer__title">Your Cart</h2>
-      <p class="cart-drawer__count"><span data-cart-item-count>{{ cart.item_count }}</span> {{ cart.item_count | pluralize: 'item', 'items' }}</p>
+      <h2 class="cart-drawer__title">{% if request.locale.iso_code == 'fr' %}Votre panier{% else %}Your Cart{% endif %}</h2>
+      <p class="cart-drawer__count" data-cart-count-label><span data-cart-item-count>{{ cart.item_count }}</span> {% if request.locale.iso_code == 'fr' %}{{ cart.item_count | pluralize: 'article', 'articles' }}{% else %}{{ cart.item_count | pluralize: 'item', 'items' }}{% endif %}</p>
     </div>
     <button type="button" class="cart-drawer__close-btn" data-cart-close aria-label="Close cart and continue shopping">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>

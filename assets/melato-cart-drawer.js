@@ -105,19 +105,51 @@
     if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
   }
 
+  const isFr = () => locale().toLowerCase().startsWith('fr');
+
   function updateChrome(cart) {
     const count = Number(cart?.item_count || 0);
     const code = currency(cart);
+    const fr = isFr();
     document.querySelectorAll('[data-cart-item-count],.cart-count,.mxh__bag-count').forEach(node => node.textContent = String(count));
-    document.querySelectorAll('.mxh__bag').forEach(node => node.setAttribute('aria-label', `Cart with ${count} ${count === 1 ? 'item' : 'items'}`));
+    document.querySelectorAll('.mxh__bag').forEach(node => node.setAttribute('aria-label', fr ? `Panier avec ${count} ${count === 1 ? 'article' : 'articles'}` : `Cart with ${count} ${count === 1 ? 'item' : 'items'}`));
     drawer.querySelectorAll('[data-cart-subtotal],.cart-subtotal__amount').forEach(node => node.textContent = formatMoney(cart?.total_price || 0, code));
     drawer.querySelectorAll('[data-checkout-btn],button[name="checkout"]').forEach(button => button.disabled = count === 0);
-    const countLabel = drawer.querySelector('[data-cart-count-label]');
-    if (countLabel) countLabel.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
+    const countLabel = drawer.querySelector('[data-cart-count-label], .cart-drawer__count');
+    if (countLabel) {
+      const unit = fr ? (count === 1 ? 'article' : 'articles') : (count === 1 ? 'item' : 'items');
+      countLabel.innerHTML = `<span data-cart-item-count>${count}</span> ${unit}`;
+    }
+  }
+
+  async function syncMainCartPage(cart) {
+    const host = document.querySelector('[data-main-cart-section]');
+    if (!host) return;
+    try {
+      const response = await fetch(window.location.href, {
+        method: 'GET',
+        credentials: 'same-origin',
+        cache: 'no-store',
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      });
+      if (!response.ok) throw new Error(`Cart page sync failed (${response.status})`);
+      const html = await response.text();
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const nextHost = doc.querySelector('[data-main-cart-section]');
+      if (nextHost) {
+        host.innerHTML = nextHost.innerHTML;
+        return;
+      }
+    } catch (error) {
+      console.error('Melato cart page sync:', error);
+    }
+    if (Number(cart?.item_count || 0) === 0) {
+      window.location.reload();
+    }
   }
 
   const emptyTemplate = drawer.querySelector('[data-cart-empty-template]');
-  const initialEmptyMarkup = emptyTemplate?.innerHTML.trim() || '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>';
+  const initialEmptyMarkup = emptyTemplate?.innerHTML.trim() || (isFr() ? '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Votre panier est vide.</p><a href="/fr/collections/new-arrivals" class="melato-cart-cta">Découvrir les nouveautés</a></div>' : '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>');
 
   function renderItems(cart) {
     const host = drawer.querySelector('[data-cart-items],.cart-drawer__items');
@@ -170,10 +202,11 @@
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
       renderCart(payload);
+      await syncMainCartPage(payload);
     } catch (error) {
       console.error('Melato cart update:', error);
       toast(error.message || 'Cart could not be updated.');
-      fetchCart().then(renderCart).catch(() => {});
+      fetchCart().then(async cart => { renderCart(cart); await syncMainCartPage(cart); }).catch(() => {});
     } finally {
       drawer.classList.remove('is-updating');
     }
@@ -280,7 +313,7 @@
     }
 
     const removeButton = event.target.closest('[data-remove-line]');
-    if (removeButton?.closest('.cart-drawer')) {
+    if (removeButton?.closest('.cart-drawer, [data-main-cart-section]')) {
       event.preventDefault();
       updateLine(removeButton.dataset.removeLine || removeButton.closest('[data-line-key]')?.dataset.lineKey, 0);
       return;

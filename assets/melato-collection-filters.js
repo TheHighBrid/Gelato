@@ -94,8 +94,13 @@
           enhanceProgressivePagination();
         }
 
-        // Swap toolbar count + badges
-        if (newToolbar) {
+        // Swap toolbar count + badges + clear button
+        var currentToolbar = qs('[data-collection-toolbar]');
+        if (currentToolbar && newToolbar) {
+          currentToolbar.innerHTML = newToolbar.innerHTML;
+          var newSortSelect = qs('[data-sort-select]', currentToolbar);
+          if (newSortSelect) bindSortSelect(newSortSelect);
+        } else if (newToolbar) {
           var oldCount = qs('[data-product-count]');
           var newCount = qs('[data-product-count]', newToolbar);
           if (oldCount && newCount) oldCount.textContent = newCount.textContent;
@@ -118,7 +123,15 @@
         var currentPillsBar = qs('[data-active-filters-bar]');
         if (currentPillsBar && newPills) {
           currentPillsBar.innerHTML = newPills.innerHTML;
-          currentPillsBar.style.display = newPills.style.display || '';
+          currentPillsBar.hidden = newPills.hidden || !newPills.children.length;
+          currentPillsBar.style.display = currentPillsBar.hidden ? 'none' : '';
+          bindPillClicks();
+        } else if (currentPillsBar && !newPills) {
+          currentPillsBar.innerHTML = '';
+          currentPillsBar.hidden = true;
+          currentPillsBar.style.display = 'none';
+        } else if (!currentPillsBar && newPills && currentToolbar) {
+          currentToolbar.insertAdjacentElement('afterend', newPills.cloneNode(true));
           bindPillClicks();
         }
 
@@ -209,11 +222,11 @@
   function updateDrawerCheckboxes(doc) {
     var newDrawer = doc.getElementById('melato-filter-drawer');
     if (!newDrawer) return;
+    var incomingInputs = qsa('[data-filter-input]', newDrawer);
     qsa('[data-filter-input]', drawer).forEach(function (input) {
-      var match = qs(
-        '[data-filter-input][name="' + input.name + '"][value="' + input.value + '"]',
-        newDrawer
-      );
+      var match = incomingInputs.find(function (candidate) {
+        return candidate.name === input.name && candidate.value === input.value;
+      });
       if (match) {
         input.checked = match.checked;
         // Update visual box
@@ -374,9 +387,10 @@
   });
 
   // ── Sort select ──────────────────────────────────────────────────────────
-  var sortSelect = qs('[data-sort-select]');
-  if (sortSelect) {
-    sortSelect.addEventListener('change', function () {
+  function bindSortSelect(selectEl) {
+    if (!selectEl || selectEl.dataset.melatoSortBound === 'true') return;
+    selectEl.dataset.melatoSortBound = 'true';
+    selectEl.addEventListener('change', function () {
       var params = collectFilterParams();
       if (this.value && this.value !== 'manual') {
         params.set('sort_by', this.value);
@@ -386,6 +400,7 @@
       fetchAndSwap(buildURL(params), true);
     });
   }
+  bindSortSelect(qs('[data-sort-select]'));
 
   // ── Filter accordion ─────────────────────────────────────────────────────
   if (drawer) {

@@ -14,9 +14,12 @@
 {%- capture melato_matching_price -%}{%- if melato_matching_product != blank -%}{%- render 'melato-money-with-currency', amount: melato_matching_product.price -%}{%- endif -%}{%- endcapture -%}
 
 <section class="melato-pdp-currency-source" hidden aria-hidden="true"
+  data-currency="{{ cart.currency.iso_code | default: shop.currency | escape }}"
   data-current-price="{{ melato_current_price | strip | escape }}"
   data-product-price="{{ melato_product_price | strip | escape }}"
-  data-matching-price="{{ melato_matching_price | strip | escape }}">
+  data-matching-price="{{ melato_matching_price | strip | escape }}"
+  data-product-cents="{{ product.price | default: 0 }}"
+  data-matching-cents="{{ melato_matching_product.price | default: 0 }}">
 </section>
 <script data-melato-pdp-currency-enforcer>
 (function () {
@@ -38,7 +41,10 @@
 
   function money(cents) {
     var number = Number(cents || 0) / 100;
-    return '$' + number.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CAD';
+    var code = String(source.dataset.currency || 'CAD').trim().toUpperCase();
+    var isFr = (document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0;
+    var formatted = number.toLocaleString(isFr ? 'fr-CA' : 'en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return isFr ? (formatted + ' $ ' + code) : ('$' + formatted + ' ' + code);
   }
 
   function apply() {
@@ -56,8 +62,14 @@
     }
 
     var cards = root.querySelectorAll('.pdp-set-card .purchase-summary__price');
-    if (cards[0] && source.dataset.productPrice) cards[0].textContent = source.dataset.productPrice;
-    if (cards[1] && source.dataset.matchingPrice) cards[1].textContent = source.dataset.matchingPrice;
+    if (cards[0]) {
+      var productCents = Number(source.dataset.productCents || 0);
+      cards[0].textContent = productCents > 0 ? money(productCents) : (source.dataset.productPrice || cards[0].textContent);
+    }
+    if (cards[1]) {
+      var matchingCents = Number(source.dataset.matchingCents || 0);
+      cards[1].textContent = matchingCents > 0 ? money(matchingCents) : (source.dataset.matchingPrice || cards[1].textContent);
+    }
   }
 
   apply();
