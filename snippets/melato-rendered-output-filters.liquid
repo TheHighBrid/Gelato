@@ -136,6 +136,12 @@
       endunless
       assign current_label = product.title | append: ' size'
       assign matching_label = matching_product.title | append: ' size'
+      assign unavailable_label = 'Unavailable'
+      if request.locale.iso_code == 'fr'
+        assign current_label = product.title | append: ' — Taille'
+        assign matching_label = matching_product.title | append: ' — Taille'
+        assign unavailable_label = 'Indisponible'
+      endif
       assign can_add_full_set = true
       if current_variant == blank or matching_variant == blank or current_variant.available == false or matching_variant.available == false
         assign can_add_full_set = false
@@ -206,7 +212,7 @@
         if current_variant != blank and matching_variant != blank
           echo current_variant.price | plus: matching_variant.price | money_with_currency
         else
-          echo 'Unavailable'
+          echo unavailable_label
         endif
         echo '</strong></p>'
         echo '<button type="button" class="melato-full-set-button" data-melato-set-add'
@@ -238,7 +244,9 @@
       assign output = output | replace: 'Add to cart', 'Ajouter au panier'
       assign output = output | replace: 'Out of stock', 'Rupture de stock'
       assign output = output | replace: 'Sold out', 'Épuisé'
+      assign output = output | replace: '>Product details<', '>Détails du produit<'
       assign output = output | replace: '<span>Materials</span>', '<span>Matières</span>'
+      assign output = output | replace: '<span>Ingredients</span>', '<span>Ingrédients</span>'
       if product_type_down contains 'bag' or product_type_down contains 'duffle' or product_type_down contains 'tote' or product_type_down contains 'messenger'
         assign output = output | replace: '<span>Fit</span>', '<span>Dimensions et capacité</span>'
       elsif product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_title_down contains 'sunglass'
@@ -247,14 +255,28 @@
         assign output = output | replace: '<span>Fit</span>', '<span>Coupe</span>'
       endif
       assign output = output | replace: '<span>Care</span>', '<span>Entretien</span>'
+      assign output = output | replace: '<span>Warranty &amp; Maintenance</span>', '<span>Garantie et entretien</span>'
       assign output = output | replace: '<summary>Construction</summary>', '<summary>Confection</summary>'
       assign output = output | replace: '<summary>Use</summary>', '<summary>Utilisation</summary>'
+      assign output = output | replace: '<span>Use</span>', '<span>Utilisation</span>'
+      assign output = output | replace: '<summary>Safety</summary>', '<summary>Sécurité</summary>'
+      assign output = output | replace: '>Story<', '>Histoire<'
+      assign output = output | replace: '>You might also like<', '>Vous aimerez aussi<'
+      assign output = output | replace: '>Continue shopping<', '>Continuer vos achats<'
+      assign output = output | replace: '>Recently viewed<', '>Consultés récemment<'
+      assign output = output | replace: '>Your trail<', '>Votre parcours<'
+      assign output = output | replace: '<strong>Origin</strong><span>Made in ', '<strong>Origine</strong><span>Fabriqué en '
+      assign output = output | replace: '<strong>Origin</strong> <span>Made in ', '<strong>Origine</strong> <span>Fabriqué en '
       assign output = output | replace: '<legend>Size</legend>', '<legend>Taille</legend>'
       assign output = output | replace: '<legend>Color</legend>', '<legend>Couleur</legend>'
+      assign output = output | replace: '<legend>Volume</legend>', '<legend>Format</legend>'
       assign output = output | replace: '<span>One Size</span>', '<span>Taille unique</span>'
       assign output = output | replace: '>Quantity<', '>Quantité<'
       assign output = output | replace: '>Fit guide<', '>Guide des tailles<'
       assign output = output | replace: '>Product measurements<', '>Mesures du produit<'
+      assign output = output | replace: 'Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded.', 'Expédition sous 1 à 3 jours ouvrables. Livraison standard offerte sur toutes les commandes. Les parfums non ouverts admissibles peuvent être retournés sous 30 jours ; les flacons ouverts ou vaporisés sont généralement exclus.'
+      assign output = output | replace: 'Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.', 'Expédition sous 1 à 3 jours ouvrables. Livraison standard offerte sur toutes les commandes. Retours acceptés sur les articles admissibles non portés selon la politique de retour en vigueur.'
+      assign output = output | replace: '>Full delivery and returns policy<', '>Politique complète de livraison et de retours<'
       assign output = output | replace: '>Complete the Set<', '>Compléter l\'ensemble<'
       assign output = output | replace: '>Selected piece<', '>Pièce sélectionnée<'
       assign output = output | replace: '>Matching piece<', '>Pièce assortie<'
@@ -262,6 +284,19 @@
       assign output = output | replace: 'ADD FULL SET', 'AJOUTER L\'ENSEMBLE'
       assign output = output | replace: '<span>Full set</span>', '<span>Ensemble complet</span>'
     endif
+  endif
+
+  if context == 'cart' and request.locale.iso_code == 'fr'
+    assign output = output | replace: '>Your Cart<', '>Votre panier<'
+    assign output = output | replace: 'Add order note', 'Ajouter une note'
+    assign output = output | replace: 'placeholder="Order note"', 'placeholder="Note de commande"'
+    assign output = output | replace: 'aria-label="Order note"', 'aria-label="Note de commande"'
+    assign output = output | replace: '>Subtotal:<', '>Sous-total :<'
+    assign output = output | replace: 'Complimentary standard delivery.', 'Livraison standard offerte.'
+    assign output = output | replace: '>Checkout<', '>Commander<'
+    assign output = output | replace: '>View cart<', '>Voir le panier<'
+    assign output = output | replace: '>Shop New Arrivals<', '>Découvrir les nouveautés<'
+    assign output = output | replace: '>Explore the current Melato rotation.<', '>Découvrez la rotation actuelle de Melato.<'
   endif
 -%}
 
