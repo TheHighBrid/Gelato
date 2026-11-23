@@ -340,7 +340,7 @@
       if (url.origin !== window.location.origin) return rawHref;
       url.pathname = normalizePath(url.pathname);
       return url.pathname + url.search + url.hash;
-    } catch (error) {
+    } catch {
       return rawHref;
     }
   }
@@ -400,13 +400,13 @@
 
       var links = Array.from(header.querySelectorAll('.mxh__drawer .mxh__nav-item > .mxh__nav-link, .mxh__drawer .mxh__nav > .mxh__nav-link'))
         .filter(function (link) { return link.getAttribute('href'); })
-        .filter(function (link) { return normalizeHref(link.getAttribute('href')) !== '/collections/sunglasses'; })
+        .filter(function (link) { return !/\/collections\/sunglasses$/i.test(normalizeHref(link.getAttribute('href'))); })
         .slice(0, 6);
       if (!links.length) return;
 
       var nav = document.createElement('nav');
       nav.className = 'mxh__desktop-nav';
-      nav.setAttribute('aria-label', 'Primary navigation');
+      nav.setAttribute('aria-label', document.documentElement.lang && document.documentElement.lang.toLowerCase().indexOf('fr') === 0 ? 'Navigation principale' : 'Primary navigation');
 
       links.forEach(function (source) {
         var link = document.createElement('a');
@@ -505,7 +505,7 @@
         style:'currency', currency:currencyCode, currencyDisplay:'narrowSymbol'
       }).format(amount);
       return formatted.includes(currencyCode) ? formatted : `${formatted} ${currencyCode}`;
-    } catch (error) {
+    } catch {
       if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
         const formatted = window.Shopify.formatMoney(Number(cents || 0), window.DRIP?.shop?.moneyFormat || '${{amount}}');
         return String(formatted).includes(currencyCode) ? formatted : `${formatted} ${currencyCode}`;
@@ -565,19 +565,40 @@
     if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
   }
 
+  function isFrenchLocale() {
+    return locale().toLowerCase().startsWith('fr');
+  }
+
   function updateChrome(cart) {
     const count = Number(cart?.item_count || 0);
     const code = currency(cart);
+    const isFr = isFrenchLocale();
+    const itemWord = isFr ? (count === 1 ? 'article' : 'articles') : (count === 1 ? 'item' : 'items');
     document.querySelectorAll('[data-cart-item-count],.cart-count,.mxh__bag-count').forEach(node => node.textContent = String(count));
-    document.querySelectorAll('.mxh__bag').forEach(node => node.setAttribute('aria-label', `Cart with ${count} ${count === 1 ? 'item' : 'items'}`));
+    document.querySelectorAll('.mxh__bag').forEach(node => node.setAttribute('aria-label', isFr ? `Panier avec ${count} ${itemWord}` : `Cart with ${count} ${itemWord}`));
     drawer.querySelectorAll('[data-cart-subtotal],.cart-subtotal__amount').forEach(node => node.textContent = formatMoney(cart?.total_price || 0, code));
     drawer.querySelectorAll('[data-checkout-btn],button[name="checkout"]').forEach(button => button.disabled = count === 0);
     const countLabel = drawer.querySelector('[data-cart-count-label]');
-    if (countLabel) countLabel.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
+    if (countLabel) {
+      const countSpan = countLabel.querySelector('[data-cart-item-count]');
+      if (countSpan) {
+        countSpan.textContent = String(count);
+        const textNode = Array.from(countLabel.childNodes).find(node => node.nodeType === 3 && node.textContent.trim().length > 0);
+        if (textNode) {
+          textNode.textContent = ` ${itemWord}`;
+        } else {
+          countLabel.appendChild(document.createTextNode(` ${itemWord}`));
+        }
+      } else {
+        countLabel.textContent = `${count} ${itemWord}`;
+      }
+    }
   }
 
   const emptyTemplate = drawer.querySelector('[data-cart-empty-template]');
-  const initialEmptyMarkup = emptyTemplate?.innerHTML.trim() || '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>';
+  const initialEmptyMarkup = emptyTemplate?.innerHTML.trim() || (isFrenchLocale()
+    ? '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Votre panier est vide.</p><a href="/fr/collections/new-arrivals" class="melato-cart-cta">Découvrir les nouveautés</a></div>'
+    : '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>');
 
   function renderItems(cart) {
     const host = drawer.querySelector('[data-cart-items],.cart-drawer__items');
@@ -587,30 +608,55 @@
       return;
     }
     const code = currency(cart);
+    const isFr = isFrenchLocale();
     host.innerHTML = cart.items.map(item => {
-      const title = escapeHtml(item.product_title || item.title || 'Product');
+      const title = escapeHtml(item.product_title || item.title || (isFr ? 'Article' : 'Product'));
       const url = escapeHtml(item.url || '#');
       const imageUrl = escapeHtml(item.image || item.featured_image?.url || '');
       const image = imageUrl ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">` : '';
       const variant = item.variant_title && item.variant_title !== 'Default Title' ? `<span class="cart-item__variant">${escapeHtml(item.variant_title)}</span>` : '';
       const key = escapeHtml(item.key || '');
       const quantity = Math.max(0, Number(item.quantity || 0));
+      const removeLabel = isFr ? `Retirer ${title}` : `Remove ${title}`;
+      const qtyGroupLabel = isFr ? `Quantité pour ${title}` : `Quantity for ${title}`;
+      const decLabel = isFr ? 'Diminuer la quantité' : 'Decrease quantity';
+      const incLabel = isFr ? 'Augmenter la quantité' : 'Increase quantity';
       return `<div class="cart-item" role="listitem" data-line-key="${key}">
         <a href="${url}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">${image}</a>
         <div class="cart-item__info">
-          <div class="cart-item__top"><a href="${url}" class="cart-item__title">${title}</a><button class="cart-item__remove" type="button" aria-label="Remove ${title}" data-remove-line="${key}">×</button></div>
+          <div class="cart-item__top"><a href="${url}" class="cart-item__title">${title}</a><button class="cart-item__remove" type="button" aria-label="${removeLabel}" data-remove-line="${key}">×</button></div>
           ${variant}
           <div class="cart-item__footer">
-            <div class="qty-stepper" aria-label="Quantity for ${title}">
-              <button class="qty-stepper__btn" type="button" aria-label="Decrease quantity" data-qty-change="-1" data-line-key="${key}">−</button>
-              <input class="qty-stepper__value" type="number" value="${quantity}" min="0" inputmode="numeric" aria-label="Quantity for ${title}" data-line-key="${key}">
-              <button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1" data-line-key="${key}">+</button>
+            <div class="qty-stepper" aria-label="${qtyGroupLabel}">
+              <button class="qty-stepper__btn" type="button" aria-label="${decLabel}" data-qty-change="-1" data-line-key="${key}">−</button>
+              <input class="qty-stepper__value" type="number" value="${quantity}" min="0" inputmode="numeric" aria-label="${qtyGroupLabel}" data-line-key="${key}">
+              <button class="qty-stepper__btn" type="button" aria-label="${incLabel}" data-qty-change="1" data-line-key="${key}">+</button>
             </div>
             <span class="price">${formatMoney(item.final_line_price, code)}</span>
           </div>
         </div>
       </div>`;
     }).join('');
+  }
+
+  async function syncMainCartPage() {
+    const mainCart = document.querySelector('[data-main-cart-section]');
+    if (!mainCart) return;
+    try {
+      const response = await fetch(route('cart'), {
+        method:'GET',
+        credentials:'same-origin',
+        cache:'no-store',
+        headers:{ Accept:'text/html', 'X-Requested-With':'XMLHttpRequest' }
+      });
+      if (!response.ok) return;
+      const text = await response.text();
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      const incoming = doc.querySelector('[data-main-cart-section]');
+      if (incoming) mainCart.innerHTML = incoming.innerHTML;
+    } catch (error) {
+      console.warn('Melato main cart sync:', error);
+    }
   }
 
   function renderCart(cart) {
@@ -630,6 +676,7 @@
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
       renderCart(payload);
+      await syncMainCartPage();
     } catch (error) {
       console.error('Melato cart update:', error);
       toast(error.message || 'Cart could not be updated.');
@@ -649,24 +696,26 @@
 
   function setButtonLoading(button, loading) {
     if (!button) return;
+    const isFr = isFrenchLocale();
     if (loading) {
       button.dataset.melatoOriginalText = button.textContent || '';
       button.dataset.melatoWasDisabled = button.disabled ? 'true' : 'false';
       button.disabled = true;
       button.classList.add('is-loading');
-      button.textContent = 'Adding';
+      button.textContent = isFr ? 'Ajout…' : 'Adding';
     } else {
       button.classList.remove('is-loading');
-      button.textContent = button.dataset.melatoOriginalText || 'Add to cart';
+      button.textContent = button.dataset.melatoOriginalText || (isFr ? 'Ajouter au panier' : 'Add to cart');
       button.disabled = button.dataset.melatoWasDisabled === 'true';
     }
   }
 
   async function addForm(form, submitter) {
     if (pendingForms.has(form)) return;
+    const isFr = isFrenchLocale();
     const id = form.querySelector('[name="id"]');
     if (!id?.value) {
-      toast('Select an available option.');
+      toast(isFr ? 'Sélectionnez une option disponible.' : 'Select an available option.');
       return;
     }
     pendingForms.add(form);
@@ -679,15 +728,15 @@
         method:'POST', credentials:'same-origin', headers:{Accept:'application/json','X-Requested-With':'XMLHttpRequest'}, body:data
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
+      if (!response.ok) throw new Error(payload.description || payload.message || (isFr ? 'Impossible d’ajouter au panier.' : 'Unable to add to cart.'));
       const cart = await fetchCart();
       renderCart(cart);
       openCart();
-      toast('Added to cart');
+      toast(isFr ? 'Ajouté au panier' : 'Added to cart');
       window.dispatchEvent(new CustomEvent('cart:updated',{detail:{cart}}));
     } catch (error) {
       console.error('Melato add to cart:', error);
-      toast(error.message || 'Unable to add to cart.');
+      toast(error.message || (isFr ? 'Impossible d’ajouter au panier.' : 'Unable to add to cart.'));
     } finally {
       pendingForms.delete(form);
       setButtonLoading(button, false);
@@ -730,17 +779,17 @@
     if (event.target.closest('[data-cart-close]')) { event.preventDefault(); closeCart(); return; }
 
     const quantityButton = event.target.closest('[data-qty-change]');
-    if (quantityButton?.closest('.cart-drawer')) {
+    if (quantityButton?.closest('.cart-drawer, [data-main-cart-section]')) {
       event.preventDefault();
       const row = quantityButton.closest('.cart-item');
-      const key = quantityButton.dataset.lineKey || row?.dataset.lineKey;
+      const key = quantityButton.dataset.lineKey || quantityButton.dataset.line || row?.dataset.lineKey;
       const input = row?.querySelector('.qty-stepper__value');
       updateLine(key, Math.max(0, Number(input?.value || 0) + Number(quantityButton.dataset.qtyChange || 0)));
       return;
     }
 
     const removeButton = event.target.closest('[data-remove-line]');
-    if (removeButton?.closest('.cart-drawer')) {
+    if (removeButton?.closest('.cart-drawer, [data-main-cart-section]')) {
       event.preventDefault();
       updateLine(removeButton.dataset.removeLine || removeButton.closest('[data-line-key]')?.dataset.lineKey, 0);
       return;
@@ -752,6 +801,14 @@
       const expanded = noteToggle.getAttribute('aria-expanded') === 'true';
       noteToggle.setAttribute('aria-expanded', String(!expanded));
       if (field) { field.hidden = expanded; field.setAttribute('aria-hidden', String(expanded)); }
+    }
+  });
+
+  document.addEventListener('change', event => {
+    const mainInput = event.target.closest('[data-main-cart-section] .qty-stepper__value');
+    if (mainInput) {
+      const key = mainInput.dataset.lineKey || mainInput.dataset.line || mainInput.closest('[data-line-key]')?.dataset.lineKey;
+      updateLine(key, Number(mainInput.value || 0));
     }
   });
 

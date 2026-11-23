@@ -3,23 +3,30 @@
   Locale-aware, product-only suggestions, ordinary GET search remains the fallback.
 {% endcomment %}
 
+{%- liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
+-%}
+
 <div
   class="search-drawer"
   role="dialog"
   aria-modal="true"
-  aria-label="Search Melato"
+  aria-label="{% if is_fr %}Rechercher chez Melato{% else %}Search Melato{% endif %}"
   aria-hidden="true"
   data-predictive-search-drawer
 >
   <form action="{{ routes.search_url }}" method="get" class="search-form" role="search" data-predictive-search-form>
-    <label class="visually-hidden" for="SearchDrawerInput">Search Melato</label>
+    <label class="visually-hidden" for="SearchDrawerInput">{% if is_fr %}Rechercher chez Melato{% else %}Search Melato{% endif %}</label>
     <div class="melato-search__field">
       <input
         id="SearchDrawerInput"
         type="search"
         name="q"
-        placeholder="Search Melato"
-        aria-label="Search Melato"
+        placeholder="{% if is_fr %}Rechercher chez Melato{% else %}Search Melato{% endif %}"
+        aria-label="{% if is_fr %}Rechercher chez Melato{% else %}Search Melato{% endif %}"
         aria-autocomplete="list"
         aria-controls="MelatoPredictiveResults"
         aria-expanded="false"
@@ -29,7 +36,7 @@
       >
       <input type="hidden" name="type" value="product">
       <input type="hidden" name="options[prefix]" value="last">
-      <button type="submit" class="melato-search__submit">Search</button>
+      <button type="submit" class="melato-search__submit">{% if is_fr %}Rechercher{% else %}Search{% endif %}</button>
     </div>
     <div id="MelatoPredictiveResults" class="melato-search__results" role="listbox" hidden data-predictive-search-results></div>
   </form>
@@ -50,10 +57,11 @@
 
   var timer=null;
   var controller=null;
+  var isFr = {{ request.locale.iso_code | json }} === 'fr';
   function escapeHtml(value){return String(value||'').replace(/[&<>"']/g,function(char){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]})}
   function closeResults(){results.hidden=true;results.innerHTML='';input.setAttribute('aria-expanded','false')}
   function showProducts(products){
-    if(!products.length){results.innerHTML='<p class="melato-search__empty">No matching pieces found.</p>';results.hidden=false;input.setAttribute('aria-expanded','true');return}
+    if(!products.length){results.innerHTML='<p class="melato-search__empty">'+(isFr?'Aucun article correspondant.':'No matching pieces found.')+'</p>';results.hidden=false;input.setAttribute('aria-expanded','true');return}
     results.innerHTML=products.map(function(product){
       var rawImage=product.featured_image&&product.featured_image.url?String(product.featured_image.url):'';
       var imageUrl=rawImage?rawImage+(rawImage.indexOf('?')>-1?'&':'?')+'width=116':'';
@@ -67,6 +75,7 @@
     if(controller)controller.abort();
     controller=new AbortController();
     var root=(window.Shopify&&Shopify.routes&&Shopify.routes.root)||'{{ routes.root_url }}';
+    if(root.charAt(root.length-1)!=='/')root+='/';
     var url=root+'search/suggest.json?q='+encodeURIComponent(query)+'&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last&resources[options][fields]=title,product_type,variants.title,vendor';
     fetch(url,{signal:controller.signal,headers:{Accept:'application/json'}})
       .then(function(response){if(!response.ok)throw new Error('Predictive search failed');return response.json()})

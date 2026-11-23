@@ -38,6 +38,10 @@
 
   function money(cents) {
     var number = Number(cents || 0) / 100;
+    var localeCode = document.documentElement.lang && document.documentElement.lang.toLowerCase().indexOf('fr') === 0 ? 'fr-CA' : 'en-CA';
+    if (localeCode === 'fr-CA') {
+      return number.toLocaleString('fr-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $ CAD';
+    }
     return '$' + number.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CAD';
   }
 

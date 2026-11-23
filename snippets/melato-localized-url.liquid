@@ -1,13 +1,12 @@
 {% doc %}
 Preserves the current locale on internal storefront links.
 @param {string} url - Destination URL
-{% enddoc %}
-{%- liquid
+{% enddoc %}{%- liquid
   assign prefix = routes.root_url
   if prefix == '/'
     assign prefix = ''
   endif
-  assign target_url = url
+  assign target_url = url | strip
   if target_url == '/collections/pant' or target_url == '/collections/pant/'
     assign target_url = '/collections/pants'
   elsif target_url contains '/collections/pant?'

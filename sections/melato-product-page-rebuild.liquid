@@ -84,6 +84,43 @@
         if material_copy == blank and material_details == blank
           assign material_copy = legacy_body
         endif
+      when 'verified materials'
+        if material_copy == blank and material_details == blank
+          capture legacy_detail
+            echo '<details class="pdp-spec"><summary>'
+            echo legacy_heading | escape_once
+            echo '</summary><div class="pdp-rte">'
+            echo legacy_body
+            echo '</div></details>'
+          endcapture
+          assign legacy_details = legacy_details | append: legacy_detail
+        endif
+      when 'details'
+        assign legacy_body_for_details = legacy_body
+        if material_copy == blank and material_details == blank
+          assign detail_lines = legacy_body | replace: '</li>', '|' | replace: '</p>', '|' | replace: '<br>', '|' | replace: '<br/>', '|' | replace: '<br />', '|' | strip_html | split: '|'
+          for detail_line in detail_lines
+            assign clean_detail_line = detail_line | strip
+            if clean_detail_line contains '%'
+              assign material_copy = clean_detail_line
+              assign li_needle = '<li>' | append: clean_detail_line | append: '</li>'
+              assign p_needle = '<p>' | append: clean_detail_line | append: '</p>'
+              assign legacy_body_for_details = legacy_body_for_details | replace: li_needle, '' | replace: p_needle, '' | replace: clean_detail_line, ''
+              break
+            endif
+          endfor
+        endif
+        assign legacy_body_plain_check = legacy_body_for_details | strip_html | strip
+        if legacy_body_plain_check != blank
+          capture legacy_detail
+            echo '<details class="pdp-spec"><summary>'
+            echo legacy_heading | escape_once
+            echo '</summary><div class="pdp-rte">'
+            echo legacy_body_for_details
+            echo '</div></details>'
+          endcapture
+          assign legacy_details = legacy_details | append: legacy_detail
+        endif
       when 'care', 'care instructions', 'care and storage'
         if care_copy == blank and care_details == blank
           assign care_copy = legacy_body
@@ -177,11 +214,70 @@
     assign size_guide_page = blank
     assign size_guide_url = blank
   endif
+  assign material_plain = material_copy | strip_html | downcase
+  if material_details != blank
+    assign material_details_joined = material_details | join: ' ' | strip_html | downcase
+    assign material_plain = material_plain | append: ' ' | append: material_details_joined
+  endif
+  assign fit_plain = fit_copy | strip_html | downcase
+  if fit_details != blank
+    assign fit_details_joined = fit_details | join: ' ' | strip_html | downcase
+    assign fit_plain = fit_plain | append: ' ' | append: fit_details_joined
+  endif
+  assign care_plain = care_copy | strip_html | downcase
+  if care_details != blank
+    assign care_details_joined = care_details | join: ' ' | strip_html | downcase
+    assign care_plain = care_plain | append: ' ' | append: care_details_joined
+  endif
+  assign legacy_details_plain = legacy_details | strip_html | downcase
+  assign existing_specs_plain = material_plain | append: ' ' | append: fit_plain | append: ' ' | append: care_plain | append: ' ' | append: legacy_details_plain
   if construction_details != blank
     assign construction_only = ''
     for detail in construction_details
-      assign detail_prefix = detail | strip | downcase | split: ':' | first | strip
-      unless detail_prefix == 'material' or detail_prefix == 'materials' or detail_prefix == 'fit' or detail_prefix == 'care' or detail_prefix == 'composition'
+      assign detail_clean = detail | strip | downcase
+      assign detail_trimmed = detail_clean
+      assign detail_last_char = detail_clean | slice: -1, 1
+      if detail_last_char == '.' and detail_clean.size > 1
+        assign detail_trim_len = detail_clean.size | minus: 1
+        assign detail_trimmed = detail_clean | slice: 0, detail_trim_len
+      endif
+      assign detail_prefix = detail_clean | split: ':' | first | strip
+      assign detail_value = ''
+      if detail_clean contains ':'
+        assign detail_value = detail_trimmed | remove_first: detail_prefix | remove_first: ':' | strip
+      endif
+      assign is_duplicate_spec = false
+      if detail_prefix == 'material' or detail_prefix == 'materials' or detail_prefix == 'fit' or detail_prefix == 'care' or detail_prefix == 'composition'
+        assign is_duplicate_spec = true
+      elsif material_plain != blank
+        if detail_prefix == 'exterior' or detail_prefix == 'lining' or detail_prefix == 'hardware' or detail_prefix == 'verified materials'
+          if material_plain contains detail_prefix
+            assign is_duplicate_spec = true
+          endif
+        endif
+      endif
+      if is_duplicate_spec == false and legacy_details_plain != blank
+        if detail_prefix == 'dimensions'
+          if legacy_details_plain contains 'dimensions' or detail_value != blank and legacy_details_plain contains detail_value
+            assign is_duplicate_spec = true
+          endif
+        elsif detail_prefix == 'finished product weight' or detail_prefix == 'weight'
+          if legacy_details_plain contains 'weight' or detail_value != blank and legacy_details_plain contains detail_value
+            assign is_duplicate_spec = true
+          endif
+        elsif detail_clean contains 'made in ' or detail_prefix == 'origin'
+          if legacy_details_plain contains 'made in '
+            assign is_duplicate_spec = true
+          endif
+        endif
+      endif
+      if is_duplicate_spec == false and detail_trimmed != blank and existing_specs_plain contains detail_trimmed
+        assign is_duplicate_spec = true
+      endif
+      if is_duplicate_spec == false and detail_value != blank and existing_specs_plain contains detail_value
+        assign is_duplicate_spec = true
+      endif
+      unless is_duplicate_spec
         capture construction_only
           echo construction_only
           echo '<li>'
@@ -309,9 +405,9 @@
         {% render 'back-in-stock-form', product: product %}
 
         {%- if family == 'fragrance' -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded. <a href="{% render 'melato-localized-url', url: '/pages/shipping-returns' %}">Full delivery and returns policy</a>.</p>
         {%- else -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy. <a href="{% render 'melato-localized-url', url: '/pages/shipping-returns' %}">Full delivery and returns policy</a>.</p>
         {%- endif -%}
 
         {%- comment -%}
@@ -350,7 +446,7 @@
               {%- if material_details != blank or material_copy != blank -%}
                 <details class="pdp-buybox-spec">
                   <summary><span>Materials</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item | replace: ', final lens material not specified', '' | replace: 'final lens material not specified', '' }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if fit_details != blank or fit_copy != blank -%}

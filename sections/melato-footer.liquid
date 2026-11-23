@@ -3,18 +3,34 @@
   One durable footer source. No runtime removal of trust or reassurance UI.
 {% endcomment %}
 
+{%- liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
+  assign footer_tagline = section.settings.tagline | default: 'Premium garments. Cut with intent.'
+  assign footer_tagline_down = footer_tagline | strip | downcase
+  if is_fr
+    if footer_tagline_down == 'join the collective.' or footer_tagline_down == 'join the collective'
+      assign footer_tagline = 'Rejoindre le collectif.'
+    elsif footer_tagline_down == 'premium garments. cut with intent.'
+      assign footer_tagline = 'Des pièces pensées avec intention.'
+    endif
+  endif
+-%}
+
 <footer class="melato-footer melato-footer--{{ section.id }}" role="contentinfo">
   <div class="melato-footer__wrap">
     <div class="melato-footer__top">
       <div class="melato-footer__brand">
-        <a href="{{ routes.root_url }}" class="melato-footer__logo-link" aria-label="{{ shop.name }} home">
+        <a href="{{ routes.root_url }}" class="melato-footer__logo-link" aria-label="{{ shop.name }}{% if is_fr %} accueil{% else %} home{% endif %}">
           {% if section.settings.logo != blank %}
             {{ section.settings.logo | image_url: width: 520 | image_tag: class: 'melato-footer__logo', loading: 'lazy', widths: '160, 220, 300, 380, 460, 520', sizes: '(max-width: 749px) 170px, 240px', alt: shop.name }}
           {% else %}
             <span class="melato-footer__wordmark">{{ shop.name }}</span>
           {% endif %}
         </a>
-        <p class="melato-footer__tagline">{{ section.settings.tagline | default: 'Premium garments. Cut with intent.' }}</p>
+        <p class="melato-footer__tagline">{{ footer_tagline }}</p>
         <a href="mailto:support@melato.ca" class="melato-footer__contact">support@melato.ca</a>
         <a href="tel:+16132096464" class="melato-footer__contact">+1 (613) 209-6464</a>
         {% if section.settings.instagram_url != blank %}
@@ -24,7 +40,7 @@
         {% endif %}
       </div>
 
-      <nav class="melato-footer__column" aria-label="Shop links">
+      <nav class="melato-footer__column" aria-label="{% if is_fr %}Liens boutique{% else %}Shop links{% endif %}">
         <h2>{% render 'melato-navigation-label', title: "Shop" %}</h2>
         <ul>
           <li><a href="{{ routes.all_products_collection_url }}">{% render 'melato-navigation-label', title: "All Products" %}</a></li>
@@ -35,7 +51,7 @@
         </ul>
       </nav>
 
-      <nav class="melato-footer__column" aria-label="Editorial and information links">
+      <nav class="melato-footer__column" aria-label="{% if is_fr %}Liens éditoriaux et d’information{% else %}Editorial and information links{% endif %}">
         <h2>{% render 'melato-navigation-label', title: "House" %}</h2>
         <ul>
           <li><a href="{% render 'melato-localized-url', url: "/pages/our-story" %}">{% render 'melato-navigation-label', title: "Our Story" %}</a></li>
@@ -48,7 +64,7 @@
         </ul>
       </nav>
 
-      <nav class="melato-footer__column" aria-label="Legal links">
+      <nav class="melato-footer__column" aria-label="{% if is_fr %}Liens légaux{% else %}Legal links{% endif %}">
         <h2>{% render 'melato-navigation-label', title: "Legal" %}</h2>
         <ul>
           <li><a href="{% render 'melato-localized-url', url: "/policies/shipping-policy" %}">{% render 'melato-navigation-label', title: "Delivery" %}</a></li>
@@ -89,7 +105,7 @@
         <p class="melato-footer__microcopy">{{ 'melato_ui.footer_policy' | t }}</p>
       </div>
       {% if shop.enabled_payment_types.size > 0 %}
-        <ul class="melato-footer__payments" aria-label="Accepted payment methods">
+        <ul class="melato-footer__payments" aria-label="{% if is_fr %}Modes de paiement acceptés{% else %}Accepted payment methods{% endif %}">
           {% for type in shop.enabled_payment_types %}
             <li>{{ type | payment_type_svg_tag }}</li>
           {% endfor %}
