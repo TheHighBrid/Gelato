@@ -38,6 +38,11 @@
 
   function money(cents) {
     var number = Number(cents || 0) / 100;
+    if ((document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0) {
+      try {
+        return new Intl.NumberFormat('fr-CA', { style: 'currency', currency: {{ shop.currency | json }}, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(number) + ' ' + {{ shop.currency | json }};
+      } catch (_) {}
+    }
     return '$' + number.toLocaleString('en-CA', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' CAD';
   }
 

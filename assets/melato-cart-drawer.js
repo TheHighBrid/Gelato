@@ -105,15 +105,34 @@
     if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
   }
 
+  function isFrenchLocale() {
+    return locale().toLowerCase().startsWith('fr');
+  }
+
   function updateChrome(cart) {
     const count = Number(cart?.item_count || 0);
     const code = currency(cart);
+    const isFr = isFrenchLocale();
+    const itemWord = isFr ? (count === 1 ? 'article' : 'articles') : (count === 1 ? 'item' : 'items');
     document.querySelectorAll('[data-cart-item-count],.cart-count,.mxh__bag-count').forEach(node => node.textContent = String(count));
-    document.querySelectorAll('.mxh__bag').forEach(node => node.setAttribute('aria-label', `Cart with ${count} ${count === 1 ? 'item' : 'items'}`));
+    document.querySelectorAll('.mxh__bag').forEach(node => node.setAttribute('aria-label', isFr ? `Panier avec ${count} ${itemWord}` : `Cart with ${count} ${itemWord}`));
     drawer.querySelectorAll('[data-cart-subtotal],.cart-subtotal__amount').forEach(node => node.textContent = formatMoney(cart?.total_price || 0, code));
     drawer.querySelectorAll('[data-checkout-btn],button[name="checkout"]').forEach(button => button.disabled = count === 0);
     const countLabel = drawer.querySelector('[data-cart-count-label]');
-    if (countLabel) countLabel.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
+    if (countLabel) {
+      const countSpan = countLabel.querySelector('[data-cart-item-count]');
+      if (countSpan) {
+        countSpan.textContent = String(count);
+        const textNode = Array.from(countLabel.childNodes).find(node => node.nodeType === 3 && node.textContent.trim().length > 0);
+        if (textNode) {
+          textNode.textContent = ` ${itemWord}`;
+        } else {
+          countLabel.appendChild(document.createTextNode(` ${itemWord}`));
+        }
+      } else {
+        countLabel.textContent = `${count} ${itemWord}`;
+      }
+    }
   }
 
   const emptyTemplate = drawer.querySelector('[data-cart-empty-template]');
@@ -153,6 +172,26 @@
     }).join('');
   }
 
+  async function syncMainCartPage() {
+    const mainCart = document.querySelector('[data-main-cart-section]');
+    if (!mainCart) return;
+    try {
+      const response = await fetch(route('cart'), {
+        method:'GET',
+        credentials:'same-origin',
+        cache:'no-store',
+        headers:{ Accept:'text/html', 'X-Requested-With':'XMLHttpRequest' }
+      });
+      if (!response.ok) return;
+      const text = await response.text();
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      const incoming = doc.querySelector('[data-main-cart-section]');
+      if (incoming) mainCart.innerHTML = incoming.innerHTML;
+    } catch (error) {
+      console.warn('Melato main cart sync:', error);
+    }
+  }
+
   function renderCart(cart) {
     renderItems(cart);
     updateChrome(cart);
@@ -170,6 +209,7 @@
       const payload = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
       renderCart(payload);
+      await syncMainCartPage();
     } catch (error) {
       console.error('Melato cart update:', error);
       toast(error.message || 'Cart could not be updated.');
@@ -270,17 +310,17 @@
     if (event.target.closest('[data-cart-close]')) { event.preventDefault(); closeCart(); return; }
 
     const quantityButton = event.target.closest('[data-qty-change]');
-    if (quantityButton?.closest('.cart-drawer')) {
+    if (quantityButton?.closest('.cart-drawer, [data-main-cart-section]')) {
       event.preventDefault();
       const row = quantityButton.closest('.cart-item');
-      const key = quantityButton.dataset.lineKey || row?.dataset.lineKey;
+      const key = quantityButton.dataset.lineKey || quantityButton.dataset.line || row?.dataset.lineKey;
       const input = row?.querySelector('.qty-stepper__value');
       updateLine(key, Math.max(0, Number(input?.value || 0) + Number(quantityButton.dataset.qtyChange || 0)));
       return;
     }
 
     const removeButton = event.target.closest('[data-remove-line]');
-    if (removeButton?.closest('.cart-drawer')) {
+    if (removeButton?.closest('.cart-drawer, [data-main-cart-section]')) {
       event.preventDefault();
       updateLine(removeButton.dataset.removeLine || removeButton.closest('[data-line-key]')?.dataset.lineKey, 0);
       return;
