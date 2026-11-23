@@ -12,6 +12,10 @@
   assign product_title_down = product.title | downcase
   assign product_type_down = product.type | downcase
   assign tags_down = product.tags | join: '|' | downcase
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
 
   assign family = 'other'
   if product_type_down contains 'fragrance' or product_type_down contains 'eau de' or product_title_down contains 'eau de toilette' or product_title_down contains 'eau de parfum' or product_title_down contains 'perfume'
@@ -80,7 +84,7 @@
       when 'story', 'product story', 'description'
         assign narrative = legacy_body | strip_html | strip
         assign story_copy = story_copy | append: ' ' | append: narrative | strip
-      when 'material', 'materials', 'composition', 'materials & composition', 'materials &amp; composition'
+      when 'material', 'materials', 'verified material', 'verified materials', 'composition', 'materials & composition', 'materials &amp; composition'
         if material_copy == blank and material_details == blank
           assign material_copy = legacy_body
         endif
@@ -103,6 +107,40 @@
       when 'use', 'application', 'how to wear'
         if use_copy == blank
           assign use_copy = legacy_body
+        endif
+      when 'details', 'product details'
+        assign details_body_output = legacy_body
+        if material_copy == blank and material_details == blank and legacy_body contains '<li>'
+          assign extracted_materials = ''
+          assign remaining_details = ''
+          assign detail_li_parts = legacy_body | split: '<li>'
+          for li_part in detail_li_parts offset: 1
+            assign li_text = li_part | split: '</li>' | first | strip
+            assign li_down = li_text | strip_html | downcase
+            if li_down contains '%' or li_down contains 'gsm'
+              assign extracted_materials = extracted_materials | append: '<li>' | append: li_text | append: '</li>'
+            elsif li_text != blank
+              assign remaining_details = remaining_details | append: '<li>' | append: li_text | append: '</li>'
+            endif
+          endfor
+          if extracted_materials != blank
+            assign material_copy = '<ul>' | append: extracted_materials | append: '</ul>'
+            if remaining_details != blank
+              assign details_body_output = '<ul>' | append: remaining_details | append: '</ul>'
+            else
+              assign details_body_output = ''
+            endif
+          endif
+        endif
+        if details_body_output != blank
+          capture legacy_detail
+            echo '<details class="pdp-spec"><summary>'
+            echo legacy_heading | escape_once
+            echo '</summary><div class="pdp-rte">'
+            echo details_body_output
+            echo '</div></details>'
+          endcapture
+          assign legacy_details = legacy_details | append: legacy_detail
         endif
       else
         capture legacy_detail
@@ -178,10 +216,40 @@
     assign size_guide_url = blank
   endif
   if construction_details != blank
+    assign material_plain = material_copy | strip_html | downcase
+    if material_details != blank
+      assign material_details_joined = material_details | join: ' ' | downcase
+      assign material_plain = material_plain | append: ' ' | append: material_details_joined
+    endif
+    assign fit_plain = fit_copy | strip_html | downcase
+    if fit_details != blank
+      assign fit_details_joined = fit_details | join: ' ' | downcase
+      assign fit_plain = fit_plain | append: ' ' | append: fit_details_joined
+    endif
+    assign care_plain = care_copy | strip_html | downcase
+    if care_details != blank
+      assign care_details_joined = care_details | join: ' ' | downcase
+      assign care_plain = care_plain | append: ' ' | append: care_details_joined
+    endif
+    assign legacy_plain = legacy_details | strip_html | downcase
+    assign made_in_plain = made_in | strip_html | strip | downcase
+
     assign construction_only = ''
     for detail in construction_details
-      assign detail_prefix = detail | strip | downcase | split: ':' | first | strip
-      unless detail_prefix == 'material' or detail_prefix == 'materials' or detail_prefix == 'fit' or detail_prefix == 'care' or detail_prefix == 'composition'
+      assign detail_down = detail | strip | downcase
+      assign detail_prefix = detail_down | split: ':' | first | strip
+      assign detail_value = detail_down | split: ':' | last | strip | remove: '.'
+      assign is_duplicate_fact = false
+      if detail_prefix == 'material' or detail_prefix == 'materials' or detail_prefix == 'fit' or detail_prefix == 'care' or detail_prefix == 'composition'
+        assign is_duplicate_fact = true
+      elsif detail_value != blank and detail_value != detail_down and detail_value.size > 3
+        if material_plain contains detail_value or fit_plain contains detail_value or care_plain contains detail_value or legacy_plain contains detail_value
+          assign is_duplicate_fact = true
+        endif
+      elsif made_in_plain != blank and detail_down contains made_in_plain and legacy_plain contains made_in_plain
+        assign is_duplicate_fact = true
+      endif
+      unless is_duplicate_fact
         capture construction_only
           echo construction_only
           echo '<li>'
@@ -242,11 +310,15 @@
       </div>
 
       <div class="pdp-buybox">
-        {%- if section.settings.eyebrow != blank -%}<p class="pdp-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.eyebrow != blank -%}
+          {%- assign pdp_eyebrow_label = section.settings.eyebrow -%}
+          {%- if is_fr and pdp_eyebrow_label == 'Product focus' -%}{%- assign pdp_eyebrow_label = 'Focus produit' -%}{%- endif -%}
+          <p class="pdp-eyebrow">{{ pdp_eyebrow_label }}</p>
+        {%- endif -%}
         <h1 class="pdp-title">{{ product.title }}</h1>
         {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle }}</p>{%- endif -%}
 
-        <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="Price">
+        <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="{%- if is_fr -%}Prix{%- else -%}Price{%- endif -%}">
           <span class="pdp-price">{{ current_variant.price | money_with_currency }}</span>
           {%- if current_variant.compare_at_price > current_variant.price -%}<s class="pdp-compare">{{ current_variant.compare_at_price | money_with_currency }}</s>{%- endif -%}
         </div>
@@ -256,15 +328,27 @@
             <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
           {%- else -%}
             {%- for option in product.options_with_values -%}
+              {%- liquid
+                assign option_label = option.name
+                assign option_name_down = option.name | downcase
+                if is_fr
+                  if option_name_down == 'size'
+                    assign option_label = 'Taille'
+                  elsif option_name_down == 'color' or option_name_down == 'colour'
+                    assign option_label = 'Couleur'
+                  elsif option_name_down == 'volume'
+                    assign option_label = 'Format'
+                  endif
+                endif
+              -%}
               <fieldset class="pdp-option">
                 <div class="pdp-option__header">
-                  <legend>{{ option.name }}</legend>
-                  {%- assign option_name_down = option.name | downcase -%}
+                  <legend>{{ option_label }}</legend>
                   {%- if option_name_down == 'size' and family == 'apparel' or option_name_down == 'size' and family == 'denim' or option_name_down == 'size' and family == 'footwear' -%}
                     {%- if size_guide_page != blank -%}
-                      <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>
+                      <button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">{%- if is_fr -%}Mesures du produit{%- else -%}Product measurements{%- endif -%}</button>
                     {%- else -%}
-                      <a class="size-guide-trigger" href="{{ size_guide_url }}">Fit guide</a>
+                      <a class="size-guide-trigger" href="{{ size_guide_url }}">{%- if is_fr -%}Guide des tailles{%- else -%}Fit guide{%- endif -%}</a>
                     {%- endif -%}
                   {%- endif -%}
                 </div>
@@ -281,10 +365,15 @@
                           assign value_available = true
                         endif
                       endfor
+                      assign value_display = value
+                      assign value_down = value | downcase
+                      if is_fr and value_down == 'one size'
+                        assign value_display = 'Taille unique'
+                      endif
                     -%}
                     <label class="pdp-choice{% if option.selected_value == value %} is-selected{% endif %}{% unless value_available %} is-sold-out{% endunless %}">
                       <input type="radio" name="options[{{ option.name | escape }}]" value="{{ value | escape }}" {% if option.selected_value == value %}checked{% endif %} data-option-position="{{ option.position }}" {% unless value_available %}disabled{% endunless %}>
-                      <span>{{ value }}</span>
+                      <span>{{ value_display }}</span>
                     </label>
                   {%- endfor -%}
                 </div>
@@ -294,7 +383,7 @@
           {%- endif -%}
 
           <div class="pdp-atc-row">
-            <label class="visually-hidden" for="PDPQty-{{ section.id }}">Quantity</label>
+            <label class="visually-hidden" for="PDPQty-{{ section.id }}">{%- if is_fr -%}Quantité{%- else -%}Quantity{%- endif -%}</label>
             <input id="PDPQty-{{ section.id }}" class="pdp-qty" type="number" name="quantity" min="1" value="1">
             <button class="pdp-atc{% unless current_variant.available %} pdp-atc--oos{% endunless %}" type="submit" name="add" data-pdp-atc {% unless current_variant.available %}disabled{% endunless %}>
               {%- if request.locale.iso_code == 'fr' -%}
@@ -309,9 +398,17 @@
         {% render 'back-in-stock-form', product: product %}
 
         {%- if family == 'fragrance' -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          {%- if is_fr -%}
+            <p class="pdp-shipping-returns">Expédition sous 1 à 3 jours ouvrables. Livraison standard offerte sur toutes les commandes. Les parfums admissibles non ouverts peuvent être retournés sous 30 jours ; les parfums ouverts ou vaporisés sont généralement exclus. <a href="{% render 'melato-localized-url', url: '/pages/shipping-returns' %}">Politique complète de livraison et de retours</a>.</p>
+          {%- else -%}
+            <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          {%- endif -%}
         {%- else -%}
-          <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          {%- if is_fr -%}
+            <p class="pdp-shipping-returns">Expédition sous 1 à 3 jours ouvrables. Livraison standard offerte sur toutes les commandes. Retours acceptés sur les articles admissibles non portés selon la politique de retour publiée. <a href="{% render 'melato-localized-url', url: '/pages/shipping-returns' %}">Politique complète de livraison et de retours</a>.</p>
+          {%- else -%}
+            <p class="pdp-shipping-returns">Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy. <a href="/pages/shipping-returns">Full delivery and returns policy</a>.</p>
+          {%- endif -%}
         {%- endif -%}
 
         {%- comment -%}
@@ -321,23 +418,23 @@
         {%- endcomment -%}
         {%- if family == 'fragrance' -%}
           {%- if ingredients_copy != blank or use_copy != blank or care_details != blank or care_copy != blank -%}
-            <div class="pdp-buybox-specs" aria-label="Product details">
-              <p class="pdp-buybox-specs__eyebrow">Product details</p>
+            <div class="pdp-buybox-specs" aria-label="{%- if is_fr -%}Détails du produit{%- else -%}Product details{%- endif -%}">
+              <p class="pdp-buybox-specs__eyebrow">{%- if is_fr -%}Détails du produit{%- else -%}Product details{%- endif -%}</p>
               {%- if ingredients_copy != blank -%}
                 <details class="pdp-buybox-spec">
-                  <summary><span>Ingredients</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <summary>{%- if is_fr -%}<span>Ingrédients</span>{%- else -%}<span>Ingredients</span>{%- endif -%}<span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
                   <div class="pdp-buybox-spec__body pdp-rte">{{ ingredients_copy }}</div>
                 </details>
               {%- endif -%}
               {%- if use_copy != blank -%}
                 <details class="pdp-buybox-spec">
-                  <summary><span>Use</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <summary>{%- if is_fr -%}<span>Utilisation</span>{%- else -%}<span>Use</span>{%- endif -%}<span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
                   <div class="pdp-buybox-spec__body pdp-rte">{{ use_copy }}</div>
                 </details>
               {%- endif -%}
               {%- if care_details != blank or care_copy != blank -%}
                 <details class="pdp-buybox-spec">
-                  <summary><span>Care</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <summary>{%- if is_fr -%}<span>Entretien</span>{%- else -%}<span>Care</span>{%- endif -%}<span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
                   <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
                 </details>
               {%- endif -%}
@@ -345,29 +442,37 @@
           {%- endif -%}
         {%- else -%}
           {%- if material_details != blank or material_copy != blank or fit_details != blank or fit_copy != blank or care_details != blank or care_copy != blank -%}
-            <div class="pdp-buybox-specs" aria-label="Product details">
-              <p class="pdp-buybox-specs__eyebrow">Product details</p>
+            <div class="pdp-buybox-specs" aria-label="{%- if is_fr -%}Détails du produit{%- else -%}Product details{%- endif -%}">
+              <p class="pdp-buybox-specs__eyebrow">{%- if is_fr -%}Détails du produit{%- else -%}Product details{%- endif -%}</p>
               {%- if material_details != blank or material_copy != blank -%}
                 <details class="pdp-buybox-spec">
-                  <summary><span>Materials</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div>
+                  {%- if is_fr -%}<summary><span>Matières</span>{%- else -%}<summary><span>Materials</span>{%- endif -%}<span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if material_details != blank -%}<ul>{%- for item in material_details -%}{%- assign clean_material_item = item | replace: ', final lens material not specified', '' | replace: 'final lens material not specified', '' | strip -%}{%- if clean_material_item != blank -%}<li>{{ clean_material_item | escape_once }}</li>{%- endif -%}{%- endfor -%}</ul>{%- else -%}{{ material_copy }}{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if fit_details != blank or fit_copy != blank -%}
+                {%- liquid
+                  assign fr_fit_label = 'Coupe'
+                  if family == 'bags'
+                    assign fr_fit_label = 'Dimensions et capacité'
+                  elsif product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_title_down contains 'sunglass'
+                    assign fr_fit_label = 'Mesures monture et verres'
+                  endif
+                -%}
                 <details class="pdp-buybox-spec">
-                  <summary><span>Fit</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  {%- if is_fr -%}<summary><span>{{ fr_fit_label }}</span>{%- else -%}<summary><span>Fit</span>{%- endif -%}<span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
                   <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}{%- if size_guide_url != blank -%}<p class="pdp-inline-link"><a href="{{ size_guide_url }}">{%- if request.locale.iso_code == 'fr' -%}Guide des tailles Melato{%- else -%}Melato Fit Guide{%- endif -%}</a></p>{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if care_details != blank or care_copy != blank -%}
                 <details class="pdp-buybox-spec">
-                  <summary><span>Care</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  {%- if is_fr -%}<summary><span>Entretien</span>{%- else -%}<summary><span>Care</span>{%- endif -%}<span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
                   <div class="pdp-buybox-spec__body pdp-rte">{%- if care_details != blank -%}<ul>{%- for item in care_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ care_copy }}{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if warranty_copy != blank and family == 'accessories' -%}
                 <details class="pdp-buybox-spec">
-                  <summary><span>Warranty &amp; Maintenance</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
+                  <summary>{%- if is_fr -%}<span>Garantie et entretien</span>{%- else -%}<span>Warranty &amp; Maintenance</span>{%- endif -%}<span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
                   <div class="pdp-buybox-spec__body pdp-rte">{{ warranty_copy | newline_to_br }}</div>
                 </details>
               {%- endif -%}
@@ -380,47 +485,47 @@
     <div class="pdp-content-stack">
       {%- if story_copy != blank -%}
         <section class="pdp-panel pdp-story" aria-labelledby="PDPStory-{{ section.id }}">
-          <header class="pdp-section-head"><h2 id="PDPStory-{{ section.id }}" class="melato-pdp-bible-section-title">Story</h2></header>
+          <header class="pdp-section-head"><h2 id="PDPStory-{{ section.id }}" class="melato-pdp-bible-section-title">{%- if is_fr -%}Histoire{%- else -%}Story{%- endif -%}</h2></header>
           <div class="pdp-rte rte"><p>{{ story_copy | escape_once }}</p></div>
         </section>
       {%- endif -%}
 
-      <section class="pdp-spec-grid" aria-label="Product specifications">
+      <section class="pdp-spec-grid" aria-label="{%- if is_fr -%}Caractéristiques du produit{%- else -%}Product specifications{%- endif -%}">
         {{ legacy_details }}
         {%- if safety_copy != blank -%}
-          <details class="pdp-spec"><summary>Safety</summary><div class="pdp-rte">{{ safety_copy | escape | newline_to_br }}</div></details>
+          <details class="pdp-spec">{%- if is_fr -%}<summary>Sécurité</summary>{%- else -%}<summary>Safety</summary>{%- endif -%}<div class="pdp-rte">{{ safety_copy | escape | newline_to_br }}</div></details>
         {%- endif -%}
         {%- if family == 'fragrance' -%}
           {%- comment -%}Fragrance purchase-decision specs are surfaced in the buybox above.{%- endcomment -%}
         {%- else -%}
           {%- if construction_only != blank or construction_paragraph != blank -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_only != blank -%}<ul>{{ construction_only }}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph | escape_once }}</p>{%- endif -%}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title">{%- if is_fr -%}<summary>Confection</summary>{%- else -%}<summary>Construction</summary>{%- endif -%}<div class="pdp-rte">{%- if construction_only != blank -%}<ul>{{ construction_only }}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph | escape_once }}</p>{%- endif -%}</div></details>
           {%- endif -%}
 
           {%- if use_copy != blank and family == 'bags' or use_copy != blank and family == 'accessories' -%}
-            <details class="pdp-spec melato-pdp-bible-section-title"><summary>Use</summary><div class="pdp-rte">{{ use_copy }}</div></details>
+            <details class="pdp-spec melato-pdp-bible-section-title">{%- if is_fr -%}<summary>Utilisation</summary>{%- else -%}<summary>Use</summary>{%- endif -%}<div class="pdp-rte">{{ use_copy }}</div></details>
           {%- endif -%}
         {%- endif -%}
       </section>
 
       {%- if matching_product != blank -%}
         <section class="pdp-panel pdp-set" aria-labelledby="PDPSet-{{ section.id }}">
-          <header class="pdp-section-head"><h2 id="PDPSet-{{ section.id }}" class="melato-pdp-bible-section-title">Complete the Set</h2></header>
+          <header class="pdp-section-head"><h2 id="PDPSet-{{ section.id }}" class="melato-pdp-bible-section-title">{%- if is_fr -%}Compléter l'ensemble{%- else -%}Complete the Set{%- endif -%}</h2></header>
           <div class="pdp-set-grid" role="list">
             <article class="pdp-set-card" role="listitem">
               {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
-              <p class="pdp-set-piece-label">Selected piece</p>
+              <p class="pdp-set-piece-label">{%- if is_fr -%}Pièce sélectionnée{%- else -%}Selected piece{%- endif -%}</p>
               <h3 class="purchase-summary__title">{{ product.title }}</h3>
               <p class="purchase-summary__price">{{ product.price | money_with_currency }}</p>
             </article>
             <article class="pdp-set-card" role="listitem">
-              <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="View {{ matching_product.title | escape }}">
+              <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="{%- if is_fr -%}Voir {{ matching_product.title | escape }}{%- else -%}View {{ matching_product.title | escape }}{%- endif -%}">
                 {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
               </a>
-              <p class="pdp-set-piece-label">Matching piece</p>
+              <p class="pdp-set-piece-label">{%- if is_fr -%}Pièce assortie{%- else -%}Matching piece{%- endif -%}</p>
               <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
               <p class="purchase-summary__price">{{ matching_product.price | money_with_currency }}</p>
-              <a class="pdp-set-cta" href="{{ matching_product.url }}">View matching piece</a>
+              <a class="pdp-set-cta" href="{{ matching_product.url }}">{%- if is_fr -%}Voir la pièce assortie{%- else -%}View matching piece{%- endif -%}</a>
             </article>
           </div>
         </section>

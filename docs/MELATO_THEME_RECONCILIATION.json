@@ -887,7 +887,7 @@
       "liveBodySha256": "2804a67b7bda2b3f609b31d191a43772d98af4542365a74a70f43c640550ae7b",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
-      "candidateSha256": "c04d22f55ec3a0224e761360427ba0499221f3eddebbd0c28ca2852b6b18afb1"
+      "candidateSha256": "a5c68096d3375f4902f70f763968d35a80aad00ee24947b3cc88b6e4dfcecf49"
     },
     {
       "path": "locales/ar.json",
@@ -1063,7 +1063,7 @@
       "liveBodySha256": "37288f17f6556e9697fe4d166fba35b4c82bf90477884b0871f6a8b37e00ecc2",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership.",
-      "candidateSha256": "5ca8bb550fc92e7b11cf1e404716769ca856679bf53ae93254823fad395ce7a7"
+      "candidateSha256": "2d7294170ef5fd0c768d8a3157be8c6e3a64c331430cc42e2775085266363569"
     },
     {
       "path": "sections/main-login.liquid",
@@ -1423,7 +1423,7 @@
       "liveBodySha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
-      "candidateSha256": "a8ea48873a1063fd5fbf3297642c80253d558c515a4ad35fbc1b3649e227cfb8"
+      "candidateSha256": "9185c116ec04d07d8892c5a12242f69a793e0f771e03c00a9d4779f6786ff5e0"
     },
     {
       "path": "sections/melato-product-proof-bar.liquid",
@@ -1653,9 +1653,9 @@
       "path": "snippets/melato-collection-tabs.liquid",
       "liveMd5": "6abbe2d3da2b20d16d4965ebe39ce58a",
       "liveBodySha256": "0f84e3602b57817e00a9ae5ac1dbfbbce204457c5dd950b8f2f78fd84d4a3135",
-      "decision": "import-live",
-      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live.",
-      "candidateSha256": "0f84e3602b57817e00a9ae5ac1dbfbbce204457c5dd950b8f2f78fd84d4a3135"
+      "decision": "remediate-live",
+      "reason": "Preserve an existing live-only source dependency or asset; no new layout inclusion unless already live. November 21: localize collection tabs for French storefront while retaining historical liveBodySha256.",
+      "candidateSha256": "32711c2a38cc853606cbaa1b71674aa1882cb5a11e254bfdedf08f8b6f022872"
     },
     {
       "path": "snippets/melato-concierge-icon-access.liquid",
@@ -1855,7 +1855,7 @@
       "liveBodySha256": "ba1ee8b972bb28b25be6fc148657fa9081835586aa1da27c21accf6043de8bc7",
       "decision": "remediate-live",
       "reason": "Preserve the verified current Shopify Blacklist product handle instead of rewriting it to a missing route.",
-      "candidateSha256": "d1abaae5da6f3c57ccd1edcd2c2785d980a864dc171732a095dc407742a60902"
+      "candidateSha256": "a42d9c35ca29216c42a298071e3e0f808cd8545d058d6c939377da04c76861a1"
     },
     {
       "path": "snippets/melato-responsive-image.liquid",
