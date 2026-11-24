@@ -77,6 +77,9 @@ export function analyzePage(page, result) {
     retrievedAt: result.retrievedAt, isPartial: result.isPartial,
     requestId: result.requestId,
     observed: fields,
+    copyMarkdown: result.outputs.markdown?.success === true && typeof result.outputs.markdown.data === "string"
+      ? result.outputs.markdown.data.slice(0, 15_000) : null,
+    markdownTruncated: result.outputs.markdown?.success === true && (result.outputs.markdown.data?.length ?? 0) > 15_000,
     productLinks: [...new Set([...(fields?.product_links ?? []), ...productLinks])],
     imageUrlsAsDisplayed: urls,
     formatStatus: Object.fromEntries(Object.entries(result.outputs).map(([key, value]) =>
