@@ -18,7 +18,7 @@
     assign family = 'fragrance'
   elsif product_type_down contains 'denim' or product_type_down contains 'jean' or tags_down contains 'denim'
     assign family = 'denim'
-  elsif product_type_down contains 'bag' or product_type_down contains 'duffle' or product_type_down contains 'tote' or product_type_down contains 'messenger'
+  elsif product_type_down contains 'bag' or product_type_down contains 'duffle' or product_type_down contains 'tote' or product_type_down contains 'messenger' or product_type_down contains 'dopp' or product_type_down contains 'pouch' or product_type_down contains 'toiletry' or product_type_down contains 'travel case' or product_type_down contains 'wallet' or product_type_down contains 'clutch' or product_type_down contains 'pack' or product_title_down contains 'dopp' or product_title_down contains 'duffle' or product_title_down contains 'pouch' or product_title_down contains 'toiletry' or product_title_down contains 'shoulder bag' or product_title_down contains 'top handle bag' or product_title_down contains 'wallet' or product_title_down contains 'tote'
     assign family = 'bags'
   elsif product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_type_down contains 'tie' or product_type_down contains 'suspender' or product_type_down contains 'belt' or product_type_down contains 'accessor'
     assign family = 'accessories'
@@ -127,7 +127,7 @@
         endif
       when 'fit', 'fit notes', 'fit and use', 'fit & construction', 'fit &amp; construction'
         if fit_copy == blank and fit_details == blank
-          assign fit_copy = legacy_body
+          assign fit_copy = legacy_body | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | replace: '  ', ' ' | strip
         endif
       when 'construction'
         if construction_details == blank and construction_paragraph == blank
@@ -210,10 +210,10 @@
   if material_copy contains 'final lens material not specified'
     assign material_copy = material_copy | replace: ', final lens material not specified', '' | replace: 'final lens material not specified', ''
   endif
-  if family == 'accessories' or family == 'bags'
+  unless family == 'apparel' or family == 'denim' or family == 'footwear'
     assign size_guide_page = blank
     assign size_guide_url = ''
-  endif
+  endunless
   assign material_plain = material_copy | strip_html | downcase
   if material_details != blank
     assign material_details_joined = material_details | join: ' ' | strip_html | downcase
@@ -283,7 +283,7 @@
         capture construction_only
           echo construction_only
           echo '<li>'
-          echo detail | escape_once
+          echo detail | escape
           echo '</li>'
         endcapture
       endunless
@@ -353,8 +353,8 @@
           endif
         -%}
         {%- if pdp_eyebrow != blank -%}<p class="pdp-eyebrow">{{ pdp_eyebrow }}</p>{%- endif -%}
-        <h1 class="pdp-title">{{ product.title }}</h1>
-        {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle }}</p>{%- endif -%}
+        <h1 class="pdp-title">{{ product.title | escape }}</h1>
+        {%- if subtitle != blank -%}<p class="pdp-thesis">{{ subtitle | escape }}</p>{%- endif -%}
 
         <div class="pdp-price-row" id="PDPPrice-{{ section.id }}" aria-label="{% if is_fr %}Prix{% else %}Price{% endif %}">
           <span class="pdp-price">{{ current_variant.price | money_with_currency }}</span>
@@ -500,7 +500,7 @@
                   {%- else -%}
                     <summary><span>Fit</span><span class="pdp-buybox-spec__icon" aria-hidden="true">+</span></summary>
                   {%- endif -%}
-                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy }}{%- endif -%}{%- if size_guide_url != blank and size_guide_url != '' and has_inline_size_guide_link == false -%}<p class="pdp-inline-link"><a href="{% render 'melato-localized-url', url: size_guide_url %}">{%- if is_fr -%}Guide des tailles Melato{%- else -%}Melato Fit Guide{%- endif -%}</a></p>{%- endif -%}</div>
+                  <div class="pdp-buybox-spec__body pdp-rte">{%- if fit_details != blank -%}<ul>{%- for item in fit_details -%}<li>{{ item | escape }}</li>{%- endfor -%}</ul>{%- else -%}{{ fit_copy | escape }}{%- endif -%}{%- if size_guide_url != blank and size_guide_url != '' and has_inline_size_guide_link == false -%}<p class="pdp-inline-link"><a href="{% render 'melato-localized-url', url: size_guide_url %}">{%- if is_fr -%}Guide des tailles Melato{%- else -%}Melato Fit Guide{%- endif -%}</a></p>{%- endif -%}</div>
                 </details>
               {%- endif -%}
               {%- if care_details != blank or care_copy != blank -%}
@@ -543,9 +543,9 @@
         {%- else -%}
           {%- if construction_only != blank or construction_paragraph != blank -%}
             {%- if is_fr -%}
-              <details class="pdp-spec melato-pdp-bible-section-title"><summary>Confection</summary><div class="pdp-rte">{%- if construction_only != blank -%}<ul>{{ construction_only }}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph | escape_once }}</p>{%- endif -%}</div></details>
+              <details class="pdp-spec melato-pdp-bible-section-title"><summary>Confection</summary><div class="pdp-rte">{%- if construction_only != blank -%}<ul>{{ construction_only }}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph | escape }}</p>{%- endif -%}</div></details>
             {%- else -%}
-              <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_only != blank -%}<ul>{{ construction_only }}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph | escape_once }}</p>{%- endif -%}</div></details>
+              <details class="pdp-spec melato-pdp-bible-section-title"><summary>Construction</summary><div class="pdp-rte">{%- if construction_only != blank -%}<ul>{{ construction_only }}</ul>{%- endif -%}{%- if construction_paragraph != blank -%}<p>{{ construction_paragraph | escape }}</p>{%- endif -%}</div></details>
             {%- endif -%}
           {%- endif -%}
 
@@ -556,23 +556,27 @@
       </section>
 
       {%- if matching_product != blank -%}
+        {%- assign current_set_alt = product.featured_image.alt | strip -%}
+        {%- if current_set_alt == blank -%}{%- assign current_set_alt = product.title | append: ' - Front view' -%}{%- endif -%}
+        {%- assign matching_set_alt = matching_product.featured_image.alt | strip -%}
+        {%- if matching_set_alt == blank -%}{%- assign matching_set_alt = matching_product.title | append: ' - Front view' -%}{%- endif -%}
         <section class="pdp-panel pdp-set" aria-labelledby="PDPSet-{{ section.id }}">
           <header class="pdp-section-head"><h2 id="PDPSet-{{ section.id }}" class="melato-pdp-bible-section-title">{% if is_fr %}Compléter l'ensemble{% else %}Complete the Set{% endif %}</h2></header>
           <div class="pdp-set-grid" role="list">
             <article class="pdp-set-card" role="listitem">
-              {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
+              {%- if product.featured_image -%}{{ product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: current_set_alt }}{%- endif -%}
               <p class="pdp-set-piece-label">{% if is_fr %}Pièce sélectionnée{% else %}Selected piece{% endif %}</p>
-              <h3 class="purchase-summary__title">{{ product.title }}</h3>
+              <h3 class="purchase-summary__title">{{ product.title | escape }}</h3>
               <p class="purchase-summary__price">{{ product.price | money_with_currency }}</p>
             </article>
             <article class="pdp-set-card" role="listitem">
-              <a class="pdp-set-media-link" href="{{ matching_product.url }}" aria-label="{% if is_fr %}Voir {{ matching_product.title | escape }}{% else %}View {{ matching_product.title | escape }}{% endif %}">
-                {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: '' }}{%- endif -%}
+              <a class="pdp-set-media-link" href="{{ matching_product.url | escape }}" aria-label="{% if is_fr %}Voir {{ matching_product.title | escape }}{% else %}View {{ matching_product.title | escape }}{% endif %}">
+                {%- if matching_product.featured_image -%}{{ matching_product.featured_image | image_url: width: 800 | image_tag: class: 'pdp-set-image', loading: 'lazy', widths: '300, 500, 800', alt: matching_set_alt }}{%- endif -%}
               </a>
               <p class="pdp-set-piece-label">{% if is_fr %}Pièce assortie{% else %}Matching piece{% endif %}</p>
-              <h3 class="purchase-summary__title"><a href="{{ matching_product.url }}">{{ matching_product.title }}</a></h3>
+              <h3 class="purchase-summary__title"><a href="{{ matching_product.url | escape }}">{{ matching_product.title | escape }}</a></h3>
               <p class="purchase-summary__price">{{ matching_product.price | money_with_currency }}</p>
-              <a class="pdp-set-cta" href="{{ matching_product.url }}">{% if is_fr %}Voir la pièce assortie{% else %}View matching piece{% endif %}</a>
+              <a class="pdp-set-cta" href="{{ matching_product.url | escape }}">{% if is_fr %}Voir la pièce assortie{% else %}View matching piece{% endif %}</a>
             </article>
           </div>
         </section>
@@ -581,7 +585,7 @@
   </div>
 
   <div class="pdp-sticky-atc" data-pdp-sticky aria-hidden="true">
-    <div class="purchase-summary"><strong class="purchase-summary__title">{{ product.title }}</strong><span class="purchase-summary__price" id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money_with_currency }}</span></div>
+    <div class="purchase-summary"><strong class="purchase-summary__title">{{ product.title | escape }}</strong><span class="purchase-summary__price" id="PDPStickyPrice-{{ section.id }}">{{ current_variant.price | money_with_currency }}</span></div>
     <button type="button" data-pdp-sticky-button class="{% unless current_variant.available %}pdp-atc--oos{% endunless %}" {% unless current_variant.available %}disabled{% endunless %}>{% if request.locale.iso_code == 'fr' %}{% if current_variant.available %}Ajouter au panier{% else %}Rupture de stock{% endif %}{% else %}{% if current_variant.available %}Add to cart{% else %}Out of stock{% endif %}{% endif %}</button>
   </div>
 

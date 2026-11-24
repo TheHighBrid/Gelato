@@ -1,25 +1,45 @@
 {%- assign site_url = shop.url | default: request.origin -%}
 {%- assign search_target = site_url | append: routes.search_url | append: '?q=' | append: '{search_term_string}' -%}
 
+{%- assign is_fr = false -%}
+{%- if request.locale.iso_code == 'fr' -%}
+  {%- assign is_fr = true -%}
+{%- endif -%}
 {%- assign melato_description = page_description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip -%}
 {%- if melato_description == blank -%}
   {%- if template.name == 'product' and product != blank -%}
     {%- assign melato_description = product.description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | truncate: 160 -%}
     {%- if melato_description == blank -%}
-      {%- capture melato_description -%}Shop {{ product.title }} by Melato. Explore product details, fit guidance, care information and complimentary standard delivery.{%- endcapture -%}
+      {%- if is_fr -%}
+        {%- capture melato_description -%}Découvrez {{ product.title }} par Melato. Consultez les détails du produit, les conseils de coupe, l’entretien et la livraison standard offerte.{%- endcapture -%}
+      {%- else -%}
+        {%- capture melato_description -%}Shop {{ product.title }} by Melato. Explore product details, fit guidance, care information and complimentary standard delivery.{%- endcapture -%}
+      {%- endif -%}
     {%- endif -%}
   {%- elsif template.name == 'collection' and collection != blank -%}
     {%- assign melato_description = collection.description | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | truncate: 160 -%}
     {%- if melato_description == blank -%}
-      {%- capture melato_description -%}Shop {{ collection.title }} from Melato, featuring premium apparel, accessories, and limited pieces selected with intention.{%- endcapture -%}
+      {%- if is_fr -%}
+        {%- capture melato_description -%}Découvrez {{ collection.title }} chez Melato : vêtements, accessoires et pièces en série limitée pensés avec précision.{%- endcapture -%}
+      {%- else -%}
+        {%- capture melato_description -%}Shop {{ collection.title }} from Melato, featuring premium apparel, accessories, and limited pieces selected with intention.{%- endcapture -%}
+      {%- endif -%}
     {%- endif -%}
   {%- elsif template.name == 'page' and page != blank -%}
     {%- assign melato_description = page.content | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | strip | truncate: 160 -%}
     {%- if melato_description == blank -%}
-      {%- capture melato_description -%}Explore {{ page.title }} from Melato for current brand, product, service, and customer-care information.{%- endcapture -%}
+      {%- if is_fr -%}
+        {%- capture melato_description -%}Consultez {{ page.title }} chez Melato pour les informations sur la marque, les produits, les services et l’assistance client.{%- endcapture -%}
+      {%- else -%}
+        {%- capture melato_description -%}Explore {{ page.title }} from Melato for current brand, product, service, and customer-care information.{%- endcapture -%}
+      {%- endif -%}
     {%- endif -%}
   {%- else -%}
-    {%- capture melato_description -%}Explore Melato premium apparel, accessories, editorial collections, customer care, and current store policies.{%- endcapture -%}
+    {%- if is_fr -%}
+      {%- capture melato_description -%}Découvrez Melato : vêtements, accessoires, collections éditoriales, service client et politiques de la boutique.{%- endcapture -%}
+    {%- else -%}
+      {%- capture melato_description -%}Explore Melato premium apparel, accessories, editorial collections, customer care, and current store policies.{%- endcapture -%}
+    {%- endif -%}
   {%- endif -%}
 {%- endif -%}
 {%- assign melato_description = melato_description | strip | truncate: 160 -%}
@@ -28,7 +48,13 @@
 {%- if request.locale.iso_code == 'ar' or request.path == '/ar' or request.path contains '/ar/' or request.path == '/en-fr' or request.path contains '/en-fr/' -%}
   {%- assign melato_incomplete_locale = true -%}
 {%- endif -%}
-{%- if melato_incomplete_locale or template.name == 'search' or request.path == '/search' or request.path contains '/search' -%}<meta name="robots" content="noindex,follow">{%- endif -%}
+{%- assign melato_noindex_collection = false -%}
+{%- if template.name == 'collection' and collection != blank and collection.handle == 'rack-1' -%}
+  {%- assign melato_noindex_collection = true -%}
+{%- elsif request.path == '/collections/rack-1' or request.path contains '/collections/rack-1' -%}
+  {%- assign melato_noindex_collection = true -%}
+{%- endif -%}
+{%- if melato_incomplete_locale or melato_noindex_collection or template.name == 'search' or request.path == '/search' or request.path contains '/search' -%}<meta name="robots" content="noindex,follow">{%- endif -%}
 
 {%- if page_description == blank and melato_description != blank -%}<meta name="description" content="{{ melato_description | escape }}">{%- endif -%}
 <meta name="twitter:site" content="@melato_ca">
@@ -37,6 +63,10 @@
 </script>
 {%- if template.name == 'page' and page.handle == 'faq' -%}
 <script type="application/ld+json">
+{%- if is_fr -%}
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Combien de temps prend la préparation d’une commande ?","acceptedAnswer":{"@type":"Answer","text":"Les commandes sont généralement préparées sous 1 à 3 jours ouvrables. Lors de lancements limités, de jours fériés ou de périodes de forte demande, le traitement peut prendre un peu plus de temps."}},{"@type":"Question","name":"Quels sont les délais d’expédition ?","acceptedAnswer":{"@type":"Answer","text":"Les délais de livraison dépendent de la destination et du mode d’expédition sélectionné. Les estimations apparaissent lors du passage en caisse et le numéro de suivi est envoyé dès l’expédition."}},{"@type":"Question","name":"La livraison standard est-elle offerte ?","acceptedAnswer":{"@type":"Answer","text":"La livraison standard est offerte sur toutes les commandes. Les taxes et droits applicables sont calculés lors du passage en caisse."}},{"@type":"Question","name":"Vais-je recevoir un numéro de suivi ?","acceptedAnswer":{"@type":"Answer","text":"Dès l’expédition de votre commande, les informations de suivi sont envoyées à l’adresse courriel ou au numéro de téléphone utilisé lors du paiement."}},{"@type":"Question","name":"Comment taillent les pièces Melato ?","acceptedAnswer":{"@type":"Answer","text":"La coupe varie selon le modèle et la silhouette. Consultez les indications de coupe et les mesures sur la fiche produit, ou contactez le service client Melato avant de commander."}},{"@type":"Question","name":"Comment demander un retour ?","acceptedAnswer":{"@type":"Answer","text":"Écrivez à support@melato.ca en indiquant votre numéro de commande, l’article à retourner et le motif du retour. Nous examinerons la demande et vous enverrons les étapes suivantes si elle est approuvée."}}]}
+{%- else -%}
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How long does order processing take?","acceptedAnswer":{"@type":"Answer","text":"Orders are usually prepared within 1 to 3 business days. During limited drops, holidays, or high-volume periods, processing may take slightly longer."}},{"@type":"Question","name":"How long does shipping take?","acceptedAnswer":{"@type":"Answer","text":"Delivery times depend on destination and the available service. Estimated delivery information appears during checkout and tracking is sent after dispatch."}},{"@type":"Question","name":"Do you offer complimentary delivery?","acceptedAnswer":{"@type":"Answer","text":"Complimentary standard delivery is available on all orders. Taxes and applicable duties are calculated at checkout."}},{"@type":"Question","name":"Will I receive tracking?","acceptedAnswer":{"@type":"Answer","text":"Once your order ships, tracking details are sent to the email or phone number used at checkout."}},{"@type":"Question","name":"How does Melato fit?","acceptedAnswer":{"@type":"Answer","text":"Fit varies by product and silhouette. Use the product-specific fit guidance and available measurements, or contact Melato Customer Care before ordering."}},{"@type":"Question","name":"How do I start a return?","acceptedAnswer":{"@type":"Answer","text":"Email support@melato.ca with your order number, the item you want to return, and the reason for return. We will review the request and send next steps if approved."}}]}
+{%- endif -%}
 </script>
 {%- endif -%}

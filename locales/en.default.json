@@ -172,7 +172,7 @@
   "melato_rack": {
     "eyebrow": "The Melato wardrobe",
     "browse_hint": "Move across the rail or drag to browse. Select a piece to take a closer look.",
-    "empty": "Choose a collection with garment views to fill this rack.",
+    "empty": "This rack edit is currently being curated. Explore all available pieces in the collection.",
     "previous": "Previous piece",
     "next": "Next piece",
     "view_collection": "Explore the collection",

@@ -5,8 +5,13 @@ const fs = require('node:fs');
 test('canonical construction details render as escaped text, not executable markup', () => {
   const source = fs.readFileSync('sections/melato-product-page-rebuild.liquid', 'utf8');
   assert.match(source, /assign construction_details = product\.metafields\.custom\.construction\.value/);
-  assert.match(source, /<li>\{\{ detail \| escape \}\}<\/li>/);
+  assert.ok(
+    /<li>\{\{ detail \| escape \}\}<\/li>/.test(source) ||
+      /echo '<li>'\s+echo detail \| escape\s+echo '<\/li>'/.test(source),
+    'construction details must HTML-escape each detail item'
+  );
   assert.doesNotMatch(source, /<li>\{\{ detail \}\}<\/li>/);
+  assert.doesNotMatch(source, /echo '<li>'\s+echo detail\s+echo '<\/li>'/);
   assert.match(source, /<p>\{\{ construction_paragraph \| escape \}\}<\/p>/);
   assert.doesNotMatch(source, /<p>\{\{ construction_paragraph \}\}<\/p>/);
   assert.match(source, /assign construction_details = product\.metafields\.custom\.design_features\.value/);
@@ -30,10 +35,16 @@ test('product-supplied palette and surface values cannot break HTML data attribu
 
 test('dynamic product navigation URLs are escaped inside href attributes', () => {
   const source = fs.readFileSync('sections/melato-product-page-rebuild.liquid', 'utf8');
-  for (const expression of ['size_guide_url', 'matching_product.url']) {
-    assert.ok(source.includes('href="{{ ' + expression + ' | escape }}"'), expression + ' link must be escaped');
-    assert.ok(!source.includes('href="{{ ' + expression + ' }}"'), expression + ' must not be unescaped');
-  }
+  const localizedUrlHelper = fs.readFileSync('snippets/melato-localized-url.liquid', 'utf8');
+  assert.ok(
+    source.includes('href="{{ size_guide_url | escape }}"') ||
+      (source.includes("href=\"{% render 'melato-localized-url', url: size_guide_url %}\"") &&
+        localizedUrlHelper.includes('| escape')),
+    'size_guide_url link must be escaped'
+  );
+  assert.ok(!source.includes('href="{{ size_guide_url }}"'), 'size_guide_url must not be unescaped');
+  assert.ok(source.includes('href="{{ matching_product.url | escape }}"'), 'matching_product.url link must be escaped');
+  assert.ok(!source.includes('href="{{ matching_product.url }}"'), 'matching_product.url must not be unescaped');
 });
 
 test('fit and matching-product labels are escaped as plain text', () => {

@@ -56,14 +56,22 @@
     assign output = output | replace: ', final lens material not specified', '' | replace: 'final lens material not specified', ''
 
     assign product_type_down = product.type | downcase
-    if product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_type_down contains 'accessor' or product_type_down contains 'bag' or product_title_down contains 'sunglass'
+    assign is_bag_like_product = false
+    if product_type_down contains 'bag' or product_type_down contains 'duffle' or product_type_down contains 'tote' or product_type_down contains 'messenger' or product_type_down contains 'dopp' or product_type_down contains 'pouch' or product_type_down contains 'toiletry' or product_type_down contains 'travel case' or product_type_down contains 'wallet' or product_type_down contains 'clutch' or product_type_down contains 'pack' or product_title_down contains 'dopp' or product_title_down contains 'duffle' or product_title_down contains 'pouch' or product_title_down contains 'toiletry' or product_title_down contains 'shoulder bag' or product_title_down contains 'top handle bag' or product_title_down contains 'wallet' or product_title_down contains 'tote'
+      assign is_bag_like_product = true
+    endif
+    if is_bag_like_product or product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_type_down contains 'accessor' or product_title_down contains 'sunglass'
       assign output = output | replace: '<a class="size-guide-trigger" href="/pages/size-guide">Fit guide</a>', ''
+      assign output = output | replace: '<a class="size-guide-trigger" href="/fr/pages/size-guide">Guide des tailles</a>', ''
       assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Fit guide</button>', ''
       assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>', ''
+      assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Guide des tailles</button>', ''
+      assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Mesures du produit</button>', ''
       assign output = output | replace: '<p class="pdp-inline-link"><a href="">Melato Fit Guide</a></p>', ''
       assign output = output | replace: '<p class="pdp-inline-link"><a href="">Guide des tailles Melato</a></p>', ''
       assign output = output | replace: '<p class="pdp-inline-link"><a href="/pages/size-guide">Melato Fit Guide</a></p>', ''
       assign output = output | replace: '<p class="pdp-inline-link"><a href="/pages/size-guide">Guide des tailles Melato</a></p>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="/fr/pages/size-guide">Guide des tailles Melato</a></p>', ''
     endif
 
 
@@ -214,13 +222,13 @@
 
       capture legacy_set_link
         echo '<a class="pdp-set-cta" href="'
-        echo matching_product.url
+        echo matching_product.url | escape
         echo '">View matching piece</a>'
       endcapture
 
       capture legacy_set_link_fr
         echo '<a class="pdp-set-cta" href="'
-        echo matching_product.url
+        echo matching_product.url | escape
         echo '">Voir la pièce assortie</a>'
       endcapture
 
@@ -303,7 +311,7 @@
         echo '>ADD FULL SET</button>'
         echo '<p class="melato-full-set-status" data-melato-set-status role="status" aria-live="polite"></p>'
         echo '<a class="pdp-set-cta" href="'
-        echo matching_product.url
+        echo matching_product.url | escape
         echo '">View matching piece</a>'
         echo '</div>'
       endcapture
@@ -329,13 +337,20 @@
       assign output = output | replace: '>Product details<', '>Détails du produit<'
       assign output = output | replace: '<span>Materials</span>', '<span>Matières</span>'
       assign output = output | replace: '<span>Ingredients</span>', '<span>Ingrédients</span>'
-      if product_type_down contains 'bag' or product_type_down contains 'duffle' or product_type_down contains 'tote' or product_type_down contains 'messenger'
+      if is_bag_like_product
         assign output = output | replace: '<span>Fit</span>', '<span>Dimensions et capacité</span>'
       elsif product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_title_down contains 'sunglass'
         assign output = output | replace: '<span>Fit</span>', '<span>Mesures monture et verres</span>'
       else
         assign output = output | replace: '<span>Fit</span>', '<span>Coupe</span>'
       endif
+    elsif is_bag_like_product
+      assign output = output | replace: '<span>Fit</span>', '<span>Dimensions &amp; Capacity</span>'
+    elsif product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_title_down contains 'sunglass'
+      assign output = output | replace: '<span>Fit</span>', '<span>Frame &amp; Lens Measurements</span>'
+    endif
+
+    if request.locale.iso_code == 'fr'
       assign output = output | replace: '<span>Care</span>', '<span>Entretien</span>'
       assign output = output | replace: '<span>Warranty &amp; Maintenance</span>', '<span>Garantie et entretien</span>'
       assign output = output | replace: '<summary>Construction</summary>', '<summary>Confection</summary>'
