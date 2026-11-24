@@ -4,6 +4,10 @@
   leak into the catalogue. Filtering and sorting remain Shopify-native.
 {% endcomment %}
 {%- liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
   assign cols_desktop = section.settings.columns_desktop | default: 3
   assign cols_mobile = section.settings.columns_mobile | default: 2
   assign per_page = section.settings.products_per_page | default: 24
@@ -17,78 +21,103 @@
     endfor
   endfor
   assign collection_intro = blank
-  case collection.handle
-    when 'all'
-      assign collection_intro = 'The complete Melato catalogue across the current rotation, limited releases and archive.'
-    when 'new-arrivals'
-      assign collection_intro = 'Recent additions to the current collection.'
-    when 'best-sellers'
-      assign collection_intro = 'Frequently selected pieces from the current catalogue.'
-    when 'tracksuits'
-      assign collection_intro = 'Track jackets, track pants, satin and velour sets.'
-    when 'denim'
-      assign collection_intro = 'Denim in straight, slim and flared silhouettes.'
-    when 'accessories'
-      assign collection_intro = 'Bags, eyewear, ties and small accessories.'
-    when 'shirts'
-      assign collection_intro = 'Shirts, polos and woven layers.'
-    when 'womens-zellige-capsule'
-      assign collection_intro = 'Women’s clothing and accessories from the current Melato edit.'
-    when 'fragrance'
-      assign collection_intro = 'Eau de Parfum and Eau de Toilette from Melato.'
-    when 'men'
-      assign collection_intro = 'Men’s clothing and accessories from the current Melato edit.'
-  endcase
+  if is_fr
+    case collection.handle
+      when 'all'
+        assign collection_intro = 'Le catalogue complet Melato, entre pièces actuelles, séries limitées et archives.'
+      when 'new-arrivals'
+        assign collection_intro = 'Les dernières nouveautés ajoutées à la collection actuelle.'
+      when 'best-sellers'
+        assign collection_intro = 'Les pièces les plus sélectionnées du catalogue actuel.'
+      when 'tracksuits'
+        assign collection_intro = 'Vestes de survêtement, pantalons de survêtement et ensembles en satin ou velours.'
+      when 'denim'
+        assign collection_intro = 'Denim en coupes droites, ajustées et évasées.'
+      when 'accessories'
+        assign collection_intro = 'Sacs, lunettes de soleil, cravates et petits accessoires.'
+      when 'shirts'
+        assign collection_intro = 'Chemises, polos et pièces tissées.'
+      when 'womens-zellige-capsule'
+        assign collection_intro = 'Prêt-à-porter et accessoires féminins de la sélection actuelle Melato.'
+      when 'fragrance'
+        assign collection_intro = 'Eau de Parfum et Eau de Toilette signées Melato.'
+      when 'men'
+        assign collection_intro = 'Prêt-à-porter et accessoires masculins de la sélection actuelle Melato.'
+    endcase
+  else
+    case collection.handle
+      when 'all'
+        assign collection_intro = 'The complete Melato catalogue across the current rotation, limited releases and archive.'
+      when 'new-arrivals'
+        assign collection_intro = 'Recent additions to the current collection.'
+      when 'best-sellers'
+        assign collection_intro = 'Frequently selected pieces from the current catalogue.'
+      when 'tracksuits'
+        assign collection_intro = 'Track jackets, track pants, satin and velour sets.'
+      when 'denim'
+        assign collection_intro = 'Denim in straight, slim and flared silhouettes.'
+      when 'accessories'
+        assign collection_intro = 'Bags, eyewear, ties and small accessories.'
+      when 'shirts'
+        assign collection_intro = 'Shirts, polos and woven layers.'
+      when 'womens-zellige-capsule'
+        assign collection_intro = 'Women’s clothing and accessories from the current Melato edit.'
+      when 'fragrance'
+        assign collection_intro = 'Eau de Parfum and Eau de Toilette from Melato.'
+      when 'men'
+        assign collection_intro = 'Men’s clothing and accessories from the current Melato edit.'
+    endcase
+  endif
 -%}
 {% render "melato-collection-tabs" %}
 <section class="melato-collection" data-collection-root>
   <header class="melato-collection-header">
     {%- if collection.image -%}<div class="melato-collection-hero">{{ collection.image | image_url: width: 2000 | image_tag: class:'melato-collection-hero__image', loading:'eager', fetchpriority:'high', widths:'750,1100,1500,2000', sizes:'100vw', alt: collection.image.alt | default: collection.title }}<div class="melato-collection-hero__overlay" aria-hidden="true"></div><div class="melato-collection-hero__content">{%- else -%}<div class="melato-collection-header__text">{%- endif -%}
-      <p class="melato-collection-eyebrow">{% if collection.handle == 'all' %}Catalogue{% else %}Collection{% endif %}</p>
-      <h1 class="melato-collection-title">{% if collection.handle == 'all' %}THE MELATO INDEX{% else %}{{ collection.title }}{% endif %}</h1>
+      <p class="melato-collection-eyebrow">{% if collection.handle == 'all' %}{% if is_fr %}Catalogue{% else %}Catalogue{% endif %}{% else %}Collection{% endif %}</p>
+      <h1 class="melato-collection-title">{% if collection.handle == 'all' %}{% if is_fr %}INDEX MELATO{% else %}THE MELATO INDEX{% endif %}{% else %}{% render 'melato-navigation-label', title: collection.title %}{% endif %}</h1>
       {%- if collection_intro != blank -%}<p class="melato-collection-desc">{{ collection_intro }}</p>{%- endif -%}
     {%- if collection.image -%}</div></div>{%- else -%}</div>{%- endif -%}
   </header>
 
   {%- if collection.handle == 'new-arrivals' -%}
-    <nav class="melato-collection-chips" aria-label="New arrivals categories"><a href="{{ collection.url }}">View all</a><a href="{{ collection.url }}?filter.p.product_type=Track+Jacket">Track jackets</a><a href="{{ collection.url }}?filter.p.product_type=Track+Pant">Track pants</a><a href="{{ collection.url }}?filter.p.product_type=Fragrance">Fragrance</a><a href="{{ collection.url }}?filter.p.product_type=Accessories">Accessories</a><a href="/collections/eves-wardrobe">Women</a></nav>
+    <nav class="melato-collection-chips" aria-label="{% if is_fr %}Catégories des nouveautés{% else %}New arrivals categories{% endif %}"><a href="{{ collection.url }}">{% if is_fr %}Tout voir{% else %}View all{% endif %}</a><a href="{{ collection.url }}?filter.p.product_type=Track+Jacket">{% if is_fr %}Vestes de survêtement{% else %}Track jackets{% endif %}</a><a href="{{ collection.url }}?filter.p.product_type=Track+Pant">{% if is_fr %}Pantalons de survêtement{% else %}Track pants{% endif %}</a><a href="{{ collection.url }}?filter.p.product_type=Fragrance">{% if is_fr %}Parfums{% else %}Fragrance{% endif %}</a><a href="{{ collection.url }}?filter.p.product_type=Accessories">{% if is_fr %}Accessoires{% else %}Accessories{% endif %}</a><a href="{% render 'melato-localized-url', url: '/collections/eves-wardrobe' %}">{% if is_fr %}Femmes{% else %}Women{% endif %}</a></nav>
   {%- endif -%}
 
   <div class="melato-collection-toolbar" data-collection-toolbar>
     <div class="melato-collection-toolbar__left">
-      {%- if section.settings.enable_filtering -%}<button class="melato-filter-btn" type="button" data-filter-open aria-expanded="false" aria-controls="melato-filter-drawer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/></svg><span>Filter</span>{%- if active_filter_count > 0 -%}<span class="melato-filter-btn__badge" data-active-filter-count>{{ active_filter_count }}</span>{%- endif -%}</button>{%- endif -%}
-      <span class="melato-collection-count" data-product-count>{{ collection.products_count }} {{ collection.products_count | pluralize:'piece','pieces' }}</span>
-      {%- if active_filter_count > 0 -%}<a class="melato-clear-filters" href="{{ collection.url }}" data-clear-all-filters>Clear</a>{%- endif -%}
+      {%- if section.settings.enable_filtering -%}<button class="melato-filter-btn" type="button" data-filter-open aria-expanded="false" aria-controls="melato-filter-drawer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="12" y1="18" x2="12" y2="18"/></svg><span>{% if is_fr %}Filtrer{% else %}Filter{% endif %}</span>{%- if active_filter_count > 0 -%}<span class="melato-filter-btn__badge" data-active-filter-count>{{ active_filter_count }}</span>{%- endif -%}</button>{%- endif -%}
+      <span class="melato-collection-count" data-product-count>{{ collection.products_count }} {% if is_fr %}{{ collection.products_count | pluralize:'pièce','pièces' }}{% else %}{{ collection.products_count | pluralize:'piece','pieces' }}{% endif %}</span>
+      {%- if active_filter_count > 0 -%}<a class="melato-clear-filters" href="{{ collection.url }}" data-clear-all-filters>{% if is_fr %}Effacer{% else %}Clear{% endif %}</a>{%- endif -%}
     </div>
-    {%- if section.settings.enable_sorting -%}<div class="melato-sort-wrap"><label for="melato-sort-select" class="visually-hidden">Sort by</label><select id="melato-sort-select" class="melato-sort-select" data-sort-select aria-label="Sort products by"><option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>Featured</option><option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>Best selling</option><option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>Price: low to high</option><option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>Price: high to low</option><option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>Newest</option><option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>A to Z</option></select></div>{%- endif -%}
+    {%- if section.settings.enable_sorting -%}<div class="melato-sort-wrap"><label for="melato-sort-select" class="visually-hidden">{% if is_fr %}Trier par{% else %}Sort by{% endif %}</label><select id="melato-sort-select" class="melato-sort-select" data-sort-select aria-label="{% if is_fr %}Trier les articles par{% else %}Sort products by{% endif %}"><option value="manual" {% if sort_by == 'manual' %}selected{% endif %}>{% if is_fr %}En vedette{% else %}Featured{% endif %}</option><option value="best-selling" {% if sort_by == 'best-selling' %}selected{% endif %}>{% if is_fr %}Meilleures ventes{% else %}Best selling{% endif %}</option><option value="price-ascending" {% if sort_by == 'price-ascending' %}selected{% endif %}>{% if is_fr %}Prix : croissant{% else %}Price: low to high{% endif %}</option><option value="price-descending" {% if sort_by == 'price-descending' %}selected{% endif %}>{% if is_fr %}Prix : décroissant{% else %}Price: high to low{% endif %}</option><option value="created-descending" {% if sort_by == 'created-descending' %}selected{% endif %}>{% if is_fr %}Nouveautés{% else %}Newest{% endif %}</option><option value="title-ascending" {% if sort_by == 'title-ascending' %}selected{% endif %}>{% if is_fr %}De A à Z{% else %}A to Z{% endif %}</option></select></div>{%- endif -%}
   </div>
 
-  {%- if active_filter_count > 0 -%}<div class="melato-active-filters" data-active-filters-bar aria-label="Active filters">{%- for filter in collection.filters -%}{%- for value in filter.values -%}{%- if value.active -%}<a href="{{ value.url_to_remove }}" class="melato-active-filter-pill" data-filter-pill>{{ filter.label }}: {{ value.label }} <span aria-hidden="true">×</span></a>{%- endif -%}{%- endfor -%}{%- endfor -%}</div>{%- endif -%}
+  {%- if active_filter_count > 0 -%}<div class="melato-active-filters" data-active-filters-bar aria-label="{% if is_fr %}Filtres actifs{% else %}Active filters{% endif %}">{%- for filter in collection.filters -%}{%- for value in filter.values -%}{%- if value.active -%}<a href="{{ value.url_to_remove }}" class="melato-active-filter-pill" data-filter-pill>{{ filter.label }}: {{ value.label }} <span aria-hidden="true">×</span></a>{%- endif -%}{%- endfor -%}{%- endfor -%}</div>{%- endif -%}
 
   {%- if section.settings.enable_filtering -%}
-    <div id="melato-filter-drawer" class="melato-filter-drawer" role="dialog" aria-modal="true" aria-label="Filter products" aria-hidden="true" data-filter-drawer>
-      <div class="melato-filter-drawer__header"><h2>Filter</h2><button type="button" data-filter-close aria-label="Close filters">×</button></div>
+    <div id="melato-filter-drawer" class="melato-filter-drawer" role="dialog" aria-modal="true" aria-label="{% if is_fr %}Filtrer les articles{% else %}Filter products{% endif %}" aria-hidden="true" data-filter-drawer>
+      <div class="melato-filter-drawer__header"><h2>{% if is_fr %}Filtrer{% else %}Filter{% endif %}</h2><button type="button" data-filter-close aria-label="{% if is_fr %}Fermer les filtres{% else %}Close filters{% endif %}">×</button></div>
       <div class="melato-filter-drawer__body">{%- for filter in collection.filters -%}<section class="melato-filter-group" data-filter-group="{{ filter.param_name }}"><button class="melato-filter-group__trigger" type="button" aria-expanded="true" aria-controls="FilterGroup-{{ forloop.index }}"><span>{{ filter.label }}</span>{%- assign group_active = 0 -%}{%- for value in filter.values -%}{%- if value.active -%}{%- assign group_active = group_active | plus:1 -%}{%- endif -%}{%- endfor -%}{%- if group_active > 0 -%}<span>{{ group_active }}</span>{%- endif -%}</button><div id="FilterGroup-{{ forloop.index }}" class="melato-filter-group__options">{%- if filter.type == 'list' -%}{%- for value in filter.values -%}<label class="melato-filter-option"><input type="checkbox" name="{{ filter.param_name }}" value="{{ value.value }}" {% if value.active %}checked{% endif %} data-filter-input><span>{{ value.label }}</span></label>{%- endfor -%}{%- elsif filter.type == 'price_range' -%}<div class="melato-price-range"><label>Minimum<input type="number" name="{{ filter.min_value.param_name }}" value="{% if filter.min_value.value %}{{ filter.min_value.value | money_without_currency | remove:',' }}{% endif %}" min="0" data-filter-price-input></label><label>Maximum<input type="number" name="{{ filter.max_value.param_name }}" value="{% if filter.max_value.value %}{{ filter.max_value.value | money_without_currency | remove:',' }}{% endif %}" min="0" data-filter-price-input></label></div>{%- endif -%}</div></section>{%- endfor -%}</div>
-      <div class="melato-filter-drawer__footer"><a href="{{ collection.url }}" class="melato-filter-clear-btn" data-filter-drawer-clear>Clear</a><button class="melato-filter-apply-btn" type="button" data-filter-apply>Show results</button></div>
+      <div class="melato-filter-drawer__footer"><a href="{{ collection.url }}" class="melato-filter-clear-btn" data-filter-drawer-clear>{% if is_fr %}Effacer{% else %}Clear{% endif %}</a><button class="melato-filter-apply-btn" type="button" data-filter-apply>{% if is_fr %}Afficher les résultats{% else %}Show results{% endif %}</button></div>
     </div>
   {%- endif -%}
 
-  <div class="melato-collection-grid" id="melato-product-grid" aria-live="polite" aria-label="Product grid" data-product-grid>
+  <div class="melato-collection-grid" id="melato-product-grid" aria-live="polite" aria-label="{% if is_fr %}Grille de produits{% else %}Product grid{% endif %}" data-product-grid>
     {%- paginate collection.products by per_page -%}
       {%- if collection.products.size > 0 -%}
         <div class="melato-product-grid__inner" style="--cols-desktop:{{ cols_desktop }};--cols-mobile:{{ cols_mobile }}">{%- if collection.handle == 'best-sellers' -%}{%- for product in collection.products -%}{%- if product.available -%}<article class="melato-product-grid__item" data-product-type="{{ product.type | escape }}">{%- render 'product-card', product:product -%}</article>{%- endif -%}{%- endfor -%}{%- else -%}{%- for product in collection.products -%}<article class="melato-product-grid__item" data-product-type="{{ product.type | escape }}">{%- render 'product-card', product:product -%}</article>{%- endfor -%}{%- endif -%}</div>
-        {%- if collection.handle == 'best-sellers' -%}{%- assign unavailable_count = 0 -%}{%- for product in collection.products -%}{%- unless product.available -%}{%- assign unavailable_count = unavailable_count | plus:1 -%}{%- endunless -%}{%- endfor -%}{%- if unavailable_count > 0 -%}<section class="melato-archive-icons" aria-labelledby="ArchiveIconsTitle"><p>Sold out</p><h2 id="ArchiveIconsTitle">Archive</h2><div class="melato-product-grid__inner" style="--cols-desktop:{{ cols_desktop }};--cols-mobile:{{ cols_mobile }}">{%- for product in collection.products -%}{%- unless product.available -%}<article class="melato-product-grid__item melato-product-grid__item--archive">{%- render 'product-card', product:product -%}</article>{%- endunless -%}{%- endfor -%}</div></section>{%- endif -%}{%- endif -%}
+        {%- if collection.handle == 'best-sellers' -%}{%- assign unavailable_count = 0 -%}{%- for product in collection.products -%}{%- unless product.available -%}{%- assign unavailable_count = unavailable_count | plus:1 -%}{%- endunless -%}{%- endfor -%}{%- if unavailable_count > 0 -%}<section class="melato-archive-icons" aria-labelledby="ArchiveIconsTitle"><p>{% if is_fr %}Épuisé{% else %}Sold out{% endif %}</p><h2 id="ArchiveIconsTitle">{% if is_fr %}Archives{% else %}Archive{% endif %}</h2><div class="melato-product-grid__inner" style="--cols-desktop:{{ cols_desktop }};--cols-mobile:{{ cols_mobile }}">{%- for product in collection.products -%}{%- unless product.available -%}<article class="melato-product-grid__item melato-product-grid__item--archive">{%- render 'product-card', product:product -%}</article>{%- endunless -%}{%- endfor -%}</div></section>{%- endif -%}{%- endif -%}
         {%- if paginate.pages > 1 -%}
           {%- if collection.handle == 'new-arrivals' and paginate.next -%}
             <div class="melato-pagination-shell" data-progressive-pagination>
-              <a class="melato-load-more" href="{{ paginate.next.url }}" data-load-more aria-label="Load more {{ collection.title | escape }} products">Load more</a>
-              <nav class="melato-pagination" aria-label="Collection page navigation" data-native-pagination>{{ paginate | default_pagination }}</nav>
+              <a class="melato-load-more" href="{{ paginate.next.url }}" data-load-more aria-label="{% if is_fr %}Charger plus d'articles {{ collection.title | escape }}{% else %}Load more {{ collection.title | escape }} products{% endif %}">{% if is_fr %}Voir plus{% else %}Load more{% endif %}</a>
+              <nav class="melato-pagination" aria-label="{% if is_fr %}Pagination de la collection{% else %}Collection page navigation{% endif %}" data-native-pagination>{{ paginate | default_pagination }}</nav>
             </div>
           {%- else -%}
-            <nav class="melato-pagination" aria-label="Collection page navigation">{{ paginate | default_pagination }}</nav>
+            <nav class="melato-pagination" aria-label="{% if is_fr %}Pagination de la collection{% else %}Collection page navigation{% endif %}">{{ paginate | default_pagination }}</nav>
           {%- endif -%}
         {%- endif -%}
-      {%- else -%}<div class="melato-collection-empty"><h2>No products found</h2><a href="{{ collection.url }}">Clear filters</a></div>{%- endif -%}
+      {%- else -%}<div class="melato-collection-empty"><h2>{% if is_fr %}Aucun produit trouvé{% else %}No products found{% endif %}</h2><a href="{{ collection.url }}">{% if is_fr %}Effacer les filtres{% else %}Clear filters{% endif %}</a></div>{%- endif -%}
     {%- endpaginate -%}
   </div>
 </section>

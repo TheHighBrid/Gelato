@@ -28,7 +28,11 @@
 >
   <div class="melato-hero-video__media" aria-hidden="true">
     {% if section.settings.shopify_video != blank %}
-      {{ section.settings.shopify_video | video_tag: autoplay: true, loop: section.settings.loop_video, muted: true, controls: false, playsinline: true, class: 'melato-hero-video__asset' }}
+      {%- capture hero_video_tag -%}{{ section.settings.shopify_video | video_tag: autoplay: true, loop: section.settings.loop_video, muted: true, controls: false, playsinline: true, class: 'melato-hero-video__asset' }}{%- endcapture -%}
+      {%- unless hero_video_tag contains 'alt=' -%}
+        {%- assign hero_video_tag = hero_video_tag | replace: '<img ', '<img alt="" ' -%}
+      {%- endunless -%}
+      {{ hero_video_tag }}
     {% elsif section.settings.video_url != blank %}
       <video class="melato-hero-video__asset" autoplay muted playsinline {% if section.settings.loop_video %}loop{% endif %} preload="metadata" {% if section.settings.poster_image != blank %}poster="{{ section.settings.poster_image | image_url: width: 2400 }}"{% endif %}>
         <source src="{{ section.settings.video_url | escape }}" type="video/mp4">

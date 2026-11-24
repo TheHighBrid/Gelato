@@ -28,7 +28,7 @@
 {%- if request.locale.iso_code == 'ar' or request.path == '/ar' or request.path contains '/ar/' or request.path == '/en-fr' or request.path contains '/en-fr/' -%}
   {%- assign melato_incomplete_locale = true -%}
 {%- endif -%}
-{%- if melato_incomplete_locale -%}<meta name="robots" content="noindex,follow">{%- endif -%}
+{%- if melato_incomplete_locale or template.name == 'search' or request.path == '/search' or request.path contains '/search' -%}<meta name="robots" content="noindex,follow">{%- endif -%}
 
 {%- if page_description == blank and melato_description != blank -%}<meta name="description" content="{{ melato_description | escape }}">{%- endif -%}
 <meta name="twitter:site" content="@melato_ca">
