@@ -3,15 +3,21 @@
   Uses available products from New Arrivals with a catalog-wide fallback.
   Product title and price are emitted as distinct semantic phrases.
 {% endcomment %}
-{%- assign recovery_collection = collections['new-arrivals'] | default: collections.all -%}
+{%- liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
+  assign recovery_collection = collections['new-arrivals'] | default: collections.all
+-%}
 <div class="cart-drawer__empty">
   <div class="cart-drawer__empty-copy">
-    <p class="cart-drawer__empty-kicker">Your edit is open</p>
-    <p class="cart-drawer__empty-text">Your cart is empty.</p>
-    <p class="cart-drawer__empty-note">Start with a current piece, then build the rest of the uniform around it.</p>
+    <p class="cart-drawer__empty-kicker">{% if is_fr %}Votre sélection vous attend{% else %}Your edit is open{% endif %}</p>
+    <p class="cart-drawer__empty-text">{% if is_fr %}Votre panier est vide.{% else %}Your cart is empty.{% endif %}</p>
+    <p class="cart-drawer__empty-note">{% if is_fr %}Commencez par une pièce actuelle, puis complétez le reste de votre sélection.{% else %}Start with a current piece, then build the rest of the uniform around it.{% endif %}</p>
   </div>
   {%- if recovery_collection != blank and recovery_collection.products.size > 0 -%}
-    <div class="cart-recovery" aria-label="Recommended new arrivals">
+    <div class="cart-recovery" aria-label="{% if is_fr %}Nouveautés recommandées{% else %}Recommended new arrivals{% endif %}">
       {%- assign recovery_count = 0 -%}
       {%- for recovery_product in recovery_collection.products -%}
         {%- if recovery_product.available and recovery_count < 3 -%}
@@ -31,5 +37,5 @@
       {%- endfor -%}
     </div>
   {%- endif -%}
-  <a href="{{ routes.collections_url }}/new-arrivals" class="melato-cart-cta">Explore new arrivals</a>
+  <a href="{% render 'melato-localized-url', url: '/collections/new-arrivals' %}" class="melato-cart-cta">{% if is_fr %}Découvrir les nouveautés{% else %}Explore new arrivals{% endif %}</a>
 </div>

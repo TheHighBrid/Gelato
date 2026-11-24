@@ -13,51 +13,39 @@
       "type": "video",
       "name": "Video",
       "settings": {
-        "heading": "THUNDERSTORM AMBER ALERT",
-        "center_heading": true,
-        "video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.HD-1080p-7.2Mbps-93650307.mp4",
-        "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.SD-480p-1.5Mbps-95096030.mp4",
-        "cover_image": "shopify://shop_images/Melato.ca-_EL_TLB_-FRAME_261.jpg",
-        "autoplay": true,
-        "full_width": true,
-        "aspect_ratio": "1/1",
         "show_hero_actions": true,
         "hero_heading": "THE CULTURE WEARS US",
         "primary_label": "Shop the drop",
         "primary_link": "/collections/new-arrivals",
         "secondary_label": "Living Lookbook",
-        "secondary_link": "/pages/living-lookbook"
+        "secondary_link": "/pages/living-lookbook",
+        "heading": "THUNDERSTORM AMBER ALERT",
+        "center_heading": true,
+        "video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.HD-1080p-7.2Mbps-93650307.mp4",
+        "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/b3a58df4e13d4a868b5e6411972adab7/b3a58df4e13d4a868b5e6411972adab7.SD-480p-1.5Mbps-95096030.mp4",
+        "cover_image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
+        "autoplay": true,
+        "full_width": true,
+        "aspect_ratio": "1/1"
       }
     },
     "melato_conversion_2026": {
       "type": "melato-home-conversion",
       "settings": {
-        "eyebrow": "Melato",
-        "heading": "THE CULTURE WEARS US",
+        "eyebrow": "المحطة ديال",
+        "heading": "الحطة",
         "copy": "Tailored for movement, cut with intent.",
-        "hero_image": "shopify://shop_images/Melato.ca-_EL_TLB_-FRAME_261.jpg",
+        "hero_image": "shopify://shop_images/rn-image_picker_lib_temp_278645d5-0651-4038-9595-0605a21ab62a.png",
         "featured_collection": "new-arrivals"
       }
     },
     "ticker": {
       "type": "ticker",
       "blocks": {
-        "item1": {
+        "item_jNdC3X": {
           "type": "item",
           "settings": {
-            "text": "THE CULTURE WEARS US"
-          }
-        },
-        "item2": {
-          "type": "item",
-          "settings": {
-            "text": "COMME NEVER CHANGE"
-          }
-        },
-        "item3": {
-          "type": "item",
-          "settings": {
-            "text": "COMPLIMENTARY STANDARD DELIVERY"
+            "text": "COMPLIMENTARY STANDARD DELIVERY ON ALL ORDERS"
           }
         },
         "item4": {
@@ -68,20 +56,63 @@
         }
       },
       "block_order": [
-        "item1",
-        "item2",
-        "item3",
+        "item_jNdC3X",
         "item4"
       ],
       "settings": {
         "accessible_label": "Melato information",
-        "speed": 60,
-        "separator": "MELATO",
+        "speed": 45,
+        "separator": "",
         "direction": "left",
-        "padding": 8,
+        "padding": 6,
         "background_color": "#f5f1e8",
         "text_color": "#111111",
         "border_color": "#d8d3cb"
+      }
+    },
+    "melato_rack_LzgiUD": {
+      "type": "melato-rack",
+      "name": "Melato Rack",
+      "settings": {
+        "collection": "rack",
+        "max_items": 14,
+        "heading": "",
+        "cta_label": "See availability",
+        "show_ticker": true,
+        "ticker_text": "The culture wears us | Numbered drops | Made in limited runs",
+        "ticker_speed": 70,
+        "bg_color": "#efeeeb",
+        "ink_color": "#22201e",
+        "accent_color": "#9c8765",
+        "rail_color": "#8d8f91",
+        "blend_photos": true,
+        "padding_top": 48,
+        "padding_bottom": 0
+      }
+    },
+    "hero_video_K7WbW8": {
+      "type": "hero-video",
+      "name": "Melato - cinematic video hero",
+      "settings": {
+        "shopify_video": "shopify://files/videos/rn-image_picker_lib_temp_5fb95f9b-0ff8-4cab-ade3-de93e29f1b93.mp4",
+        "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
+        "poster_image": "shopify://shop_images/1000018480.jpg",
+        "loop_video": true,
+        "hero_height": "full",
+        "custom_height": 820,
+        "overlay_opacity": 20,
+        "enable_texture": true,
+        "content_position": "left",
+        "content_width": 700,
+        "kicker": "from the",
+        "heading_line_1": "culture",
+        "heading_line_2": "of the couture",
+        "body": "<p>&nbsp; &nbsp; &nbsp;S/o to everyone who chose us as the messenger for their self-expression! 🙏🏽🎙️</p>",
+        "primary_label": "Most wanted",
+        "primary_link": "shopify://collections/best-sellers",
+        "secondary_label": "New Arrivals",
+        "secondary_link": "shopify://collections/new-arrivals",
+        "show_scroll_cue": true
       }
     },
     "featured_collection": {
@@ -89,7 +120,7 @@
       "settings": {
         "eyebrow": "Collection",
         "title": "THE UNIFORM",
-        "collection": "frontpage",
+        "collection": "tracksuits",
         "products_to_show": 16,
         "columns_desktop": 4,
         "columns_mobile": 2,
@@ -101,24 +132,24 @@
       "type": "hero-video",
       "name": "Melato - cinematic video hero",
       "settings": {
-        "shopify_video": "shopify://files/videos/Hero.mp4",
+        "shopify_video": "shopify://files/videos/YouCut_20261015_140313517.mp4",
         "video_url": "https://cdn.shopify.com/videos/c/vp/cd09720f09ea48b085edf1240ec6068b/cd09720f09ea48b085edf1240ec6068b.SD-480p-1.5Mbps-95081011.mp4",
-        "poster_image": "shopify://shop_images/rn-image_picker_lib_temp_2b5e94fa-a763-49a2-a495-8203a4e667d2.png",
+        "poster_image": "shopify://shop_images/103305.png",
         "loop_video": true,
         "hero_height": "full",
         "custom_height": 1100,
-        "overlay_opacity": 65,
+        "overlay_opacity": 20,
         "enable_texture": true,
         "content_position": "left",
-        "content_width": 920,
+        "content_width": 500,
         "kicker": "THE MELATO STANDARD",
         "heading_line_1": "THE   Culture",
         "heading_line_2": "WEARS US",
-        "body": "<p>    -        comme never change</p>",
-        "primary_label": "SHOP THE DROP",
-        "primary_link": "shopify://collections/frontpage",
-        "secondary_label": "OUR STORY",
-        "secondary_link": "shopify://pages/our-story",
+        "body": "<p>&nbsp; &nbsp; - &nbsp; &nbsp; &nbsp; &nbsp;comme never change</p>",
+        "primary_label": "DENIM",
+        "primary_link": "shopify://collections/denim",
+        "secondary_label": "ACCESSORIES",
+        "secondary_link": "shopify://collections/accessories",
         "show_scroll_cue": true
       }
     },
@@ -127,13 +158,19 @@
       "disabled": true,
       "name": "Video",
       "settings": {
+        "show_hero_actions": false,
+        "hero_heading": "THE CULTURE WEARS US",
+        "primary_label": "Shop the drop",
+        "primary_link": "",
+        "secondary_label": "Living Lookbook",
+        "secondary_link": "",
         "heading": "HENDRIX BLUE MAGIC",
         "center_heading": true,
         "video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
-        "mobile_video_url": "",
+        "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/db0ffcec610d49e5bad1f318c9110a7f/db0ffcec610d49e5bad1f318c9110a7f.SD-480p-1.5Mbps-95093852.mp4",
         "cover_image": "shopify://shop_images/hendrix-flare-jean-view-07.png",
-        "autoplay": false,
-        "full_width": true,
+        "autoplay": true,
+        "full_width": false,
         "aspect_ratio": "4/3"
       }
     },
@@ -141,7 +178,8 @@
       "type": "announcement-marquee",
       "name": "Announcement Marquee",
       "settings": {
-        "ticker_text": "SHOULD YOU WISH TO PREVIEW OUR SELECTION IN PERSON, PLEASE CONTACT US TO SCHEDULE AN APPOINTMENT AT 8555 CAMPEAU DRIVE, UNIT #370, TANGER OUTLETS OTTAWA.",
+        "ticker_text": "Private previews by appointment. Tanger Outlets Ottawa.",
+        "contact_url": "/pages/contact",
         "divider_char": "✦",
         "scroll_speed": 60,
         "bar_height": 38,
@@ -164,6 +202,7 @@
     },
     "drop_signup_FMehUL": {
       "type": "drop-signup",
+      "disabled": true,
       "settings": {
         "eyebrow": "Email",
         "heading": "MELATO NOTES",
@@ -178,11 +217,152 @@
     },
     "concierge_strip_74pEae": {
       "type": "concierge-strip",
+      "disabled": true,
       "name": "Client Services Nav",
       "settings": {
         "current_pillar": "order-support",
         "contextual_copy": "<p>Need help with an order? Email <a href=\"mailto:support@melato.ca\">support@melato.ca</a> and include your order number.</p>",
         "show_contextual": true
+      }
+    },
+    "melato_service_hero_CdQdE4": {
+      "type": "melato-service-hero",
+      "disabled": true,
+      "name": "Melato Service Hero",
+      "settings": {
+        "eyebrow": "",
+        "headline": "",
+        "subcopy": ""
+      }
+    },
+    "video_LXiWPt": {
+      "type": "video",
+      "disabled": true,
+      "name": "Video",
+      "settings": {
+        "show_hero_actions": false,
+        "hero_heading": "THE CULTURE WEARS US",
+        "primary_label": "Shop the drop",
+        "primary_link": "",
+        "secondary_label": "Living Lookbook",
+        "secondary_link": "",
+        "heading": "",
+        "center_heading": true,
+        "video_url": "",
+        "mobile_video_url": "https://cdn.shopify.com/videos/c/vp/49f8211e467c4d22acbad3fe6f4a2371/49f8211e467c4d22acbad3fe6f4a2371.SD-480p-1.5Mbps-97751476.mp4",
+        "autoplay": true,
+        "full_width": true,
+        "aspect_ratio": "4/3"
+      }
+    },
+    "melato_world_orb_kPPgtR": {
+      "type": "melato-world-orb",
+      "blocks": {
+        "location_QyPaCc": {
+          "type": "location",
+          "settings": {
+            "loc_id": "living-book",
+            "title": "Living Book",
+            "kicker": "Lookbook",
+            "blurb": "The cinematic dossier. Frames of evidence, garments, and withheld identity — the house, narrated.",
+            "link": "/pages/living-lookbook",
+            "lat": 22,
+            "lon": 18
+          }
+        },
+        "location_HXgkaC": {
+          "type": "location",
+          "settings": {
+            "loc_id": "ready-to-wear",
+            "title": "Ready To Wear",
+            "kicker": "The Uniform",
+            "blurb": "Limited-run apparel, tailored for movement and cut with intent. Tracksuits, denim, the daily house language.",
+            "link": "/collections/new-arrivals",
+            "lat": 6,
+            "lon": 72
+          }
+        },
+        "location_JMbQQF": {
+          "type": "location",
+          "settings": {
+            "loc_id": "accessories",
+            "title": "Accessories",
+            "kicker": "Finishing",
+            "blurb": "Bags, lenses, chain wallets, and the last decisions. Small objects that complete the look.",
+            "link": "/collections/accessories",
+            "lat": -16,
+            "lon": 128
+          }
+        },
+        "location_N6Rpgx": {
+          "type": "location",
+          "settings": {
+            "loc_id": "editorial",
+            "title": "Editorial",
+            "kicker": "Journal",
+            "blurb": "Notes from the house. Process, references, and the culture that wears us.",
+            "link": "/blogs/news",
+            "lat": 34,
+            "lon": 196
+          }
+        },
+        "location_6KFAmL": {
+          "type": "location",
+          "settings": {
+            "loc_id": "popup",
+            "title": "Pop-Up Show & Events",
+            "kicker": "Coordinates",
+            "blurb": "Physical appearances. Popup calendar, showings, and the house in a room.",
+            "link": "/pages/popup-calendar",
+            "lat": -28,
+            "lon": 244
+          }
+        },
+        "location_kiq3Y6": {
+          "type": "location",
+          "settings": {
+            "loc_id": "concierge",
+            "title": "Concierge",
+            "kicker": "Service",
+            "blurb": "Fit, care, delivery, and private assistance. One line to the house.",
+            "link": "/pages/contact",
+            "lat": 12,
+            "lon": 300
+          }
+        },
+        "location_dBkQRi": {
+          "type": "location",
+          "settings": {
+            "loc_id": "radio",
+            "title": "Story",
+            "kicker": "About us",
+            "blurb": "The house frequency. Sound from the atelier a listening room for the world of Melato.",
+            "link": "/pages/our-story",
+            "lat": -20,
+            "lon": 348
+          }
+        }
+      },
+      "block_order": [
+        "location_QyPaCc",
+        "location_HXgkaC",
+        "location_JMbQQF",
+        "location_N6Rpgx",
+        "location_6KFAmL",
+        "location_kiq3Y6",
+        "location_dBkQRi"
+      ],
+      "disabled": true,
+      "name": "Melato World Orb",
+      "settings": {
+        "kicker": "World of Melato",
+        "wordmark": "MELATO",
+        "line": "The House",
+        "list_label": "Featured locations",
+        "hint": "Drag to spin · Click a marker to enter",
+        "enter_label": "Enter this room",
+        "close_label": "Back to orbit",
+        "height": "100dvh"
       }
     }
   },
@@ -190,12 +370,17 @@
     "video_Hm6knQ",
     "melato_conversion_2026",
     "ticker",
+    "melato_rack_LzgiUD",
+    "hero_video_K7WbW8",
     "featured_collection",
     "hero_video_wLntL4",
     "video_YBN7Uc",
     "announcement_marquee_VfV9At",
     "brand_story",
     "drop_signup_FMehUL",
-    "concierge_strip_74pEae"
+    "concierge_strip_74pEae",
+    "melato_service_hero_CdQdE4",
+    "video_LXiWPt",
+    "melato_world_orb_kPPgtR"
   ]
 }

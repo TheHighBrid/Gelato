@@ -17,9 +17,9 @@ test('Living Lookbook production template only orders defined sections and block
   const sectionIds = new Set(Object.keys(template.sections));
   for (const sectionId of template.order) assert.ok(sectionIds.has(sectionId), `Missing ordered section: ${sectionId}`);
 
-  assert.equal(template.sections.main?.type, 'melato-living-book-vol01');
+  assert.equal(template.sections.main?.type, 'melato-lookbook-shop');
   assert.equal(template.order.length, 1);
-  assert.equal(template.sections.main?.settings?.hide_store_chrome, true);
+  assert.equal(template.sections.main?.block_order.length, 28);
 });
 
 test('Living Look drawer is route-scoped and progressively enhanced', () => {

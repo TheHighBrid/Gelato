@@ -67,7 +67,7 @@
           "badge_text": "POPUP CALENDAR",
           "cta_text": "NEWSLETTER",
           "cta_link": "shopify://pages/newsletter",
-          "fallback_message": "COMPLIMENTARY DELIVERY ON ALL ORDERS · NEW ARRIVALS NOW LIVE · POPUP COORDINATES & DROP INTELLIGENCE VIA MELATO NOTES.",
+          "fallback_message": "COMPLIMENTARY STANDARD DELIVERY ON ALL ORDERS · NEW ARRIVALS NOW LIVE · POPUP COORDINATES & DROP INTELLIGENCE VIA MELATO NOTES.",
           "fallback_micro": "Melato"
         }
       },
@@ -88,7 +88,7 @@
       "melato-footer": {
         "type": "melato-footer",
         "settings": {
-          "logo": "shopify://shop_images/ChatGPT_Image_Jun_19_2026_08_19_50_PM_1_1_0f2ee861-7aa7-4533-af8d-516730fcd64b.png",
+          "logo": "shopify://shop_images/MELATO_Official_Logo.png",
           "logo_width": 320,
           "tagline": "Join the collective.",
           "instagram_url": "https://www.instagram.com/melato.ca",

@@ -19,7 +19,7 @@
   ];
 
   const KNOWLEDGE = {
-    delivery: 'Complimentary delivery is included on all Melato orders. Orders usually prepare within 1 to 3 business days before dispatch.',
+    delivery: 'Complimentary standard delivery is included on all Melato orders. Orders usually prepare within 1 to 3 business days before dispatch.',
     returns: 'Unworn, unwashed, tagged items may be eligible under the posted return policy. For any return request, include the order number, checkout email, item name, and reason so client care can review it cleanly.',
     order: 'I cannot access live Shopify order data from this browser widget. For order-specific help, email orders@melato.ca with your order number and checkout email, or reply to your confirmation email.',
     fit: 'Melato pieces are silhouette-led. Track jackets usually read best true to size for a clean designer fit, or one size up for a relaxed styling effect. Flare and wide-leg pants should be chosen by waist first, then desired drape and stack.',

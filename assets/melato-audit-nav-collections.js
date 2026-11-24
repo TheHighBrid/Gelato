@@ -21,6 +21,9 @@
     var path = pathname || '/';
     path = path.replace(/\/{2,}/g, '/');
     path = path.replace(/\/collections\/denim-1(?=\/|$)/i, '/collections/denim');
+    path = path.replace(/\/collections\/pant(?=\/|$)/i, '/collections/pants');
+    path = path.replace(/\/products\/sunset-deposition-corset-dress-copy(?=\/|$)/i, '/products/sunset-deposition-corset-dress');
+    path = path.replace(/\/products\/rex-x-fur-jacket-1(?=\/|$)/i, '/products/rex-x-fur-jacket');
     if (path.length > 1) path = path.replace(/\/+$/g, '');
     return path || '/';
   }
@@ -92,13 +95,13 @@
 
       var links = Array.from(header.querySelectorAll('.mxh__drawer .mxh__nav-item > .mxh__nav-link, .mxh__drawer .mxh__nav > .mxh__nav-link'))
         .filter(function (link) { return link.getAttribute('href'); })
-        .filter(function (link) { return normalizeHref(link.getAttribute('href')) !== '/collections/sunglasses'; })
+        .filter(function (link) { return !/\/collections\/sunglasses$/i.test(normalizeHref(link.getAttribute('href'))); })
         .slice(0, 6);
       if (!links.length) return;
 
       var nav = document.createElement('nav');
       nav.className = 'mxh__desktop-nav';
-      nav.setAttribute('aria-label', 'Primary navigation');
+      nav.setAttribute('aria-label', document.documentElement.lang && document.documentElement.lang.toLowerCase().indexOf('fr') === 0 ? 'Navigation principale' : 'Primary navigation');
 
       links.forEach(function (source) {
         var link = document.createElement('a');

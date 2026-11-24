@@ -8,7 +8,7 @@
   Or add via Shopify Customizer → Add Section → Announcement Marquee
 {% endcomment %}
 
-{% assign ticker_text   = section.settings.ticker_text | default: 'Complimentary delivery on all orders.' %}
+{% assign ticker_text   = section.settings.ticker_text | default: 'Complimentary standard delivery on all orders.' %}
 {% assign divider_char  = section.settings.divider_char | default: '✦' %}
 {% assign scroll_speed  = section.settings.scroll_speed | default: 28 %}
 {% assign bg_color      = section.settings.bg_color | default: '#0a0a0a' %}
@@ -78,6 +78,9 @@
     border: 0 !important;
   }
 
+  .melato-marquee__contact {display:block;color:inherit;text-decoration:none;}
+  .melato-marquee__contact:focus-visible {outline:2px solid currentColor;outline-offset:-3px;}
+
   @keyframes melato-marquee-scroll-{{ section.id }} {
     from { transform: translate3d(0, 0, 0); }
     to { transform: translate3d(-50%, 0, 0); }
@@ -99,14 +102,16 @@
   data-announcement-bar
   data-melato-marquee
 >
+  {% if section.settings.contact_url != blank %}<a class="melato-marquee__contact" href="{% render 'melato-localized-url', url: section.settings.contact_url %}">{% endif %}
   <div class="melato-marquee__track" aria-hidden="true">
     {% for i in (1..6) %}
-      <span class="melato-marquee__item">{{ ticker_text }}</span>
+      <span class="melato-marquee__item">{{ ticker_text | escape }}</span>
       <span class="melato-marquee__divider" aria-hidden="true">{{ divider_char }}</span>
     {% endfor %}
   </div>
 
-  <p class="melato-marquee__sr">{{ ticker_text }}</p>
+  <p class="melato-marquee__sr">{{ ticker_text | escape }}</p>
+  {% if section.settings.contact_url != blank %}</a>{% endif %}
 </div>
 
 {% schema %}
@@ -115,11 +120,12 @@
   "tag": "div",
   "class": "melato-marquee-section",
   "settings": [
+    {"type":"url","id":"contact_url","label":"Contact destination"},
     {
       "type": "textarea",
       "id": "ticker_text",
       "label": "Ticker text",
-      "default": "Complimentary delivery on all orders."
+      "default": "Complimentary standard delivery on all orders."
     },
     {
       "type": "text",

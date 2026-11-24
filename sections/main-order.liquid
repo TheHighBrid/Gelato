@@ -5,7 +5,7 @@
 <section class="section-spacing">
   <div class="container--narrow">
     <div class="drip-reveal" style="margin-bottom:40px;">
-      <a href="{{ routes.account_url }}" class="btn btn--ghost btn--sm" style="margin-bottom:16px;">← Back to Account</a>
+      <a href="{{ routes.account_url | replace: '&amp;', '&' | escape }}" class="btn btn--ghost btn--sm" style="margin-bottom:16px;">← Back to Account</a>
       <h1 class="heading-md">Order {{ order.name }}</h1>
       <p class="text-label" style="color:var(--color-muted);margin-top:8px;">Placed {{ order.created_at | date: '%B %d, %Y' }}</p>
     </div>

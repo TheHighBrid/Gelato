@@ -1,0 +1,75 @@
+:root {
+  --surface-page: #ffffff;
+  --surface-media: #faf9f6;
+  --surface-studio: #ffffff;
+  --surface-subtle: #f3f1ec;
+  --text-primary: #111111;
+  --text-secondary: #595959;
+  --border-subtle: #e6e4e0;
+  --border-control: #767676;
+  --action: #111111;
+  --action-text: #ffffff;
+  --error: #8f1010;
+  --success: #204030;
+  --font-editorial: 'Cormorant Garamond', 'Iowan Old Style', Baskerville, Georgia, serif;
+  --font-commerce: 'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body-weight: 400;
+  --font-control-weight: 500;
+  --type-body: 1rem;
+  --type-editorial-min: 1.75rem;
+  --prose-measure: 62ch;
+  --page-width-max: 1600px;
+  --page-gutter: 20px;
+  --space-section: 64px;
+  --space-module: 40px;
+  --space-card: 12px;
+  --radius-control: 0px;
+  --target-control: 44px;
+  --target-size: 48px;
+  --hotspot-core: #ffffff;
+  --hotspot-outline: #111111;
+  --hotspot-visual-size: 24px;
+  --hotspot-target-size: 44px;
+  --motion-control: 180ms;
+  --motion-media: 220ms;
+  --motion-drawer: 280ms;
+  --motion-ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+@media (min-width: 375px) {
+  :root {
+    --page-gutter: 24px;
+    --space-card: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-gutter: 32px;
+    --space-section: 96px;
+    --space-module: 56px;
+    --space-card: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --page-gutter: clamp(40px, 5.5vw, 96px);
+    --space-section: 128px;
+    --space-module: 72px;
+    --space-card: 32px;
+  }
+}
+
+.melato-commerce-number {
+  font-family: var(--font-commerce);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-control: 0ms;
+    --motion-media: 0ms;
+    --motion-drawer: 0ms;
+  }
+}

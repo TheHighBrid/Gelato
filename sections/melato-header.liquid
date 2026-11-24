@@ -5,17 +5,25 @@
 {% endcomment %}
 
 {% liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
   assign atelier_menu = section.settings.menu
   if atelier_menu == blank
     assign atelier_menu = linklists['main-menu']
   endif
   assign logo_alt = section.settings.logo.alt | default: shop.name | escape
+  assign drawer_note_copy = section.settings.drawer_note | default: 'Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.'
+  if is_fr and drawer_note_copy == 'Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.'
+    assign drawer_note_copy = 'Prêt-à-porter de créateur, pensé avec intention. Conçu à Ottawa. Porté partout.'
+  endif
 %}
 
 <header id="mxh-{{ section.id }}" class="mxh" role="banner" data-mxh>
   <div class="mxh__bar">
     <div class="mxh__left">
-      <button class="mxh__menu" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mxh-drawer-{{ section.id }}" data-mxh-menu>
+      <button class="mxh__menu" type="button" aria-label="{% if is_fr %}Ouvrir le menu{% else %}Open navigation{% endif %}" aria-expanded="false" aria-controls="mxh-drawer-{{ section.id }}" data-mxh-menu>
         <span class="mxh__menu-mark" aria-hidden="true">
           <svg viewBox="0 0 40 40" focusable="false">
             <path d="M7 20h26" />
@@ -28,7 +36,7 @@
     </div>
 
     <div class="mxh__center">
-      <a class="mxh__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }} home">
+      <a class="mxh__logo" href="{{ routes.root_url }}" aria-label="{{ shop.name }}{% if is_fr %} accueil{% else %} home{% endif %}">
         {% if section.settings.logo != blank %}
           {{ section.settings.logo | image_url: width: 900 | image_tag: class: 'mxh__logo-img', alt: logo_alt, loading: 'eager', widths: '140, 180, 220, 280, 360, 480, 640, 900', sizes: '(max-width: 749px) 138px, 210px' }}
         {% else %}
@@ -37,13 +45,13 @@
       </a>
     </div>
 
-    <div class="mxh__right" aria-label="Header tools">
-      <button class="mxh__text-btn mxh__search-btn" type="button" aria-label="Open search" aria-expanded="false" aria-controls="mxh-search-{{ section.id }}" data-mxh-search-open>Search</button>
+    <div class="mxh__right" aria-label="{% if is_fr %}Outils d’en-tête{% else %}Header tools{% endif %}">
+      <button class="mxh__text-btn mxh__search-btn" type="button" aria-label="{% if is_fr %}Ouvrir la recherche{% else %}Open search{% endif %}" aria-expanded="false" aria-controls="mxh-search-{{ section.id }}" data-mxh-search-open>{{ 'search.submit' | t }}</button>
       {% if shop.customer_accounts_enabled and section.settings.show_account %}
-        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">Account</a>
+        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url | replace: '&amp;', '&' | escape }}{% else %}{{ routes.account_login_url | replace: '&amp;', '&' | escape }}{% endif %}">{{ 'melato_ui.account' | t }}</a>
       {% endif %}
-      <a class="mxh__bag" href="{{ routes.cart_url }}" aria-label="Cart with {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}">
-        <span>Bag</span>
+      <a class="mxh__bag" href="{{ routes.cart_url }}" aria-label="{% if is_fr %}Panier avec {{ cart.item_count }} {% if cart.item_count == 1 %}article{% else %}articles{% endif %}{% else %}Cart with {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}{% endif %}">
+        <span>{{ 'melato_ui.bag' | t }}</span>
         <span class="mxh__bag-count">{{ cart.item_count }}</span>
       </a>
     </div>
@@ -54,60 +62,60 @@
   <aside id="mxh-drawer-{{ section.id }}" class="mxh__drawer" role="dialog" aria-modal="true" aria-labelledby="mxh-drawer-title-{{ section.id }}" aria-hidden="true" hidden inert data-mxh-drawer>
     <div class="mxh__drawer-inner">
       <div class="mxh__drawer-top">
-        <h2 id="mxh-drawer-title-{{ section.id }}" class="mxh__drawer-kicker">Melato / Navigation</h2>
-        <button class="mxh__close" type="button" aria-label="Close navigation" data-mxh-close>
+        <h2 id="mxh-drawer-title-{{ section.id }}" class="mxh__drawer-kicker">{{ 'melato_ui.navigation' | t }}</h2>
+        <button class="mxh__close" type="button" aria-label="{% if is_fr %}Fermer le menu{% else %}Close navigation{% endif %}" data-mxh-close>
           <span></span><span></span>
         </button>
       </div>
 
       <div class="mxh__drawer-grid">
         <div class="mxh__drawer-note">
-          <p>{{ section.settings.drawer_note | default: 'Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.' }}</p>
-          <a href="{{ routes.all_products_collection_url }}">Collection</a>
+          <p>{{ drawer_note_copy }}</p>
+          <a href="{{ routes.all_products_collection_url }}">{{ 'melato_ui.collection' | t }}</a>
         </div>
 
-        <nav class="mxh__nav" aria-label="Main navigation">
+        <nav class="mxh__nav" aria-label="{% if is_fr %}Navigation principale{% else %}Main navigation{% endif %}">
           {% if atelier_menu != blank and atelier_menu.links.size > 0 %}
             {% for link in atelier_menu.links %}
               <div class="mxh__nav-item">
                 <a class="mxh__nav-link{% if link.active %} is-active{% endif %}" href="{{ link.url }}">
-                  <span>{{ forloop.index | prepend: '0' }}</span>
-                  {{ link.title }}
+                  <span>{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
+                  {% render 'melato-navigation-label', title: link.title %}
                 </a>
                 {% if link.links.size > 0 %}
                   <div class="mxh__subnav">
                     {% for child_link in link.links %}
-                      <a href="{{ child_link.url }}">{{ child_link.title }}</a>
+                      <a href="{{ child_link.url }}">{% render 'melato-navigation-label', title: child_link.title %}</a>
                     {% endfor %}
                   </div>
                 {% endif %}
               </div>
             {% endfor %}
           {% else %}
-            <a class="mxh__nav-link" href="{{ routes.root_url }}"><span>01</span>Home</a>
-            <a class="mxh__nav-link" href="{{ routes.all_products_collection_url }}"><span>02</span>Collection</a>
-            <a class="mxh__nav-link" href="{{ routes.search_url }}"><span>03</span>Search</a>
+            <a class="mxh__nav-link" href="{{ routes.root_url }}"><span>01</span>{% if is_fr %}Accueil{% else %}Home{% endif %}</a>
+            <a class="mxh__nav-link" href="{{ routes.all_products_collection_url }}"><span>02</span>{{ 'melato_ui.collection' | t }}</a>
+            <a class="mxh__nav-link" href="{{ routes.search_url }}"><span>03</span>{{ 'search.submit' | t }}</a>
           {% endif %}
         </nav>
       </div>
 
       <div class="mxh__drawer-bottom">
-        <button class="mxh__drawer-search" type="button" data-mxh-search-open>Search the archive</button>
-        <a href="{{ routes.cart_url }}">Cart / {{ cart.item_count }}</a>
+        <button class="mxh__drawer-search" type="button" data-mxh-search-open>{{ 'melato_ui.search_archive' | t }}</button>
+        <a href="{{ routes.cart_url }}">{{ 'cart.title' | t }} / {{ cart.item_count }}</a>
       </div>
     </div>
   </aside>
 
   <section id="mxh-search-{{ section.id }}" class="mxh__search" role="dialog" aria-modal="true" aria-labelledby="mxh-search-title-{{ section.id }}" aria-hidden="true" hidden inert data-mxh-search>
     <div class="mxh__search-panel">
-      <button class="mxh__close mxh__search-close" type="button" aria-label="Close search" data-mxh-search-close><span></span><span></span></button>
-      <h2 id="mxh-search-title-{{ section.id }}" class="mxh__search-kicker">Search Melato</h2>
+      <button class="mxh__close mxh__search-close" type="button" aria-label="{% if is_fr %}Fermer la recherche{% else %}Close search{% endif %}" data-mxh-search-close><span></span><span></span></button>
+      <h2 id="mxh-search-title-{{ section.id }}" class="mxh__search-kicker">{{ 'melato_ui.search_melato' | t }}</h2>
       <form class="mxh__search-form" action="{{ routes.search_url }}" method="get" role="search">
-        <label class="mxh__sr" for="mxh-search-input-{{ section.id }}">Search products</label>
-        <input id="mxh-search-input-{{ section.id }}" type="search" name="q" placeholder="Type what you want" autocomplete="off" data-mxh-search-input>
+        <label class="mxh__sr" for="mxh-search-input-{{ section.id }}">{{ 'melato_ui.search_products' | t }}</label>
+        <input id="mxh-search-input-{{ section.id }}" type="search" name="q" placeholder="{{ 'melato_ui.type_search' | t }}" autocomplete="off" data-mxh-search-input>
         <input type="hidden" name="type" value="product">
         <input type="hidden" name="options[prefix]" value="last">
-        <button type="submit">Search</button>
+        <button type="submit">{{ 'search.submit' | t }}</button>
       </form>
     </div>
   </section>
@@ -115,11 +123,11 @@
 
 <style>
   #mxh-{{ section.id }} {
-    --mxh-bg: {{ section.settings.bg_color | default: '#050505' }};
-    --mxh-text: {{ section.settings.text_color | default: '#F6F0E5' }};
+    --mxh-bg: var(--surface-page);
+    --mxh-text: var(--text-primary);
     --mxh-muted: color-mix(in srgb, var(--mxh-text) 62%, transparent);
     --mxh-line: color-mix(in srgb, var(--mxh-text) 13%, transparent);
-    --mxh-panel: #090909;
+    --mxh-panel: var(--surface-page);
     --mxh-accent: {{ section.settings.accent_color | default: '#D8C7A7' }};
     --mxh-logo-width: {{ section.settings.logo_width | default: 188 }}px;
     position: sticky;
@@ -127,7 +135,7 @@
     z-index: 1200;
     width: 100%;
     color: var(--mxh-text);
-    background: color-mix(in srgb, var(--mxh-bg) 94%, transparent);
+    background: var(--mxh-bg);
     border-bottom: 1px solid var(--mxh-line);
     backdrop-filter: blur(18px) saturate(125%);
     -webkit-backdrop-filter: blur(18px) saturate(125%);
@@ -166,7 +174,7 @@
     opacity: 1 !important;
     visibility: visible !important;
   }
-  #mxh-{{ section.id }} .mxh__wordmark { font-family: var(--font-heading-family, sans-serif); font-size: clamp(28px, 4vw, 46px); letter-spacing: -.055em; text-transform: uppercase; }
+  #mxh-{{ section.id }} .mxh__wordmark { font-family: var(--font-commerce); font-size: clamp(28px, 4vw, 46px); letter-spacing: .08em; text-transform: uppercase; }
 
   #mxh-{{ section.id }} button { font: inherit; color: inherit; }
   #mxh-{{ section.id }} .mxh__menu,
@@ -232,14 +240,14 @@
   #mxh-{{ section.id }} .mxh__drawer-note p { margin: 0 0 24px; color: var(--mxh-muted); font-size: clamp(15px, 1.6vw, 19px); line-height: 1.45; letter-spacing: .01em; }
   #mxh-{{ section.id }} .mxh__drawer-note a { display: inline-flex; border-bottom: 1px solid currentColor; padding-bottom: 5px; text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
   #mxh-{{ section.id }} .mxh__nav { display: grid; gap: 2px; }
-  #mxh-{{ section.id }} .mxh__nav-link { display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 16px; padding: clamp(10px, 1.3vw, 18px) 0; border-bottom: 1px solid var(--mxh-line); font-family: var(--font-heading-family, sans-serif); font-size: clamp(44px, 7.4vw, 118px); line-height: .86; letter-spacing: -.055em; text-transform: uppercase; }
+  #mxh-{{ section.id }} .mxh__nav-link { display: grid; grid-template-columns: 44px 1fr; align-items: baseline; gap: 16px; padding: clamp(10px, 1.3vw, 18px) 0; border-bottom: 1px solid var(--mxh-line); font-family: var(--font-commerce); font-size: clamp(44px, 7.4vw, 118px); line-height: .86; letter-spacing: .08em; text-transform: uppercase; }
   #mxh-{{ section.id }} .mxh__nav-link span { color: var(--mxh-accent); font-family: var(--font-body-family, sans-serif); font-size: 11px; letter-spacing: .14em; line-height: 1; }
   #mxh-{{ section.id }} .mxh__nav-link:hover { color: var(--mxh-accent); }
   #mxh-{{ section.id }} .mxh__subnav { display: flex; flex-wrap: wrap; gap: 10px 18px; padding: 12px 0 22px 60px; }
   #mxh-{{ section.id }} .mxh__subnav a { color: var(--mxh-muted); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
   #mxh-{{ section.id }} .mxh__drawer-bottom a { color: var(--mxh-muted); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; }
 
-  #mxh-{{ section.id }} .mxh__search { display: grid; place-items: center; padding: 24px; background: rgba(5,5,5,.96); backdrop-filter: blur(18px); }
+  #mxh-{{ section.id }} .mxh__search { display: grid; place-items: center; padding: 24px; background: var(--surface-page); backdrop-filter: blur(18px); }
   #mxh-{{ section.id }} .mxh__search-panel { width: min(820px, 100%); position: relative; }
   #mxh-{{ section.id }} .mxh__search-close { position: absolute; right: 0; top: -70px; }
   #mxh-{{ section.id }} .mxh__search-form { display: grid; grid-template-columns: 1fr auto; gap: 12px; margin-top: 18px; }
@@ -283,8 +291,8 @@
   inset: 0 !important;
   z-index: 2 !important;
   background:
-    linear-gradient(90deg, rgba(5, 5, 5, 0.98) 0%, rgba(7, 7, 7, 0.96) 42%, rgba(7, 7, 7, 0.92) 100%) !important;
-  color: #f6f0e5 !important;
+    var(--surface-page) !important;
+  color: var(--text-primary) !important;
   overflow-y: auto !important;
   min-height: 100svh !important;
 }
@@ -315,7 +323,7 @@
 
 #mxh-{{ section.id }} .mxh__drawer-top {
   min-height: 54px !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.10) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
   padding-bottom: 20px !important;
 }
 
@@ -323,7 +331,7 @@
   display: inline-flex !important;
   align-items: center !important;
   gap: 10px !important;
-  color: rgba(246, 240, 229, 0.62) !important;
+  color: var(--text-secondary) !important;
   font-size: 11px !important;
   letter-spacing: 0.22em !important;
   text-transform: uppercase !important;
@@ -337,14 +345,14 @@
 }
 
 #mxh-{{ section.id }} .mxh__close {
-  background: rgba(246, 240, 229, 0.045) !important;
-  border: 1px solid rgba(246, 240, 229, 0.14) !important;
-  color: #f6f0e5 !important;
+  background: var(--border-subtle) !important;
+  border: 1px solid var(--border-subtle) !important;
+  color: var(--text-primary) !important;
   transition: background 180ms ease, border-color 180ms ease, transform 180ms ease !important;
 }
 
 #mxh-{{ section.id }} .mxh__close:hover {
-  background: #f6f0e5 !important;
+  background: var(--surface-studio) !important;
   border-color: #f6f0e5 !important;
   color: #050505 !important;
   transform: rotate(90deg) !important;
@@ -361,21 +369,21 @@
   align-self: center !important;
   max-width: 360px !important;
   padding: 28px !important;
-  border: 1px solid rgba(246, 240, 229, 0.10) !important;
+  border: 1px solid var(--border-subtle) !important;
   background: rgba(255, 255, 255, 0.035) !important;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42) !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-note p {
-  color: rgba(246, 240, 229, 0.76) !important;
+  color: var(--text-secondary) !important;
   font-size: clamp(14px, 1.15vw, 17px) !important;
   line-height: 1.55 !important;
   margin-bottom: 26px !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-note a {
-  color: #f6f0e5 !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.55) !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--text-secondary) !important;
   font-size: 11px !important;
   letter-spacing: 0.16em !important;
 }
@@ -398,9 +406,9 @@
   align-items: center !important;
   gap: 18px !important;
   padding: clamp(14px, 1.45vw, 22px) 0 !important;
-  border-bottom: 1px solid rgba(246, 240, 229, 0.10) !important;
-  color: #f6f0e5 !important;
-  font-family: var(--font-heading-family, sans-serif) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-commerce) !important;
   font-size: clamp(42px, 5.4vw, 84px) !important;
   line-height: 0.88 !important;
   letter-spacing: -0.045em !important;
@@ -410,7 +418,7 @@
 }
 
 #mxh-{{ section.id }} .mxh__nav-link span {
-  color: rgba(216, 199, 167, 0.78) !important;
+  color:var(--text-secondary) !important;
   font-family: var(--font-body-family, sans-serif) !important;
   font-size: 11px !important;
   font-weight: 600 !important;
@@ -430,29 +438,29 @@
 }
 
 #mxh-{{ section.id }} .mxh__subnav a {
-  color: rgba(246, 240, 229, 0.58) !important;
+  color: var(--text-secondary) !important;
   font-size: 11px !important;
   letter-spacing: 0.14em !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-bottom {
-  border-top: 1px solid rgba(246, 240, 229, 0.10) !important;
+  border-top: 1px solid var(--border-subtle) !important;
   padding-top: 20px !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-search {
-  background: rgba(246, 240, 229, 0.045) !important;
-  border-color: rgba(246, 240, 229, 0.14) !important;
+  background: var(--border-subtle) !important;
+  border-color: var(--border-subtle) !important;
 }
 
 #mxh-{{ section.id }} .mxh__drawer-bottom a {
-  color: rgba(246, 240, 229, 0.72) !important;
+  color: var(--text-secondary) !important;
 }
 
 /* Mobile luxury drawer */
 @media (max-width: 749px) {
   #mxh-{{ section.id }} .mxh__drawer {
-    background: rgba(5, 5, 5, 0.98) !important;
+    background: var(--surface-page) !important;
   }
 
   #mxh-{{ section.id }} .mxh__drawer-inner {

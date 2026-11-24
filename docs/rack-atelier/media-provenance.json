@@ -1,0 +1,332 @@
+{
+  "date": "2026-10-25",
+  "assetCount": 21,
+  "frontViews": 14,
+  "verifiedBackViews": 7,
+  "constraints": "One garment per image. Preserve design and lettering. No invented reverse views. Angle control is a perspective transform, not a scanned 3D mesh.",
+  "assets": [
+    {
+      "key": "shell-front",
+      "path": "assets/rack-shell-company-technical-track-jacket-front.webp",
+      "width": 1122,
+      "height": 1402,
+      "transparentFraction": 0.4113572156913602,
+      "bytes": 136694,
+      "productHandle": "shell-company-technical-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_247b1980-9a08-486e-a4c9-0734d8c72586.jpg?v=1791328633",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_2663ff63-197b-4008-a488-b1eb68a5c60f.png?v=1792028500",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_5781dbcc-c0f1-4db3-bd7f-6a8e2750f95d.png?v=1791506508",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_27ab80de-4019-454c-ac3a-77904f851925.png?v=1791497255"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "offshore-front",
+      "path": "assets/rack-offshore-account-panel-track-jacket-front.webp",
+      "width": 1122,
+      "height": 1402,
+      "transparentFraction": 0.37293616707479255,
+      "bytes": 136576,
+      "productHandle": "offshore-account-panel-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_92d4c64c-fa1f-4609-bb91-c10ee288803f.png?v=1791420571",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_b3514bc1-9c0c-4b9a-bd86-baeac5a9c7ae.jpg?v=1791506388",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_f40317c5-013f-4f82-90a9-e82eae01935d.jpg?v=1791506362"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "hot-front",
+      "path": "assets/rack-hot-pursuit-panel-track-jacket-front.webp",
+      "width": 1121,
+      "height": 1403,
+      "transparentFraction": 0.389946228389147,
+      "bytes": 151396,
+      "productHandle": "hot-pursuit-panel-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/hot-pursuit-track-jacket.jpg?v=1791273692",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_d487be34-b0de-4c68-a2cb-814089352b23.jpg?v=1791506945",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_1bc5bac6-e398-4cd8-956f-c81be5b33eeb.jpg?v=1791506945"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "divididos-back",
+      "path": "assets/rack-divididos-velour-track-jacket-back.webp",
+      "width": 1121,
+      "height": 1403,
+      "transparentFraction": 0.4108928045738614,
+      "bytes": 165816,
+      "productHandle": "divididos-velour-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/divididos-velour-track-jacket-view-01.jpg?v=1786664058",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/divididos-velour-track-jacket-view-03.jpg?v=1786664058",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/divididos-velour-track-jacket-view-02.png?v=1786664058",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/divididos-velour-track-jacket-view-04.jpg?v=1786664058"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "divididos-front",
+      "path": "assets/rack-divididos-velour-track-jacket-front.webp",
+      "width": 1244,
+      "height": 1265,
+      "transparentFraction": 0.401844744099742,
+      "bytes": 142610,
+      "productHandle": "divididos-velour-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/divididos-velour-track-jacket-view-01.jpg?v=1786664058",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/divididos-velour-track-jacket-view-03.jpg?v=1786664058",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/divididos-velour-track-jacket-view-02.png?v=1786664058",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/divididos-velour-track-jacket-view-04.jpg?v=1786664058"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "burden-front",
+      "path": "assets/rack-burden-of-plush-velour-track-jacket-front.webp",
+      "width": 1121,
+      "height": 1403,
+      "transparentFraction": 0.3435438142936984,
+      "bytes": 162488,
+      "productHandle": "burden-of-plush-velour-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_52f3499d-61a6-43e9-b863-28a8d71c203f.jpg?v=1791420424",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_4935e5fc-2a5f-46d8-985a-2ec1e4f22a14.jpg?v=1791507312",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_1796d822-b61d-403c-847d-4ed5b30f0269.jpg?v=1791507312"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "ryu-front",
+      "path": "assets/rack-ryu-velour-track-jacket-front.webp",
+      "width": 1254,
+      "height": 1254,
+      "transparentFraction": 0.347766254842558,
+      "bytes": 136334,
+      "productHandle": "ryu-velour-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-ryu-velour-track-jacket-back.png?v=1791630460",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-ryu-velour-track-jacket-front.png?v=1791630460"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "ryu-back",
+      "path": "assets/rack-ryu-velour-track-jacket-back.webp",
+      "width": 1254,
+      "height": 1254,
+      "transparentFraction": 0.31278473478171287,
+      "bytes": 184892,
+      "productHandle": "ryu-velour-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-ryu-velour-track-jacket-back.png?v=1791630460",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-ryu-velour-track-jacket-front.png?v=1791630460"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "cho-front",
+      "path": "assets/rack-cho-velour-track-jacket-front.webp",
+      "width": 1254,
+      "height": 1254,
+      "transparentFraction": 0.29102915328047535,
+      "bytes": 144932,
+      "productHandle": "cho-velour-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-cho-velour-track-jacket-back.jpg?v=1791630460",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-cho-velour-track-jacket-front.jpg?v=1791630460"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "cho-back",
+      "path": "assets/rack-cho-velour-track-jacket-back.webp",
+      "width": 1121,
+      "height": 1403,
+      "transparentFraction": 0.34675853895342146,
+      "bytes": 202926,
+      "productHandle": "cho-velour-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-cho-velour-track-jacket-back.jpg?v=1791630460",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-cho-velour-track-jacket-front.jpg?v=1791630460"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "reasonable-front",
+      "path": "assets/rack-reasonable-doubt-track-jacket-front.webp",
+      "width": 1122,
+      "height": 1402,
+      "transparentFraction": 0.3363726634474306,
+      "bytes": 137330,
+      "productHandle": "reasonable-doubt-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-reasonable-doubt-track-jacket-front.jpg?v=1791630460",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/melato-reasonable-doubt-track-jacket-model.jpg?v=1791630460"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "rex-front",
+      "path": "assets/rack-rex-x-fur-jacket-1-front.webp",
+      "width": 1122,
+      "height": 1402,
+      "transparentFraction": 0.39419622083044087,
+      "bytes": 206586,
+      "productHandle": "rex-x-fur-jacket-1",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rex-x-fur-jacket-view-05.jpg?v=1787707972",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rex-x-fur-jacket-view-02.png?v=1787707972",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rex-x-fur-jacket-view-04.jpg?v=1787707972",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rex-x-fur-jacket-view-01.jpg?v=1787707972",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rex-x-fur-jacket-view-03.png?v=1787707972",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rex-x-fur-jacket-view-06.jpg?v=1787707972"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "dress-front",
+      "path": "assets/rack-dress-code-rib-knit-zip-mini-dress-front.webp",
+      "width": 1254,
+      "height": 1254,
+      "transparentFraction": 0.5748456613478019,
+      "bytes": 72066,
+      "productHandle": "dress-code-rib-knit-zip-mini-dress",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_34edcd6c-b748-4d4e-865c-64ce4d100f91.jpg?v=1788050362",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_e7b10038-6f81-4f81-9379-ceb540562da7.jpg?v=1788050363",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_ffe4fe9a-ac72-4374-9b0c-e16239cd150c.jpg?v=1788050363",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_5e4e51f7-80a3-4382-ad1d-14cdb62b9337.png?v=1788077815"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "detour-front",
+      "path": "assets/rack-detour-tee-front.webp",
+      "width": 1121,
+      "height": 1403,
+      "transparentFraction": 0.41002872015681957,
+      "bytes": 120582,
+      "productHandle": "detour-tee",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/detour-case-001-tee-front.jpg?v=1786439152",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_61398881-f799-4fb0-8f21-31cb9d4ed905.png?v=1786583426",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/detour-case-001-tee-back.jpg?v=1786439163"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "bordeaux-front",
+      "path": "assets/rack-bordeaux-line-knit-polo-front.webp",
+      "width": 1122,
+      "height": 1402,
+      "transparentFraction": 0.3822238920208208,
+      "bytes": 171888,
+      "productHandle": "bordeaux-line-knit-polo",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_5c47b932-eeb7-4a8f-b838-34d1c3b02484.jpg?v=1787471539",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_0ce0cac8-fa42-4de2-8b1a-87c2f89003dc.jpg?v=1787449525",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_3395772a-e5de-460c-a3cb-175f6d20b653.jpg?v=1787449525"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "cold-front",
+      "path": "assets/rack-cold-shoulder-mockneck-top-front.webp",
+      "width": 1132,
+      "height": 1390,
+      "transparentFraction": 0.4647068917304319,
+      "bytes": 60382,
+      "productHandle": "cold-shoulder-mockneck-top",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/cold-shoulder-mockneck-top-view-04.jpg?v=1787708084",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/cold-shoulder-mockneck-top-view-02.jpg?v=1787708084",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/cold-shoulder-mockneck-top-view-03.jpg?v=1787708084",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/cold-shoulder-mockneck-top-view-01.jpg?v=1787708084",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/cold-shoulder-mockneck-top-view-05.jpg?v=1787708084"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "blush-front",
+      "path": "assets/rack-blush-ledger-satin-shirt-front.webp",
+      "width": 1122,
+      "height": 1402,
+      "transparentFraction": 0.32545243489692594,
+      "bytes": 97844,
+      "productHandle": "blush-ledger-satin-shirt",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/blush-ledger-satin-shirt-view-04.jpg?v=1787707971",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/blush-ledger-satin-shirt-view-02.jpg?v=1787707971",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/blush-ledger-satin-shirt-view-01.jpg?v=1787707971",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/blush-ledger-satin-shirt-view-03.jpg?v=1787707971",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/blush-ledger-satin-shirt-view-06.jpg?v=1787707971",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/blush-ledger-satin-shirt-view-05.jpg?v=1787707971"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "shell-back",
+      "path": "assets/rack-shell-company-technical-track-jacket-back.webp",
+      "width": 1254,
+      "height": 1254,
+      "transparentFraction": 0.34806895446532815,
+      "bytes": 120788,
+      "productHandle": "shell-company-technical-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_247b1980-9a08-486e-a4c9-0734d8c72586.jpg?v=1791328633",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_2663ff63-197b-4008-a488-b1eb68a5c60f.png?v=1792028500",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_5781dbcc-c0f1-4db3-bd7f-6a8e2750f95d.png?v=1791506508",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_27ab80de-4019-454c-ac3a-77904f851925.png?v=1791497255"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "offshore-back",
+      "path": "assets/rack-offshore-account-panel-track-jacket-back.webp",
+      "width": 1121,
+      "height": 1403,
+      "transparentFraction": 0.35080619266857116,
+      "bytes": 122358,
+      "productHandle": "offshore-account-panel-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_92d4c64c-fa1f-4609-bb91-c10ee288803f.png?v=1791420571",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_b3514bc1-9c0c-4b9a-bd86-baeac5a9c7ae.jpg?v=1791506388",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_f40317c5-013f-4f82-90a9-e82eae01935d.jpg?v=1791506362"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "hot-back",
+      "path": "assets/rack-hot-pursuit-panel-track-jacket-back.webp",
+      "width": 1121,
+      "height": 1403,
+      "transparentFraction": 0.3598724028985931,
+      "bytes": 149762,
+      "productHandle": "hot-pursuit-panel-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/hot-pursuit-track-jacket.jpg?v=1791273692",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_d487be34-b0de-4c68-a2cb-814089352b23.jpg?v=1791506945",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_1bc5bac6-e398-4cd8-956f-c81be5b33eeb.jpg?v=1791506945"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    },
+    {
+      "key": "burden-back",
+      "path": "assets/rack-burden-of-plush-velour-track-jacket-back.webp",
+      "width": 1121,
+      "height": 1403,
+      "transparentFraction": 0.3933396195103776,
+      "bytes": 149860,
+      "productHandle": "burden-of-plush-velour-track-jacket",
+      "sourceGallery": [
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_52f3499d-61a6-43e9-b863-28a8d71c203f.jpg?v=1791420424",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_4935e5fc-2a5f-46d8-985a-2ec1e4f22a14.jpg?v=1791507312",
+        "//cdn.shopify.com/s/files/1/0809/3358/5151/files/rn-image_picker_lib_temp_1796d822-b61d-403c-847d-4ed5b30f0269.jpg?v=1791507312"
+      ],
+      "method": "Built-in image generation, reference-based extraction with transparent alpha; optimized to 1000px WebP retaining alpha."
+    }
+  ]
+}

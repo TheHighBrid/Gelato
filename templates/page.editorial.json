@@ -1,0 +1,934 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "melato_editorial_Bq6dnr": {
+      "type": "melato-editorial",
+      "blocks": {
+        "scene_tp6Ahp": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000394881f594415fa3c79a2776.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_Fd3WUE": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000155881f5996cc1a4df606c50.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_rrkTbn": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/495471036_1792504120423097.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_LxzbCe": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/my-project-page-1_30.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": "wine-breaker-panel-jacket"
+          }
+        },
+        "scene_b3bhmV": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000a0e481f7852286c225998e57.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_PFKeQ4": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/365219018_1792435314602461.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": "coat-of-silence-gloss-trench"
+          }
+        },
+        "scene_4a7yxa": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000b32c81f5b2414247447b1a18.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_QpHBkj": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/644513553_1792504130606817_2.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": "coat-of-silence-gloss-trench"
+          }
+        },
+        "scene_FacxaG": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/47373276_1792080552860320.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_TWteYY": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000fafc81f5869c86f44445d69c.png",
+            "codename": "EXHIBIT-02",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_tGrJpT": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_00000000b0bc81f5a7299b504f2e0fe7.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_cdcWYf": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/file_000000007958720c8981597dfd26896a.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_LtmnCm": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/cobalt_editorial_reclining.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_bjWiLE": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/840881730_1792435451129159.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": "shell-company-technical-track-jacket"
+          }
+        },
+        "scene_7j7KJy": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/893573318_1792080381022191.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_UiYjVT": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/217719321_1792504183681997_1.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_a3NT9W": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1058352147_1792753406461918.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_XTNrnr": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/131647733_1792504141764646.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_cVmAzy": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/684070184_1792080332106457.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_KribXK": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/421367034_1792072396171770.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_dmbFNz": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017434.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_TrtWgf": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000003134.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_kTmKrK": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000014854.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_qhJQzh": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000376899.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_nUtwwq": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017556.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_TCXXQJ": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017680.jpg",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_4wB4Q3": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000005946.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_WBTMjC": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000001644.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_wgYNJH": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017633.png",
+            "codename": "EXHIBIT-03",
+            "alt": "",
+            "act": "THE DOSSIER",
+            "product": ""
+          }
+        }
+      },
+      "block_order": [
+        "scene_tp6Ahp",
+        "scene_Fd3WUE",
+        "scene_rrkTbn",
+        "scene_LxzbCe",
+        "scene_b3bhmV",
+        "scene_PFKeQ4",
+        "scene_4a7yxa",
+        "scene_QpHBkj",
+        "scene_FacxaG",
+        "scene_TWteYY",
+        "scene_tGrJpT",
+        "scene_cdcWYf",
+        "scene_LtmnCm",
+        "scene_bjWiLE",
+        "scene_7j7KJy",
+        "scene_UiYjVT",
+        "scene_a3NT9W",
+        "scene_XTNrnr",
+        "scene_cVmAzy",
+        "scene_KribXK",
+        "scene_dmbFNz",
+        "scene_TrtWgf",
+        "scene_kTmKrK",
+        "scene_qhJQzh",
+        "scene_nUtwwq",
+        "scene_TCXXQJ",
+        "scene_4wB4Q3",
+        "scene_WBTMjC",
+        "scene_wgYNJH"
+      ],
+      "name": "Melato Editorial",
+      "settings": {
+        "intro_enabled": true
+      }
+    },
+    "main": {
+      "type": "melato-editorial",
+      "blocks": {
+        "scene_BTqmHU": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017547.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": "shell-company-technical-track-jacket"
+          }
+        },
+        "scene_n4L6GB": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000017581.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_HB9qRn": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000018700.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_EpmqYg": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000018482.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": "hot-pursuit-panel-track-jacket"
+          }
+        },
+        "scene_fcJtTe": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000015814.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_idVTFz": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/1000018769.jpg",
+            "codename": "EXHIBIT-01",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_ELCpJE": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_e3cdf115-0d0c-4e63-b27f-7cf2556bb6f8.webp",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_PihxmB": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_f99c6d28-981b-461e-856d-18faef8f5588.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_frPEPD": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_f29b8ba3-5b10-4fef-82ee-eccb597535df.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_Vdzpip": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Melato_Editorial_Lookbook_ACT_3_SHOT_7_www.melato.ca.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_mzfhWp": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Editorial_Shots_Vol2_20.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE DOSSIER",
+            "product": ""
+          }
+        },
+        "scene_UKBXDB": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Editorial_Shots_Vol2_26.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_PgGi6Y": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_9bc394bb-e9d0-4fd5-83a0-b9a73b4a3de9.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE WITNESSES",
+            "product": ""
+          }
+        },
+        "scene_rtU7wq": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_c08bbb51-c3c7-468f-8ee2-d71c701fac85.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_dpkJ8q": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_f2caa49a-a33a-4670-8ba3-a731d2f377cb.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_7meGJh": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_6902d00a-5e48-4c4b-bd7a-b3f8bba0f9e5.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_zwpga7": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_101_AP.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_dzyyWy": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_41.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE EVIDENCE",
+            "product": ""
+          }
+        },
+        "scene_BBT6tg": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca_EL_TLL_FRAME_116.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_jnzFUr": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/The_Living_Lookbook_Melato_Editorial_Lookbook_ACT_3_SHOT_3_www.melato.ca.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_mhmRHm": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_a0c4510b-97b7-4b9b-9035-5e6816de72aa.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_QAWfxg": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_100_AP.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_wyMhtk": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_02f9a006-5424-44f5-b423-5ce4b7f81e8e.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_hJxNNL": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_58.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_tztirX": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_c3f8a453-e89f-49bb-a921-fd36edf5beed.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_aJLwk9": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_60__AP.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_W6Cecc": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_49.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_QWeVr7": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__Editorial_Lookbok_The_Living_Book_FRAME_4.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_rfxKkh": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ARNIBAL26_TLL_OTTAWA_001.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_7kMEFA": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_41.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_PGqAgh": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_56c3875c-24b0-40af-a689-37060153cb87.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_jKm3dH": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_58f42586-0d0f-4b45-9dba-348e896257d3.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_GBTa3A": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_43.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_8NwjDJ": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_47.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_EWHrGk": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_31.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_NjgGMt": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_44.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_yH9Jgd": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_40.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_YEPr9N": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_51.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_44MKM8": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_77.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_HJcNVH": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_80.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_iD7rF9": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca_EL_TLL_FRAME_112.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_NPqNgh": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_94.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_RFtD3m": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_84.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_HAVDp6": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca__EL_TLL_FRAME_63__AP.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_RV9DPc": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca_EL_TLL_FRAME_106.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_TNDdyd": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca_EL_TLL_FRAME_113.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_P9YDRF": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/MELATO_ORIGINS26_DRESS-CODE-VIOLATION-RIBBED-POLO-MINI-DRESS_TLB_NOBU_MARRAKECH_001.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_LCpt97": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_7b8f9b5c-9495-4535-a6ca-49cf9f8264d6.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_WpiB4b": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/rn-image_picker_lib_temp_278645d5-0651-4038-9595-0605a21ab62a.png",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": ""
+          }
+        },
+        "scene_XpgKgw": {
+          "type": "scene",
+          "settings": {
+            "image": "shopify://shop_images/Melato.ca_EL_TLL_FRAME_105.jpg",
+            "codename": "EXHIBIT-00",
+            "alt": "",
+            "act": "THE SCENE",
+            "product": "dawn-to-dusk-three-piece-undergarment-set"
+          }
+        }
+      },
+      "block_order": [
+        "scene_BTqmHU",
+        "scene_n4L6GB",
+        "scene_HB9qRn",
+        "scene_EpmqYg",
+        "scene_fcJtTe",
+        "scene_idVTFz",
+        "scene_ELCpJE",
+        "scene_PihxmB",
+        "scene_frPEPD",
+        "scene_Vdzpip",
+        "scene_mzfhWp",
+        "scene_UKBXDB",
+        "scene_PgGi6Y",
+        "scene_rtU7wq",
+        "scene_dpkJ8q",
+        "scene_7meGJh",
+        "scene_zwpga7",
+        "scene_dzyyWy",
+        "scene_BBT6tg",
+        "scene_jnzFUr",
+        "scene_mhmRHm",
+        "scene_QAWfxg",
+        "scene_wyMhtk",
+        "scene_hJxNNL",
+        "scene_tztirX",
+        "scene_aJLwk9",
+        "scene_W6Cecc",
+        "scene_QWeVr7",
+        "scene_rfxKkh",
+        "scene_7kMEFA",
+        "scene_PGqAgh",
+        "scene_jKm3dH",
+        "scene_GBTa3A",
+        "scene_8NwjDJ",
+        "scene_EWHrGk",
+        "scene_NjgGMt",
+        "scene_yH9Jgd",
+        "scene_YEPr9N",
+        "scene_44MKM8",
+        "scene_HJcNVH",
+        "scene_iD7rF9",
+        "scene_NPqNgh",
+        "scene_RFtD3m",
+        "scene_HAVDp6",
+        "scene_RV9DPc",
+        "scene_TNDdyd",
+        "scene_P9YDRF",
+        "scene_LCpt97",
+        "scene_WpiB4b",
+        "scene_XpgKgw"
+      ],
+      "settings": {
+        "intro_enabled": true
+      }
+    },
+    "melato_living_lookbook_20260901_H4YgXB": {
+      "type": "melato-living-lookbook-20260901",
+      "name": "Living Lookbook Sep 01",
+      "settings": {}
+    },
+    "melato_living_book_director_BE7DPm": {
+      "type": "melato-living-book-director",
+      "name": "Living Book Case Director",
+      "settings": {}
+    },
+    "melato_living_book_casefile_fzqJRa": {
+      "type": "melato-living-book-casefile",
+      "disabled": true,
+      "name": "Living Book v2",
+      "settings": {
+        "case_code": "LB-INFINITE",
+        "case_subtitle": "CASE FILE / UNRESOLVED",
+        "case_title": "THE LIVING BOOK",
+        "outline_title": "EVIDENCE",
+        "deck": "A forensic fashion archive built from sightings, fragments and afterimages. The clothes are not supporting evidence. They are the motive.",
+        "filed_date": "18 AUG 2026",
+        "include_case03": true
+      }
+    }
+  },
+  "order": [
+    "melato_editorial_Bq6dnr",
+    "main",
+    "melato_living_lookbook_20260901_H4YgXB",
+    "melato_living_book_director_BE7DPm",
+    "melato_living_book_casefile_fzqJRa"
+  ]
+}

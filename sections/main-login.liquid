@@ -23,13 +23,13 @@
         <input class="field__input" type="password" name="customer[password]" id="customer-password" autocomplete="current-password" required>
       </div>
 
-      <a href="{{ routes.account_recover_url }}" class="btn btn--ghost btn--sm" style="margin-bottom:24px;display:inline-block;">
+      <a href="{{ routes.account_recover_url | replace: '&amp;', '&' | escape }}" class="btn btn--ghost btn--sm" style="margin-bottom:24px;display:inline-block;">
         {{ 'account.forgot_password' | t }}
       </a>
 
       <div style="display:flex;flex-direction:column;gap:12px;">
         <button type="submit" class="btn btn--primary btn--full">{{ 'account.login' | t }}</button>
-        <a href="{{ routes.account_register_url }}" class="btn btn--secondary btn--full">{{ 'account.register' | t }}</a>
+        <a href="{{ routes.account_register_url | replace: '&amp;', '&' | escape }}" class="btn btn--secondary btn--full">{{ 'account.register' | t }}</a>
       </div>
     {%- endform -%}
   </div>

@@ -53,6 +53,81 @@
       assign output = output | replace: '>Product measurements</button>', '>Fit guide</button>'
     endunless
 
+    assign output = output | replace: ', final lens material not specified', '' | replace: 'final lens material not specified', ''
+
+    assign product_type_down = product.type | downcase
+    if product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_type_down contains 'accessor' or product_type_down contains 'bag' or product_title_down contains 'sunglass'
+      assign output = output | replace: '<a class="size-guide-trigger" href="/pages/size-guide">Fit guide</a>', ''
+      assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Fit guide</button>', ''
+      assign output = output | replace: '<button class="size-guide-trigger" type="button" data-open-size-drawer aria-haspopup="dialog" aria-expanded="false">Product measurements</button>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="">Melato Fit Guide</a></p>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="">Guide des tailles Melato</a></p>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="/pages/size-guide">Melato Fit Guide</a></p>', ''
+      assign output = output | replace: '<p class="pdp-inline-link"><a href="/pages/size-guide">Guide des tailles Melato</a></p>', ''
+    endif
+
+
+    assign matching_product = product.metafields.custom.companion_product.value | default: product.metafields.custom.companion_product
+    if matching_product == blank
+      assign matching_product = product.metafields.custom.matching_product.value | default: product.metafields.custom.matching_piece.value | default: product.metafields.custom.set_partner.value
+    endif
+    if product.featured_image != blank
+      capture empty_current_set_alt
+        echo 'class="pdp-set-image" loading="lazy" widths="300, 500, 800" alt=""'
+      endcapture
+      capture proper_current_set_alt
+        echo 'class="pdp-set-image" loading="lazy" widths="300, 500, 800" alt="'
+        echo product.title | escape
+        echo ' - Front view"'
+      endcapture
+      assign output = output | replace_first: empty_current_set_alt, proper_current_set_alt
+    endif
+    if matching_product != blank and matching_product.featured_image != blank
+      capture empty_match_set_alt
+        echo 'class="pdp-set-image" loading="lazy" widths="300, 500, 800" alt=""'
+      endcapture
+      capture proper_match_set_alt
+        echo 'class="pdp-set-image" loading="lazy" widths="300, 500, 800" alt="'
+        echo matching_product.title | escape
+        echo ' - Front view"'
+      endcapture
+      assign output = output | replace_first: empty_match_set_alt, proper_match_set_alt
+    endif
+    if output contains '<article class="pdp-set-card"'
+      assign set_chunks = output | split: '<article class="pdp-set-card"'
+      if set_chunks.size >= 3
+        assign chunk1 = set_chunks[1]
+        if chunk1 contains 'pdp-set-image' and chunk1 contains 'alt=""'
+          capture c_alt_attr
+            echo 'alt="'
+            echo product.title | escape
+            echo ' - Front view"'
+          endcapture
+          assign chunk1 = chunk1 | replace_first: 'alt=""', c_alt_attr
+        endif
+        assign chunk2 = set_chunks[2]
+        if matching_product != blank and chunk2 contains 'pdp-set-image' and chunk2 contains 'alt=""'
+          capture m_alt_attr
+            echo 'alt="'
+            echo matching_product.title | escape
+            echo ' - Front view"'
+          endcapture
+          assign chunk2 = chunk2 | replace_first: 'alt=""', m_alt_attr
+        endif
+        assign rebuilt_set = set_chunks[0]
+        for chunk in set_chunks offset: 1
+          if forloop.index == 1
+            assign rebuilt_set = rebuilt_set | append: '<article class="pdp-set-card"' | append: chunk1
+          elsif forloop.index == 2
+            assign rebuilt_set = rebuilt_set | append: '<article class="pdp-set-card"' | append: chunk2
+          else
+            assign rebuilt_set = rebuilt_set | append: '<article class="pdp-set-card"' | append: chunk
+          endif
+        endfor
+        assign output = rebuilt_set
+      endif
+    endif
+
     assign origin_copy = product.metafields.custom.made_in.value | default: product.metafields.custom.country_of_origin.value
     if origin_copy != blank and origin_copy contains 'Designed in'
       capture malformed_origin_row
@@ -90,21 +165,63 @@
     if matching_product != blank
       assign current_variant = product.selected_or_first_available_variant
       assign matching_variant = matching_product.selected_or_first_available_variant
-      assign current_label = 'Jacket size'
-      assign matching_label = 'Pant size'
-      if product_title_down contains 'pant'
-        assign current_label = 'Pant size'
-        assign matching_label = 'Jacket size'
-      endif
+      unless current_variant.available
+        assign current_variant = product.variants | where: 'available', true | first
+      endunless
+      unless matching_variant.available
+        assign matching_variant = matching_product.variants | where: 'available', true | first
+      endunless
+      assign current_label = product.title | append: ' size'
+      assign matching_label = matching_product.title | append: ' size'
       assign can_add_full_set = true
-      if current_variant == blank or matching_variant == blank
+      if current_variant == blank or matching_variant == blank or current_variant.available == false or matching_variant.available == false
         assign can_add_full_set = false
+      endif
+
+      assign current_size_pos = 0
+      if product.options_with_values.size > 1
+        assign current_other_multi = false
+        assign current_candidate_pos = 0
+        for opt in product.options_with_values
+          assign opt_name_down = opt.name | strip | downcase
+          if opt_name_down == 'size' or opt_name_down == 'taille'
+            assign current_candidate_pos = opt.position
+          elsif opt.values.size > 1
+            assign current_other_multi = true
+          endif
+        endfor
+        if current_candidate_pos > 0 and current_other_multi == false
+          assign current_size_pos = current_candidate_pos
+        endif
+      endif
+
+      assign matching_size_pos = 0
+      if matching_product.options_with_values.size > 1
+        assign matching_other_multi = false
+        assign matching_candidate_pos = 0
+        for opt in matching_product.options_with_values
+          assign opt_name_down = opt.name | strip | downcase
+          if opt_name_down == 'size' or opt_name_down == 'taille'
+            assign matching_candidate_pos = opt.position
+          elsif opt.values.size > 1
+            assign matching_other_multi = true
+          endif
+        endfor
+        if matching_candidate_pos > 0 and matching_other_multi == false
+          assign matching_size_pos = matching_candidate_pos
+        endif
       endif
 
       capture legacy_set_link
         echo '<a class="pdp-set-cta" href="'
         echo matching_product.url
         echo '">View matching piece</a>'
+      endcapture
+
+      capture legacy_set_link_fr
+        echo '<a class="pdp-set-cta" href="'
+        echo matching_product.url
+        echo '">Voir la pièce assortie</a>'
       endcapture
 
       capture full_set_markup
@@ -114,12 +231,20 @@
         echo '<span data-melato-full-set hidden aria-hidden="true"></span>'
         echo '<div class="melato-full-set-selectors">'
         echo '<label class="melato-full-set-selector"><span>'
-        echo current_label
+        echo current_label | escape
         echo '</span><select data-melato-set-current aria-label="'
-        echo current_label
+        echo current_label | escape
         echo '">'
         for variant in product.variants
           if variant.available
+            assign v_label = variant.title
+            if current_size_pos == 1 and variant.option1 != blank
+              assign v_label = variant.option1
+            elsif current_size_pos == 2 and variant.option2 != blank
+              assign v_label = variant.option2
+            elsif current_size_pos == 3 and variant.option3 != blank
+              assign v_label = variant.option3
+            endif
             echo '<option value="'
             echo variant.id
             echo '" data-price="'
@@ -129,18 +254,26 @@
               echo ' selected'
             endif
             echo '>'
-            echo variant.title | escape
+            echo v_label | escape
             echo '</option>'
           endif
         endfor
         echo '</select></label>'
         echo '<label class="melato-full-set-selector"><span>'
-        echo matching_label
+        echo matching_label | escape
         echo '</span><select data-melato-set-matching aria-label="'
-        echo matching_label
+        echo matching_label | escape
         echo '">'
         for variant in matching_product.variants
           if variant.available
+            assign mv_label = variant.title
+            if matching_size_pos == 1 and variant.option1 != blank
+              assign mv_label = variant.option1
+            elsif matching_size_pos == 2 and variant.option2 != blank
+              assign mv_label = variant.option2
+            elsif matching_size_pos == 3 and variant.option3 != blank
+              assign mv_label = variant.option3
+            endif
             echo '<option value="'
             echo variant.id
             echo '" data-price="'
@@ -150,7 +283,7 @@
               echo ' selected'
             endif
             echo '>'
-            echo variant.title | escape
+            echo mv_label | escape
             echo '</option>'
           endif
         endfor
@@ -177,8 +310,75 @@
 
       if output contains legacy_set_link
         assign output = output | replace_first: legacy_set_link, full_set_markup
+      elsif output contains legacy_set_link_fr
+        assign output = output | replace_first: legacy_set_link_fr, full_set_markup
       endif
     endif
+
+    comment
+      Normalize legacy URLs after matching Complete the Set links, not before.
+    endcomment
+    assign output = output | replace: '/products/sunset-deposition-corset-dress-copy', '/products/sunset-deposition-corset-dress'
+    assign output = output | replace: '/products/rex-x-fur-jacket-1', '/products/rex-x-fur-jacket'
+
+    if request.locale.iso_code == 'fr'
+      assign output = output | replace: '>Product focus<', '>Focus produit<'
+      assign output = output | replace: 'Add to cart', 'Ajouter au panier'
+      assign output = output | replace: 'Out of stock', 'Rupture de stock'
+      assign output = output | replace: 'Sold out', 'Épuisé'
+      assign output = output | replace: '>Product details<', '>Détails du produit<'
+      assign output = output | replace: '<span>Materials</span>', '<span>Matières</span>'
+      assign output = output | replace: '<span>Ingredients</span>', '<span>Ingrédients</span>'
+      if product_type_down contains 'bag' or product_type_down contains 'duffle' or product_type_down contains 'tote' or product_type_down contains 'messenger'
+        assign output = output | replace: '<span>Fit</span>', '<span>Dimensions et capacité</span>'
+      elsif product_type_down contains 'sunglass' or product_type_down contains 'eyewear' or product_title_down contains 'sunglass'
+        assign output = output | replace: '<span>Fit</span>', '<span>Mesures monture et verres</span>'
+      else
+        assign output = output | replace: '<span>Fit</span>', '<span>Coupe</span>'
+      endif
+      assign output = output | replace: '<span>Care</span>', '<span>Entretien</span>'
+      assign output = output | replace: '<span>Warranty &amp; Maintenance</span>', '<span>Garantie et entretien</span>'
+      assign output = output | replace: '<summary>Construction</summary>', '<summary>Confection</summary>'
+      assign output = output | replace: '<summary>Use</summary>', '<summary>Utilisation</summary>'
+      assign output = output | replace: '<span>Use</span>', '<span>Utilisation</span>'
+      assign output = output | replace: '<summary>Safety</summary>', '<summary>Sécurité</summary>'
+      assign output = output | replace: '>Story<', '>Histoire<'
+      assign output = output | replace: '>You might also like<', '>Vous aimerez aussi<'
+      assign output = output | replace: '>Continue shopping<', '>Continuer vos achats<'
+      assign output = output | replace: '>Recently viewed<', '>Consultés récemment<'
+      assign output = output | replace: '>Your trail<', '>Votre parcours<'
+      assign output = output | replace: '<strong>Origin</strong><span>Made in ', '<strong>Origine</strong><span>Fabriqué en '
+      assign output = output | replace: '<strong>Origin</strong> <span>Made in ', '<strong>Origine</strong> <span>Fabriqué en '
+      assign output = output | replace: '<legend>Size</legend>', '<legend>Taille</legend>'
+      assign output = output | replace: '<legend>Color</legend>', '<legend>Couleur</legend>'
+      assign output = output | replace: '<legend>Volume</legend>', '<legend>Format</legend>'
+      assign output = output | replace: '<span>One Size</span>', '<span>Taille unique</span>'
+      assign output = output | replace: '>Quantity<', '>Quantité<'
+      assign output = output | replace: '>Fit guide<', '>Guide des tailles<'
+      assign output = output | replace: '>Product measurements<', '>Mesures du produit<'
+      assign output = output | replace: 'Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Eligible unopened fragrances may be returned within 30 days; opened or sprayed fragrances are generally excluded.', 'Expédition sous 1 à 3 jours ouvrables. Livraison standard offerte sur toutes les commandes. Les parfums non ouverts admissibles peuvent être retournés sous 30 jours ; les flacons ouverts ou vaporisés sont généralement exclus.'
+      assign output = output | replace: 'Ships in 1 to 3 business days. Complimentary standard delivery on all orders. Returns accepted on eligible unworn items under the posted return policy.', 'Expédition sous 1 à 3 jours ouvrables. Livraison standard offerte sur toutes les commandes. Retours acceptés sur les articles admissibles non portés selon la politique de retour en vigueur.'
+      assign output = output | replace: '>Full delivery and returns policy<', '>Politique complète de livraison et de retours<'
+      assign output = output | replace: '>Complete the Set<', '>Compléter l\'ensemble<'
+      assign output = output | replace: '>Selected piece<', '>Pièce sélectionnée<'
+      assign output = output | replace: '>Matching piece<', '>Pièce assortie<'
+      assign output = output | replace: '>View matching piece<', '>Voir la pièce assortie<'
+      assign output = output | replace: 'ADD FULL SET', 'AJOUTER L\'ENSEMBLE'
+      assign output = output | replace: '<span>Full set</span>', '<span>Ensemble complet</span>'
+    endif
+  endif
+
+  if context == 'cart' and request.locale.iso_code == 'fr'
+    assign output = output | replace: '>Your Cart<', '>Votre panier<'
+    assign output = output | replace: 'Add order note', 'Ajouter une note'
+    assign output = output | replace: 'placeholder="Order note"', 'placeholder="Note de commande"'
+    assign output = output | replace: 'aria-label="Order note"', 'aria-label="Note de commande"'
+    assign output = output | replace: '>Subtotal:<', '>Sous-total :<'
+    assign output = output | replace: 'Complimentary standard delivery.', 'Livraison standard offerte.'
+    assign output = output | replace: '>Checkout<', '>Commander<'
+    assign output = output | replace: '>View cart<', '>Voir le panier<'
+    assign output = output | replace: '>Shop New Arrivals<', '>Découvrir les nouveautés<'
+    assign output = output | replace: '>Explore the current Melato rotation.<', '>Découvrez la rotation actuelle de Melato.<'
   endif
 -%}
 

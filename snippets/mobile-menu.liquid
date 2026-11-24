@@ -26,7 +26,7 @@
     {%- for link in linklists.main-menu.links -%}
       <li class="mobile-nav__item">
         <a href="{{ link.url }}" class="mobile-nav__link">
-          {{ link.title }}
+          {% render 'melato-navigation-label', title: link.title %}
         </a>
       </li>
     {%- endfor -%}
@@ -43,7 +43,7 @@
     </div>
     {%- if shop.customer_accounts_enabled -%}
       <a
-        href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+        href="{%- if customer -%}{{ routes.account_url | replace: '&amp;', '&' | escape }}{%- else -%}{{ routes.account_login_url | replace: '&amp;', '&' | escape }}{%- endif -%}"
         class="btn btn--secondary btn--full btn--sm"
       >
         {%- if customer -%}{{ 'account.my_account' | t }}{%- else -%}{{ 'account.login' | t }}{%- endif -%}

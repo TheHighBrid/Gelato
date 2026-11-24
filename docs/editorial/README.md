@@ -1,0 +1,3 @@
+# Melato Editorial: The Living Book
+Standalone Shopify page `/pages/editorial` using `page.editorial.json`. Never modify existing `page.living-lookbook.json` or `melato-living-book-vol01.liquid`.
+31 exhibit scenes / four acts: The Scene (1-8), The Evidence (9-18), The Witnesses (19-26), The Dossier (27-31). Full media production and product-ID verification remain outstanding. Source package includes complete storyboard, cue WAV files and React prototype scaffold. Audio is opt-in; images are each standalone. Native Liquid is production route; do not initialize another Next app in theme root. Shopify page and staging theme assignment are separate publication gates.

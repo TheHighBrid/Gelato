@@ -7,7 +7,7 @@
 {%- if product != blank -%}
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 {%- assign site_url = shop.url | default: request.origin -%}
-{%- assign product_description = product.description | strip_html | strip_newlines | replace: '  ', ' ' | truncate: 700 -%}
+{%- assign product_description = product.description | replace: '</h', ' </h' | replace: '</p>', '</p> ' | replace: '</li>', '</li> ' | replace: '<br>', ' ' | replace: '<br/>', ' ' | replace: '<br />', ' ' | strip_html | strip_newlines | replace: '  ', ' ' | replace: '  ', ' ' | replace: ', final lens material not specified', '' | replace: 'final lens material not specified', '' | strip | truncate: 700 -%}
 {%- if product_description == blank -%}
   {%- assign product_description = product.title | append: ' by ' | append: shop.name -%}
 {%- endif -%}
@@ -31,7 +31,7 @@
       },
       "sku": {{ current_variant.sku | default: product.handle | json }},
       "mpn": {{ current_variant.barcode | default: current_variant.sku | default: current_variant.id | json }},
-      "category": {{ product.type | default: product.product_type | default: 'Apparel' | json }}{% if product.featured_image != blank %},
+      "category": {{ product.type | default: 'Apparel' | json }}{% if product.featured_image != blank %},
       "image": [
         {%- assign emitted_image = false -%}
         {%- for media in product.media limit: 8 -%}

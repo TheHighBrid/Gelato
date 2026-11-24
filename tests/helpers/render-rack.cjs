@@ -1,0 +1,16 @@
+const fs = require('fs');
+const { Liquid } = require('liquidjs');
+const repo = require('path').resolve(__dirname, '../..');
+const root = fs.mkdtempSync(require('path').join(require('os').tmpdir(), 'melato-rack-test-'));
+fs.mkdirSync(root,{recursive:true});
+for (const dir of ['sections','snippets']) for (const name of fs.readdirSync(repo+'/'+dir).filter(n=>n.startsWith('melato-rack')&&n.endsWith('.liquid'))) fs.writeFileSync(root+'/'+name, fs.readFileSync(repo+'/'+dir+'/'+name,'utf8').replace(/{%\s*doc\s*%}[\s\S]*?{%\s*enddoc\s*%}/g,'').replace(/{%\s*schema\s*%}[\s\S]*?{%\s*endschema\s*%}/g,''));
+const engine = new Liquid({root,extname:'.liquid'});
+const locale=JSON.parse(fs.readFileSync(repo+'/locales/en.default.json','utf8').replace(/\/\*[\s\S]*?\*\//g,''));
+engine.registerFilter('t', key => key.split('.').reduce((o,k)=>o?.[k],locale)||key);
+engine.registerFilter('asset_url', key => '/assets/'+key);
+engine.registerFilter('stylesheet_tag',url=>`<link rel="stylesheet" href="${url}">`);
+engine.registerFilter('money_with_currency', value=>'$'+(value/100).toFixed(2)+' CAD');
+engine.registerFilter('json', value=>JSON.stringify(value));
+const products=JSON.parse(fs.readFileSync(repo+'/tests/fixtures/rack-products.json','utf8')).map((p,i)=>({...p,id:i+1,price:Math.round(Number(p.price.replace(/[$,]/g,''))*100)}));
+const section={id:'test-rack',blocks:[],settings:{collection:{title:'Rack',url:'/collections/rack',products_count:products.length,products},max_items:14,heading:'Off the rail',cta_label:'See availability',bg_color:'#FAF9F6',ink_color:'#22201E',padding_top:64,padding_bottom:40,show_ticker:false,ticker_text:'',ticker_speed:70}};
+module.exports=async()=>'<html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>'+await engine.renderFile('melato-rack', {section})+'</body></html>';

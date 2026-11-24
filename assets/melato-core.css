@@ -1,0 +1,2198 @@
+/* Melato Core CSS — consolidated global layers. Do not edit individual source files; regenerate from them. */
+
+/* ===== melato-luxury-tokens.css ===== */
+:root {
+  --surface-page: #ffffff;
+  --surface-media: #faf9f6;
+  --surface-studio: #ffffff;
+  --surface-subtle: #f3f1ec;
+  --text-primary: #111111;
+  --text-secondary: #595959;
+  --border-subtle: #e6e4e0;
+  --border-control: #767676;
+  --action: #111111;
+  --action-text: #ffffff;
+  --error: #8f1010;
+  --success: #204030;
+  --font-editorial: 'Cormorant Garamond', 'Iowan Old Style', Baskerville, Georgia, serif;
+  --font-commerce: 'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-body-weight: 400;
+  --font-control-weight: 500;
+  --type-body: 1rem;
+  --type-editorial-min: 1.75rem;
+  --prose-measure: 62ch;
+  --page-width-max: 1600px;
+  --page-gutter: 20px;
+  --space-section: 64px;
+  --space-module: 40px;
+  --space-card: 12px;
+  --radius-control: 0px;
+  --target-control: 44px;
+  --target-size: 48px;
+  --hotspot-core: #ffffff;
+  --hotspot-outline: #111111;
+  --hotspot-visual-size: 24px;
+  --hotspot-target-size: 44px;
+  --motion-control: 180ms;
+  --motion-media: 220ms;
+  --motion-drawer: 280ms;
+  --motion-ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+@media (min-width: 375px) {
+  :root {
+    --page-gutter: 24px;
+    --space-card: 16px;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --page-gutter: 32px;
+    --space-section: 96px;
+    --space-module: 56px;
+    --space-card: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --page-gutter: clamp(40px, 5.5vw, 96px);
+    --space-section: 128px;
+    --space-module: 72px;
+    --space-card: 32px;
+  }
+}
+
+.melato-commerce-number {
+  font-family: var(--font-commerce);
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-control: 0ms;
+    --motion-media: 0ms;
+    --motion-drawer: 0ms;
+  }
+}
+
+/* ===== melato-collection-navigation.css ===== */
+/* MELATO October 10 | Collection Navigation & Editorial Polish */
+.mx-collection-tabs{display:flex;gap:clamp(20px,3vw,44px);align-items:center;padding:0 clamp(16px,5vw,60px);overflow-x:auto;scrollbar-width:thin;border-bottom:1px solid var(--border-subtle);background:var(--surface-page);color:var(--text-primary);overscroll-behavior-inline:contain;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}.mx-collection-tabs a{position:relative;flex:none;display:inline-flex;align-items:center;min-height:56px;text-decoration:none;color:inherit;font:500 12px/1.3 var(--font-body-family,Arial,sans-serif);letter-spacing:.13em;text-transform:uppercase;scroll-snap-align:start;white-space:nowrap;transition:color .2s}.mx-collection-tabs a[aria-current=page]{color:var(--text-primary)}.mx-collection-tabs a[aria-current=page]:after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:currentColor}.mx-collection-tabs a:hover,.mx-collection-tabs a:focus-visible{color:var(--text-primary)}.mx-collection-tabs a:focus-visible{outline:2px solid currentColor;outline-offset:-4px}.melato-collection-header .melato-collection-title{max-width:15ch;font-size:clamp(46px,8vw,112px);font-weight:400;line-height:.91;letter-spacing:-.025em;text-wrap:balance;text-transform:uppercase}.melato-collection-header .melato-collection-eyebrow{font-size:11px;letter-spacing:.32em;color:var(--text-primary)}.melato-collection-header .melato-collection-desc{max-width:56ch;font-size:clamp(13px,1.5vw,16px)}.melato-collection-header__text{padding-block:clamp(48px,6vw,95px) clamp(36px,5vw,70px)}.melato-collection-header .melato-collection-title:after{content:"";display:block;width:66px;height:2px;background:var(--text-primary);margin-top:24px}.product-card__badges{max-width:calc(100% - 62px);display:flex;gap:5px;flex-wrap:wrap}.product-card__badges .badge{font-size:10px;line-height:1.3;letter-spacing:.09em}.product-card__badges .badge--category{background:#f6efe3;color:#17120c;border:1px solid rgba(15,15,15,.12)}@media(max-width:749px){.mx-collection-tabs{gap:22px;padding-inline:16px}.mx-collection-tabs a{min-height:52px;font-size:11px}.melato-collection-header .melato-collection-title{font-size:clamp(43px,11vw,70px);max-width:12ch}.melato-collection-header__text{padding:46px 20px 36px}.product-card__badges .badge{font-size:9px}}@media(prefers-reduced-motion:reduce){.mx-collection-tabs{scroll-behavior:auto}.mx-collection-tabs a{transition:none}}
+
+/* ===== melato-dynamic-announcement.css ===== */
+#melato-announcement-bar{padding-right:54px!important;grid-template-columns:minmax(0,1fr)!important;min-height:44px!important}#melato-announcement-bar[hidden]{display:none!important}#melato-announcement-bar .melato-ann__badge,#melato-announcement-bar .melato-ann__cta{display:none!important}#melato-announcement-bar .melato-ann__viewport{grid-column:1;min-width:0;width:100%;mask-image:none!important;-webkit-mask-image:none!important}#melato-announcement-bar.mx-ann-rotating .melato-ann__track{width:100%!important;animation:none!important;transform:none!important;will-change:auto!important}#melato-announcement-bar.mx-ann-rotating .melato-ann__group{display:flex!important;gap:0!important;padding:0!important;max-width:100%;justify-content:center;align-items:center}#melato-announcement-bar.mx-ann-rotating .melato-ann__item{width:100%;justify-content:center;text-align:center;white-space:normal!important;line-height:1.4;overflow-wrap:anywhere;padding-block:11px;animation:mx-ann-in .28s ease}#melato-announcement-bar.mx-ann-rotating .melato-ann__item[hidden]{display:none!important}#melato-announcement-bar .mx-ann-close{position:absolute;right:5px;top:50%;transform:translateY(-50%);z-index:3;width:42px;height:42px;display:flex;align-items:center;justify-content:center;color:var(--ab-fg);background:transparent;border:0;cursor:pointer;border-radius:50%}#melato-announcement-bar .mx-ann-close:focus-visible{outline:2px solid currentColor;outline-offset:-4px}@keyframes mx-ann-in{from{opacity:.1;transform:translateY(5px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){#melato-announcement-bar.mx-ann-rotating .melato-ann__item{animation:none!important}}
+
+/* ===== melato-enhancements.css ===== */
+/* ============================================================
+   MELATO ENHANCEMENTS - melato-enhancements.css
+   Load in theme.liquid <head> via:
+   {{ 'melato-enhancements.css' | asset_url | stylesheet_tag }}
+   ============================================================ */
+
+/* ---- GLOBAL TOKENS ---------------------------------------- */
+:root {
+  --m-black:    #0a0a0a;
+  --m-offwhite: #e8e8e8;
+  --m-white:    #ffffff;
+  --m-neon:     #8fff00;
+  --m-dim:      #1a1a1a;
+  --m-border:   #2a2a2a;
+  --m-radius:   2px;
+  --m-font-ui:  'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  --m-ease-out-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --m-ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- UTILITY ---------------------------------------------- */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+/* ============================================================
+   1. PRODUCT CARD HOVER IMAGE
+   ============================================================ */
+
+.pci-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  background: var(--m-dim);
+}
+
+/* Force consistent aspect ratio - 4:5 portrait (adjust to your card) */
+.pci-wrapper::before {
+  content: '';
+  display: block;
+  padding-top: 125%; /* 4:5 = 125% */
+}
+
+.pci {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: opacity 0.45s var(--m-ease-in-out),
+              transform 0.55s var(--m-ease-out-expo);
+  will-change: opacity, transform;
+}
+
+.pci--primary {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
+}
+
+.pci--secondary {
+  opacity: 0;
+  transform: scale(1.03);
+  z-index: 2;
+}
+
+/* Trigger hover on the card wrapper - works even if card has padding/text below */
+.product-card:hover .pci--primary,
+.product-item:hover .pci--primary,
+[class*="product-card"]:hover .pci--primary {
+  opacity: 0;
+  transform: scale(1.03);
+}
+
+.product-card:hover .pci--secondary,
+.product-item:hover .pci--secondary,
+[class*="product-card"]:hover .pci--secondary {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Touch: no hover - keep primary visible, slight scale on tap */
+@media (hover: none) {
+  .pci--secondary { display: none; }
+}
+
+/* Placeholder SVG fallback */
+.pci--placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--m-dim);
+}
+
+.pci--svg {
+  width: 60%;
+  height: auto;
+  opacity: 0.15;
+}
+
+/* Badge overlay within the image wrapper */
+.pci-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+
+/* ============================================================
+   2. PRODUCT BADGES
+   ============================================================ */
+
+.badge-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--m-font-ui);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: var(--m-radius);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* 3 or fewer units - critical urgency */
+.badge--critical {
+  background: #ff3030;
+  color: #fff;
+}
+
+/* 4–8 units */
+.badge--low-stock {
+  background: var(--m-neon);
+  color: var(--m-black);
+}
+
+/* Tagged 'new-drop' */
+.badge--drop {
+  background: transparent;
+  color: var(--m-neon);
+  border: 1px solid var(--m-neon);
+}
+
+/* Tagged 'coming-soon' */
+.badge--coming-soon {
+  background: var(--m-black);
+  color: var(--m-offwhite);
+  border: 1px solid var(--m-border);
+}
+
+/* Sold out */
+.badge--sold-out {
+  background: var(--m-border);
+  color: var(--m-offwhite);
+  opacity: 0.75;
+}
+
+/* Sale % */
+.badge--sale {
+  background: var(--m-white);
+  color: var(--m-black);
+}
+
+
+/* ============================================================
+   3. ANNOUNCEMENT MARQUEE
+   ============================================================ */
+
+.melato-marquee {
+  position: relative;
+  overflow: hidden;
+  background: var(--marquee-bg, var(--m-black));
+  height: var(--marquee-height, 38px);
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--m-border);
+  z-index: 200;
+}
+
+.melato-marquee__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+.melato-marquee__track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 0;
+  animation: melato-marquee-scroll var(--marquee-speed, 28s) linear infinite;
+  will-change: transform;
+}
+
+/* Pause on hover (accessibility - reduce motion) */
+@media (prefers-reduced-motion: no-preference) {
+  .melato-marquee:hover .melato-marquee__track {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .melato-marquee__track {
+    animation: none;
+  }
+}
+
+.melato-marquee__item {
+  font-family: var(--m-font-ui);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--marquee-text, var(--m-offwhite));
+  white-space: nowrap;
+  padding: 0 28px;
+}
+
+.melato-marquee__divider {
+  font-size: 10px;
+  color: var(--marquee-accent, var(--m-neon));
+  flex-shrink: 0;
+}
+
+@keyframes melato-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+
+/* ============================================================
+   4. STICKY ADD TO CART BAR
+   ============================================================ */
+
+.m-satc {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  background: var(--m-black);
+  border-top: 1px solid var(--m-border);
+  transform: translateY(100%);
+  transition: transform 0.4s var(--m-ease-out-expo);
+  will-change: transform;
+}
+
+.m-satc[aria-hidden="false"] {
+  transform: translateY(0);
+}
+
+.m-satc__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Product thumbnail + meta */
+.m-satc__info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.m-satc__thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--m-radius);
+  flex-shrink: 0;
+  border: 1px solid var(--m-border);
+}
+
+.m-satc__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.m-satc__title {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--m-offwhite);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.m-satc__price {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 400;
+  color: #888;
+  letter-spacing: 0.05em;
+}
+
+/* Size select + CTA */
+.m-satc__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.m-satc__size-select {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--m-dim);
+  color: var(--m-offwhite);
+  border: 1px solid var(--m-border);
+  border-radius: var(--m-radius);
+  padding: 8px 10px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 70px;
+}
+
+.m-satc__btn {
+  position: relative;
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--m-neon);
+  color: var(--m-black);
+  border: none;
+  border-radius: var(--m-radius);
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.m-satc__btn:hover {
+  background: #a8ff33;
+  transform: translateY(-1px);
+}
+
+.m-satc__btn:active {
+  transform: translateY(0);
+}
+
+/* Loading state */
+.m-satc__btn.is-loading .m-satc__btn-text {
+  opacity: 0;
+}
+
+.m-satc__btn.is-loading .m-satc__spinner {
+  display: block;
+}
+
+.m-satc__spinner {
+  display: none;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 16px;
+  height: 16px;
+  animation: satc-spin 0.7s linear infinite;
+}
+
+@keyframes satc-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Mobile: hide product title text, keep price */
+@media (max-width: 480px) {
+  .m-satc__title { display: none; }
+  .m-satc__thumb { width: 34px; height: 34px; }
+  .m-satc__btn   { padding: 10px 16px; }
+}
+
+
+/* ============================================================
+   5. DROP LIST SIGNUP SECTION
+   ============================================================ */
+
+.m-dropsignup {
+  position: relative;
+  background: var(--ds-bg, var(--m-black));
+  color: var(--ds-text, var(--m-offwhite));
+  overflow: hidden;
+  padding: 80px 40px;
+}
+
+.m-dropsignup__inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.m-dropsignup__eyebrow {
+  font-family: var(--m-font-ui);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--ds-accent, var(--m-neon));
+  margin: 0 0 16px;
+}
+
+.m-dropsignup__heading {
+  font-family: var(--font-heading, var(--m-font-ui));
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ds-text, var(--m-offwhite));
+  margin: 0 0 20px;
+}
+
+.m-dropsignup__sub {
+  font-family: var(--m-font-ui);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #888;
+  margin: 0;
+}
+
+/* Form */
+.m-dropsignup__form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.m-dropsignup__field-group {
+  display: flex;
+  border: 1px solid var(--m-border);
+  border-radius: var(--m-radius);
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.m-dropsignup__field-group:focus-within {
+  border-color: var(--ds-accent, var(--m-neon));
+}
+
+.m-dropsignup__input {
+  flex: 1;
+  background: var(--m-dim);
+  color: var(--ds-text, var(--m-offwhite));
+  border: none;
+  outline: none;
+  padding: 16px 20px;
+  font-family: var(--m-font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.m-dropsignup__input::placeholder {
+  color: #555;
+}
+
+.m-dropsignup__btn {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--ds-accent, var(--m-neon));
+  color: var(--m-black);
+  border: none;
+  padding: 16px 24px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.m-dropsignup__btn:hover { background: #a8ff33; }
+
+.m-dropsignup__disclaimer {
+  font-family: var(--m-font-ui);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #555;
+  margin: 0;
+}
+
+.m-dropsignup__success {
+  font-family: var(--m-font-ui);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-accent, var(--m-neon));
+  padding: 20px;
+  border: 1px solid var(--ds-accent, var(--m-neon));
+  border-radius: var(--m-radius);
+}
+
+.m-dropsignup__error {
+  font-family: var(--m-font-ui);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: #ff3030;
+  margin: 0;
+}
+
+/* Decorative lines */
+.m-dropsignup__lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.m-dropsignup__lines span {
+  position: absolute;
+  width: 1px;
+  background: var(--m-border);
+  opacity: 0.4;
+  top: 0;
+  bottom: 0;
+}
+
+.m-dropsignup__lines span:nth-child(1) { left: 33.33%; }
+.m-dropsignup__lines span:nth-child(2) { left: 50%; }
+.m-dropsignup__lines span:nth-child(3) { left: 66.66%; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .m-dropsignup {
+    padding: 60px 24px;
+  }
+
+  .m-dropsignup__inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .m-dropsignup__field-group {
+    flex-direction: column;
+  }
+
+  .m-dropsignup__btn {
+    padding: 14px 24px;
+  }
+}
+
+/* ===== melato-palette-logo-updated.css ===== */
+/* ============================================================
+   MELATO - PALETTE OVERRIDE v2
+   Replaces ALL neon green (#8fff00 / lime / chartreuse) with
+   the brand's signature burnt-orange × brown × beige palette.
+
+   HOW TO INSTALL:
+   In layout/theme.liquid, inside <head>, add AFTER all other
+   stylesheet tags so these rules override everything:
+     {{ 'melato-palette.css' | asset_url | stylesheet_tag }}
+
+   Also add AFTER melato-enhancements.css if that file is loaded.
+   ============================================================ */
+
+/* ── NEW BRAND TOKENS ──────────────────────────────────────── */
+:root {
+  /* Primary - burnt orange (sampled from the Melato logo) */
+  --m-orange:        #C04A10;
+  --m-orange-hover:  #D8560F;
+  --m-orange-light:  #E07030;
+
+  /* Secondary - dark brown */
+  --m-brown-dark:    #3D1A06;
+  --m-brown-mid:     #6B2E0A;
+  --m-brown-border:  #5A2508;
+
+  /* Tertiary - beige / tan */
+  --m-beige:         #E8C9A0;
+  --m-beige-dim:     #C4A882;
+  --m-beige-dark:    #8B7355;
+
+  /* Neutrals (unchanged) */
+  --m-black:         #080808;
+  --m-off:           #0e0e0e;
+  --m-surface:       #141414;
+  --m-border:        #242424;
+  --m-dim:           #2e2e2e;
+  --m-muted:         #666;
+  --m-text:          #d8d8d8;
+  --m-white:         #f0f0f0;
+
+  /* Override the old neon token everywhere */
+  --m-neon:          #C04A10;
+  --m-accent:        #C04A10;
+}
+
+/* ── GLOBAL NEON → ORANGE SWEEP ────────────────────────────── */
+
+/* Any element using the old neon green as background */
+[style*="#8fff00"],
+[style*="#8FFF00"],
+[style*="chartreuse"],
+[style*="lime"] {
+  background-color: #C04A10 !important;
+  color: #fff !important;
+}
+
+/* ── ANNOUNCEMENT BAR ───────────────────────────────────────── */
+.announcement-bar,
+.announcement-bar__message,
+.shopify-section--announcement-bar,
+[class*="announcement"] {
+  background-color: #C04A10 !important;
+  color: #fff !important;
+}
+
+.announcement-bar a,
+.announcement-bar__message a,
+[class*="announcement"] a {
+  color: #fff !important;
+}
+
+/* ── MARQUEE TICKER ──────────────────────────────────────────── */
+.melato-marquee {
+  background: var(--m-brown-dark) !important;
+  border-bottom-color: var(--m-brown-border) !important;
+}
+
+.melato-marquee__divider {
+  color: var(--m-orange) !important;
+}
+
+.melato-marquee__item {
+  color: var(--m-beige) !important;
+}
+
+/* ── BUTTONS - PRIMARY ───────────────────────────────────────── */
+.btn--primary,
+.button--primary,
+[class*="btn-primary"],
+.shopify-payment-button__button--unbranded,
+button[name="add"],
+input[name="add"],
+.product-form__submit,
+.m-satc__btn,
+.m-dropsignup__btn,
+#satc-btn {
+  background-color: var(--m-orange) !important;
+  color: #fff !important;
+  border-color: var(--m-orange) !important;
+}
+
+.btn--primary:hover,
+.button--primary:hover,
+button[name="add"]:hover,
+.product-form__submit:hover,
+.m-satc__btn:hover,
+.m-dropsignup__btn:hover,
+#satc-btn:hover {
+  background-color: var(--m-orange-hover) !important;
+  border-color: var(--m-orange-hover) !important;
+}
+
+/* ── BUTTONS - OUTLINE / SECONDARY ──────────────────────────── */
+.btn--secondary,
+.button--secondary,
+[class*="btn-outline"] {
+  color: var(--m-orange) !important;
+  border-color: var(--m-orange) !important;
+  background: transparent !important;
+}
+
+.btn--secondary:hover,
+.button--secondary:hover {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+}
+
+/* ── LINKS - ACCENT ──────────────────────────────────────────── */
+a[class*="accent"],
+.text--accent,
+[class*="link--accent"] {
+  color: var(--m-orange) !important;
+}
+
+/* ── BADGES (from melato-enhancements.css) ────────────────────── */
+.badge--low-stock {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+}
+
+.badge--drop {
+  background: transparent !important;
+  color: var(--m-orange) !important;
+  border-color: var(--m-orange) !important;
+}
+
+/* ── STICKY ATC BAR ──────────────────────────────────────────── */
+.m-satc {
+  border-top-color: var(--m-brown-border) !important;
+}
+
+.m-satc__btn.is-success {
+  background: var(--m-brown-mid) !important;
+}
+
+/* ── DROP SIGNUP SECTION ─────────────────────────────────────── */
+.m-dropsignup {
+  --ds-accent: var(--m-orange) !important;
+}
+
+.m-dropsignup__eyebrow {
+  color: var(--m-orange) !important;
+}
+
+.m-dropsignup__field-group:focus-within {
+  border-color: var(--m-orange) !important;
+}
+
+/* ── PRICE / SALE INDICATORS ──────────────────────────────────── */
+.price--sale,
+.price-item--sale,
+[class*="price--on-sale"],
+.badge--sale {
+  color: var(--m-orange) !important;
+}
+
+/* ── PRODUCT FORM - SIZE SELECTOR ────────────────────────────── */
+.variant-input-wrap input:checked + label,
+.swatch--active,
+[class*="variant--active"],
+[class*="option--active"] {
+  border-color: var(--m-orange) !important;
+  color: var(--m-orange) !important;
+}
+
+/* ── FOCUS RING ───────────────────────────────────────────────── */
+:focus-visible {
+  outline-color: var(--m-orange) !important;
+}
+
+/* ── PROGRESS BARS / SLIDERS ─────────────────────────────────── */
+progress::-webkit-progress-value,
+input[type="range"]::-webkit-slider-thumb {
+  background: var(--m-orange) !important;
+}
+
+/* ── COUNTDOWN TIMER (homepage) ──────────────────────────────── */
+[class*="countdown"],
+[class*="timer"] {
+  color: var(--m-beige) !important;
+}
+
+[class*="countdown__separator"],
+[class*="timer__colon"] {
+  color: var(--m-orange) !important;
+}
+
+/* ── MARQUEE SECTION CUSTOMIZER COLOURS ──────────────────────── */
+#melato-marquee-section {
+  --marquee-accent: var(--m-orange);
+}
+
+/* ── COMPLETE THE SET SECTION ACCENTS ────────────────────────── */
+.m-cts__badge,
+.m-cts__cta {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+  border-color: var(--m-orange) !important;
+}
+
+.m-cts__cta:hover {
+  background: var(--m-orange-hover) !important;
+}
+
+.m-cts__heading-accent,
+.m-cts__label {
+  color: var(--m-orange) !important;
+}
+
+/* ── TAG-BASED RECOMMENDATIONS ───────────────────────────────── */
+.m-recs__heading-accent {
+  color: var(--m-orange) !important;
+}
+
+.m-recs__card:hover {
+  border-color: var(--m-brown-border) !important;
+}
+
+/* ── FOOTER ACCENTS ───────────────────────────────────────────── */
+.footer__heading,
+[class*="footer__title"],
+[class*="footer-heading"] {
+  color: var(--m-beige-dim) !important;
+}
+
+/* ── QUICK VIEW BUTTON ────────────────────────────────────────── */
+.quick-add__submit,
+[class*="quick-view"],
+[class*="quick-add"] {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+}
+
+/* ── NOTIFICATION / TOAST ────────────────────────────────────── */
+[class*="toast"],
+[class*="notification"],
+[class*="cart-notification"] {
+  border-color: var(--m-orange) !important;
+}
+
+/* ── PAGINATION / ACTIVE STATE ───────────────────────────────── */
+.pagination__item--current,
+[aria-current="page"] {
+  background: var(--m-orange) !important;
+  color: #fff !important;
+  border-color: var(--m-orange) !important;
+}
+
+/* ── SCROLLBAR (webkit) ──────────────────────────────────────── */
+::-webkit-scrollbar-thumb {
+  background: var(--m-brown-mid) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--m-orange) !important;
+}
+
+/* ── LOGO SIZE - HEADER & FOOTER v3 ────────────────────────────
+   Purpose: make the Melato logo visibly larger in both the header
+   and footer, while preserving the logo aspect ratio.
+
+   Adjust only these 4 variables if you want it bigger/smaller later.
+   Recommended safe range:
+   - Header desktop: 140px–190px
+   - Header mobile: 110px–145px
+   - Footer desktop: 170px–240px
+   - Footer mobile: 140px–180px
+*/
+:root {
+  --melato-header-logo-width-desktop: 165px;
+  --melato-header-logo-width-mobile: 128px;
+  --melato-footer-logo-width-desktop: 220px;
+  --melato-footer-logo-width-mobile: 165px;
+}
+
+/* Header logo wrapper - removes tight theme constraints */
+#shopify-section-header .header__heading,
+#shopify-section-header .header__heading-link,
+#shopify-section-header .header__heading-logo-wrapper,
+#shopify-section-header .site-header__logo,
+#shopify-section-header .site-header__logo-link,
+#shopify-section-header .header__logo,
+#shopify-section-header [class*="logo"] {
+  max-width: none !important;
+}
+
+/* Header logo image / SVG */
+#shopify-section-header .header__heading-logo,
+#shopify-section-header .header__heading-logo img,
+#shopify-section-header .header__heading-logo svg,
+#shopify-section-header .site-header__logo img,
+#shopify-section-header .site-header__logo svg,
+#shopify-section-header .header__logo img,
+#shopify-section-header .header__logo svg,
+#shopify-section-header img[src*="logo"],
+#shopify-section-header img[alt*="Melato"],
+#shopify-section-header svg[aria-label*="Melato"] {
+  width: var(--melato-header-logo-width-desktop) !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* Keep the header from clipping the larger logo */
+#shopify-section-header .header,
+#shopify-section-header .site-header,
+#shopify-section-header header,
+.shopify-section-header-sticky .header,
+.shopify-section-header-sticky header {
+  overflow: visible !important;
+}
+
+/* Footer logo wrapper */
+footer .footer__logo,
+footer .site-footer__logo,
+footer [class*="logo"],
+.footer .footer__logo,
+.site-footer .site-footer__logo,
+[class*="footer"] [class*="logo"] {
+  max-width: none !important;
+}
+
+/* Footer logo image / SVG */
+footer .footer__logo img,
+footer .footer__logo svg,
+footer .site-footer__logo img,
+footer .site-footer__logo svg,
+footer img[src*="logo"],
+footer img[alt*="Melato"],
+.footer__logo img,
+.footer__logo svg,
+.site-footer__logo img,
+.site-footer__logo svg,
+[class*="footer"] [class*="logo"] img,
+[class*="footer"] [class*="logo"] svg {
+  width: var(--melato-footer-logo-width-desktop) !important;
+  height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* Mobile sizing */
+@media screen and (max-width: 749px) {
+  #shopify-section-header .header__heading-logo,
+  #shopify-section-header .header__heading-logo img,
+  #shopify-section-header .header__heading-logo svg,
+  #shopify-section-header .site-header__logo img,
+  #shopify-section-header .site-header__logo svg,
+  #shopify-section-header .header__logo img,
+  #shopify-section-header .header__logo svg,
+  #shopify-section-header img[src*="logo"],
+  #shopify-section-header img[alt*="Melato"] {
+    width: var(--melato-header-logo-width-mobile) !important;
+  }
+
+  footer .footer__logo img,
+  footer .footer__logo svg,
+  footer .site-footer__logo img,
+  footer .site-footer__logo svg,
+  footer img[src*="logo"],
+  footer img[alt*="Melato"],
+  .footer__logo img,
+  .footer__logo svg,
+  .site-footer__logo img,
+  .site-footer__logo svg,
+  [class*="footer"] [class*="logo"] img,
+  [class*="footer"] [class*="logo"] svg {
+    width: var(--melato-footer-logo-width-mobile) !important;
+  }
+}
+
+
+/* ===== melato-header-logo-bigger.css ===== */
+/* ============================================================
+   MELATO - HEADER LOGO BIGGER OVERRIDE v4
+   Purpose: force the centered Melato header logo to render larger.
+   Install this AFTER theme.css and AFTER melato-palette-logo-updated.css.
+   ============================================================ */
+
+:root {
+  --melato-header-logo-height-desktop: 34px;
+  --melato-header-logo-height-mobile: 25px;
+  --melato-header-logo-width-desktop: 190px;
+  --melato-header-logo-width-mobile: 140px;
+}
+
+/* Give the header enough vertical space so the larger logo is not clipped. */
+header,
+.header,
+.site-header,
+.shopify-section-header,
+[class*="header"] {
+  overflow: visible !important;
+}
+
+/* Target the actual logo containers used by most Shopify themes. */
+header .header__heading,
+header .header__heading-link,
+header .header__heading-logo-wrapper,
+header .site-header__logo,
+header .site-header__logo-link,
+header .header__logo,
+header .logo,
+.header .header__heading,
+.header .header__heading-link,
+.header .header__heading-logo-wrapper,
+.header .site-header__logo,
+.header .site-header__logo-link,
+.header .header__logo,
+.header .logo {
+  width: auto !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* Strong header-logo image override. Uses height because wide logos can still look tiny when only width is controlled. */
+header .header__heading-logo,
+header .header__heading-logo img,
+header .header__heading-logo svg,
+header .header__heading-link img,
+header .header__heading-link svg,
+header .header__heading-logo-wrapper img,
+header .header__heading-logo-wrapper svg,
+header .site-header__logo img,
+header .site-header__logo svg,
+header .site-header__logo-link img,
+header .site-header__logo-link svg,
+header .header__logo img,
+header .header__logo svg,
+header .logo img,
+header .logo svg,
+header a[href="/"] img,
+header a[href="/"] svg,
+.header .header__heading-logo,
+.header .header__heading-logo img,
+.header .header__heading-logo svg,
+.header .header__heading-link img,
+.header .header__heading-link svg,
+.header .header__heading-logo-wrapper img,
+.header .header__heading-logo-wrapper svg,
+.header .site-header__logo img,
+.header .site-header__logo svg,
+.header .site-header__logo-link img,
+.header .site-header__logo-link svg,
+.header .header__logo img,
+.header .header__logo svg,
+.header .logo img,
+.header .logo svg,
+.header a[href="/"] img,
+.header a[href="/"] svg {
+  height: var(--melato-header-logo-height-desktop) !important;
+  width: auto !important;
+  max-height: none !important;
+  max-width: var(--melato-header-logo-width-desktop) !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+/* If the theme applies a logo scale variable, override it too. */
+header,
+.header {
+  --logo-width: var(--melato-header-logo-width-desktop) !important;
+  --header-logo-width: var(--melato-header-logo-width-desktop) !important;
+  --header-logo-height: var(--melato-header-logo-height-desktop) !important;
+}
+
+@media screen and (max-width: 749px) {
+  :root {
+    --melato-header-logo-height-mobile: 92px;
+    --melato-header-logo-width-mobile: 530px;
+  }
+
+  header .header__heading-logo,
+  header .header__heading-logo img,
+  header .header__heading-logo svg,
+  header .header__heading-link img,
+  header .header__heading-link svg,
+  header .header__heading-logo-wrapper img,
+  header .header__heading-logo-wrapper svg,
+  header .site-header__logo img,
+  header .site-header__logo svg,
+  header .site-header__logo-link img,
+  header .site-header__logo-link svg,
+  header .header__logo img,
+  header .header__logo svg,
+  header .logo img,
+  header .logo svg,
+  header a[href="/"] img,
+  header a[href="/"] svg,
+  .header .header__heading-logo,
+  .header .header__heading-logo img,
+  .header .header__heading-logo svg,
+  .header .header__heading-link img,
+  .header .header__heading-link svg,
+  .header .header__heading-logo-wrapper img,
+  .header .header__heading-logo-wrapper svg,
+  .header .site-header__logo img,
+  .header .site-header__logo svg,
+  .header .site-header__logo-link img,
+  .header .site-header__logo-link svg,
+  .header .header__logo img,
+  .header .header__logo svg,
+  .header .logo img,
+  .header .logo svg,
+  .header a[href="/"] img,
+  .header a[href="/"] svg {
+    height: var(--melato-header-logo-height-mobile) !important;
+    width: auto !important;
+    max-width: var(--melato-header-logo-width-mobile) !important;
+    max-height: none !important;
+    object-fit: contain !important;
+  }
+
+  header,
+  .header {
+    --logo-width: var(--melato-header-logo-width-mobile) !important;
+    --header-logo-width: var(--melato-header-logo-width-mobile) !important;
+    --header-logo-height: var(--melato-header-logo-height-mobile) !important;
+  }
+}
+
+/* ===== melato-palette-v3.css ===== */
+/* Melato luxury presentation. Semantic colors are owned by melato-luxury-tokens.css. */
+:root {
+ --melato-black:var(--text-primary);--melato-ink:var(--text-primary);--melato-ink-2:var(--text-primary);--melato-ink-3:var(--text-secondary);
+ --melato-offwhite:var(--surface-page);--melato-offwhite-2:var(--surface-media);--melato-beige:var(--surface-media);--melato-beige-deep:var(--border-subtle);
+ --melato-muted:var(--text-secondary);--melato-line:var(--border-subtle);--melato-soft-line:var(--border-subtle);--melato-icon-stroke:currentColor;
+ --melato-ui:var(--font-commerce);--melato-editorial:var(--font-editorial);--melato-mono:var(--font-commerce);
+ --color-accent:var(--action);--color-accent-hover:var(--text-secondary);--header-height:78px;
+}
+body { background:var(--surface-page);color:var(--text-primary);font-family:var(--font-commerce); }
+h1,h2,h3 {font-weight:400;letter-spacing:0;line-height:1.12;text-transform:none;}
+h1,h2 {font-family:var(--font-editorial);}
+h1 {font-size:clamp(36px,5vw,76px);}
+h2 {font-size:clamp(28px,3.7vw,52px);}
+button,input,select,textarea {font-family:var(--font-commerce);font-variant-numeric:lining-nums tabular-nums;}
+.price,[class*="__price"],[class*="-price"],[class*="quantity"],[class*="qty"],.pdp-size,.melato-collection-count,.mxh__bag-count {font-family:var(--font-commerce);font-variant-numeric:lining-nums tabular-nums;}
+:focus-visible {outline:2px solid currentColor;outline-offset:4px;}
+.product-card {background:transparent;box-shadow:none;border-radius:0;}
+.product-card__media {aspect-ratio:4/5;background:var(--surface-studio);border:1px solid var(--border-subtle);border-radius:0;}
+.product-card__img {width:100%;height:100%;object-fit:contain;}
+.product-card__info {padding:20px 0 0;}
+.product-card__title {font-family:var(--font-commerce);font-size:14px;font-weight:400;letter-spacing:0;text-transform:none;line-height:1.5;}
+.product-card__price {font-size:13px;line-height:1.6;}
+.featured-collection {padding-block:var(--space-section);}
+.featured-collection .grid {gap:var(--space-module) var(--space-card);}
+.melato-collection-header__text {padding:var(--space-section) var(--page-gutter) var(--space-module);}
+.melato-collection-toolbar,.melato-collection-grid {padding-inline:var(--page-gutter);}
+.melato-collection-grid {padding-block:var(--space-module) var(--space-section);}
+.melato-product-grid__inner {gap:var(--space-module) var(--space-card);}
+.melato-trust-strip {background:var(--surface-media);color:var(--text-primary);border-color:var(--border-subtle);font-weight:400;text-transform:none;letter-spacing:0;}
+.cart-drawer,.search-drawer,.mobile-menu {color:var(--text-primary);}
+.cart-drawer__header,.cart-drawer__footer,.search-drawer__header {border-color:var(--border-subtle);}
+.cart-drawer__body {padding-block:32px;}
+.cart-item {padding-block:24px;border-color:var(--border-subtle);}
+.cart-recovery__image {background:var(--surface-studio);}
+.cart-drawer .cart-checkout,.cart-drawer button[name="checkout"] {background:var(--action);color:var(--action-text);min-height:48px;}
+.melato-brand-clean,.melato-strip {padding-block:var(--space-section);}
+.melato-brand-clean__media {border-radius:0;}
+@media(min-width:1024px){.featured-collection .grid {grid-template-columns:repeat(3,minmax(0,1fr));}}
+@media(max-width:374px){.melato-product-grid__inner,.featured-collection .grid {grid-template-columns:minmax(0,1fr);}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important;}}
+
+.melato-footer__column h2,.cart-drawer__title,.search-drawer__title {font-family:var(--font-commerce);}
+.mxh__logo-img,.melato-footer__logo {filter:brightness(0);}
+
+.melato-collection-hero .melato-collection-title,.melato-collection-hero .melato-collection-desc {color:#ffffff;}
+
+/* ===== melato-audit-upgrades.css ===== */
+:root {
+  --melato-black: #080808;
+  --melato-ink: #111111;
+  --melato-paper: #f7f3ea;
+  --melato-muted: rgba(17, 17, 17, 0.68);
+  --melato-line: rgba(17, 17, 17, 0.14);
+  --melato-white-line: rgba(255, 255, 255, 0.18);
+  --melato-radius: 22px;
+  --melato-shadow: 0 18px 50px rgba(0, 0, 0, 0.12);
+}
+
+.melato-section-wrap {
+  width: min(1180px, calc(100% - 32px));
+  margin-inline: auto;
+}
+
+.melato-section {
+  margin-block: clamp(28px, 5vw, 72px);
+}
+
+.melato-section-head {
+  margin-bottom: clamp(18px, 3vw, 34px);
+}
+
+.melato-section-head h1,
+.melato-section-head h2,
+.melato-page__header h1,
+.melato-editorial__copy h2 {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+  font-size: clamp(2rem, 5vw, 5.4rem);
+}
+
+.melato-eyebrow {
+  margin: 0 0 0.7rem;
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--melato-muted);
+}
+
+.melato-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--melato-black);
+  background: var(--melato-black);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.melato-button:hover {
+  transform: translateY(-1px);
+  opacity: 0.88;
+}
+
+.melato-button--light {
+  background: #fff;
+  color: var(--melato-black);
+}
+
+.melato-grid--cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.melato-card {
+  position: relative;
+}
+
+.melato-card__media,
+.melato-set__media,
+.melato-editorial__media {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--melato-radius);
+  background: #eee;
+}
+
+.melato-card__image,
+.melato-set__image,
+.melato-editorial__image,
+.melato-responsive-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.melato-card__media {
+  aspect-ratio: 4 / 5;
+}
+
+.melato-card__image {
+  height: 100%;
+}
+
+.melato-card__badge {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  background: var(--melato-black);
+  color: #fff;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.melato-card__content {
+  padding-top: 0.8rem;
+}
+
+.melato-card__eyebrow {
+  margin: 0 0 0.2rem;
+  color: var(--melato-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+}
+
+.melato-card__title {
+  margin: 0;
+  font-size: clamp(0.95rem, 2vw, 1.1rem);
+  line-height: 1.1;
+}
+
+.melato-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.melato-card__price {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+
+.melato-card__price-compare {
+  color: var(--melato-muted);
+}
+
+.melato-proof {
+  background: var(--melato-black);
+  color: #fff;
+  padding: 20px 0;
+}
+
+.melato-proof__wrap {
+  width: min(1180px, calc(100% - 32px));
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--melato-white-line);
+  border: 1px solid var(--melato-white-line);
+  border-radius: var(--melato-radius);
+  overflow: hidden;
+}
+
+.melato-proof__item {
+  display: flex;
+  gap: 0.8rem;
+  padding: 1rem;
+  background: #101010;
+}
+
+.melato-proof__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 50%;
+  border: 1px solid var(--melato-white-line);
+}
+
+.melato-proof__item strong,
+.melato-proof__item p {
+  margin: 0;
+}
+
+.melato-proof__item p {
+  margin-top: 0.25rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.88rem;
+  line-height: 1.35;
+}
+
+.melato-set {
+  padding-block: clamp(28px, 5vw, 72px);
+  background: var(--melato-paper);
+}
+
+.melato-set__wrap {
+  display: grid;
+  gap: clamp(20px, 4vw, 44px);
+}
+
+.melato-set__head p {
+  max-width: 58ch;
+}
+
+.melato-set__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 2vw, 24px);
+}
+
+.melato-set__item {
+  padding: clamp(14px, 2vw, 22px);
+  border: 1px solid var(--melato-line);
+  border-radius: calc(var(--melato-radius) + 8px);
+  background: #fff;
+  box-shadow: var(--melato-shadow);
+}
+
+.melato-set__label {
+  display: inline-flex;
+  margin-bottom: 0.7rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--melato-muted);
+}
+
+.melato-set__media {
+  aspect-ratio: 4 / 5;
+  margin-bottom: 1rem;
+}
+
+.melato-set__image {
+  height: 100%;
+}
+
+.melato-set__item h3,
+.melato-set__item p {
+  margin: 0 0 0.45rem;
+}
+
+.melato-set__total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  border-radius: var(--melato-radius);
+  background: var(--melato-black);
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.melato-accordions {
+  padding-block: clamp(24px, 4vw, 64px);
+}
+
+.melato-accordions__wrap,
+.melato-page__wrap {
+  max-width: 980px;
+}
+
+.melato-accordion-list {
+  border-top: 1px solid var(--melato-line);
+}
+
+.melato-accordion {
+  border-bottom: 1px solid var(--melato-line);
+}
+
+.melato-accordion summary {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 0;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.melato-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.melato-accordion[open] summary span:last-child {
+  transform: rotate(45deg);
+}
+
+.melato-accordion__content {
+  padding: 0 0 1.2rem;
+  color: var(--melato-muted);
+}
+
+.melato-editorial {
+  padding-block: clamp(34px, 7vw, 96px);
+}
+
+.melato-editorial__grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(20px, 5vw, 64px);
+  align-items: center;
+}
+
+.melato-editorial__copy .rte {
+  margin-block: 1.2rem 1.5rem;
+  max-width: 54ch;
+}
+
+.melato-editorial__media {
+  aspect-ratio: 4 / 5;
+  box-shadow: var(--melato-shadow);
+}
+
+.melato-editorial__image {
+  height: 100%;
+}
+
+.melato-page {
+  padding-block: clamp(34px, 7vw, 96px);
+}
+
+.melato-page__header {
+  margin-bottom: clamp(24px, 4vw, 42px);
+}
+
+.melato-page__header p {
+  max-width: 68ch;
+  color: var(--melato-muted);
+}
+
+.melato-contact__grid {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: clamp(20px, 4vw, 46px);
+}
+
+.melato-contact__cards {
+  display: grid;
+  gap: 1rem;
+}
+
+.melato-contact-card,
+.melato-contact__form-card {
+  padding: clamp(16px, 2.3vw, 26px);
+  border: 1px solid var(--melato-line);
+  border-radius: var(--melato-radius);
+  background: #fff;
+}
+
+.melato-contact-card h2,
+.melato-contact__form-card h2 {
+  margin-top: 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.melato-contact-card p {
+  margin-bottom: 0.5rem;
+  color: var(--melato-muted);
+}
+
+.melato-contact-card a {
+  font-weight: 700;
+  color: var(--melato-black);
+}
+
+.melato-contact-form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.melato-contact-form input,
+.melato-contact-form select,
+.melato-contact-form textarea {
+  width: 100%;
+  border: 1px solid var(--melato-line);
+  border-radius: 14px;
+  padding: 0.85rem 0.9rem;
+  font: inherit;
+  background: #fff;
+}
+
+.melato-contact-form label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.78rem;
+}
+
+.melato-form-success {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  background: #e9f6ec;
+}
+
+.melato-form-error {
+  padding: 0.8rem 1rem;
+  border-radius: 12px;
+  background: #fff0f0;
+}
+
+:where(.melato-button, .melato-card a, .melato-set a, .melato-accordion summary, .melato-contact-form input, .melato-contact-form textarea, .melato-contact-form select):focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+
+@media (max-width: 989px) {
+  .melato-grid--cards,
+  .melato-proof__wrap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .melato-editorial__grid,
+  .melato-contact__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .melato-grid--cards,
+  .melato-proof__wrap,
+  .melato-set__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .melato-section-wrap,
+  .melato-proof__wrap {
+    width: min(100% - 24px, 1180px);
+  }
+
+  .melato-proof__item {
+    padding: 0.9rem;
+  }
+}
+
+/* ===== melato-storefront-tail.css ===== */
+/* MELATO STOREFRONT TAIL
+   Consolidated in the exact former cascade order:
+   1. melato-header-footer-fix.css
+   2. melato-optimization-2026.css
+   3. melato-hidden-ui-cleanup.css
+   4. melato-august-2026-audit-fixes.css
+*/
+
+/* ===== Header / footer / search fix ===== */
+/*
+  MELATO HEADER / FOOTER / SEARCH FIX
+  Fixes duplicate hamburger icon, missing cart icon, tiny logo, and dark header/footer alignment.
+*/
+.shopify-section-header,#shopify-section-header,.header-wrapper,.site-header{background:var(--surface-page,#ffffff)!important;color:var(--text-primary)!important}.header,.site-header,.melato-header{min-height:76px!important;align-items:center!important}.announcement-bar,.announcement-bar-section,.utility-bar{background:#302922!important;color:var(--text-primary)!important}.announcement-bar *,.utility-bar *{color:var(--text-primary)!important}.header__heading-logo,.header__heading-logo-wrapper img,.header__heading-link img,.site-header__logo img,.site-header__logo-image,.melato-logo img,.melato-header__logo img{width:clamp(92px,8vw,150px)!important;max-width:clamp(92px,8vw,150px)!important;height:auto!important;opacity:1!important;visibility:visible!important}.header__heading-link,.site-header__logo,.melato-header__logo{display:inline-flex!important;align-items:center!important;justify-content:center!important}.header__menu-item,.header__inline-menu a,.site-nav a,nav a{color:var(--text-primary)!important;letter-spacing:.12em;text-transform:uppercase;font-size:11px}.header__menu-item:hover,.header__inline-menu a:hover,.site-nav a:hover,nav a:hover{color:var(--text-primary)!important}.header__icons,.site-header__icons,.melato-header__icons{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:18px!important;opacity:1!important;visibility:visible!important}.header__icon,.site-header__icon,.header__icon--search,.header__icon--cart,.header__icon--account,a[href="/cart"],a[href*="/cart"],a[href="/search"],a[href*="/search"]{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:42px!important;height:42px!important;color:var(--text-primary)!important;opacity:1!important;visibility:visible!important;pointer-events:auto!important}.header__icon svg,.site-header__icon svg,.header__icon--search svg,.header__icon--cart svg,.header__icon--account svg,a[href="/cart"] svg,a[href*="/cart"] svg,a[href="/search"] svg,a[href*="/search"] svg{width:22px!important;height:22px!important;display:block!important;color:var(--text-primary)!important;fill:none!important;stroke:currentColor!important;stroke-width:1.7!important;opacity:1!important;visibility:visible!important}.header__icon--menu{display:inline-flex!important;align-items:center!important;justify-content:center!important;color:var(--text-primary)!important;opacity:1!important;visibility:visible!important}.header__icon--menu svg,.header__icon--menu .icon,summary.header__icon--menu svg{width:24px!important;height:24px!important;display:block!important;color:var(--text-primary)!important;opacity:1!important;visibility:visible!important}.header__icon--menu svg+svg,.header__icon--menu .icon-close,summary.header__icon--menu svg+svg,summary.header__icon--menu .icon-close{display:none!important}.header__icon--menu .icon-hamburger,summary.header__icon--menu .icon-hamburger{display:block!important}.cart-count-bubble,.header__cart-count,.site-header__cart-count{display:flex!important;align-items:center!important;justify-content:center!important;background:#f5f1e8!important;color:#050609!important;opacity:1!important;visibility:visible!important}.search-modal,.predictive-search,.search__input,input[type="search"]{color:#050609!important;background:#f8f6ef!important}.search-modal *,.predictive-search *{color:#050609!important}.footer,.site-footer,.melato-footer,#shopify-section-footer{background:#111!important;color:var(--text-primary)!important}.footer *,.site-footer *,.melato-footer *,#shopify-section-footer *{opacity:1!important}.footer a,.site-footer a,.melato-footer a,#shopify-section-footer a{color:rgba(245,241,232,.78)!important}.footer a:hover,.site-footer a:hover,.melato-footer a:hover,#shopify-section-footer a:hover{color:#fff!important}.footer h2,.footer h3,.footer .footer-block__heading,.site-footer h2,.site-footer h3,.melato-footer h2,.melato-footer h3{color:var(--text-primary)!important}.footer__payment,.list-payment,.payment-icons{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:8px!important;opacity:1!important}@media screen and (max-width:749px){.header,.site-header,.melato-header{min-height:68px!important}.header__heading-logo,.header__heading-logo-wrapper img,.header__heading-link img,.site-header__logo img,.site-header__logo-image,.melato-logo img,.melato-header__logo img{width:96px!important;max-width:96px!important}.header__icons,.site-header__icons,.melato-header__icons{gap:10px!important}.header__icon,.site-header__icon,.header__icon--search,.header__icon--cart,.header__icon--account{width:38px!important;height:38px!important}}
+
+/* ===== Optimization layer ===== */
+:root{--melato-tap-target:46px}html{scroll-behavior:smooth}img{max-width:100%;height:auto}button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}.btn,button,[type=button],[type=submit],.m-header__icon-btn,.m-header__hamburger,.m-header__drawer-link,.ml-add-to-cart,.ml-swatch,.melato-home-conversion a,.melato-size-guide-link{min-height:var(--melato-tap-target)}.melato-header-inline-search{display:none}@media (min-width:990px){.melato-header-inline-search{display:flex;align-items:center;gap:8px;min-width:210px;max-width:300px;height:42px;padding:0 8px 0 16px;border:1px solid rgba(245,241,232,.16);border-radius:999px;background:rgba(255,255,255,.05)}.melato-header-inline-search input{width:100%;border:0;outline:0;background:transparent;color:currentColor;font:inherit;font-size:12px}.melato-header-inline-search input::placeholder{color:rgba(245,241,232,.62)}.melato-header-inline-search button{min-height:32px;border:0;border-radius:999px;background:#f5f1e8;color:#050609;padding:0 12px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}}.melato-home-conversion{background:#050609;color:var(--text-primary);border-bottom:1px solid rgba(245,241,232,.08)}.melato-home-conversion__shell{width:min(1360px,100%);margin:0 auto;padding:clamp(54px,7vw,104px) clamp(18px,4vw,56px)}.melato-home-conversion__hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);gap:clamp(28px,5vw,72px);align-items:center}.melato-home-conversion__eyebrow,.melato-section-eyebrow{margin:0 0 14px;color:#d6b678;font-size:12px;line-height:1.1;letter-spacing:.22em;text-transform:uppercase}.melato-home-conversion__title{max-width:980px;margin:0;font-size:clamp(42px,7vw,94px);line-height:.9;letter-spacing:-.055em;text-transform:uppercase}.melato-home-conversion__copy{max-width:58ch;margin:22px 0 0;color:rgba(245,241,232,.78);font-size:clamp(16px,1.5vw,20px);line-height:1.55}.melato-home-conversion__ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.melato-home-conversion__cta,.melato-home-conversion__cta-secondary{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:0 24px;text-decoration:none;text-transform:uppercase;letter-spacing:.12em;font-size:12px;font-weight:900}.melato-home-conversion__cta{background:#f5f1e8;color:#050609}.melato-home-conversion__cta-secondary{border:1px solid rgba(245,241,232,.2);color:var(--text-primary)}.melato-home-conversion__proof{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.melato-home-conversion__proof-card,.melato-home-conversion__panel,.melato-home-conversion__product{border:1px solid rgba(245,241,232,.1);border-radius:26px;background:rgba(255,255,255,.045);box-shadow:0 20px 60px rgba(0,0,0,.24)}.melato-home-conversion__proof-card{padding:22px}.melato-home-conversion__proof-card strong{display:block;margin-bottom:6px;font-size:15px}.melato-home-conversion__proof-card span{display:block;color:rgba(245,241,232,.68);font-size:13px;line-height:1.4}.melato-home-conversion__sections{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:clamp(36px,5vw,72px)}.melato-home-conversion__panel{padding:clamp(22px,3vw,34px)}.melato-home-conversion__panel h2{margin:0 0 12px;font-size:clamp(23px,2.4vw,36px);line-height:.98;letter-spacing:-.04em;text-transform:uppercase}.melato-home-conversion__panel p{margin:0;color:rgba(245,241,232,.72);line-height:1.55}.melato-home-conversion__products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:28px}.melato-home-conversion__product{overflow:hidden;color:inherit;text-decoration:none}.melato-home-conversion__product-image{display:block;aspect-ratio:4/5;width:100%;object-fit:cover;background:rgba(255,255,255,.05)}.melato-home-conversion__product-text{padding:14px}.melato-home-conversion__product-title{margin:0 0 6px;font-size:13px;line-height:1.3}.melato-home-conversion__product-price{margin:0;color:rgba(245,241,232,.72);font-size:12px}.testimonials-track{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px}.testimonial-card{min-width:min(360px,86vw);scroll-snap-align:start}.testimonial-card__badge,.melato-review-badge{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(245,241,232,.16);border-radius:999px;padding:7px 10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.86}.melato-product-proof-inline{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:12px 0 18px}.melato-stock-cue{display:inline-flex;align-items:center;gap:8px;border-radius:999px;background:rgba(214,182,120,.12);color:currentColor;padding:9px 13px;font-size:12px;line-height:1.25}.melato-stock-cue:before{content:'';width:8px;height:8px;border-radius:999px;background:#d6b678;box-shadow:0 0 0 5px rgba(214,182,120,.12)}.melato-size-guide-link{display:inline-flex;align-items:center;justify-content:center;margin-left:10px;border:1px solid rgba(245,241,232,.18);border-radius:999px;color:inherit;padding:0 13px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;text-decoration:none}@media (max-width:989px){.melato-home-conversion__hero,.melato-home-conversion__sections{grid-template-columns:1fr}.melato-home-conversion__proof,.melato-home-conversion__products{grid-template-columns:repeat(2,minmax(0,1fr))}.melato-home-conversion__shell{padding-top:44px}.ml-buybox,.product-info{padding-inline:18px!important}.ml-cta-row,.product-info [data-atc-target]{gap:14px!important}.ml-add-to-cart,.btn--lg,.btn--full,.m-search-form__button,.m-search-form__input{min-height:54px!important}}@media (max-width:540px){.melato-home-conversion__proof,.melato-home-conversion__products{grid-template-columns:1fr}.melato-home-conversion__ctas{display:grid}.melato-home-conversion__cta,.melato-home-conversion__cta-secondary{width:100%}}
+
+/* ===== Hidden utility cleanup ===== */
+.melato-utility-layer{position:relative;z-index:2147483000;width:0;height:0;overflow:visible;pointer-events:none}.melato-utility-layer *,.melato-utility-layer *::before,.melato-utility-layer *::after{box-sizing:border-box}.melato-utility-layer>*{pointer-events:auto}.melato-utility-layer .drip-overlay,.melato-utility-layer [data-overlay]{position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.62);opacity:0;visibility:hidden;pointer-events:none;transition:opacity 180ms ease,visibility 180ms ease}.melato-utility-layer .drip-overlay.is-visible,.melato-utility-layer [data-overlay].is-visible,.melato-utility-layer .drip-overlay[aria-hidden="false"],.melato-utility-layer [data-overlay][aria-hidden="false"]{opacity:1;visibility:visible;pointer-events:auto}.melato-utility-layer .cart-drawer,.melato-utility-layer .search-drawer,.melato-utility-layer .mobile-menu,.melato-utility-layer .quick-view-modal,.melato-utility-layer .size-guide-modal,.melato-utility-layer [id*="cart" i][class*="drawer" i],.melato-utility-layer [id*="search" i][class*="drawer" i],.melato-utility-layer [id*="menu" i][class*="drawer" i],.melato-utility-layer [id*="quick" i][class*="modal" i],.melato-utility-layer [id*="size" i][class*="modal" i],.melato-utility-layer [data-cart-drawer],.melato-utility-layer [data-search-drawer],.melato-utility-layer [data-mobile-menu],.melato-utility-layer [data-quick-view],.melato-utility-layer [data-size-guide]{position:fixed!important;z-index:950;max-width:min(92vw,480px);max-height:100dvh;overflow:auto;visibility:hidden;opacity:0;pointer-events:none}.melato-utility-layer .cart-drawer,.melato-utility-layer [id*="cart" i][class*="drawer" i],.melato-utility-layer [data-cart-drawer],.melato-utility-layer .search-drawer,.melato-utility-layer [id*="search" i][class*="drawer" i],.melato-utility-layer [data-search-drawer],.melato-utility-layer .mobile-menu,.melato-utility-layer [id*="menu" i][class*="drawer" i],.melato-utility-layer [data-mobile-menu]{top:0;right:0;bottom:0;transform:translateX(104%);transition:transform 220ms ease,opacity 180ms ease,visibility 180ms ease}.melato-utility-layer .quick-view-modal,.melato-utility-layer .size-guide-modal,.melato-utility-layer [id*="quick" i][class*="modal" i],.melato-utility-layer [id*="size" i][class*="modal" i],.melato-utility-layer [data-quick-view],.melato-utility-layer [data-size-guide]{inset:50% auto auto 50%;transform:translate(-50%,-46%);width:min(92vw,760px);transition:transform 220ms ease,opacity 180ms ease,visibility 180ms ease}.melato-utility-layer .is-open,.melato-utility-layer .is-active,.melato-utility-layer .is-visible,.melato-utility-layer [open],.melato-utility-layer [aria-hidden="false"]{visibility:visible!important;opacity:1!important;pointer-events:auto!important}.melato-utility-layer .cart-drawer.is-open,.melato-utility-layer .search-drawer.is-open,.melato-utility-layer .mobile-menu.is-open,.melato-utility-layer [id*="cart" i][class*="drawer" i].is-open,.melato-utility-layer [id*="search" i][class*="drawer" i].is-open,.melato-utility-layer [id*="menu" i][class*="drawer" i].is-open,.melato-utility-layer [data-cart-drawer].is-open,.melato-utility-layer [data-search-drawer].is-open,.melato-utility-layer [data-mobile-menu].is-open,.melato-utility-layer [aria-hidden="false"][class*="drawer" i]{transform:translateX(0)!important}.melato-utility-layer .quick-view-modal.is-open,.melato-utility-layer .size-guide-modal.is-open,.melato-utility-layer [id*="quick" i][class*="modal" i].is-open,.melato-utility-layer [id*="size" i][class*="modal" i].is-open,.melato-utility-layer [data-quick-view].is-open,.melato-utility-layer [data-size-guide].is-open,.melato-utility-layer [aria-hidden="false"][class*="modal" i]{transform:translate(-50%,-50%)!important}.melato-utility-layer #drip-toast,.melato-utility-layer .drip-toast,.melato-utility-layer [role="status"]{position:fixed;right:18px;bottom:18px;z-index:1200;width:auto;max-width:min(420px,calc(100vw - 36px));pointer-events:none}footer,.shopify-section-footer,.melato-footer{position:relative;z-index:1}.template-page .melato-footer a,.template-page .melato-footer small,.template-page .melato-footer p,.template-page footer a,.template-page footer small,.template-page footer p{overflow-wrap:anywhere}.template-page .main-content+.shopify-section-footer,.template-page main+footer,.template-page main+.melato-footer{margin-top:0}
+
+/* ===== August commerce safeguards ===== */
+.melato-audit-hidden,[hidden].melato-audit-hidden{display:none!important}.melato-home-clean .melato-home-clean__header{background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important;backdrop-filter:none!important}.pdp-trust-row,[class*="product"] [class*="trust-row"],[class*="product"] [class*="assurance"]{display:flex;flex-wrap:wrap;align-items:center;gap:.55rem 1rem}ul.pdp-trust-row{list-style:none;margin:0;padding:0}.pdp-trust-row>span,.pdp-trust-row>li,[class*="product"] [class*="trust-row"]>span,[class*="product"] [class*="trust-row"]>li,[class*="product"] [class*="assurance"]>span,[class*="product"] [class*="assurance"]>li{display:inline-flex;align-items:center}.pdp-trust-row>span:not(:last-child)::after,.pdp-trust-row>li:not(:last-child)::after,[class*="product"] [class*="trust-row"]>span:not(:last-child)::after,[class*="product"] [class*="trust-row"]>li:not(:last-child)::after,[class*="product"] [class*="assurance"]>span:not(:last-child)::after,[class*="product"] [class*="assurance"]>li:not(:last-child)::after{content:"";width:1px;height:.85em;margin-inline-start:1rem;background:currentColor;opacity:.28}.pdp-price-row,[class*="product"] [class*="price-row"]{display:flex;flex-wrap:wrap;align-items:baseline;gap:.45rem .8rem}.melato-audit-spec-card{margin-block:clamp(1rem,2vw,1.5rem);padding:clamp(1rem,2.5vw,1.5rem);border:1px solid color-mix(in srgb,currentColor 18%,transparent);border-radius:1rem;background:color-mix(in srgb,currentColor 4%,transparent)}.melato-audit-spec-card__eyebrow{margin:0 0 .55rem;font-family:var(--font-mono-family,monospace);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;opacity:.68}.melato-audit-spec-card h2,.melato-audit-spec-card h3{margin:0 0 .85rem}.melato-audit-spec-card dl{display:grid;grid-template-columns:minmax(7.5rem,.38fr) minmax(0,1fr);gap:.65rem 1rem;margin:0}.melato-audit-spec-card dt{font-weight:700}.melato-audit-spec-card dd{margin:0}.melato-audit-rating-label{display:inline-flex;flex-wrap:wrap;gap:.35rem}@media (max-width:640px){.melato-audit-spec-card dl{grid-template-columns:1fr;gap:.25rem}.melato-audit-spec-card dd{margin-bottom:.65rem}}
+
+/* ===== melato-apple-design.css ===== */
+/* ==========================================================================
+   MELATO ATELIER × APPLE DESIGN & FLUID MOTION SYSTEM
+   Architected for Melato.ca — Luxury Streetwear & Cut-and-Sew Storefront
+   Principles: WWDC "Designing Fluid Interfaces" & "Principles of Great Design"
+   ========================================================================== */
+
+:root {
+  /* Apple Fluid Motion Spring & Physics Tokens */
+  --ease-apple-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-apple-snap: cubic-bezier(0.2, 0, 0, 1);
+  --ease-apple-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-apple-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+
+  /* Apple Latency & Duration Budgets */
+  --duration-instant: 120ms;
+  --duration-fast: 180ms;
+  --duration-normal: 280ms;
+  --duration-sheet: 380ms;
+
+  /* Specular Light & Translucent Materials */
+  --glass-header-bg: var(--surface-page);
+  --glass-header-scrolled: var(--surface-page);
+  --glass-drawer-bg: var(--surface-page);
+  --glass-specular-border: 1px solid var(--border-subtle);
+  --glass-specular-top: 1px solid var(--border-subtle);
+  --glass-blur-header: blur(24px) saturate(180%);
+  --glass-blur-sheet: blur(28px) saturate(160%);
+  --glass-blur-scrim: blur(14px) saturate(120%);
+}
+
+/* ==========================================================================
+   1. RESPONSE — KILL LATENCY (Instant Pointer Feedback)
+   ========================================================================== */
+
+/* Universal tap highlight removal & instant manipulation */
+*, *::before, *::after {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Primary buttons & interactive CTA controls */
+.btn,
+button.button,
+.button,
+.product-form__submit,
+.mxh__menu,
+.mxh__text-btn,
+.mxh__drawer-search,
+.mxh__search-form button,
+.cart-drawer__checkout,
+.quick-add-btn,
+.melato-button,
+a.button-light,
+.send-button {
+  touch-action: manipulation;
+  transition: transform var(--duration-fast) var(--ease-apple-spring),
+              background-color var(--duration-fast) ease,
+              border-color var(--duration-fast) ease,
+              box-shadow var(--duration-fast) ease,
+              color var(--duration-fast) ease;
+}
+
+/* Instant active depression on pointer-down */
+.btn:active,
+button.button:active,
+.button:active,
+.product-form__submit:active,
+.mxh__menu:active,
+.mxh__text-btn:active,
+.mxh__drawer-search:active,
+.mxh__search-form button:active,
+.cart-drawer__checkout:active,
+.quick-add-btn:active,
+.melato-button:active,
+a.button-light:active,
+.send-button:active,
+.service-tab:active,
+.chip:active {
+  transform: scale(0.972) !important;
+  transition: transform var(--duration-instant) var(--ease-apple-snap) !important;
+}
+
+/* Variant swatches, size selector pills, and icon triggers */
+.product-form__input input[type="radio"] + label,
+.variant-picker__button,
+.size-selector__btn,
+.swatch,
+.header__icon,
+.mxh__icon-btn,
+.quantity__button {
+  touch-action: manipulation;
+  transition: transform var(--duration-fast) var(--ease-apple-spring),
+              border-color var(--duration-fast) ease,
+              background-color var(--duration-fast) ease,
+              box-shadow var(--duration-fast) ease;
+}
+
+.product-form__input input[type="radio"] + label:active,
+.variant-picker__button:active,
+.size-selector__btn:active,
+.swatch:active,
+.header__icon:active,
+.mxh__icon-btn:active,
+.quantity__button:active {
+  transform: scale(0.94) !important;
+  transition: transform var(--duration-instant) var(--ease-apple-snap) !important;
+}
+
+/* ==========================================================================
+   2. MATERIALS & DEPTH — TRANSLUCENT FUNCTIONAL CHROME
+   ========================================================================== */
+
+/* Translucent Sticky Header (Overrides opaque background) */
+.site-header,
+.header-wrapper,
+.shopify-section-header header,
+#shopify-section-header header,
+.mxh,
+[data-mxh] {
+  background: var(--glass-header-bg) !important;
+  backdrop-filter: var(--glass-blur-header) !important;
+  -webkit-backdrop-filter: var(--glass-blur-header) !important;
+  border-bottom: var(--glass-specular-border) !important;
+  transition: background 320ms var(--ease-apple-smooth),
+              box-shadow 320ms var(--ease-apple-smooth),
+              border-color 320ms var(--ease-apple-smooth) !important;
+}
+
+/* Specular illumination on header when scrolled */
+.site-header.is-scrolled,
+.header-wrapper.is-scrolled,
+.mxh.is-scrolled,
+[data-mxh].is-scrolled {
+  background: var(--glass-header-scrolled) !important;
+  border-bottom-color: var(--border-subtle) !important;
+  box-shadow: none !important;
+}
+
+/* Dimming & Depth Scrim Overlay */
+.drip-overlay {
+  background: rgba(0, 0, 0, 0.65) !important;
+  backdrop-filter: var(--glass-blur-scrim) !important;
+  -webkit-backdrop-filter: var(--glass-blur-scrim) !important;
+  transition: opacity 340ms var(--ease-apple-spring),
+              visibility 340ms var(--ease-apple-spring) !important;
+}
+
+/* Cart Drawer & Mobile Menus — Frosted Acrylic Depth & Apple Sheet Physics */
+.cart-drawer,
+.mobile-menu,
+.search-drawer {
+  background: var(--glass-drawer-bg) !important;
+  backdrop-filter: var(--glass-blur-sheet) !important;
+  -webkit-backdrop-filter: var(--glass-blur-sheet) !important;
+  border-left: var(--glass-specular-border) !important;
+  box-shadow: -24px 0 60px rgba(0, 0, 0, 0.55) !important;
+  transition: transform var(--duration-sheet) var(--ease-apple-drawer) !important;
+}
+
+[dir="rtl"] .cart-drawer,
+[dir="rtl"] .mobile-menu {
+  border-left: none !important;
+  border-right: var(--glass-specular-border) !important;
+  box-shadow: 24px 0 60px rgba(0, 0, 0, 0.55) !important;
+}
+
+.search-drawer {
+  border-bottom: var(--glass-specular-border) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Fullscreen Navigation Atelier Drawer Polish */
+.mxh__drawer {
+  background: var(--surface-page) !important;
+  backdrop-filter: var(--glass-blur-sheet) !important;
+  -webkit-backdrop-filter: var(--glass-blur-sheet) !important;
+  transition: opacity 320ms var(--ease-apple-spring),
+              visibility 320ms var(--ease-apple-spring) !important;
+}
+
+.mxh__drawer-note {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: var(--glass-specular-border) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-radius: 8px;
+}
+
+/* ==========================================================================
+   3. STAGGERED DRAWER CONTENT & SPATIAL CONTINUITY
+   ========================================================================== */
+
+@keyframes appleItemSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.cart-drawer.is-open .cart-drawer__item {
+  animation: appleItemSlideIn 380ms var(--ease-apple-spring) forwards;
+}
+
+.cart-drawer.is-open .cart-drawer__item:nth-child(1) { animation-delay: 50ms; }
+.cart-drawer.is-open .cart-drawer__item:nth-child(2) { animation-delay: 95ms; }
+.cart-drawer.is-open .cart-drawer__item:nth-child(3) { animation-delay: 140ms; }
+.cart-drawer.is-open .cart-drawer__item:nth-child(4) { animation-delay: 185ms; }
+.cart-drawer.is-open .cart-drawer__item:nth-child(5) { animation-delay: 230ms; }
+
+/* Stagger for navigation links in mobile menu */
+.mobile-menu.is-open .mobile-nav__item,
+.mxh__drawer.is-open .mxh__nav-item {
+  animation: appleItemSlideIn 340ms var(--ease-apple-spring) forwards;
+}
+.mobile-menu.is-open .mobile-nav__item:nth-child(1),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(1) { animation-delay: 40ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(2),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(2) { animation-delay: 80ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(3),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(3) { animation-delay: 120ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(4),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(4) { animation-delay: 160ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(5),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(5) { animation-delay: 200ms; }
+.mobile-menu.is-open .mobile-nav__item:nth-child(6),
+.mxh__drawer.is-open .mxh__nav-item:nth-child(6) { animation-delay: 240ms; }
+
+/* ==========================================================================
+   4. OPTICAL TYPOGRAPHY & VISUAL HIERARCHY (WWDC 2020)
+   ========================================================================== */
+
+/* Large Display Type: Negative Tracking & Compact Leading */
+h1,
+.hero h1,
+.mxh__title,
+.lbv2-title,
+.section-heading h2,
+.product-title,
+.product__title {
+  letter-spacing: -0.022em !important;
+  line-height: 1.04 !important;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "kern" 1;
+}
+
+/* Micro Utility & Monospace Type: Crisp Positive Tracking for Legibility */
+.kicker,
+.eyebrow,
+.section-index,
+.service-label,
+.mini-label,
+.mxh__drawer-kicker,
+.cart-drawer__title,
+.drip-toast {
+  letter-spacing: 0.12em !important;
+}
+
+/* ==========================================================================
+   5. PRODUCT CARDS & MICRO-INTERACTIONS
+   ========================================================================== */
+
+.product-card,
+.melato-product-card {
+  position: relative;
+  transition: transform 340ms var(--ease-apple-spring),
+              box-shadow 340ms var(--ease-apple-spring);
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover,
+  .melato-product-card:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.product-card__media,
+.melato-product-card .product-card__media {
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--color-surface, var(--surface-page));
+}
+
+.product-card__img,
+.melato-product-card img {
+  transition: transform 650ms var(--ease-apple-spring),
+              filter 400ms var(--ease-apple-smooth),
+              opacity 380ms ease !important;
+  will-change: transform;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .product-card:hover .product-card__img--primary,
+  .melato-product-card:hover img {
+    transform: scale(1.035);
+  }
+}
+
+/* Floating Badges & Save/Wishlist Buttons */
+.product-card__badges .badge,
+.product-card__wishlist,
+.melato-card-save {
+  backdrop-filter: blur(12px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+  border: var(--glass-specular-border) !important;
+  transition: transform var(--duration-fast) var(--ease-apple-spring),
+              background-color var(--duration-fast) ease !important;
+}
+
+.product-card__wishlist:active,
+.melato-card-save:active {
+  transform: scale(0.9) !important;
+}
+
+/* ==========================================================================
+   6. CONTINUOUS ACCORDION DISCLOSURE ANIMATION
+   ========================================================================== */
+
+.melato-accordion {
+  border-bottom: 1px solid var(--melato-line, var(--border-subtle));
+}
+
+.melato-accordion summary {
+  user-select: none;
+  transition: color var(--duration-fast) ease, opacity var(--duration-fast) ease;
+}
+
+.melato-accordion summary:hover {
+  opacity: 0.9;
+}
+
+/* Spring icon flip */
+.melato-accordion summary span:last-child {
+  display: inline-block;
+  transform-origin: center center;
+  transition: transform 320ms var(--ease-apple-spring) !important;
+  will-change: transform;
+}
+
+.melato-accordion[open] summary span:last-child {
+  transform: rotate(45deg) !important;
+}
+
+/* Content wrapper smooth transition */
+.melato-accordion__content {
+  overflow: hidden;
+  transition: opacity 280ms var(--ease-apple-spring),
+              transform 280ms var(--ease-apple-spring);
+}
+
+.melato-accordion:not([open]) .melato-accordion__content {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+.melato-accordion[open] .melato-accordion__content {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   7. TOAST NOTIFICATION — DYNAMIC ISLAND PILL
+   ========================================================================== */
+
+.drip-toast {
+  border-radius: 999px !important;
+  background: rgba(246, 240, 229, 0.94) !important;
+  color: #080808 !important;
+  backdrop-filter: var(--glass-blur-header) !important;
+  -webkit-backdrop-filter: var(--glass-blur-header) !important;
+  border: var(--glass-specular-top) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.38) !important;
+  font-weight: 700 !important;
+  padding: 12px 24px !important;
+  transition: opacity 320ms var(--ease-apple-spring),
+              transform 360ms var(--ease-apple-spring) !important;
+  transform: translateX(-50%) translateY(24px) scale(0.95) !important;
+  will-change: transform, opacity;
+}
+
+.drip-toast.is-visible {
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0) scale(1) !important;
+}
+
+/* Cart Quantity Badge Pulse */
+@keyframes appleBadgePulse {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.24); }
+  100% { transform: scale(1); }
+}
+
+.cart-count-bubble.badge-pulse,
+.mxh__cart-count.badge-pulse {
+  animation: appleBadgePulse 320ms var(--ease-apple-spring) forwards;
+}
+
+/* ==========================================================================
+   8. ACCESSIBILITY — REDUCED MOTION & REDUCED TRANSPARENCY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .cart-drawer,
+  .mobile-menu,
+  .search-drawer,
+  .drip-toast,
+  .product-card,
+  .melato-accordion summary span:last-child {
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .site-header,
+  .header-wrapper,
+  .mxh,
+  [data-mxh],
+  .cart-drawer,
+  .mobile-menu,
+  .search-drawer,
+  .mxh__drawer,
+  .drip-toast,
+  .drip-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background-color: var(--surface-page) !important;
+  }
+
+  .drip-toast {
+    background-color: var(--surface-studio) !important;
+  }
+}

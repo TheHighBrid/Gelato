@@ -14,7 +14,7 @@
   html.melato-product-palette-ready {
     --melato-product-accent: #c9a85d;
     --melato-product-accent-2: #f6ead8;
-    --melato-product-title: #f6ead8;
+    --melato-product-title: #111111;
     --melato-product-eyebrow: #c9a85d;
     --melato-product-cta: #c40025;
     --melato-product-cta-text: #ffffff;
@@ -72,7 +72,7 @@
   html.melato-product-palette-ready body.template-product .price,
   html.melato-product-palette-ready body.template-product .product__price,
   html.melato-product-palette-ready body.template-product [class*="price"] {
-    color: var(--melato-product-accent-2) !important;
+    color: var(--text-primary) !important;
   }
 
   html.melato-product-palette-ready body.template-product .product__media-wrapper,
@@ -94,7 +94,7 @@
   html.melato-product-palette-ready body.template-product [id*="complete"] .price,
   html.melato-product-palette-ready body.template-product [class*="complete"] [class*="money"],
   html.melato-product-palette-ready body.template-product [id*="complete"] [class*="money"] {
-    color: var(--melato-product-accent-2) !important;
+    color: var(--text-primary) !important;
   }
 
   html.melato-product-palette-ready body.template-product .melato-product-soft-border {
@@ -592,12 +592,12 @@ const productPalettes = [
 
   const readableAccent = (accent) => {
     const safe = cleanHex(accent) || fallbackPalette.accent;
-    if (contrastRatio(safe, "#111214") >= 4.5) return safe;
+    if (contrastRatio(safe, "#ffffff") >= 4.5) return safe;
     for (let amount = 0.12; amount <= 0.76; amount += 0.08) {
-      const candidate = mixHex(safe, "#ffffff", amount);
-      if (contrastRatio(candidate, "#111214") >= 4.5) return candidate;
+      const candidate = mixHex(safe, "#111111", amount);
+      if (contrastRatio(candidate, "#ffffff") >= 4.5) return candidate;
     }
-    return "#f5f1e8";
+    return "#111111";
   };
 
   const keywordAccent = (text) => {
@@ -781,8 +781,8 @@ const haystack = normalize([
     root.classList.add("melato-product-palette-ready");
     root.style.setProperty("--melato-product-accent", palette.accent);
     root.style.setProperty("--melato-product-accent-2", palette.accent2);
-    root.style.setProperty("--melato-product-title", palette.title);
-    root.style.setProperty("--melato-product-eyebrow", palette.eyebrow);
+    root.style.setProperty("--melato-product-title", readableAccent(palette.title));
+    root.style.setProperty("--melato-product-eyebrow", readableAccent(palette.eyebrow));
     root.style.setProperty("--melato-product-cta", palette.cta);
     root.style.setProperty("--melato-product-cta-text", readableText(palette.cta, palette));
     root.style.setProperty("--melato-product-accent-readable", readableAccent(palette.accent));

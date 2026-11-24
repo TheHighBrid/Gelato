@@ -1,0 +1,12 @@
+{
+  "sections": {
+    "rack": {
+      "type": "melato-rack",
+      "settings": {
+        "max_items": 16,
+        "show_ticker": true
+      }
+    }
+  },
+  "order": ["rack"]
+}

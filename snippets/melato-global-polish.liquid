@@ -29,7 +29,7 @@
 /* THE UNIFORM mobile CTA: cream button with deliberate dark contrast. */
 .featured-collection .u-show-mobile .btn.btn--secondary{
   min-width:144px!important;
-  background:var(--melato-offwhite,#f4ead8)!important;
+  background:var(--melato-offwhite,var(--surface-studio))!important;
   color:var(--melato-black,#050505)!important;
   border:1px solid var(--melato-offwhite,#f4ead8)!important;
   opacity:1!important;
@@ -54,7 +54,7 @@
 .melato-pdp-rebuild .pdp-mini-detail,
 .melato-pdp-rebuild .pdp-spec{
   background:var(--pdp-surface)!important;
-  border:1px solid rgba(255,255,255,.095)!important;
+  border:1px solid var(--border-subtle)!important;
   border-radius:26px!important;
   box-shadow:0 18px 50px rgba(0,0,0,.24)!important;
 }
@@ -62,7 +62,7 @@
 .melato-pdp-rebuild .pdp-mini-detail[open],
 .melato-pdp-rebuild .pdp-spec[open]{background:var(--pdp-surface)!important}
 .melato-pdp-rebuild .pdp-mini-detail__content,
-.melato-pdp-rebuild .pdp-spec .pdp-rte{color:rgba(255,255,255,.78)!important}
+.melato-pdp-rebuild .pdp-spec .pdp-rte{color:var(--text-secondary)!important}
 
 /* PDP QA 2026-08-21: prevent cramped two-column specification cards in the narrow right rail. */
 body.template-product .melato-pdp-rebuild .pdp-spec-grid{
@@ -122,7 +122,7 @@ body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte ul{
   min-width:0!important;
   border-color:var(--pdp-accent,#d3a74a)!important;
   background:var(--pdp-accent,#d3a74a)!important;
-  color:#fff!important;
+  color:var(--text-primary)!important;
   border-radius:12px!important;
   transition:filter .2s ease,transform .2s ease!important;
 }
@@ -149,8 +149,8 @@ body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte ul{
   width:100%!important;
   margin:0!important;
   padding:28px min(5vw,60px) 34px!important;
-  border-top:1px solid rgba(255,255,255,.08)!important;
-  background:#080808!important;
+  border-top:1px solid var(--border-subtle)!important;
+  background:var(--surface-page)!important;
 }
 .melato-pagination .page,
 .melato-pagination .next,
@@ -162,10 +162,10 @@ body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte ul{
   min-width:44px!important;
   height:44px!important;
   padding:0 12px!important;
-  border:1px solid rgba(255,255,255,.18)!important;
+  border:1px solid var(--border-subtle)!important;
   border-radius:999px!important;
-  background:#111214!important;
-  color:#f5f1e8!important;
+  background:var(--surface-page)!important;
+  color:var(--text-primary)!important;
   text-decoration:none!important;
   font-size:11px!important;
   font-weight:800!important;
@@ -175,7 +175,7 @@ body.template-product .melato-pdp-rebuild .pdp-spec .pdp-rte ul{
 }
 .melato-pagination .current{
   border-color:#f4ead8!important;
-  background:#f4ead8!important;
+  background:var(--surface-studio)!important;
   color:#080808!important;
 }
 .melato-pagination .next a,

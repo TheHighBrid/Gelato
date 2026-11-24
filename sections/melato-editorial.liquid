@@ -1,0 +1,13 @@
+{{ 'melato-editorial.css' | asset_url | stylesheet_tag }}
+<section class="melato-editorial" data-melato-editorial aria-label="Melato Editorial">
+<header class="me-intro" {% unless section.settings.intro_enabled %}hidden{% endunless %}><div><small>MELATO / CASE FILE 001</small><h1>EDITORIAL</h1><p>THE UNSOLVED WEARING</p><button type="button" class="me-enter">ENTER THE BOOK ↓</button></div></header>
+<nav class="me-toolbar" aria-label="Editorial controls"><span>THE LIVING BOOK / EDITORIAL</span><button type="button" class="me-sound" aria-pressed="false">Sound off</button></nav>
+{% for block in section.blocks %}<article class="me-frame" id="editorial-{{ forloop.index }}" {{ block.shopify_attributes }}>
+{% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 1800 | image_tag: widths: '640,960,1200,1440,1800', loading: 'lazy', alt: block.settings.alt }}{% else %}<div class="me-placeholder">EXHIBIT {{ forloop.index }}</div>{% endif %}
+<div class="me-meta">{{ block.settings.act | escape }} / {{ block.settings.codename | escape }}</div>
+{% if block.settings.product != blank %}<a class="me-link" href="{{ block.settings.product.url }}">VIEW PIECE ↗</a>{% endif %}
+</article>{% endfor %}</section>
+<script src="{{ 'melato-editorial.js' | asset_url }}" defer></script>
+{% schema %}
+{"name":"Melato Editorial","settings":[{"type":"checkbox","id":"intro_enabled","label":"Show cinematic intro","default":true}],"blocks":[{"type":"scene","name":"Editorial scene","settings":[{"type":"image_picker","id":"image","label":"Individual photograph"},{"type":"text","id":"codename","label":"Codename","default":"EXHIBIT-00"},{"type":"text","id":"alt","label":"Accessible description"},{"type":"select","id":"act","label":"Act","options":[{"value":"THE SCENE","label":"The Scene"},{"value":"THE EVIDENCE","label":"The Evidence"},{"value":"THE WITNESSES","label":"The Witnesses"},{"value":"THE DOSSIER","label":"The Dossier"}],"default":"THE SCENE"},{"type":"product","id":"product","label":"Verified product (optional)"}]}],"max_blocks":50,"presets":[{"name":"Melato Editorial"}]}
+{% endschema %}
