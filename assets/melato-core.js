@@ -340,7 +340,7 @@
       if (url.origin !== window.location.origin) return rawHref;
       url.pathname = normalizePath(url.pathname);
       return url.pathname + url.search + url.hash;
-    } catch (error) {
+    } catch {
       return rawHref;
     }
   }
@@ -400,13 +400,13 @@
 
       var links = Array.from(header.querySelectorAll('.mxh__drawer .mxh__nav-item > .mxh__nav-link, .mxh__drawer .mxh__nav > .mxh__nav-link'))
         .filter(function (link) { return link.getAttribute('href'); })
-        .filter(function (link) { return normalizeHref(link.getAttribute('href')) !== '/collections/sunglasses'; })
+        .filter(function (link) { return !/\/collections\/sunglasses$/i.test(normalizeHref(link.getAttribute('href'))); })
         .slice(0, 6);
       if (!links.length) return;
 
       var nav = document.createElement('nav');
       nav.className = 'mxh__desktop-nav';
-      nav.setAttribute('aria-label', 'Primary navigation');
+      nav.setAttribute('aria-label', document.documentElement.lang && document.documentElement.lang.toLowerCase().indexOf('fr') === 0 ? 'Navigation principale' : 'Primary navigation');
 
       links.forEach(function (source) {
         var link = document.createElement('a');
@@ -505,7 +505,7 @@
         style:'currency', currency:currencyCode, currencyDisplay:'narrowSymbol'
       }).format(amount);
       return formatted.includes(currencyCode) ? formatted : `${formatted} ${currencyCode}`;
-    } catch (error) {
+    } catch {
       if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
         const formatted = window.Shopify.formatMoney(Number(cents || 0), window.DRIP?.shop?.moneyFormat || '${{amount}}');
         return String(formatted).includes(currencyCode) ? formatted : `${formatted} ${currencyCode}`;
@@ -696,6 +696,7 @@
 
   function setButtonLoading(button, loading) {
     if (!button) return;
+    const isFr = isFrenchLocale();
     if (loading) {
       button.dataset.melatoOriginalText = button.textContent || '';
       button.dataset.melatoWasDisabled = button.disabled ? 'true' : 'false';
@@ -711,9 +712,10 @@
 
   async function addForm(form, submitter) {
     if (pendingForms.has(form)) return;
+    const isFr = isFrenchLocale();
     const id = form.querySelector('[name="id"]');
     if (!id?.value) {
-      toast('Select an available option.');
+      toast(isFr ? 'Sélectionnez une option disponible.' : 'Select an available option.');
       return;
     }
     pendingForms.add(form);
@@ -726,15 +728,15 @@
         method:'POST', credentials:'same-origin', headers:{Accept:'application/json','X-Requested-With':'XMLHttpRequest'}, body:data
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.description || payload.message || 'Unable to add to cart.');
+      if (!response.ok) throw new Error(payload.description || payload.message || (isFr ? 'Impossible d’ajouter au panier.' : 'Unable to add to cart.'));
       const cart = await fetchCart();
       renderCart(cart);
       openCart();
-      toast('Added to cart');
+      toast(isFr ? 'Ajouté au panier' : 'Added to cart');
       window.dispatchEvent(new CustomEvent('cart:updated',{detail:{cart}}));
     } catch (error) {
       console.error('Melato add to cart:', error);
-      toast(error.message || 'Unable to add to cart.');
+      toast(error.message || (isFr ? 'Impossible d’ajouter au panier.' : 'Unable to add to cart.'));
     } finally {
       pendingForms.delete(form);
       setButtonLoading(button, false);
@@ -799,6 +801,14 @@
       const expanded = noteToggle.getAttribute('aria-expanded') === 'true';
       noteToggle.setAttribute('aria-expanded', String(!expanded));
       if (field) { field.hidden = expanded; field.setAttribute('aria-hidden', String(expanded)); }
+    }
+  });
+
+  document.addEventListener('change', event => {
+    const mainInput = event.target.closest('[data-main-cart-section] .qty-stepper__value');
+    if (mainInput) {
+      const key = mainInput.dataset.lineKey || mainInput.dataset.line || mainInput.closest('[data-line-key]')?.dataset.lineKey;
+      updateLine(key, Number(mainInput.value || 0));
     }
   });
 

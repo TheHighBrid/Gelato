@@ -105,7 +105,7 @@
         <p class="melato-footer__microcopy">{{ 'melato_ui.footer_policy' | t }}</p>
       </div>
       {% if shop.enabled_payment_types.size > 0 %}
-        <ul class="melato-footer__payments" aria-label="Accepted payment methods">
+        <ul class="melato-footer__payments" aria-label="{% if is_fr %}Modes de paiement acceptés{% else %}Accepted payment methods{% endif %}">
           {% for type in shop.enabled_payment_types %}
             <li>{{ type | payment_type_svg_tag }}</li>
           {% endfor %}

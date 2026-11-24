@@ -35,7 +35,7 @@
       if (url.origin !== window.location.origin) return rawHref;
       url.pathname = normalizePath(url.pathname);
       return url.pathname + url.search + url.hash;
-    } catch (error) {
+    } catch {
       return rawHref;
     }
   }
