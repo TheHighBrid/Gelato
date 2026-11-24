@@ -4,7 +4,14 @@
   Policy sync refresh, 2026-08-29.
 {% endcomment %}
 
-<section class="section-spacing">
+{%- liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
+-%}
+
+<section class="section-spacing" data-main-cart-section>
   <div class="container--narrow">
     <h1 class="heading-md drip-reveal" style="margin-bottom:48px;">{{ 'cart.title' | t }}</h1>
 
@@ -13,7 +20,7 @@
         <div style="display:grid;grid-template-columns:1fr 360px;gap:48px;align-items:start;" class="cart-page-grid">
           <div>
             {%- for item in cart.items -%}
-              <div class="cart-item drip-reveal" style="grid-template-columns:100px 1fr;padding:24px 0;">
+              <div class="cart-item drip-reveal" data-line-key="{{ item.key }}" style="grid-template-columns:100px 1fr;padding:24px 0;">
                 <a href="{{ item.url }}">
                   <img
                     class="cart-item__img"
@@ -26,17 +33,25 @@
                   >
                 </a>
                 <div class="cart-item__info">
-                  <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+                  <div class="cart-item__top">
+                    <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+                    <button
+                      type="button"
+                      class="cart-item__remove"
+                      data-remove-line="{{ item.key }}"
+                      aria-label="{% if is_fr %}Retirer {{ item.product.title | escape }}{% else %}Remove {{ item.product.title | escape }}{% endif %}"
+                    >×</button>
+                  </div>
                   {%- if item.variant.title != 'Default Title' -%}
                     <span class="cart-item__variant">{{ item.variant.title }}</span>
                   {%- endif -%}
                   <div class="cart-item__footer">
                     <div class="qty-stepper">
-                      <button type="button" class="qty-stepper__btn" data-qty-change="-1" data-line="{{ item.key }}" aria-label="Decrease {{ item.product.title | escape }} quantity">−</button>
-                      <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" data-line="{{ item.key }}" name="updates[]" aria-label="{{ item.product.title | escape }} quantity">
-                      <button type="button" class="qty-stepper__btn" data-qty-change="+1" data-line="{{ item.key }}" aria-label="Increase {{ item.product.title | escape }} quantity">+</button>
+                      <button type="button" class="qty-stepper__btn" data-qty-change="-1" data-line="{{ item.key }}" aria-label="{% if is_fr %}Diminuer la quantité de {{ item.product.title | escape }}{% else %}Decrease {{ item.product.title | escape }} quantity{% endif %}">−</button>
+                      <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" data-line="{{ item.key }}" name="updates[]" aria-label="{% if is_fr %}Quantité pour {{ item.product.title | escape }}{% else %}{{ item.product.title | escape }} quantity{% endif %}">
+                      <button type="button" class="qty-stepper__btn" data-qty-change="+1" data-line="{{ item.key }}" aria-label="{% if is_fr %}Augmenter la quantité de {{ item.product.title | escape }}{% else %}Increase {{ item.product.title | escape }} quantity{% endif %}">+</button>
                     </div>
-                    <span class="price">{{ item.final_line_price | money }}</span>
+                    <span class="price">{{ item.final_line_price | money_with_currency }}</span>
                   </div>
                 </div>
               </div>
@@ -44,12 +59,12 @@
           </div>
 
           <div style="background:var(--color-surface);padding:32px;position:sticky;top:80px;" class="drip-reveal drip-reveal--delay-2">
-            <h2 class="heading-xs" style="margin-bottom:24px;">ORDER SUMMARY</h2>
+            <h2 class="heading-xs" style="margin-bottom:24px;">{% if is_fr %}RÉCAPITULATIF{% else %}ORDER SUMMARY{% endif %}</h2>
             <div class="cart-subtotal" style="margin-bottom:12px;">
               <span class="text-label">{{ 'cart.subtotal' | t }}</span>
-              <span class="price">{{ cart.total_price | money }}</span>
+              <span class="price">{{ cart.total_price | money_with_currency }}</span>
             </div>
-            <p class="text-label" style="color:var(--color-muted);text-align:center;margin-bottom:20px;">Complimentary standard delivery · prepared in 1–3 business days · returns on eligible items within 30 days</p>
+            <p class="text-label" style="color:var(--color-muted);text-align:center;margin-bottom:20px;">{% if is_fr %}Livraison standard offerte · préparation sous 1 à 3 jours ouvrables · retours sur les articles admissibles sous 30 jours{% else %}Complimentary standard delivery · prepared in 1–3 business days · returns on eligible items within 30 days{% endif %}</p>
             <button type="submit" name="checkout" class="btn btn--primary btn--full btn--lg">{{ 'cart.checkout' | t }}</button>
             {%- if additional_checkout_buttons -%}
               <div class="additional-checkout-buttons" style="margin-top:12px;">{{ content_for_additional_checkout_buttons }}</div>
@@ -66,22 +81,27 @@
       -%}
       <div class="melato-empty-cart">
         <div class="melato-empty-cart__intro">
-          <p class="text-label">Your cart</p>
+          <p class="text-label">{% if is_fr %}Votre panier{% else %}Your cart{% endif %}</p>
           <h2 class="heading-sm">{{ 'cart.empty' | t }}</h2>
-          <p>Your cart is empty. Start with New Arrivals or revisit the Living Lookbook.</p>
+          <p>{% if is_fr %}Votre panier est vide. Découvrez les nouveautés ou parcourez le Lookbook interactif.{% else %}Your cart is empty. Start with New Arrivals or revisit the Living Lookbook.{% endif %}</p>
           <div class="melato-empty-cart__actions">
-            <a href="/collections/new-arrivals" class="btn btn--primary">SHOP NEW ARRIVALS</a>
-            <a href="/pages/living-lookbook" class="btn btn--secondary">LIVING LOOKBOOK</a>
+            <a href="{% render 'melato-localized-url', url: '/collections/new-arrivals' %}" class="btn btn--primary">{% if is_fr %}DÉCOUVRIR LES NOUVEAUTÉS{% else %}SHOP NEW ARRIVALS{% endif %}</a>
+            <a href="{% render 'melato-localized-url', url: '/pages/living-lookbook' %}" class="btn btn--secondary">{% if is_fr %}LOOKBOOK INTERACTIF{% else %}LIVING LOOKBOOK{% endif %}</a>
           </div>
         </div>
 
-        <ul class="melato-empty-cart__trust" aria-label="Shopping assurances">
-          <li><strong>Complimentary standard delivery</strong><span>Standard delivery is included on all orders. Orders usually prepare within 1 to 3 business days.</span></li>
-          <li><strong>Free returns</strong><span>Approved eligible returns within 30 days include free standard return shipping through the Melato return method.</span></li>
+        <ul class="melato-empty-cart__trust" aria-label="{% if is_fr %}Garanties d’achat{% else %}Shopping assurances{% endif %}">
+          {% if is_fr %}
+            <li><strong>Livraison standard offerte</strong><span>La livraison standard est offerte sur toutes les commandes. Préparation habituelle sous 1 à 3 jours ouvrables.</span></li>
+            <li><strong>Retours offerts</strong><span>Les retours admissibles approuvés sous 30 jours incluent les frais de retour standard via la méthode Melato.</span></li>
+          {% else %}
+            <li><strong>Complimentary standard delivery</strong><span>Standard delivery is included on all orders. Orders usually prepare within 1 to 3 business days.</span></li>
+            <li><strong>Free returns</strong><span>Approved eligible returns within 30 days include free standard return shipping through the Melato return method.</span></li>
+          {% endif %}
         </ul>
 
         {%- if shop.enabled_payment_types.size > 0 -%}
-          <div class="melato-empty-cart__payments" aria-label="Accepted payment methods">
+          <div class="melato-empty-cart__payments" aria-label="{% if is_fr %}Modes de paiement acceptés{% else %}Accepted payment methods{% endif %}">
             {%- for type in shop.enabled_payment_types -%}
               {{ type | payment_type_svg_tag }}
             {%- endfor -%}
@@ -90,8 +110,8 @@
 
         {%- if recovery_collection != blank and recovery_collection.products_count > 0 -%}
           <section class="melato-empty-cart__recovery" aria-labelledby="EmptyCartRecoveryTitle">
-            <p class="text-label">Most Wanted</p>
-            <h3 id="EmptyCartRecoveryTitle" class="heading-xs">Continue the rotation</h3>
+            <p class="text-label">{% if is_fr %}Les plus demandés{% else %}Most Wanted{% endif %}</p>
+            <h3 id="EmptyCartRecoveryTitle" class="heading-xs">{% if is_fr %}Poursuivre la sélection{% else %}Continue the rotation{% endif %}</h3>
             <div class="melato-empty-cart__grid">
               {%- for product in recovery_collection.products limit: 4 -%}
                 <div class="melato-empty-cart__product">{%- render 'product-card', product: product -%}</div>
