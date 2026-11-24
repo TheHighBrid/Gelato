@@ -6,7 +6,7 @@
   <div class="container">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:48px;" class="drip-reveal">
       <h1 class="heading-md">{{ 'account.my_account' | t }}</h1>
-      <a href="{{ routes.account_logout_url }}" class="btn btn--secondary btn--sm">{{ 'account.logout' | t }}</a>
+      <a href="{{ routes.account_logout_url | replace: '&amp;', '&' | escape }}" class="btn btn--secondary btn--sm">{{ 'account.logout' | t }}</a>
     </div>
 
     <div style="display:grid;grid-template-columns:2fr 1fr;gap:48px;align-items:start;" class="account-grid">
@@ -61,7 +61,7 @@
             {{ customer.default_address.city }}, {{ customer.default_address.country }}
           {%- endif -%}
         </p>
-        <a href="{{ routes.account_addresses_url }}" class="btn btn--secondary btn--sm btn--full" style="margin-top:20px;">
+        <a href="{{ routes.account_addresses_url | replace: '&amp;', '&' | escape }}" class="btn btn--secondary btn--sm btn--full" style="margin-top:20px;">
           {{ 'account.addresses' | t }}
         </a>
       </div>

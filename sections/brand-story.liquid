@@ -1,8 +1,8 @@
 {% comment %}Melato story gateway / clean QA 2026-08-11. No placeholder art.{% endcomment %}
-{%- assign has_image = false -%}{%- if section.settings.image != blank -%}{%- assign has_image = true -%}{%- endif -%}
+{%- assign has_image = false -%}{%- if section.settings.image != blank -%}{%- assign has_image = true -%}{%- assign brand_story_alt = section.settings.image.alt | strip | default: section.settings.heading | default: 'Melato editorial story' | escape -%}{%- endif -%}
 <section class="melato-brand-clean{% unless has_image %} melato-brand-clean--text-only{% endunless %}">
   <div class="melato-brand-clean__shell">
-    {%- if has_image -%}<div class="melato-brand-clean__media">{{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width:900px) 50vw, 100vw', alt: section.settings.image.alt }}</div>{%- endif -%}
+    {%- if has_image -%}<div class="melato-brand-clean__media">{{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600, 900, 1200, 1400', sizes: '(min-width:900px) 50vw, 100vw', alt: brand_story_alt }}</div>{%- endif -%}
     <div class="melato-brand-clean__content">
       {%- if section.settings.eyebrow != blank -%}<p>{{ section.settings.eyebrow }}</p>{%- endif -%}
       {%- if section.settings.heading != blank -%}<h2>{{ section.settings.heading | newline_to_br }}</h2>{%- endif -%}

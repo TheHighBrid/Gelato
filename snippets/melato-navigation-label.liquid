@@ -1,8 +1,7 @@
 {% doc %}
 Renders a localized standard navigation label while preserving custom names.
 @param {string} title - Menu label
-{% enddoc %}
-{%- liquid
+{% enddoc %}{%- liquid
   assign raw_title = title | strip
   assign raw_title = raw_title | replace: '&amp;', '&' | replace: '&#39;', "'" | replace: '&#039;', "'" | replace: '&apos;', "'"
   assign num_prefix = ''

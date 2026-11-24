@@ -1,32 +1,39 @@
+{%- liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
+-%}
+
 <section class="melato-search-page" aria-labelledby="MelatoSearchHeading">
   <div class="melato-search-page__wrap">
 
     <header class="melato-search-page__header">
-      <p class="melato-search-page__eyebrow">Search</p>
-      <h1 id="MelatoSearchHeading">Search Melato</h1>
-      <p>Find jackets, pants, tracksuits, and release details.</p>
+      <p class="melato-search-page__eyebrow">{% if is_fr %}Recherche{% else %}Search{% endif %}</p>
+      <h1 id="MelatoSearchHeading">{% if is_fr %}Rechercher chez Melato{% else %}Search Melato{% endif %}</h1>
+      <p>{% if is_fr %}Trouvez vestes, pantalons, survêtements et détails de collection.{% else %}Find jackets, pants, tracksuits, and release details.{% endif %}</p>
     </header>
 
     <form action="{{ routes.search_url }}" method="get" role="search" class="melato-search-page__form">
-      <label class="visually-hidden" for="MelatoSearchInput">Search</label>
+      <label class="visually-hidden" for="MelatoSearchInput">{% if is_fr %}Recherche{% else %}Search{% endif %}</label>
       <input
         id="MelatoSearchInput"
         type="search"
         name="q"
         value="{{ search.terms | escape }}"
-        placeholder="Search products"
+        placeholder="{% if is_fr %}Rechercher des articles{% else %}Search products{% endif %}"
         autocomplete="off"
       >
       <input type="hidden" name="options[prefix]" value="last">
-      <button type="submit">Search</button>
+      <button type="submit">{% if is_fr %}Rechercher{% else %}Search{% endif %}</button>
     </form>
 
     {%- if search.performed -%}
       <div class="melato-search-page__status">
         {%- if search.results_count > 0 -%}
-          {{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for “{{ search.terms | escape }}”
+          {% if is_fr %}{{ search.results_count }} résultat{% if search.results_count != 1 %}s{% endif %} pour « {{ search.terms | escape }} »{% else %}{{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for “{{ search.terms | escape }}”{% endif %}
         {%- else -%}
-          No results for “{{ search.terms | escape }}”
+          {% if is_fr %}Aucun résultat pour « {{ search.terms | escape }} »{% else %}No results for “{{ search.terms | escape }}”{% endif %}
         {%- endif -%}
       </div>
 
@@ -54,7 +61,7 @@
                 </a>
 
                 <div class="melato-search-card__content">
-                  <p class="melato-search-card__type">{{ item.object_type | capitalize }}</p>
+                  <p class="melato-search-card__type">{% if is_fr and item.object_type == 'product' %}Article{% else %}{{ item.object_type | capitalize }}{% endif %}</p>
                   <h2>
                     <a href="{{ item.url }}">{{ item.title }}</a>
                   </h2>
@@ -70,14 +77,14 @@
           </div>
         {%- else -%}
           <div class="melato-search-empty-recovery" data-search-recovery>
-            <h2 class="melato-search-empty-recovery__heading">Explore Melato</h2>
-            <p class="melato-search-empty-recovery__subheading">Discover our latest collections and signature silhouettes:</p>
+            <h2 class="melato-search-empty-recovery__heading">{% if is_fr %}Explorer Melato{% else %}Explore Melato{% endif %}</h2>
+            <p class="melato-search-empty-recovery__subheading">{% if is_fr %}Découvrez nos dernières collections et silhouettes phares :{% else %}Discover our latest collections and signature silhouettes:{% endif %}</p>
             <div class="melato-search-empty-recovery__links">
-              <a href="{{ routes.root_url }}collections/new-arrivals" class="melato-search-empty-recovery__link">New Arrivals</a>
-              <a href="{{ routes.root_url }}collections/tracksuits" class="melato-search-empty-recovery__link">Tracksuits</a>
-              <a href="{{ routes.root_url }}collections/accessories" class="melato-search-empty-recovery__link">Accessories</a>
-              <a href="{{ routes.root_url }}collections/fragrance" class="melato-search-empty-recovery__link">Fragrance</a>
-              <a href="{{ routes.all_products_collection_url }}" class="melato-search-empty-recovery__link">All Products</a>
+              <a href="{% render 'melato-localized-url', url: '/collections/new-arrivals' %}" class="melato-search-empty-recovery__link">{% render 'melato-navigation-label', title: 'New Arrivals' %}</a>
+              <a href="{% render 'melato-localized-url', url: '/collections/tracksuits' %}" class="melato-search-empty-recovery__link">{% render 'melato-navigation-label', title: 'Tracksuits' %}</a>
+              <a href="{% render 'melato-localized-url', url: '/collections/accessories' %}" class="melato-search-empty-recovery__link">{% render 'melato-navigation-label', title: 'Accessories' %}</a>
+              <a href="{% render 'melato-localized-url', url: '/collections/fragrance' %}" class="melato-search-empty-recovery__link">{% render 'melato-navigation-label', title: 'Fragrance' %}</a>
+              <a href="{{ routes.all_products_collection_url }}" class="melato-search-empty-recovery__link">{% render 'melato-navigation-label', title: 'All Products' %}</a>
             </div>
           </div>
         {%- endif -%}
@@ -85,13 +92,13 @@
         {%- if paginate.pages > 1 -%}
           <nav class="melato-search-pagination" role="navigation" aria-label="Pagination">
             {%- if paginate.previous -%}
-              <a href="{{ paginate.previous.url }}">Previous</a>
+              <a href="{{ paginate.previous.url }}">{% if is_fr %}Précédent{% else %}Previous{% endif %}</a>
             {%- endif -%}
 
-            <span>Page {{ paginate.current_page }} of {{ paginate.pages }}</span>
+            <span>{% if is_fr %}Page {{ paginate.current_page }} sur {{ paginate.pages }}{% else %}Page {{ paginate.current_page }} of {{ paginate.pages }}{% endif %}</span>
 
             {%- if paginate.next -%}
-              <a href="{{ paginate.next.url }}">Next</a>
+              <a href="{{ paginate.next.url }}">{% if is_fr %}Suivant{% else %}Next{% endif %}</a>
             {%- endif -%}
           </nav>
         {%- endif -%}
