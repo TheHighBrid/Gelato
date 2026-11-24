@@ -126,19 +126,40 @@
     if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
   }
 
+  function isFrenchLocale() {
+    return locale().toLowerCase().startsWith('fr');
+  }
+
   function updateChrome(cart) {
     const count = Number(cart?.item_count || 0);
     const code = currency(cart);
+    const isFr = isFrenchLocale();
+    const itemWord = isFr ? (count === 1 ? 'article' : 'articles') : (count === 1 ? 'item' : 'items');
     document.querySelectorAll('[data-cart-item-count],.cart-count,.mxh__bag-count').forEach(node => node.textContent = String(count));
-    document.querySelectorAll('.mxh__bag').forEach(node => node.setAttribute('aria-label', `Cart with ${count} ${count === 1 ? 'item' : 'items'}`));
+    document.querySelectorAll('.mxh__bag').forEach(node => node.setAttribute('aria-label', isFr ? `Panier avec ${count} ${itemWord}` : `Cart with ${count} ${itemWord}`));
     drawer.querySelectorAll('[data-cart-subtotal],.cart-subtotal__amount').forEach(node => node.textContent = formatMoney(cart?.total_price || 0, code));
     drawer.querySelectorAll('[data-checkout-btn],button[name="checkout"]').forEach(button => button.disabled = count === 0);
     const countLabel = drawer.querySelector('[data-cart-count-label]');
-    if (countLabel) countLabel.textContent = `${count} ${count === 1 ? 'item' : 'items'}`;
+    if (countLabel) {
+      const countSpan = countLabel.querySelector('[data-cart-item-count]');
+      if (countSpan) {
+        countSpan.textContent = String(count);
+        const textNode = Array.from(countLabel.childNodes).find(node => node.nodeType === 3 && node.textContent.trim().length > 0);
+        if (textNode) {
+          textNode.textContent = ` ${itemWord}`;
+        } else {
+          countLabel.appendChild(document.createTextNode(` ${itemWord}`));
+        }
+      } else {
+        countLabel.textContent = `${count} ${itemWord}`;
+      }
+    }
   }
 
   const emptyTemplate = drawer.querySelector('[data-cart-empty-template]');
-  const initialEmptyMarkup = emptyTemplate?.innerHTML.trim() || '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>';
+  const initialEmptyMarkup = emptyTemplate?.innerHTML.trim() || (isFrenchLocale()
+    ? '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Votre panier est vide.</p><a href="/fr/collections/new-arrivals" class="melato-cart-cta">Découvrir les nouveautés</a></div>'
+    : '<div class="cart-drawer__empty"><p class="cart-drawer__empty-text">Your cart is empty.</p><a href="/collections/new-arrivals" class="melato-cart-cta">Explore new arrivals</a></div>');
 
   function renderItems(cart) {
     const host = drawer.querySelector('[data-cart-items],.cart-drawer__items');
@@ -148,30 +169,55 @@
       return;
     }
     const code = currency(cart);
+    const isFr = isFrenchLocale();
     host.innerHTML = cart.items.map(item => {
-      const title = escapeHtml(item.product_title || item.title || 'Product');
-      const url = safeCartUrl(item.url);
-      const imageUrl = safeCartUrl(item.image || item.featured_image?.url || '', true);
-      const image = imageUrl ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">` : '<span class="cart-item__img cart-item__img--placeholder" aria-hidden="true"></span>';
+      const title = escapeHtml(item.product_title || item.title || (isFr ? 'Article' : 'Product'));
+      const url = escapeHtml(item.url || '#');
+      const imageUrl = escapeHtml(item.image || item.featured_image?.url || '');
+      const image = imageUrl ? `<img class="cart-item__img" src="${imageUrl}" alt="${title}" width="88" height="110" loading="lazy" decoding="async">` : '';
       const variant = item.variant_title && item.variant_title !== 'Default Title' ? `<span class="cart-item__variant">${escapeHtml(item.variant_title)}</span>` : '';
       const key = escapeHtml(item.key || '');
       const quantity = Math.max(0, Number(item.quantity || 0));
+      const removeLabel = isFr ? `Retirer ${title}` : `Remove ${title}`;
+      const qtyGroupLabel = isFr ? `Quantité pour ${title}` : `Quantity for ${title}`;
+      const decLabel = isFr ? 'Diminuer la quantité' : 'Decrease quantity';
+      const incLabel = isFr ? 'Augmenter la quantité' : 'Increase quantity';
       return `<div class="cart-item" role="listitem" data-line-key="${key}">
         <a href="${url}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">${image}</a>
         <div class="cart-item__info">
-          <div class="cart-item__top"><a href="${url}" class="cart-item__title">${title}</a><button class="cart-item__remove" type="button" aria-label="Remove ${title}" data-remove-line="${key}">×</button></div>
+          <div class="cart-item__top"><a href="${url}" class="cart-item__title">${title}</a><button class="cart-item__remove" type="button" aria-label="${removeLabel}" data-remove-line="${key}">×</button></div>
           ${variant}
           <div class="cart-item__footer">
-            <div class="qty-stepper" aria-label="Quantity for ${title}">
-              <button class="qty-stepper__btn" type="button" aria-label="Decrease quantity" data-qty-change="-1" data-line-key="${key}">−</button>
-              <input class="qty-stepper__value" type="number" value="${quantity}" min="0" inputmode="numeric" aria-label="Quantity for ${title}" data-line-key="${key}">
-              <button class="qty-stepper__btn" type="button" aria-label="Increase quantity" data-qty-change="1" data-line-key="${key}">+</button>
+            <div class="qty-stepper" aria-label="${qtyGroupLabel}">
+              <button class="qty-stepper__btn" type="button" aria-label="${decLabel}" data-qty-change="-1" data-line-key="${key}">−</button>
+              <input class="qty-stepper__value" type="number" value="${quantity}" min="0" inputmode="numeric" aria-label="${qtyGroupLabel}" data-line-key="${key}">
+              <button class="qty-stepper__btn" type="button" aria-label="${incLabel}" data-qty-change="1" data-line-key="${key}">+</button>
             </div>
             <span class="price">${formatMoney(item.final_line_price, code)}</span>
           </div>
         </div>
       </div>`;
     }).join('');
+  }
+
+  async function syncMainCartPage() {
+    const mainCart = document.querySelector('[data-main-cart-section]');
+    if (!mainCart) return;
+    try {
+      const response = await fetch(route('cart'), {
+        method:'GET',
+        credentials:'same-origin',
+        cache:'no-store',
+        headers:{ Accept:'text/html', 'X-Requested-With':'XMLHttpRequest' }
+      });
+      if (!response.ok) return;
+      const text = await response.text();
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      const incoming = doc.querySelector('[data-main-cart-section]');
+      if (incoming) mainCart.innerHTML = incoming.innerHTML;
+    } catch (error) {
+      console.warn('Melato main cart sync:', error);
+    }
   }
 
   function renderCart(cart) {
@@ -203,43 +249,19 @@
     drawer.classList.add('is-updating');
     let nextQuantity = requested;
     try {
-      while (true) {
-        const payload = await serializeCartMutation(async () => {
-          const response = await fetch(route('cart/change.js'), {
-            method:'POST', credentials:'same-origin',
-            headers:{'Content-Type':'application/json',Accept:'application/json','X-Requested-With':'XMLHttpRequest'},
-            body:JSON.stringify({id:key,quantity:nextQuantity})
-          });
-          const result = await response.json().catch(() => ({}));
-          if (!response.ok) throw new Error(result.description || result.message || 'Cart could not be updated.');
-          if (!result || !Array.isArray(result.items) || !Number.isSafeInteger(result.item_count) || result.item_count < 0 || !Number.isSafeInteger(result.total_price) || result.total_price < 0) {
-            throw new Error('Cart update returned an invalid response.');
-          }
-          // Apply this full-cart snapshot before any later mutation begins.
-          // Preserve optimistic quantity intent for lines still awaiting updates.
-          if (!queuedLineQuantities.has(key)) renderCart(result);
-          return result;
-        });
-        if (!queuedLineQuantities.has(key)) break;
-        nextQuantity = queuedLineQuantities.get(key);
-        queuedLineQuantities.delete(key);
-        if (nextQuantity === Number(payload.items?.find(item => item.key === key)?.quantity ?? 0)) {
-          renderCart(payload);
-          break;
-        }
-      }
+      const response = await fetch(route('cart/change.js'), {
+        method:'POST', credentials:'same-origin',
+        headers:{'Content-Type':'application/json',Accept:'application/json','X-Requested-With':'XMLHttpRequest'},
+        body:JSON.stringify({id:key,quantity:Math.max(0,Number(quantity || 0))})
+      });
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(payload.description || payload.message || (isFrenchLocale() ? 'Impossible de mettre à jour le panier.' : 'Cart could not be updated.'));
+      renderCart(payload);
+      await syncMainCartPage();
     } catch (error) {
       console.error('Melato cart update:', error);
-      toast(error.message || 'Cart could not be updated.');
-      // A recovery GET must not repaint a newer cart mutation's result.
-      serializeCartMutation(async () => {
-        const cart = await fetchCart();
-        renderCart(cart);
-      }).catch(recoveryError => {
-        // A failed recovery must not leave shoppers trusting a stale drawer.
-        console.error('Melato cart recovery:', recoveryError);
-        window.location.assign(route('cart'));
-      });
+      toast(error.message || (isFrenchLocale() ? 'Impossible de mettre à jour le panier.' : 'Cart could not be updated.'));
+      fetchCart().then(renderCart).catch(() => {});
     } finally {
       queuedLineQuantities.delete(key);
       pendingLines.delete(key);
@@ -262,10 +284,10 @@
       button.dataset.melatoWasDisabled = button.disabled ? 'true' : 'false';
       button.disabled = true;
       button.classList.add('is-loading');
-      button.textContent = 'Adding';
+      button.textContent = isFrenchLocale() ? 'Ajout…' : 'Adding';
     } else {
       button.classList.remove('is-loading');
-      button.textContent = button.dataset.melatoOriginalText || 'Add to cart';
+      button.textContent = button.dataset.melatoOriginalText || (isFrenchLocale() ? 'Ajouter au panier' : 'Add to cart');
       button.disabled = button.dataset.melatoWasDisabled === 'true';
     }
   }
@@ -355,10 +377,10 @@
     if (event.target.closest('[data-cart-close]')) { event.preventDefault(); closeCart(); return; }
 
     const quantityButton = event.target.closest('[data-qty-change]');
-    if (quantityButton?.closest('.cart-drawer')) {
+    if (quantityButton?.closest('.cart-drawer, [data-main-cart-section]')) {
       event.preventDefault();
       const row = quantityButton.closest('.cart-item');
-      const key = quantityButton.dataset.lineKey || row?.dataset.lineKey;
+      const key = quantityButton.dataset.lineKey || quantityButton.dataset.line || row?.dataset.lineKey;
       const input = row?.querySelector('.qty-stepper__value');
       // A blank or invalid manual entry must not become an accidental removal.
       const rawQuantity = input?.value.trim() ?? '';
@@ -378,7 +400,7 @@
     }
 
     const removeButton = event.target.closest('[data-remove-line]');
-    if (removeButton?.closest('.cart-drawer')) {
+    if (removeButton?.closest('.cart-drawer, [data-main-cart-section]')) {
       event.preventDefault();
       updateLine(removeButton.dataset.removeLine || removeButton.closest('[data-line-key]')?.dataset.lineKey, 0);
       return;

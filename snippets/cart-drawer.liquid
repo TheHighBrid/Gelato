@@ -2,18 +2,24 @@
   Melato cart drawer / semantic QA 2026-08-20.
   Quantity and removal remain AJAX-driven by melato-cart-drawer.js.
 {% endcomment %}
-<div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="Shopping cart" aria-hidden="true" inert data-cart-drawer>
+{%- liquid
+  assign is_fr = false
+  if request.locale.iso_code == 'fr'
+    assign is_fr = true
+  endif
+-%}
+<div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="{% if is_fr %}Panier{% else %}Shopping cart{% endif %}" aria-hidden="true" inert data-cart-drawer>
   <div class="cart-drawer__header">
     <div class="cart-drawer__header-left">
-      <h2 class="cart-drawer__title">Your Cart</h2>
-      <p class="cart-drawer__count"><span data-cart-item-count>{{ cart.item_count }}</span> {{ cart.item_count | pluralize: 'item', 'items' }}</p>
+      <h2 class="cart-drawer__title">{% if is_fr %}Votre panier{% else %}Your Cart{% endif %}</h2>
+      <p class="cart-drawer__count" data-cart-count-label><span data-cart-item-count>{{ cart.item_count }}</span> {% if is_fr %}{{ cart.item_count | pluralize: 'article', 'articles' }}{% else %}{{ cart.item_count | pluralize: 'item', 'items' }}{% endif %}</p>
     </div>
-    <button type="button" class="cart-drawer__close-btn" data-cart-close aria-label="Close cart and continue shopping">
+    <button type="button" class="cart-drawer__close-btn" data-cart-close aria-label="{% if is_fr %}Fermer le panier et continuer vos achats{% else %}Close cart and continue shopping{% endif %}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
   </div>
 
-  <div class="cart-drawer__items" role="list" aria-label="Cart items" aria-live="polite" data-cart-items>
+  <div class="cart-drawer__items" role="list" aria-label="{% if is_fr %}Articles du panier{% else %}Cart items{% endif %}" aria-live="polite" data-cart-items>
     {%- if cart.item_count == 0 -%}
       {%- render 'melato-cart-empty-state' -%}
     {%- else -%}
@@ -29,15 +35,15 @@
           </a>
           <div class="cart-item__info">
             <div class="cart-item__top">
-              <a href="{{ item.url | escape }}" class="cart-item__title">{{ item.product.title | escape }}</a>
-              <button class="cart-item__remove" type="button" aria-label="Remove {{ item.product.title | escape }}" data-remove-line="{{ item.key | escape }}">×</button>
+              <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+              <button class="cart-item__remove" type="button" aria-label="{% if is_fr %}Retirer {{ item.product.title | escape }}{% else %}Remove {{ item.product.title | escape }}{% endif %}" data-remove-line="{{ item.key }}">×</button>
             </div>
             {%- if item.variant.title != 'Default Title' -%}<span class="cart-item__variant">{{ item.variant.title | escape }}</span>{%- endif -%}
             <div class="cart-item__footer">
-              <div class="qty-stepper" aria-label="Quantity for {{ item.product.title | escape }}">
-                <button class="qty-stepper__btn" type="button" aria-label="Decrease quantity for {{ item.product.title | escape }}" data-qty-change="-1" data-line-key="{{ item.key | escape }}">−</button>
-                <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" aria-label="Quantity for {{ item.product.title | escape }}" data-line-key="{{ item.key | escape }}">
-                <button class="qty-stepper__btn" type="button" aria-label="Increase quantity for {{ item.product.title | escape }}" data-qty-change="1" data-line-key="{{ item.key | escape }}">+</button>
+              <div class="qty-stepper" aria-label="{% if is_fr %}Quantité pour {{ item.product.title | escape }}{% else %}Quantity for {{ item.product.title | escape }}{% endif %}">
+                <button class="qty-stepper__btn" type="button" aria-label="{% if is_fr %}Diminuer la quantité{% else %}Decrease quantity{% endif %}" data-qty-change="-1" data-line-key="{{ item.key }}">−</button>
+                <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" aria-label="{% if is_fr %}Quantité{% else %}Quantity{% endif %}" data-line-key="{{ item.key }}">
+                <button class="qty-stepper__btn" type="button" aria-label="{% if is_fr %}Augmenter la quantité{% else %}Increase quantity{% endif %}" data-qty-change="1" data-line-key="{{ item.key }}">+</button>
               </div>
               <span class="price" data-line-price="{{ item.key | escape }}" aria-label="{{ melato_line_price | strip_html | escape }}">{{ melato_line_price }}</span>
             </div>
@@ -50,22 +56,22 @@
 
   {%- if cart.item_count > 0 -%}
     <div class="cart-extras">
-      <button class="cart-note-toggle" type="button" aria-expanded="false" aria-controls="cart-note-field">Add order note <span aria-hidden="true">⌄</span></button>
+      <button class="cart-note-toggle" type="button" aria-expanded="false" aria-controls="cart-note-field">{% if is_fr %}Ajouter une note{% else %}Add order note{% endif %} <span aria-hidden="true">⌄</span></button>
       <div id="cart-note-field" class="cart-note" aria-hidden="true" hidden>
-        <textarea class="cart-note__input" name="note" form="cart-form" placeholder="Order note" aria-label="Order note" rows="3" data-note-input>{{ cart.note | escape }}</textarea>
+        <textarea class="cart-note__input" name="note" form="cart-form" placeholder="{% if is_fr %}Note de commande{% else %}Order note{% endif %}" aria-label="{% if is_fr %}Note de commande{% else %}Order note{% endif %}" rows="3" data-note-input>{{ cart.note }}</textarea>
       </div>
     </div>
   {%- endif -%}
 
   {%- capture melato_cart_subtotal -%}{%- render 'melato-money-with-currency', amount: cart.total_price -%}{%- endcapture -%}
   <div class="cart-drawer__footer">
-    <div class="cart-subtotal" aria-label="Subtotal {{ melato_cart_subtotal | strip_html | escape }}"><span class="cart-subtotal__label">Subtotal:</span> <span class="cart-subtotal__amount" data-cart-subtotal>{{ melato_cart_subtotal }}</span></div>
-    <p class="cart-drawer__policy-note">Complimentary standard delivery.</p>
-    <form id="cart-form" action="/cart" method="post">
+    <div class="cart-subtotal" aria-label="{% if is_fr %}Sous-total{% else %}Subtotal{% endif %} {{ melato_cart_subtotal | strip_html | escape }}"><span class="cart-subtotal__label">{% if is_fr %}Sous-total :{% else %}Subtotal:{% endif %}</span> <span class="cart-subtotal__amount" data-cart-subtotal>{{ melato_cart_subtotal }}</span></div>
+    <p class="cart-drawer__policy-note">{% if is_fr %}Livraison standard offerte.{% else %}Complimentary standard delivery.{% endif %}</p>
+    <form id="cart-form" action="{{ routes.cart_url }}" method="post">
       <input type="hidden" name="note" data-note-hidden value="{{ cart.note | escape }}">
-      <button type="submit" name="checkout" class="melato-cart-checkout-btn" {% if cart.item_count == 0 %}disabled{% endif %} data-checkout-btn>Checkout</button>
+      <button type="submit" name="checkout" class="melato-cart-checkout-btn" {% if cart.item_count == 0 %}disabled{% endif %} data-checkout-btn>{% if is_fr %}Commander{% else %}Checkout{% endif %}</button>
     </form>
-    <a href="{{ routes.cart_url }}" class="cart-drawer__view-cart">View cart</a>
+    <a href="{{ routes.cart_url }}" class="cart-drawer__view-cart">{% if is_fr %}Voir le panier{% else %}View cart{% endif %}</a>
   </div>
 </div>
 

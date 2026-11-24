@@ -146,3 +146,11 @@ test('Successful add remains successful when refreshing the cart count fails', a
   assert.equal(w.document.querySelector('[data-tll-live]').textContent, 'Added to your bag.');
   dom.window.close();
 });
+
+test('Lookbook headings and product titles explicitly guard color against global heading resets', () => {
+  const css = fs.readFileSync(new URL('../assets/melato-lookbook-shop.css', import.meta.url), 'utf8');
+  assert.match(css, /\.tll\s+h1\s*\{[^}]*color\s*:\s*var\(--tll-paper\)/);
+  assert.match(css, /\.tll\s+h2\s*\{[^}]*color\s*:\s*var\(--tll-paper\)/);
+  assert.match(css, /\.tll-dialog\s+h2\s*\{[^}]*color\s*:\s*var\(--tll-ink\)/);
+  assert.match(css, /\.tll-product\s+h3\s*\{[^}]*color\s*:\s*inherit/);
+});

@@ -43,7 +43,7 @@
               {{ address.country }}
             </p>
             <div style="display:flex;gap:8px;margin-top:16px;">
-              <a href="{{ routes.account_addresses_url }}/{{ address.id }}" class="btn btn--secondary btn--sm">Edit</a>
+              <a href="{{ routes.account_addresses_url | replace: '&amp;', '&' | escape }}/{{ address.id }}" class="btn btn--secondary btn--sm">Edit</a>
               {%- form 'customer_address', address -%}
                 <input type="hidden" name="_method" value="delete">
                 <button type="submit" class="btn btn--ghost btn--sm" style="color:var(--color-error);">Remove</button>
