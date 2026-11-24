@@ -43,7 +43,7 @@
                     >×</button>
                   </div>
                   {%- if item.variant.title != 'Default Title' -%}
-                    <span class="cart-item__variant">{{ item.variant.title }}</span>
+                    <span class="cart-item__variant">{{ item.variant.title | escape }}</span>
                   {%- endif -%}
                   <div class="cart-item__footer">
                     <div class="qty-stepper">
