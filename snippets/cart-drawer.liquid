@@ -25,10 +25,12 @@
     {%- else -%}
       {%- for item in cart.items -%}
         {%- capture melato_line_price -%}{%- render 'melato-money-with-currency', amount: item.final_line_price -%}{%- endcapture -%}
-        <div class="cart-item" role="listitem" data-line-key="{{ item.key }}" data-line-index="{{ forloop.index }}">
-          <a href="{{ item.url }}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">
-            {%- if item.image != blank -%}
-              <img class="cart-item__img" src="{{ item.image | image_url: width: 120 }}" srcset="{{ item.image | image_url: width: 120 }} 1x, {{ item.image | image_url: width: 240 }} 2x" alt="{{ item.title | escape }}" width="80" height="{{ 80 | divided_by: item.image.aspect_ratio | ceil }}" loading="lazy">
+        <div class="cart-item" role="listitem" data-line-key="{{ item.key | escape }}" data-line-index="{{ forloop.index }}">
+          <a href="{{ item.url | escape }}" class="cart-item__img-link" tabindex="-1" aria-hidden="true">
+            {%- if item.image != blank and item.image.aspect_ratio != blank and item.image.aspect_ratio > 0 -%}
+              <img class="cart-item__img" src="{{ item.image | image_url: width: 120 | escape }}" srcset="{{ item.image | image_url: width: 120 | escape }} 1x, {{ item.image | image_url: width: 240 | escape }} 2x" alt="{{ item.title | escape }}" width="80" height="{{ 80 | divided_by: item.image.aspect_ratio | ceil }}" loading="lazy">
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'cart-item__img cart-item__img--placeholder' }}
             {%- endif -%}
           </a>
           <div class="cart-item__info">
@@ -36,14 +38,14 @@
               <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
               <button class="cart-item__remove" type="button" aria-label="{% if is_fr %}Retirer {{ item.product.title | escape }}{% else %}Remove {{ item.product.title | escape }}{% endif %}" data-remove-line="{{ item.key }}">×</button>
             </div>
-            {%- if item.variant.title != 'Default Title' -%}<span class="cart-item__variant">{{ item.variant.title }}</span>{%- endif -%}
+            {%- if item.variant.title != 'Default Title' -%}<span class="cart-item__variant">{{ item.variant.title | escape }}</span>{%- endif -%}
             <div class="cart-item__footer">
               <div class="qty-stepper" aria-label="{% if is_fr %}Quantité pour {{ item.product.title | escape }}{% else %}Quantity for {{ item.product.title | escape }}{% endif %}">
                 <button class="qty-stepper__btn" type="button" aria-label="{% if is_fr %}Diminuer la quantité{% else %}Decrease quantity{% endif %}" data-qty-change="-1" data-line-key="{{ item.key }}">−</button>
                 <input class="qty-stepper__value" type="number" value="{{ item.quantity }}" min="0" aria-label="{% if is_fr %}Quantité{% else %}Quantity{% endif %}" data-line-key="{{ item.key }}">
                 <button class="qty-stepper__btn" type="button" aria-label="{% if is_fr %}Augmenter la quantité{% else %}Increase quantity{% endif %}" data-qty-change="1" data-line-key="{{ item.key }}">+</button>
               </div>
-              <span class="price" data-line-price="{{ item.key }}" aria-label="{{ melato_line_price | strip_html | escape }}">{{ melato_line_price }}</span>
+              <span class="price" data-line-price="{{ item.key | escape }}" aria-label="{{ melato_line_price | strip_html | escape }}">{{ melato_line_price }}</span>
             </div>
           </div>
         </div>
