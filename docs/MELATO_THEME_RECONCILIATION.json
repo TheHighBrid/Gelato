@@ -167,7 +167,7 @@
       "liveBodySha256": "6a40b01cecef63a38110a97ee2e47fbefa988766b8303ff46a17a6e740652aba",
       "decision": "retain-repository-fix",
       "reason": "Keep repository non-clipping desktop announcement layout, visible category links and full six-link navigation.",
-      "candidateSha256": "4eb1b4b854acee0ebf0d345a1abd1eef7a552f2f63e03c00d49a5c806b3b198c"
+      "candidateSha256": "f1c13ab38885c812db2087f5e286057f9ff8c749dfc45bb77a8723ac5319d0a1"
     },
     {
       "path": "assets/melato-audit-ui-20260818.js",
@@ -1423,7 +1423,7 @@
       "liveBodySha256": "140448d18fad5cd5527b0bd9cf047348bfee58b054e19ff42736fdabc129a01b",
       "decision": "remediate-live",
       "reason": "Correct Shopify Liquid Product.type category semantics against the frozen live baseline; preserve the approved design and product evidence ownership. November 10: preserve current Shopify-synced source and apply verified audit corrections; historical live hash retained.",
-      "candidateSha256": "3759d6225a4e490387fa111aa63c172584931adfb76147104487c6e2ab8d1ad2"
+      "candidateSha256": "a8ea48873a1063fd5fbf3297642c80253d558c515a4ad35fbc1b3649e227cfb8"
     },
     {
       "path": "sections/melato-product-proof-bar.liquid",
@@ -1853,9 +1853,9 @@
       "path": "snippets/melato-rendered-output-filters.liquid",
       "liveMd5": "a8e37c5e06a02dbf0c2f27106e907e3b",
       "liveBodySha256": "ba1ee8b972bb28b25be6fc148657fa9081835586aa1da27c21accf6043de8bc7",
-      "decision": "identical",
-      "reason": "Repository bytes match the fetched live body or provider inventory checksum.",
-      "candidateSha256": "ba1ee8b972bb28b25be6fc148657fa9081835586aa1da27c21accf6043de8bc7"
+      "decision": "remediate-live",
+      "reason": "Preserve the verified current Shopify Blacklist product handle instead of rewriting it to a missing route.",
+      "candidateSha256": "d1abaae5da6f3c57ccd1edcd2c2785d980a864dc171732a095dc407742a60902"
     },
     {
       "path": "snippets/melato-responsive-image.liquid",

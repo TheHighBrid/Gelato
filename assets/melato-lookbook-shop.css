@@ -21,7 +21,7 @@ body:has([data-tll]) :is(#shopify-section-header, .shopify-section-group-header-
 .tll-header>a:last-child { padding:12px 0; }
 .tll-intro { padding:64px 6vw 48px; display:grid; grid-template-columns:1fr 1fr; gap:18px 40px; align-items:end; border-bottom:1px solid #ffffff26; }
 .tll-intro>p:first-child { grid-column:1/-1; font:10px monospace; letter-spacing:.18em; text-transform:uppercase; color:var(--tll-accent); }
-.tll h1 { margin:0; max-width:850px; font-family:'TLL Condensed',Impact,'Arial Narrow',sans-serif; font-weight:400; font-size:clamp(60px,8.4vw,146px); line-height:.89; text-transform:uppercase; letter-spacing:-.035em; text-wrap:balance; }
+.tll h1 { margin:0; max-width:850px; color:var(--tll-paper); font-family:'TLL Condensed',Impact,'Arial Narrow',sans-serif; font-weight:400; font-size:clamp(60px,8.4vw,146px); line-height:.89; text-transform:uppercase; letter-spacing:-.035em; text-wrap:balance; }
 .tll-intro>p:nth-of-type(2) { margin:0; max-width:280px; justify-self:end; font:italic 21px/1.4 'TLL Editorial',Georgia,serif; color:var(--tll-muted); }
 .tll-intro>a { grid-column:1/-1; width:max-content; margin-top:16px; font:10px monospace; letter-spacing:.12em; text-transform:uppercase; }
 .tll-intro>a span { margin-left:20px; }
@@ -33,7 +33,7 @@ body:has([data-tll]) :is(#shopify-section-header, .shopify-section-group-header-
 .tll-eyebrow { position:relative; z-index:1; width:100%; margin:0 0 84px; font:10px/1.7 monospace; letter-spacing:.12em; text-transform:uppercase; color:var(--tll-accent); }
 .tll-eyebrow span { display:block; color:var(--tll-muted); margin-top:8px; }
 .tll-number { position:absolute; top:15%; right:6%; font:clamp(140px,18vw,310px)/1 'TLL Condensed',Impact,'Arial Narrow',sans-serif; color:#ffffff06; pointer-events:none; }
-.tll h2 { position:relative; font:400 clamp(44px,5vw,84px)/.94 'TLL Condensed',Impact,'Arial Narrow',sans-serif; letter-spacing:-.025em; text-transform:uppercase; margin:0 0 22px; overflow-wrap:break-word; }
+.tll h2 { position:relative; color:var(--tll-paper); font:400 clamp(44px,5vw,84px)/.94 'TLL Condensed',Impact,'Arial Narrow',sans-serif; letter-spacing:-.025em; text-transform:uppercase; margin:0 0 22px; overflow-wrap:break-word; }
 .tll-caption { position:relative; max-width:280px; color:var(--tll-muted); margin:0 0 40px; font:italic 21px/1.45 'TLL Editorial',Georgia,serif; }
 .tll-shopping { width:100%; border-top:1px solid #ffffff40; }
 .tll-shopping summary { display:flex; justify-content:space-between; align-items:center; gap:12px; list-style:none; padding:22px 0; font:11px/1.5 monospace; text-transform:uppercase; letter-spacing:.08em; min-height:64px; }
@@ -54,12 +54,12 @@ body:has([data-tll]) :is(#shopify-section-header, .shopify-section-group-header-
 .tll-dialog[open] { display:flex; flex-direction:column; }
 .tll-dialog header { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; padding-bottom:24px; border-bottom:1px solid #11110f40; }
 .tll-dialog header p { font:10px monospace; letter-spacing:.1em; text-transform:uppercase; margin:0 0 12px; }
-.tll-dialog h2 { margin:0; font-size:38px; }
+.tll-dialog h2 { margin:0; color:var(--tll-ink); font-size:38px; }
 .tll-dialog header button { flex:none; width:44px; height:44px; border:1px solid #11110f40; color:inherit; background:transparent; font-size:28px; }
 .tll-product { display:grid; grid-template-columns:100px minmax(0,1fr); gap:22px; padding:28px 0; border-bottom:1px solid currentColor; }
 .tll-product-image { background:white; align-self:start; }
 .tll-product-image img { display:block; width:100%; height:138px; object-fit:contain; }
-.tll-product h3 { margin:0 0 10px; font:400 24px/1.1 Georgia,serif; }
+.tll-product h3 { margin:0 0 10px; color:inherit; font:400 24px/1.1 Georgia,serif; }
 .tll-product-copy>p { font:12px monospace; margin:0 0 18px; }
 .tll-product form { display:grid; gap:10px; }
 .tll-option-label { display:block; margin-bottom:6px; font:10px monospace; text-transform:uppercase; }

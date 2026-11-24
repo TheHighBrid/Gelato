@@ -1,13 +1,12 @@
 {% doc %}
 Preserves the current locale on internal storefront links.
 @param {string} url - Destination URL
-{% enddoc %}
-{%- liquid
+{% enddoc %}{%- liquid
   assign prefix = routes.root_url
   if prefix == '/'
     assign prefix = ''
   endif
-  assign target_url = url
+  assign target_url = url | strip
   if target_url == '/collections/pant' or target_url == '/collections/pant/'
     assign target_url = '/collections/pants'
   elsif target_url contains '/collections/pant?'
@@ -17,7 +16,6 @@ Preserves the current locale on internal storefront links.
   endif
   assign target_url = target_url | replace: '/products/sunset-deposition-corset-dress-copy', '/products/sunset-deposition-corset-dress'
   assign target_url = target_url | replace: '/products/rex-x-fur-jacket-1', '/products/rex-x-fur-jacket'
-  assign target_url = target_url | replace: '/products/blacklist-sunglasses-1', '/products/blacklist-sunglasses'
   assign parts = target_url | split: '/'
   assign first_character = target_url | slice: 0, 1
   assign needs_prefix = false
