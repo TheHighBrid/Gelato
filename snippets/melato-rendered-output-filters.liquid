@@ -36,12 +36,12 @@
     if fit_preview != blank
       capture fit_row
         echo '<div class="pdp-conversion-assurances__fact"><strong>Fit</strong> <span>'
-        echo fit_preview | strip_html | strip_newlines | truncate: 170 | escape
+        echo fit_preview | strip_html | strip_newlines | escape
         echo '</span></div>'
       endcapture
       capture legacy_fit_row
         echo '<div class="pdp-conversion-assurances__fact"><strong>Fit</strong><span>'
-        echo fit_preview | strip_html | strip_newlines | truncate: 170 | escape
+        echo fit_preview | strip_html | strip_newlines | escape
         echo '</span></div>'
       endcapture
       assign output = output | replace: fit_row, '' | replace: legacy_fit_row, ''
