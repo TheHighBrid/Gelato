@@ -31,7 +31,6 @@
           return response.text();
         })
         .then((text) => {
-          if (window.scrollY > 150) return;
           const html = document.createElement('div');
           html.innerHTML = text;
           const incoming = html.querySelector('product-recommendations');

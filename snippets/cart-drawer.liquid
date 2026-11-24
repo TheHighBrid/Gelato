@@ -8,10 +8,10 @@
     assign is_fr = true
   endif
 -%}
-<div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="{% if is_fr %}Panier d’achat{% else %}Shopping cart{% endif %}" aria-hidden="true" inert data-cart-drawer>
+<div id="cart-drawer" class="cart-drawer" role="dialog" aria-modal="true" aria-label="{% if is_fr %}Panier{% else %}Shopping cart{% endif %}" aria-hidden="true" inert data-cart-drawer>
   <div class="cart-drawer__header">
     <div class="cart-drawer__header-left">
-      <h2 class="cart-drawer__title">Your Cart</h2>
+      <h2 class="cart-drawer__title">{% if is_fr %}Votre panier{% else %}Your Cart{% endif %}</h2>
       <p class="cart-drawer__count" data-cart-count-label><span data-cart-item-count>{{ cart.item_count }}</span> {% if is_fr %}{{ cart.item_count | pluralize: 'article', 'articles' }}{% else %}{{ cart.item_count | pluralize: 'item', 'items' }}{% endif %}</p>
     </div>
     <button type="button" class="cart-drawer__close-btn" data-cart-close aria-label="{% if is_fr %}Fermer le panier et continuer vos achats{% else %}Close cart and continue shopping{% endif %}">
@@ -54,22 +54,22 @@
 
   {%- if cart.item_count > 0 -%}
     <div class="cart-extras">
-      <button class="cart-note-toggle" type="button" aria-expanded="false" aria-controls="cart-note-field">Add order note <span aria-hidden="true">⌄</span></button>
+      <button class="cart-note-toggle" type="button" aria-expanded="false" aria-controls="cart-note-field">{% if is_fr %}Ajouter une note{% else %}Add order note{% endif %} <span aria-hidden="true">⌄</span></button>
       <div id="cart-note-field" class="cart-note" aria-hidden="true" hidden>
-        <textarea class="cart-note__input" name="note" form="cart-form" placeholder="Order note" aria-label="Order note" rows="3" data-note-input>{{ cart.note }}</textarea>
+        <textarea class="cart-note__input" name="note" form="cart-form" placeholder="{% if is_fr %}Note de commande{% else %}Order note{% endif %}" aria-label="{% if is_fr %}Note de commande{% else %}Order note{% endif %}" rows="3" data-note-input>{{ cart.note }}</textarea>
       </div>
     </div>
   {%- endif -%}
 
   {%- capture melato_cart_subtotal -%}{%- render 'melato-money-with-currency', amount: cart.total_price -%}{%- endcapture -%}
   <div class="cart-drawer__footer">
-    <div class="cart-subtotal" aria-label="{% if is_fr %}Sous-total{% else %}Subtotal{% endif %} {{ melato_cart_subtotal | strip_html | escape }}"><span class="cart-subtotal__label">Subtotal:</span> <span class="cart-subtotal__amount" data-cart-subtotal>{{ melato_cart_subtotal }}</span></div>
-    <p class="cart-drawer__policy-note">Complimentary standard delivery.</p>
+    <div class="cart-subtotal" aria-label="{% if is_fr %}Sous-total{% else %}Subtotal{% endif %} {{ melato_cart_subtotal | strip_html | escape }}"><span class="cart-subtotal__label">{% if is_fr %}Sous-total :{% else %}Subtotal:{% endif %}</span> <span class="cart-subtotal__amount" data-cart-subtotal>{{ melato_cart_subtotal }}</span></div>
+    <p class="cart-drawer__policy-note">{% if is_fr %}Livraison standard offerte.{% else %}Complimentary standard delivery.{% endif %}</p>
     <form id="cart-form" action="{{ routes.cart_url }}" method="post">
       <input type="hidden" name="note" data-note-hidden value="{{ cart.note | escape }}">
-      <button type="submit" name="checkout" class="melato-cart-checkout-btn" {% if cart.item_count == 0 %}disabled{% endif %} data-checkout-btn>Checkout</button>
+      <button type="submit" name="checkout" class="melato-cart-checkout-btn" {% if cart.item_count == 0 %}disabled{% endif %} data-checkout-btn>{% if is_fr %}Commander{% else %}Checkout{% endif %}</button>
     </form>
-    <a href="{{ routes.cart_url }}" class="cart-drawer__view-cart">View cart</a>
+    <a href="{{ routes.cart_url }}" class="cart-drawer__view-cart">{% if is_fr %}Voir le panier{% else %}View cart{% endif %}</a>
   </div>
 </div>
 

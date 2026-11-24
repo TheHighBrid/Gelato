@@ -97,7 +97,7 @@
     assign melato_filter_main_output = false
     if template.name == 'index' or template.name == 'collection'
       assign melato_filter_main_output = true
-    elsif request.path contains '/pages/faq' or request.path contains '/pages/contact' or template.name == 'policy' or request.path contains '/policies/'
+    elsif request.path contains '/pages/faq' or request.path contains '/pages/contact' or request.path contains '/pages/shipping-returns' or request.path contains '/pages/size-guide' or template.name == 'policy' or request.path contains '/policies/'
       assign melato_filter_main_output = true
     elsif template.name == 'product' and product
       assign melato_filter_main_output = true

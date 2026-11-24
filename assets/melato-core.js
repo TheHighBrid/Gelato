@@ -674,12 +674,12 @@
         body:JSON.stringify({id:key,quantity:Math.max(0,Number(quantity || 0))})
       });
       const payload = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(payload.description || payload.message || 'Cart could not be updated.');
+      if (!response.ok) throw new Error(payload.description || payload.message || (isFrenchLocale() ? 'Impossible de mettre à jour le panier.' : 'Cart could not be updated.'));
       renderCart(payload);
       await syncMainCartPage();
     } catch (error) {
       console.error('Melato cart update:', error);
-      toast(error.message || 'Cart could not be updated.');
+      toast(error.message || (isFrenchLocale() ? 'Impossible de mettre à jour le panier.' : 'Cart could not be updated.'));
       fetchCart().then(renderCart).catch(() => {});
     } finally {
       drawer.classList.remove('is-updating');
@@ -702,10 +702,10 @@
       button.dataset.melatoWasDisabled = button.disabled ? 'true' : 'false';
       button.disabled = true;
       button.classList.add('is-loading');
-      button.textContent = isFr ? 'Ajout…' : 'Adding';
+      button.textContent = isFrenchLocale() ? 'Ajout…' : 'Adding';
     } else {
       button.classList.remove('is-loading');
-      button.textContent = button.dataset.melatoOriginalText || (isFr ? 'Ajouter au panier' : 'Add to cart');
+      button.textContent = button.dataset.melatoOriginalText || (isFrenchLocale() ? 'Ajouter au panier' : 'Add to cart');
       button.disabled = button.dataset.melatoWasDisabled === 'true';
     }
   }

@@ -57,7 +57,7 @@
 
   var timer=null;
   var controller=null;
-  var isFr = {{ request.locale.iso_code | json }} === 'fr';
+  var isFr={{ request.locale.iso_code | json }}==='fr';
   function escapeHtml(value){return String(value||'').replace(/[&<>"']/g,function(char){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]})}
   function closeResults(){results.hidden=true;results.innerHTML='';input.setAttribute('aria-expanded','false')}
   function showProducts(products){

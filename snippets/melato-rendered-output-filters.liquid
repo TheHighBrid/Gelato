@@ -322,6 +322,7 @@
     assign output = output | replace: '/products/rex-x-fur-jacket-1', '/products/rex-x-fur-jacket'
 
     if request.locale.iso_code == 'fr'
+      assign output = output | replace: '>Product focus<', '>Focus produit<'
       assign output = output | replace: 'Add to cart', 'Ajouter au panier'
       assign output = output | replace: 'Out of stock', 'Rupture de stock'
       assign output = output | replace: 'Sold out', 'Épuisé'

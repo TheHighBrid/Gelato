@@ -18,7 +18,7 @@
   if is_fr and drawer_note_copy == 'Designer apparel, edited with intention. Built in Ottawa. Worn anywhere.'
     assign drawer_note_copy = 'Prêt-à-porter de créateur, pensé avec intention. Conçu à Ottawa. Porté partout.'
   endif
--%}
+%}
 
 <header id="mxh-{{ section.id }}" class="mxh" role="banner" data-mxh>
   <div class="mxh__bar">
@@ -48,7 +48,7 @@
     <div class="mxh__right" aria-label="{% if is_fr %}Outils d’en-tête{% else %}Header tools{% endif %}">
       <button class="mxh__text-btn mxh__search-btn" type="button" aria-label="{% if is_fr %}Ouvrir la recherche{% else %}Open search{% endif %}" aria-expanded="false" aria-controls="mxh-search-{{ section.id }}" data-mxh-search-open>{{ 'search.submit' | t }}</button>
       {% if shop.customer_accounts_enabled and section.settings.show_account %}
-        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">{{ 'melato_ui.account' | t }}</a>
+        <a class="mxh__text-btn mxh__account" href="{% if customer %}{{ routes.account_url | replace: '&amp;', '&' | escape }}{% else %}{{ routes.account_login_url | replace: '&amp;', '&' | escape }}{% endif %}">{{ 'melato_ui.account' | t }}</a>
       {% endif %}
       <a class="mxh__bag" href="{{ routes.cart_url }}" aria-label="{% if is_fr %}Panier avec {{ cart.item_count }} {% if cart.item_count == 1 %}article{% else %}articles{% endif %}{% else %}Cart with {{ cart.item_count }} {% if cart.item_count == 1 %}item{% else %}items{% endif %}{% endif %}">
         <span>{{ 'melato_ui.bag' | t }}</span>
