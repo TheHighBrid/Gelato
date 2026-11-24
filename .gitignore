@@ -20,3 +20,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Generated Context.dev QA evidence (public page content and screenshots)
+.cache/contextdev-storefront/
