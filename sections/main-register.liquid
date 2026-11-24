@@ -36,7 +36,7 @@
 
       <div style="display:flex;flex-direction:column;gap:12px;">
         <button type="submit" class="btn btn--primary btn--full">{{ 'account.register' | t }}</button>
-        <a href="{{ routes.account_login_url }}" class="btn btn--secondary btn--full">{{ 'account.login' | t }}</a>
+        <a href="{{ routes.account_login_url | replace: '&amp;', '&' | escape }}" class="btn btn--secondary btn--full">{{ 'account.login' | t }}</a>
       </div>
     {%- endform -%}
   </div>
