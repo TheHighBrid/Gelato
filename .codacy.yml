@@ -1,0 +1,23 @@
+engines:
+  eslint:
+    enabled: true
+  biome:
+    enabled: true
+  opengrep:
+    enabled: true
+  pmd:
+    enabled: true
+  lizard:
+    enabled: true
+  stylelint:
+    enabled: true
+  markdownlint:
+    enabled: true
+  agentlinter:
+    enabled: true
+exclude_paths:
+  - "assets/**"
+  - "node_modules/**"
+  - ".next/**"
+  - "out/**"
+  - "archive/**"
